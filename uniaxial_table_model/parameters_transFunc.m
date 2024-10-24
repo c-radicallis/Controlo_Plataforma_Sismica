@@ -1,10 +1,10 @@
 clear all
-% Defining parameters
 
 %Servo-valve parameters
 tsv=0.0246      %Valve time constant (tsv=0.0246 s)
 ksvkq=1934.5    %Valve flow gain (ksvkq=1934.5 cm3/s/V)
-kpl=1.67401e-7  %Valve pressure gain & leakadge factor (kpl=1.67401e-7 m3/s/kPa)
+kpl=1.67401e-7  %Valve pressu
+% re gain & leakadge factor (kpl=1.67401e-7 m3/s/kPa)
 Be=193716.28    %Oil Bulk modulus (Be=193716.28 kPa)
 Vt=0.002659     %Oil Volume on actuator chamber (Vt=0.002659 m3)
 A=0.012456      %Piston area (A=0.012456 m2)
@@ -50,3 +50,7 @@ t_vector = dados(:,1);
 t_step = t_vector(2)
 ddx = [t_vector dados(:,2)];
 ddy = [t_vector  dados(:,3)];
+
+%%
+
+ EspetroResposta18102024%( 'elcentro')

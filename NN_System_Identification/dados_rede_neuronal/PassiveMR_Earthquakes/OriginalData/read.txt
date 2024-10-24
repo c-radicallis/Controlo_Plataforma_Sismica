@@ -1,0 +1,1 @@
+o ficheiro 'TDOF_PassFD_A1_s3_100_V0' é o do dia 26/8 uma vez que o primeiro, do dia 25/8 e agora com o nome 'TDOF_PassFD_A1_s3_100_V0_BateLim' batia no fim de curso

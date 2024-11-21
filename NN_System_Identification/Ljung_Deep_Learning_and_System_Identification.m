@@ -70,12 +70,15 @@ vdat=iddata(ySchroeder' , uSchroeder' ,1/fs);
 net=cascadeforwardnet([6,6,6,6,6,6]);
 N2=neuralnet(net);
 mmN2=nlarx(edat,[4 4 0],N2);
+
+%%
 compare(vdat,mmN2)
 figure(4)
 resid(vdat,mmN2)
 
-%% % LSTM Network
-% numHiddenUnits=8;featureDimension=1;%u(t)
+%% LSTM Network
+% numHiddenUnits=8;
+% featureDimension=1;%u(t)
 % layers=[sequenceInputLayer(featureDimension), lstmLayer(numHiddenUnits, 'OutputMode','sequence'), fullyConnectedLayer(1), regressionLayer];
 % options=trainingOptions( 'adam','MaxEpochs',200, 'InitialLearnRate',0.01, 'Plots','training-progress');
 % XTrain=cell(1,1);
@@ -83,5 +86,15 @@ resid(vdat,mmN2)
 % XTrain{1}=edat.u';
 % YTrain{1}=edat.y';
 % net=trainNetwork(XTrain,YTrain,layers,options);
-% 
-% 
+
+%%
+lstm_predict = predict(net,vdat.InputData');
+
+Ts = vdat.Ts; % Sampling time
+N = length(vdat.y); % Number of data points (assuming single-output data)
+timeVector = (0:N-1)' * Ts; % Create the time vector
+
+plot(timeVector,lstm_predict)
+hold on
+plot(timeVector,vdat.OutputData)
+legend('LSTM predicted','Validation Data')

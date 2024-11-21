@@ -5,6 +5,7 @@ clc
 % Deep Learning and System Identification , Ljung , Andersson, Tiels ,
 % Schon
 
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\NN_System_Identification\dados_elcentro'
 data=load("TDOF_PassFD_ElCentro_s1_70_V0.mat");
 
 
@@ -71,6 +72,58 @@ legend('train','test')
 test_data.Tstart=  time(ceil( length(time)/2 ))
 data = iddata( Y , U , dt )
 
+
+%% Frequency content
+
+% % Assuming 'data' is your iddata object
+% inputSignal = data.u; % Input signal
+% outputSignal = data.y; % Output signal
+% Fs = 1 / data.Ts; % Sampling frequency
+% N = length(inputSignal); % Number of samples
+% 
+% % Compute FFT
+% inputFFT = fft(inputSignal);
+% outputFFT = fft(outputSignal);
+% frequencies = (0:N-1)' * (Fs / N); % Frequency vector
+% 
+% % Only keep the first half of the spectrum (positive frequencies)
+% halfIndex = floor(N/2)+1;
+% frequencies = frequencies(1:halfIndex);
+% inputFFT = abs(inputFFT(1:halfIndex)); % Magnitude of FFT
+% outputFFT = abs(outputFFT(1:halfIndex));
+% 
+% % Plot the frequency content
+% figure;
+% subplot(2, 1, 1);
+% semilogx(frequencies, inputFFT);
+% title('Frequency Content of Input Signal');
+% xlabel('Frequency (Hz)');
+% ylabel('Magnitude');
+% 
+% subplot(2, 1, 2);
+% semilogx(frequencies, outputFFT);
+% title('Frequency Content of Output Signal');
+% xlabel('Frequency (Hz)');
+% ylabel('Magnitude');
+
+%%  Power Spectral Density
+% 
+inputSignal = data.u; % Input signal
+outputSignal = data.y; % Output signal
+Fs = 1 / data.Ts; % Sampling frequency
+
+% Plot PSD for input signal
+figure;
+subplot(2, 1, 1);
+pspectrum(inputSignal, Fs, 'power');
+title('Power Spectral Density of Input Signals');
+
+% Plot PSD for output signal
+subplot(2, 1, 2);
+pspectrum(outputSignal, Fs, 'power');
+title('Power Spectral Density of Output Signals');
+
+
 %% Deep Cascade Network
 net=cascadeforwardnet([6,6,6,6,6,6])
 N2=neuralnet(net)
@@ -87,6 +140,8 @@ mN2=nlarx(data,[N_A N_B N_K ],N2)
 %% Compare
 compare(test_data,mN2)
 
+
+%%
 figure(4)
 resid(data,mN2)
 

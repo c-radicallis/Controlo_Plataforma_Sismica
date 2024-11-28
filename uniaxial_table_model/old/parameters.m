@@ -17,11 +17,11 @@ K_h = 4*beta_e*A^2/V_t;
 k_c = k_pl/2;
 C_l = k_c;
 
-% Converting everything to SI units
-k_p  = k_p/100
-k_sv =  tau_sv*100^3
-k_q = k_q*100^3
-k_pl = k_pl/1000
+% % Converting everything to SI units
+% k_p  = k_p/100
+% k_sv =  tau_sv*100^3
+% k_q = k_q*100^3
+% k_pl = k_pl/1000
 
 %%  structure parameters
 % 1st mode

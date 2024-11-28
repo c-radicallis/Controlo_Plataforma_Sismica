@@ -150,7 +150,7 @@ resid(data,mN2)
 % array to timetable
 
 
-idplot(test_data)
+idplot(data)
 
 %% simOpt = simOptions('InitialCondition',[0 0 0 0]);
 yn = sim( mN2 , test_data );

@@ -13,7 +13,6 @@ m_T = m_p;
 c_t = 5.7800;             % kNs/m
 K_h = 4*beta_e*A^2/V_t;
 
-%paremeters i couldnt find
 % assumed k_c = C_l = k_pl/2
 k_c = k_pl/2;
 C_l = k_c;
@@ -24,8 +23,7 @@ k_sv =  tau_sv*100^3
 k_q = k_q*100^3
 k_pl = k_pl/1000
 
-
-%%%  structure parameters
+%%  structure parameters
 % 1st mode
 m_sp= 2000; % kg
 f_sp = 2; % Hz
@@ -41,11 +39,8 @@ qsi_sp2 = 0.05; %
 k_sp2 = m_sp*(2*pi*f_sp)^2; %N/m
 c_sp2 = qsi_sp*2*m_sp*2*pi*f_sp; %N/m/s
 
-
-%%
-
+% sismic reference
 dados = load('elcentro.txt');
-
 t_vector = dados(:,1);
 t_step = t_vector(2)
 ddx = [t_vector dados(:,2)];

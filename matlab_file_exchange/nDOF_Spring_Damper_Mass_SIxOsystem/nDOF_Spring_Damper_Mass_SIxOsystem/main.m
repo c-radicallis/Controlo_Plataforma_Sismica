@@ -1,9 +1,23 @@
 clc; clear all; 
 %%
 n= 2;
-M= ones(1,n)*50;
-C= ones(1,n)*10;
-K= ones(1,n)*20000;
+% M= ones(1,n)*50;
+% C= ones(1,n)*10;
+% K= ones(1,n)*20000;
+
+% System
+m2   = 100;       %      [kg]
+m1   = 2000;         %       [kg]
+k2  = 5000;       %        [N/m]
+k1  = 200000;     %        [N/m]
+c2  = 4000;          %      [N.s/m]
+c1=2000;   %      [N.s/m]
+
+M=[ m1 m2];
+
+C=[ c1  c2];
+
+K=[k1 k2];
 
 %% input signal
 in_opt.f= 5; % frequency in Hz

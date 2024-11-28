@@ -75,7 +75,8 @@ if n > 1
     end
     A= [zeros(n) eye(n); A_K A_C] ;
 else
-    A=[0 1;-K/M -C/M];
+    A=[0 1;
+        -K/M -C/M];
 end
 
 %% calculating state space matrix B

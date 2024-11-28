@@ -28,6 +28,7 @@ xsi=eval(['data.',sname{1},'.Y(8).Data']);xsi=double(xsi)*sensa(8);
 ag=eval(['data.',sname{1},'.Y(1).Data']);ag=double(ag)*sensa(1);
 ai=eval(['data.',sname{1},'.Y(2).Data']);ai=double(ai)*sensa(2);
 as=eval(['data.',sname{1},'.Y(3).Data']);as=double(as)*sensa(3);
+detrend()
 
 figure
  plot(time,xg)

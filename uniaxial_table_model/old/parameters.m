@@ -9,13 +9,15 @@ beta_e = 193716.28;       % kPa
 V_t = 0.002659;           % m^3
 A = 0.012456;             % m^2
 m_p = 1.9751;             % ton
-m_T = m_p;
+
 c_t = 5.7800;             % kNs/m
 K_h = 4*beta_e*A^2/V_t;
 
 % assumed k_c = C_l = k_pl/2
 k_c = k_pl/2;
 C_l = k_c;
+
+m_T = m_p;
 
 % % Converting everything to SI units
 % k_p  = k_p/100
@@ -25,14 +27,14 @@ C_l = k_c;
 
 %%  structure parameters
 % 1st mode
-m_sp= 2000; % kg
+m_sp= 2000 % kg
 f_sp = 2; % Hz
 qsi_sp = 0.05; %
 
 k_sp = m_sp*(2*pi*f_sp)^2; %N/m
 c_sp = qsi_sp*2*m_sp*2*pi*f_sp; %N/m/s
 %2nd mode
-m_sp2= 2000; % kg
+m_sp2= 1000 % kg
 f_sp2 = 2; % Hz
 qsi_sp2 = 0.05; %
 

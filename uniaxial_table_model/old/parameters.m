@@ -13,11 +13,9 @@ m_p = 1.9751;             % ton
 c_t = 5.7800;             % kNs/m
 K_h = 4*beta_e*A^2/V_t;
 
-% assumed k_c = C_l = k_pl/2
-k_c = k_pl/2;
-C_l = k_c;
+%from Gidewon k_pl =  k_c + C_l 
 
-m_T = m_p;
+
 
 % % Converting everything to SI units
 % k_p  = k_p/100

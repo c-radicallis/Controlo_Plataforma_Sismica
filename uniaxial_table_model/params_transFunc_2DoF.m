@@ -19,7 +19,7 @@ cT=5.78*1e3        %Total damping, actuator + platen (ct=5.78 kN s/m1)
 %Additional 2DOF model
 %  structure parameters
 % 1st mode
-m1= 1%e8 % kg
+m1= 1%e9 % kg
 f1 = 1; % Hz
 zeta1 = 0.05; %
 
@@ -61,38 +61,45 @@ G_xT_xref = G_Fp_xref * G_xT_Fp
 G_x1_xref = G_x1_xT*G_xT_xref
 G_x2_xT = G_x2_x1 * G_x1_xT
 
-
 %%
-figure(1) % Create a single figure
-hold on
+% If axes don't exist, create them
+if ~exist('ax1', 'var') || ~isvalid(ax1)
+    figure(1); % Create a single figure
+    ax1 = subplot(2,2,1); hold(ax1, 'on');
+    ax2 = subplot(2,2,2); hold(ax2, 'on');
+    ax3 = subplot(2,2,3); hold(ax3, 'on');
+    ax4 = subplot(2,2,4); hold(ax4, 'on');
+end
+
 % First plot
-subplot(2,2,1) 
-hold on;
+axes(ax1); % Activate the existing axes
 bode(G_xT_xref);
 title('Bode of G\_xT\_xref'); 
 legend();
 
 % Second plot
-subplot(2,2,2)
-hold on;
+axes(ax2); % Activate the existing axes
 bode(G_x1_xT);
 title('Bode of G\_x1\_xT'); 
 legend();
 
 % Third plot
-subplot(2,2,3)
-hold on;
+axes(ax3); % Activate the existing axes
 bode(G_x2_xT);
 title('Bode of G\_x2\_xT'); 
 legend();
 
 % Fourth plot
-subplot(2,2,4)
-hold on;
-bode(G_x1_xref);
-title('Bode of G\_x1\_xref'); 
-legend();
+axes(ax4); % Activate the existing axes
+hold on
+lsim(G_xT_xref/s^2*1e3 ,  ddx(:,2) ,ddx(:,1),)
+hold on
+lsim(1/s^2*1e3,  ddx(:,2) ,ddx(:,1))
+title('Table Displacement(mm)'); 
+legend()
 
+
+    
 
 %%
 dados = load('elcentro.txt');
@@ -105,7 +112,7 @@ ddy = [t_vector  dados(:,3)];
 %plot(ddx(:,1) ,ddx(:,2))
 
 %%
-figure(3)
-hold on
-lsim(G_xT_xref ,  ddx(:,2) ,ddx(:,1))
- legend()
+% figure(3)
+% hold on
+% lsim(G_xT_xref ,  ddx(:,2) ,ddx(:,1))
+% legend()

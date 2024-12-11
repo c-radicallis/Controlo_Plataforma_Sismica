@@ -19,7 +19,7 @@ cT=5.78*1e3        %Total damping, actuator + platen (ct=5.78 kN s/m1)
 %Additional 2DOF model
 %  structure parameters
 % 1st mode
-m1= 1%e8 % kg
+m1= 1e6 % kg
 f1 = 1; % Hz
 zeta1 = 0.05; %
 
@@ -27,8 +27,8 @@ k1 = m1*(2*pi*f1)^2; %N/m
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s
 
 %2nd mode
-m2= 1%e6 % kg
-f2 = 10; % Hz
+m2= 1e6 % kg
+f2 = 5; % Hz
 zeta2 = 0.1; %
 
 k2 = m2*(2*pi*f2)^2; %N/m
@@ -63,36 +63,25 @@ G_x2_xT = G_x2_x1 * G_x1_xT
 
 
 %%
-figure(1) % Create a single figure
+figure(1)
 hold on
-% First plot
-subplot(2,2,1) 
-hold on;
-bode(G_xT_xref);
-title('Bode of G\_xT\_xref'); 
-legend();
+bode(G_xT_xref)
+legend()
 
-% Second plot
-subplot(2,2,2)
-hold on;
-bode(G_x1_xT);
-title('Bode of G\_x1\_xT'); 
-legend();
+figure(2)
+hold on
+bode(G_x1_xT)
+legend()
 
-% Third plot
-subplot(2,2,3)
-hold on;
-bode(G_x2_xT);
-title('Bode of G\_x2\_xT'); 
-legend();
+figure(3)
+hold on
+bode(G_x2_x1)
+legend()
 
-% Fourth plot
-subplot(2,2,4)
-hold on;
-bode(G_x1_xref);
-title('Bode of G\_x1\_xref'); 
-legend();
-
+figure(4)
+hold on
+bode(G_x1_xref)
+legend()
 
 %%
 dados = load('elcentro.txt');

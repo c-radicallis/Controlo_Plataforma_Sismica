@@ -5,7 +5,7 @@
 
 %Script para construir/visualizar o espetro de resposta
 
-clear all, %close all
+%clear all, %close all
 
 % ------------Inputs---------------------------------------------
 % carregar file do sismo: load sismo.txt -> criada matriz 'sismo' com dados 
@@ -47,12 +47,12 @@ sc=1;
 % In(:,1)=SinalAcel(:,1);In(:,2)=SinalAcel(:,2)*9.86*sc;
 %
 %if nome_acao == 'elcentro'
-    %Sismo Elcentro
-    %cl=3; %2-FN;3-FP
-    load elcentro.txt
-    In=elcentro;
-    %In(:,1)=elcentro(:,1);In(:,2)=elcentro(:,cl)*sc;
-    %
+    % %Sismo Elcentro
+    % %cl=3; %2-FN;3-FP
+    % load elcentro.txt
+    % In=elcentro;
+    % %In(:,1)=elcentro(:,1);In(:,2)=elcentro(:,cl)*sc;
+    % %
 
 %Sismo Erzikan
 % cl=3; %2-NS;3-EW

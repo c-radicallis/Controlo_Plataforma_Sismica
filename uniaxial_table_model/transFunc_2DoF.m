@@ -143,29 +143,6 @@ media_picos_x_m=mean(picos_x_m,n_directions-1);
 
 %%
 
-% subplot(131)
-% plot(dados(:,1),dados(:,2:end))
-% title('time series'),xlabel('t(s)'),ylabel('ddx_g (m/s^2)')
-% legend()%'ddx' , 'ddy' )% , 'mean')
-
-figure('Position', [100 100 1800 800])
-grid on
-hold on
-
-subplot(121)
-hold on
-semilogx(f_vector,picos_ddx_m,'.','MarkerSize',2, 'DisplayName' , 'picos ddx')
-semilogx( f_vector, media_picos_ddx_m,'.','MarkerSize',2, 'DisplayName' , 'media picos ddx')
-%xlim([0 4])
-xlabel('Frequency (Hz)'),ylabel('ddx_m (m/s^2)'),title('Response Spectra')
-
-subplot(122)
-hold on
-semilogx(f_vector,picos_x_m ,'.','MarkerSize',2, 'DisplayName' , 'picos x')
-semilogx(f_vector, media_picos_x_m,'.','MarkerSize',2, 'DisplayName' , 'media picos x')
-xlabel('Frequency (Hz)'),ylabel('x_m (m)'),title('Response Spectra')
-
-
 % Apply a filter to the data
 
 % % Moving average filter
@@ -180,15 +157,50 @@ filtered_media_picos_x_m = movmean(media_picos_x_m, windowSize);
 % filtered_picos_ddx_m = lowpass(picos_ddx_m, cut);
 % filtered_picos_x_m = lowpass(picos_x_m, cut);
 
+
+figure('Position', [100 100 1800 800]);
+grid on;
+hold on;
+
+% Define colors for lines 1/3 and 2/4
+color1 = 'r'; % MATLAB default blue
+color2 = 'b'; % MATLAB default orange
+color3 = 'g';
+
+subplot(121);
+hold on;
+% Plot the two lines for picos_ddx_m with different colors
+semilogx(f_vector, picos_ddx_m(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos ddx - Line 1');
+semilogx(f_vector, picos_ddx_m(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos ddx - Line 2');
+% Plot the two lines for media_picos_ddx_m with matching colors
+semilogx(f_vector, media_picos_ddx_m, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos ddx ');
+xlabel('Frequency (Hz)');
+ylabel('ddx_m (m/s^2)');
+title('Response Spectra');
+
+subplot(122);
+hold on;
+% Plot the two lines for picos_x_m with different colors
+semilogx(f_vector, picos_x_m(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos x - Line 1');
+semilogx(f_vector, picos_x_m(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos x - Line 2');
+% Plot the two lines for media_picos_x_m with matching colors
+semilogx(f_vector, media_picos_x_m, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos x');
+xlabel('Frequency (Hz)');
+ylabel('x_m (m)');
+title('Response Spectra');
+xlim([0 2.5]);
+
+
 subplot(121)
 hold on
-semilogx(f_vector, filtered_picos_ddx_m,  'DisplayName' , 'filtrado ddx' , 'LineWidth' , 3)
-semilogx(f_vector, filtered_media_picos_ddx_m,  'DisplayName' , 'filtrado media  ddx' , 'LineWidth' , 3)
+semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
+semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
+semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
 legend
 
 subplot(122)
 hold on
-semilogx(f_vector, filtered_picos_x_m,  'DisplayName' , 'filtrado x' , 'LineWidth' , 3)
-semilogx(f_vector, filtered_media_picos_x_m,  'DisplayName' , 'filtrado media  x' , 'LineWidth' , 3)
-xlim([0 2.5])
+semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
+semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
+semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos x');
 legend

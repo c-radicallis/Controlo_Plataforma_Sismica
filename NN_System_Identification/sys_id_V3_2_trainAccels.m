@@ -1,15 +1,21 @@
-close all
+%close all
 %clear all
 clc
 
-% Deep Learning and System Identification , Ljung , Andersson, Tiels ,
-% Schon
+dados = load('elcentro.txt');
+t_vector = dados(:,1);
+t_step = t_vector(2);
+ddx = [t_vector dados(:,2)]';
+ddy = [t_vector  dados(:,3)]';
+
+% Deep Learning and System Identification , Ljung , Andersson, Tiels , Schon
 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\NN_System_Identification\dados_elcentro'
 data=load("TDOF_PassFD_ElCentro_s1_70_V0.mat");
 
 
-%sensa: Sensibilidade dos sensores:1-Ag;2-Ai;3-As;4-Xg;5-Xgref;6-Xig;7-Xsi;
+%sensa: Sensibilidade dos sensores:
+% 1-Ag;2-Ai;3-As;4-Forca de amortecimento do dispositivo; 5-Xg; 6-Xgref; 7-Xig; 8-Xsi;
 sensa=ones(8,1);  %acerto dos sinais
 sname=fieldnames(data);
 time=eval(['data.',sname{1},'.X.Data']);
@@ -20,16 +26,22 @@ dt=mean(diff(time));
 % the DOF to the ground: xig=xi-xg; xsg=xs-xg.
 
 xg=eval(['data.',sname{1},'.Y(5).Data']);xg=double(xg)*sensa(5);
-xgr=eval(['data.',sname{1},'.Y(6).Data']);xgr=double(xgr)*sensa(6);
+xgr=eval(['data.',sname{1},'.Y(6).Data']);xgr=double(xgr)*sensa(6); % referencia
 xig=eval(['data.',sname{1},'.Y(7).Data']);xig=double(xig)*sensa(7);
 xsi=eval(['data.',sname{1},'.Y(8).Data']);xsi=double(xsi)*sensa(8);
 ag=eval(['data.',sname{1},'.Y(1).Data']);ag=double(ag)*sensa(1);
 ai=eval(['data.',sname{1},'.Y(2).Data']);ai=double(ai)*sensa(2);
 as=eval(['data.',sname{1},'.Y(3).Data']);as=double(as)*sensa(3);
-%detrend()
+linha4 =  eval(['data.',sname{1},'.Y(4).Data']); linha4=double(linha4)*sensa(4);
 
 % figure
-%  plot(time,xg)
+% plot(time,linha4)
+% legend('linha4')
+% 
+% figure
+% plot(time,xg,time,xgr)
+% legend('xg','xgr')
+
 
 dimv=size(xg);
 if dimv(1)==1
@@ -75,8 +87,8 @@ plot(t, signal);
 title('Original Signal');
 xlabel('Time'); ylabel('Amplitude');
 
-yline(signal(1), '--r', 'Start');
-yline(signal(end), '--r', 'End');
+% xline(signal(1), '--r', 'Start');
+% xline(signal(end), '--r', 'End');
 
 subplot(3, 1, 2);
 plot(t, local_std);
@@ -94,20 +106,22 @@ xlabel('Time'); ylabel('Amplitude');
 fprintf('The signal was spliced from index %d to %d.\n', start_index, end_index);
 
 
+%% Modelo inverso
+% Modelo determina referencia a partir de sinal sismico & mediçoes na mesa
 
-%% Create a discrete−time neural state−space object with 
-% 6 states: xig xsi ai as
+% inputs: 
+U = [ ddx(start_index:end_index)    ag(start_index:end_index) ]; % sinal sismico(k-1) & mediçao na mesa(k+1)
+siz = size(U)
+Num_I= siz(2)
+% outputs:  
+Y = [ ref(start_index:end_index) ]; % referencia(k) ( no treino é igual ao sismo(k) )
+siz = size(Y)
+Num_O= siz(2)
 
-% 2 inputs: xg , ag 
-Num_I=2
-U = [xg(start_index:end_index)  ag(start_index:end_index)];
-% 4 outputs:  xig xsi  ai as
-Num_O=1 
-Y = [ai(start_index:end_index)];
+%%
 % sample time of dt seconds.
-data = iddata( Y , U , dt )
-
-
+data = iddata( Y , U , dt ) 
+idplot(data)
 
 %%  Power Spectral Density
 % 
@@ -134,7 +148,7 @@ N2=neuralnet(net)
 %%
 N_A = 10*ones(Num_O)
 N_B = 10*ones(Num_O,Num_I)
-N_K = zeros(Num_O,Num_I)
+N_K = ones(Num_O,Num_I)
 
 % opt = nlarxOptions
 % opt.SearchOptions.MaxIterations = 10
@@ -142,23 +156,11 @@ mN2=nlarx(data,[N_A N_B N_K ],N2)
 
 %% Compare
 figure
-compare(data,mN2)
+compare(data(1:1500),mN2)
 
 
-%%
-figure
-resid(data,mN2)
 
 
-%% simOpt = simOptions('InitialCondition',[0 0 0 0]);
-yn = sim( mN2 , data );
-
-figure
-plot( time(ceil( length(time)/2 ):end) , Y_test(:,1))
-hold on
-plot(yn(:,1))
-xlabel("Time"); ylabel("State");
-legend("Original","Estimated");
 
 
 

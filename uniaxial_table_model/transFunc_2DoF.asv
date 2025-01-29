@@ -53,22 +53,21 @@ bode(G_x1_xT);
 title('Bode of G\_x1\_xT'); 
 legend();
 
+
+% displacements in milimeters
+x_ref = lsim(1e3/s^2,  ddx(:,2) ,ddx(:,1),'foh');
+x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
 % Third plot
 axes(ax3); % Activate the existing axes
-bode(G_x2_xT);
-title('Bode of G\_x2\_xT'); 
-legend();
+title('Dsiplacemm)'); 
+hold on
+plot(ddx(:,1),ddx_ref,"DisplayName","Reference")
+plot(ddx(:,1),ddx_T,"DisplayName","MSE="+string(erro))
 
 
 ddx_ref=ddx(:,2);
 ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 erro = mean((ddx_T-ddx_ref).^2);
-
-% displacements in milimeters
-x_ref = lsim(1e3/s^2,  ddx(:,2) ,ddx(:,1),'foh');
-x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
-
-
 % Fourth plot
 axes(ax4); % Activate the existing axes
 title('Acceleration(m/s^2)'); 
@@ -84,16 +83,19 @@ legend()
 
 % Use PID tuner app to generate a PID controller for the system
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
+
+% G_c  = pidtune(G_xT_xref,'PIDF',tuner_opts)
+% [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
 G_c  = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',tuner_opts)
 [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
 
 
-ddx_T = lsim(G_Fp_isv*G_xT_Fp, ddx(:,2) ,ddx(:,1),'foh');
+ddx_T = lsim(G_xT_xref, ddx(:,2) ,ddx(:,1),'foh');
 erro = mean((ddx_T-ddx_ref).^2);
 
 axes(ax4); % Activate the existing axes
 hold on
-plot(ddx(:,1),ddx_T,"DisplayName","MSE="+string(erro))
+plot(ddx(:,1),ddx_T,"DisplayName","Tuned MSE="+string(erro))
 
 % displacements in milimeters
 % x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');

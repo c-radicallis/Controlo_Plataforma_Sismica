@@ -1,4 +1,6 @@
 clear 
+close all
+clc
 
 %Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
@@ -53,63 +55,40 @@ bode(G_x1_xT);
 title('Bode of G\_x1\_xT'); 
 legend();
 
-% Third plot
-axes(ax3); % Activate the existing axes
-bode(G_x2_xT);
-title('Bode of G\_x2\_xT'); 
-legend();
-
-
-ddx_ref=ddx(:,2);
-ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
-erro = mean((ddx_T-ddx_ref).^2);
 
 % displacements in milimeters
 x_ref = lsim(1e3/s^2,  ddx(:,2) ,ddx(:,1),'foh');
 x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
+erro = mean((x_T-x_ref).^2);
+% Third plot
+axes(ax3); % Activate the existing axes
+title('Displacement (mm)'); 
+hold on
+plot(ddx(:,1),x_ref,"DisplayName","Reference")
+plot(ddx(:,1),x_T,"DisplayName","MSE="+string(erro))
+legend()
 
-
+ddx_ref=ddx(:,2);
+ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
+erro = mean((ddx_T-ddx_ref).^2);
 % Fourth plot
 axes(ax4); % Activate the existing axes
 title('Acceleration(m/s^2)'); 
 hold on
 plot(ddx(:,1),ddx_ref,"DisplayName","Reference")
 plot(ddx(:,1),ddx_T,"DisplayName","MSE="+string(erro))
-
-% title('Displacement(mm)'); 
-% plot(ddx(:,1),x_ref,"DisplayName","Reference")
-% plot(ddx(:,1),x_T,"DisplayName","MSE="+string(erro))
-
 legend()
 
-% Use PID tuner app to generate a PID controller for the system
-tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 
-% G_c  = pidtune(G_xT_xref,'PIDF',tuner_opts)
-% [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
-G_c  = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',tuner_opts)
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
-
-
-ddx_T = lsim(G_xT_xref, ddx(:,2) ,ddx(:,1),'foh');
-erro = mean((ddx_T-ddx_ref).^2);
-
-axes(ax4); % Activate the existing axes
-hold on
-plot(ddx(:,1),ddx_T,"DisplayName","Tuned MSE="+string(erro))
-
-% displacements in milimeters
-% x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
-% erro = mean((x_T-x_ref).^2);
 
 %% Finding Response Spectre
 
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 1e3;
+n_points = 1e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
- [picos_ddx_m , picos_x_m , media_picos_ddx_m , media_picos_x_m , filtered_picos_ddx_m , filtered_picos_x_m , filtered_media_picos_ddx_m , filtered_media_picos_x_m   ] = ResponseSpectre( dados , f_vector );
+[picos_ddx_m , picos_x_m , media_picos_ddx_m , media_picos_x_m , filtered_picos_ddx_m , filtered_picos_x_m , filtered_media_picos_ddx_m , filtered_media_picos_x_m   ] = ResponseSpectre( dados , f_vector );
 
 %%
 
@@ -148,16 +127,16 @@ xlim([0 2.5]);
 
 subplot(121)
 hold on
-semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
-semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
-semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
+semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
+semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
+semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
 legend
 
 subplot(122)
 hold on
-semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
-semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
-semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos x');
+semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
+semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
+semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos x');
 legend
 
 
@@ -181,7 +160,7 @@ color3 = 'g';
 
 subplot(121);
 hold on;
-% Plot the two lines for picos_ddx_m with different colors
+% Plot the two lines for picos_ddx_m with different colors'LineWidth' , 2
 semilogx(f_vector, picos_ddx_m(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos ddx - Line 1');
 semilogx(f_vector, picos_ddx_m(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos ddx - Line 2');
 % Plot the two lines for media_picos_ddx_m with matching colors
@@ -205,16 +184,106 @@ xlim([0 2.5]);
 
 subplot(121)
 hold on
-semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
-semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
-semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
+semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
+semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
+semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
 legend
 
 subplot(122)
 hold on
-semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 3, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
-semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 3, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
-semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 3, 'Color', color3, 'DisplayName', 'filtered media picos x');
+semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
+semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
+semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos x');
+legend
+
+
+%% Use PID tuner app to generate a PID controller for the system
+tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
+
+% G_c  = pidtune(G_xT_xref,'PIDF',tuner_opts)
+% [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
+G_c  = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',tuner_opts)
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
+
+
+% First plot
+axes(ax1); % Activate the existing axes
+bode(G_xT_xref);
+legend();
+
+% Second plot
+axes(ax2); % Activate the existing axes
+bode(G_x1_xT);
+legend();
+
+
+% displacements in milimeters
+axes(ax3); % Activate the existing axes
+hold on
+x_T_tuned = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
+erro = mean((x_T_tuned-x_ref).^2);
+plot(ddx(:,1),x_T_tuned,"DisplayName","Tuned MSE="+string(erro))
+
+axes(ax4); % Activate the existing axes
+hold on
+ddx_T_tuned = lsim(G_xT_xref, ddx(:,2) ,ddx(:,1),'foh');
+erro = mean((ddx_T_tuned-ddx_ref).^2);
+plot(ddx(:,1),ddx_T_tuned,"DisplayName","Tuned MSE="+string(erro))
+
+%% Finding Response Spectre for table
+clc
+
+dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
+
+ [picos_ddx_m , picos_x_m , media_picos_ddx_m , media_picos_x_m , filtered_picos_ddx_m , filtered_picos_x_m , filtered_media_picos_ddx_m , filtered_media_picos_x_m   ] = ResponseSpectre( dados_mesa , f_vector );
+
+%%
+
+figure(F1);
+grid on;
+hold on;
+
+% Define colors for lines 1/3 and 2/4
+color1 = 'r'; % MATLAB default blue
+color2 = 'b'; % MATLAB default orange
+color3 = 'g';
+
+subplot(121);
+hold on;
+% Plot the two lines for picos_ddx_m with different colors'LineWidth' , 2
+semilogx(f_vector, picos_ddx_m(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos ddx - Line 1');
+semilogx(f_vector, picos_ddx_m(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos ddx - Line 2');
+% Plot the two lines for media_picos_ddx_m with matching colors
+semilogx(f_vector, media_picos_ddx_m, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos ddx ');
+xlabel('Frequency (Hz)');
+ylabel('ddx_m (m/s^2)');
+title('Response Spectra');
+
+subplot(122);
+hold on;
+% Plot the two lines for picos_x_m with different colors
+semilogx(f_vector, picos_x_m(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos x - Line 1');
+semilogx(f_vector, picos_x_m(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos x - Line 2');
+% Plot the two lines for media_picos_x_m with matching colors
+semilogx(f_vector, media_picos_x_m, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos x');
+xlabel('Frequency (Hz)');
+ylabel('x_m (m)');
+title('Response Spectra');
+xlim([0 2.5]);
+
+
+subplot(121)
+hold on
+semilogx(f_vector, filtered_picos_ddx_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos ddx - Line 1');
+semilogx(f_vector, filtered_picos_ddx_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos ddx - Line 2');
+semilogx(f_vector, filtered_media_picos_ddx_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
+legend
+
+subplot(122)
+hold on
+semilogx(f_vector, filtered_picos_x_m(:, 1), 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'filtered picos x - Line 1');
+semilogx(f_vector, filtered_picos_x_m(:, 2), 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'filtered picos x - Line 2');
+semilogx(f_vector, filtered_media_picos_x_m,'LineWidth' , 2, 'Color', color3, 'DisplayName', 'filtered media picos x');
 legend
 
 

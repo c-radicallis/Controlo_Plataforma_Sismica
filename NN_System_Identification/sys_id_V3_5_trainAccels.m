@@ -1,0 +1,234 @@
+clear
+close all
+
+% Deep Learning and System Identification , Ljung , Andersson, Tiels , Schon
+
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\NN_System_Identification\dados_elcentro'
+data=load("TDOF_PassFD_ElCentro_s1_70_V0.mat");
+
+sname=fieldnames(data);
+time=eval(['data.',sname{1},'.X.Data']);
+dt=mean(diff(time));
+xgr=eval(['data.',sname{1},'.Y(6).Data'])*1e-3; % referencia
+xg=eval(['data.',sname{1},'.Y(5).Data'])*1e-3; %posicao da mesa
+ag=eval(['data.',sname{1},'.Y(1).Data']); %aceleraçao na mesa
+
+
+%%  MATLAB script to splice the beginning and end of a signal where values are almost constant
+
+signal = xgr ;
+n = length(signal);
+t = 1:n; % Time or index vector
+
+% Parameters to detect constant regions
+window_size = 10; % Size of the moving window
+threshold = 0.0001; % Threshold for detecting constant values (tolerance for variation)
+
+% Calculate the local standard deviation of the signal
+local_std = movstd(signal, window_size);
+
+% Identify constant regions (where local standard deviation is below the threshold)
+constant_regions = local_std < threshold;
+
+% Find the indices for the beginning and end constant regions
+start_index = find(~constant_regions, 1, 'first'); % First non-constant index
+end_index = find(~constant_regions, 1, 'last'); % Last non-constant index
+
+% Splice the signal to remove the constant regions at the beginning and end
+spliced_signal = signal(start_index:end_index);
+
+% Plot the results
+figure;
+subplot(3, 1, 1);
+hold on
+plot(t, signal);
+title('Original Signal');
+xlabel('Time'); ylabel('Amplitude');
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
+xlim([0 t(end)])
+
+subplot(3, 1, 2);
+hold on
+plot(t, local_std);
+title('Local Standard Deviation');
+xlabel('Time'); ylabel('Std Dev');
+yline(threshold, '--m', 'Threshold');
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
+xlim([0 t(end)])
+
+subplot(3, 1, 3);
+hold on
+new_t = t(start_index:end_index);
+plot(new_t, spliced_signal);
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
+title('Spliced Signal');
+xlabel('Time'); ylabel('Amplitude');
+xlim([0 t(end)])
+
+%% Acceleration Correction
+
+time=time(start_index:end_index);
+xgr=xgr(start_index:end_index); % referencia
+xg =xg(start_index:end_index); %posicao da mesa
+ag =ag(start_index:end_index); %aceleraçao na mesa
+ag_corrected = ag - mean(ag);
+
+
+% Step 2: Double integrate the corrected acceleration
+velocity_corrected = cumtrapz(time, ag_corrected); % Single integration for velocity
+displacement_corrected = cumtrapz(time, velocity_corrected); % Double integration for displacement
+
+% % Step 4: Adjust offset iteratively (if needed)
+% % Define optimization function to minimize final displacement
+% cost_function = @(offset) displacement_with_offset(offset, time, ag);
+% % Use fminsearch to find the optimal offset
+% optimal_offset = fminsearch(cost_function, mean(ag));
+optimal_offset = 0.011050288925249;
+% Apply the optimal offset
+ag_optimal = ag + optimal_offset;
+% Recompute displacement with corrected acceleration
+velocity_optimal = cumtrapz(time, ag_optimal);
+displacement_optimal = cumtrapz(time, velocity_optimal);
+
+
+% Step 2: Apply Band-Pass Filter
+%[optimal_low_cutoff, min_error] = find_optimal_low_cutoff(time, ag_corrected, xg)
+low_cutoff = 0.288738738738739 %optimal_low_cutoff   % Lower cutoff frequency in Hz
+% Sampling frequency (should be equal to 1/dt if your time is in seconds)
+fs = 1 / dt;
+% Apply the band-pass filter using MATLAB's bandpass function
+ag_filtered = highpass(ag_corrected, low_cutoff, fs);
+velocity_filtered = cumtrapz(time, ag_filtered);
+displacement_filtered = cumtrapz(time, velocity_filtered);
+
+% Obtaining acceleration from displacement xg
+% First derivative (velocity)
+d_xg = diff(xg) / dt;
+% Second derivative (acceleration)
+dd_xg = diff(d_xg) / dt;
+% Align time vectors for plotting
+t_dxg= time(1:end-1); % Time vector for velocity
+t_ddxg = time(1:end-2); % Time vector for acceleration
+
+%% Plotting all signals on the same plot
+figure;
+hold on;
+plot(time, xgr, 'LineWidth', 1.5, 'DisplayName', 'Reference Signal (xgr)');
+plot(time, xg, 'LineWidth', 1.5, 'DisplayName', 'Position Signal (xg)');
+plot(time, displacement_corrected, 'LineWidth', 1.5, 'DisplayName', 'Corrected Displacement (from ag)');
+plot(time, displacement_optimal, 'LineWidth', 1.5, 'DisplayName', 'Optimal Displacement (from ag)');
+plot(time, displacement_filtered, 'LineWidth', 1.5, 'DisplayName', 'Filtered Displacement (from ag)');
+title('Signals Over Time');
+xlabel('Time (s)');
+ylabel('Amplitude');
+legend show;
+grid on;
+
+figure;
+hold on;
+plot(time, ag, 'LineWidth', 1.5, 'DisplayName', 'Acceleration (ag)');
+plot(time, ag_optimal, 'LineWidth', 1.5, 'DisplayName', 'Optimal Acceleration (ag)');
+plot(t_ddxg, dd_xg, 'LineWidth', 1.5, 'DisplayName', 'Acceleration (from xg)');
+plot(time, ag_filtered, 'LineWidth', 1.5, 'DisplayName', 'Filtered Acceleration (from xg)');
+title('Signals Over Time');
+xlabel('Time (s)');
+ylabel('Amplitude');
+legend show;
+grid on;
+xlim([time(1) time(end)])
+
+
+
+%% 
+
+% inputs: 
+U = [ xgr'  ag' ]; % sinal sismico(k-1) & mediçao na mesa(k+1)
+Num_I= 2;
+
+% outputs:  
+Y = [ xg' ]; 
+Num_O = 1;
+
+data = iddata( Y , U , dt ) ;
+figure;
+idplot(data);
+
+%  Power Spectral Density
+Fs = 1 / data.Ts; % Sampling frequency
+
+% Plot PSD for input signal
+figure;
+subplot(2, 1, 1);
+pspectrum(data.u, Fs, 'power');
+title('Power Spectral Density of Input Signals');
+
+% Plot PSD for output signal
+subplot(2, 1, 2);
+pspectrum(data.y, Fs, 'power');
+title('Power Spectral Density of Output Signals');
+
+
+%% Deep Cascade Network
+net=cascadeforwardnet([6,6,6,6,6,6])
+N2=neuralnet(net)
+
+%%
+N_A = 10*ones(Num_O)
+N_B = 10*ones(Num_O,Num_I)
+N_K = ones(Num_O,Num_I)
+
+% opt = nlarxOptions
+% opt.SearchOptions.MaxIterations = 10
+mN2=nlarx(data,[N_A N_B N_K ],N2)
+
+%% Compare
+figure
+compare(data,mN2)
+
+%% Functions
+
+function final_displacement = displacement_with_offset(offset, t, acc)
+    % Correct the acceleration by subtracting the offset
+    acc_corrected = acc + offset;
+    % Compute velocity (single integration)
+    velocity = cumtrapz(t, acc_corrected);
+    % Compute displacement (double integration)
+    displacement = cumtrapz(t, velocity);
+    % Final displacement (value at the last time point)
+    final_displacement = abs(displacement(end));
+end
+
+function [optimal_low_cutoff, min_error] = find_optimal_low_cutoff(t, acc, xg)
+    % Function to find the optimal low cutoff frequency that minimizes the error
+    % between the displacement from filtered acceleration and the reference displacement xg.
+
+    % Define the frequency range for the low-pass filter search
+    low_cutoff_range = linspace(0.15, 0.35, 1000); % You can adjust this range as needed
+
+    min_error = inf; % Initialize minimum error to a large value
+    optimal_low_cutoff = 0.15; % Initialize the optimal low cutoff frequency
+
+    for low_cutoff = low_cutoff_range
+        % Apply band-pass filter to the acceleration signal with the current low_cutoff
+        fs = 1 / mean(diff(t));  % Sampling frequency
+        acc_filtered = highpass(acc, low_cutoff, fs);
+
+        % Use the corrected acceleration to compute displacement
+        velocity_filtered = cumtrapz(t, acc_filtered);
+        % Compute displacement (double integration)
+        displacement_filtered = cumtrapz(t, velocity_filtered);
+
+        % Compute the error (absolute difference between filtered displacement and reference displacement xg)
+        error = sum((displacement_filtered - xg).^2); % Sum of squared errors (SSE)
+
+        % Update optimal low cutoff if a new minimum error is found
+        if error < min_error
+            min_error = error;
+            optimal_low_cutoff = low_cutoff;
+        end
+    end
+end
+

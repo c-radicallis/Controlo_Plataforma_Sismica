@@ -71,27 +71,36 @@ spliced_signal = signal(start_index:end_index);
 % Plot the results
 figure;
 subplot(3, 1, 1);
+hold on
 plot(t, signal);
 title('Original Signal');
 xlabel('Time'); ylabel('Amplitude');
-
-yline(signal(1), '--r', 'Start');
-yline(signal(end), '--r', 'End');
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
+xlim([0 t(end)])
 
 subplot(3, 1, 2);
+hold on
 plot(t, local_std);
 title('Local Standard Deviation');
 xlabel('Time'); ylabel('Std Dev');
-yline(threshold, '--r', 'Threshold');
+yline(threshold, '--m', 'Threshold');
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
+xlim([0 t(end)])
 
 subplot(3, 1, 3);
+hold on
 new_t = t(start_index:end_index);
 plot(new_t, spliced_signal);
+xline(start_index, '-r', 'Start');
+xline(end_index, '-r', 'End');
 title('Spliced Signal');
 xlabel('Time'); ylabel('Amplitude');
+xlim([0 t(end)])
 
-% Display indices of the spliced regions
-fprintf('The signal was spliced from index %d to %d.\n', start_index, end_index);
+% % Display indices of the spliced regions
+% fprintf('The signal was spliced from index %d to %d.\n', start_index, end_index);
 
 
 
@@ -178,10 +187,10 @@ figure
 plot( time(ceil( length(time)/2 ):end) , Y_test(:,1))
 hold on
 
-%%
-plot(yn(:,1))
-xlabel("Time"); ylabel("State");
-legend("Original","Estimated");
+% %%
+% plot(yn(:,1))
+% xlabel("Time"); ylabel("State");
+% legend("Original","Estimated");
 
 
 

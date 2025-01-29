@@ -1,12 +1,6 @@
-%close all
-%clear all
+close
+clear
 clc
-
-dados = load('elcentro.txt');
-t_vector = dados(:,1);
-t_step = t_vector(2);
-ddx = [t_vector dados(:,2)]';
-ddy = [t_vector  dados(:,3)]';
 
 % Deep Learning and System Identification , Ljung , Andersson, Tiels , Schon
 
@@ -14,48 +8,38 @@ addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma
 data=load("TDOF_PassFD_ElCentro_s1_70_V0.mat");
 
 
-%sensa: Sensibilidade dos sensores:
-% 1-Ag;2-Ai;3-As;4-Forca de amortecimento do dispositivo; 5-Xg; 6-Xgref; 7-Xig; 8-Xsi;
-sensa=ones(8,1);  %acerto dos sinais
 sname=fieldnames(data);
 time=eval(['data.',sname{1},'.X.Data']);
 dt=mean(diff(time));
+xgr=eval(['data.',sname{1},'.Y(6).Data'])*1e-3; % referencia
+xg=eval(['data.',sname{1},'.Y(5).Data'])*1e-3; %posicao da mesa
+ag=eval(['data.',sname{1},'.Y(1).Data']); %aceleraçao na mesa
+ag_corrected = ag - mean(ag);
 
-% ddxg g is the input absolute acceleration at the base (ground);
-%   and xrg={xig xsg}^T is the vector of relative displacements of
-% the DOF to the ground: xig=xi-xg; xsg=xs-xg.
+% Step 2: Double integrate the corrected acceleration
+velocity = cumtrapz(t, ag_corrected); % Single integration for velocity
+displacement = cumtrapz(t, velocity); % Double integration for displacement
 
-xg=eval(['data.',sname{1},'.Y(5).Data']);xg=double(xg)*sensa(5);
-xgr=eval(['data.',sname{1},'.Y(6).Data']);xgr=double(xgr)*sensa(6); % referencia
-xig=eval(['data.',sname{1},'.Y(7).Data']);xig=double(xig)*sensa(7);
-xsi=eval(['data.',sname{1},'.Y(8).Data']);xsi=double(xsi)*sensa(8);
-ag=eval(['data.',sname{1},'.Y(1).Data']);ag=double(ag)*sensa(1);
-ai=eval(['data.',sname{1},'.Y(2).Data']);ai=double(ai)*sensa(2);
-as=eval(['data.',sname{1},'.Y(3).Data']);as=double(as)*sensa(3);
-linha4 =  eval(['data.',sname{1},'.Y(4).Data']); linha4=double(linha4)*sensa(4);
+% Step 3: Check residual displacement
+final_displacement = displacement(end); % Residual displacement at the end
 
-% figure
-% plot(time,linha4)
-% legend('linha4')
-% 
-% figure
-% plot(time,xg,time,xgr)
-% legend('xg','xgr')
+% Step 4: Adjust offset iteratively (if needed)
+% Define optimization function to minimize final displacement
+cost_function = @(offset) abs(cumtrapz(t, cumtrapz(t, ag - offset))(end));
 
+% Use fminsearch to find the optimal offset
+optimal_offset = fminsearch(cost_function, mean(acc));
 
-dimv=size(xg);
-if dimv(1)==1
-    time=time';
-    ag=ag';
-    ai=ai';
-    as=as';
-end
+% Apply the optimal offset
+acc_corrected = acc - optimal_offset;
 
-%%
-% MATLAB script to splice the beginning and end of a signal where values are almost constant
+% Recompute displacement with corrected acceleration
+velocity = cumtrapz(t, acc_corrected);
+displacement = cumtrapz(t, velocity);
 
-% Example input signal (can be replaced with real data)
-signal = xg ;
+%%  MATLAB script to splice the beginning and end of a signal where values are almost constant
+
+signal = xgr ;
 n = length(signal);
 t = 1:n; % Time or index vector
 
@@ -108,16 +92,36 @@ xlabel('Time'); ylabel('Amplitude');
 xlim([0 t(end)])
 
 
+% Double integration of ag to get displacement
+velocity = cumtrapz(time(start_index:end_index), ag(start_index:end_index));       % First integration (velocity)
+displacement = cumtrapz(time(start_index:end_index), velocity); % Second integration (displacement)
+
+% Plotting all signals on the same plot
+figure;
+hold on;
+plot(time(start_index:end_index), xgr(start_index:end_index), 'LineWidth', 1.5, 'DisplayName', 'Reference Signal (xgr)');
+plot(time(start_index:end_index), displacement, 'LineWidth', 1.5, 'DisplayName', 'Displacement (from ag)');
+plot(time(start_index:end_index), xg(start_index:end_index), 'LineWidth', 1.5, 'DisplayName', 'Position Signal (xg)');
+plot(time(start_index:end_index), velocity, 'LineWidth', 1.5, 'DisplayName', 'Velocity (from ag)');
+%plot(time(start_index:end_index), ag(start_index:end_index))
+
+% Add labels, legend, and grid
+title('Signals Over Time');
+xlabel('Time (s)');
+ylabel('Amplitude');
+legend show;
+grid on;
+
 
 %% Modelo inverso
 % Modelo determina referencia a partir de sinal sismico & mediçoes na mesa
 
 % inputs: 
-U = [ ddx(start_index:end_index)    ag(start_index:end_index) ]; % sinal sismico(k-1) & mediçao na mesa(k+1)
+U = [ ddx(start_index:end_index)     ]; % sinal sismico(k-1) & mediçao na mesa(k+1)
 siz = size(U)
 Num_I= siz(2)
 % outputs:  
-Y = [ ref(start_index:end_index) ]; % referencia(k) ( no treino é igual ao sismo(k) )
+Y = [ ag(start_index:end_index) ]; % referencia(k) ( no treino é igual ao sismo(k) )
 siz = size(Y)
 Num_O= siz(2)
 

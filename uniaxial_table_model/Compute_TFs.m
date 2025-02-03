@@ -5,17 +5,17 @@ function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xre
 % 1st mode
 m1= 1e3; % kg
 f1 = 2; % Hz
-zeta1 = 0.02 ; 
+zeta1 = 0.05 ; 
 
 % k1 = m1*(2*pi*f1)^2; %N/m
-c1 = zeta1*2*m1*2*pi*f1; %N/m/s
+c1 = zeta1*2*m1*2*pi*f1 %N/m/s
 
 %2nd mode
 m2= 1e3; % kg
 f2 = 10; % Hz
-zeta2 = 0.05; %
+zeta2 = 0.1; %
 
-c2 = zeta2*2*m2*2*pi*f2; %N/m/s
+c2 = zeta2*2*m2*2*pi*f2 %N/m/s
 
 syms k1 k2
 assume(k1 ,"positive")

@@ -63,7 +63,7 @@ G_csv=G_c*G_svq;
 
 G_x2_x1= G_21/G_2;
 G_x1_xT = G_T1*G_2/(G_1*G_2-G_21^2);
-G_xT_Fp = G_1*G_2-G_21^2/(G_T*G_1*G_2-G_T*G_21^2-G_2*G_T1^2);
+G_xT_Fp = (G_1*G_2-G_21^2)/(G_T*G_1*G_2-G_T*G_21^2-G_2*G_T1^2);
 
 G_Fp_xref = G_csv/( k_pl/A + A*s/k_h +G_xT_Fp*(G_csv + A*s));
 

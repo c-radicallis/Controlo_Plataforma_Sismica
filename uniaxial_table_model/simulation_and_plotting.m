@@ -7,7 +7,7 @@ clc
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv , Ass , Bss ]=Compute_TFs_and_StateSpace(G_c);
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ]=Compute_TFs(G_c); %_and_StateSpace
 
 % Limits
 lim_displacement = 100 % mm
@@ -42,7 +42,10 @@ ax7 = axes(fig7); hold(ax7, 'on');
 % First plot
 axes(ax1); % Activate the existing axes
 title('Bode of G\_xT\_xref'); 
-bodeplot(G_xT_xref);
+opts1=bodeoptions('cstprefs');
+opts1.FreqUnits = 'Hz';
+opts1.XLim={[1 51]};
+bodeplot(G_xT_xref,opts1);
 grid on
 
 
@@ -135,10 +138,7 @@ hold on
 title('Force to Platen'); 
 legend();
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-F_p_xT =  lsim(1/G_xT_Fp,   x_T*1e-3  , t_vector,'foh');
 plot(t_vector,F_p_isv,"DisplayName","Default")
-plot(t_vector,F_p_xT,"DisplayName","Default")
-plot(t_vector, (1.9751*1e3+2e3)*ddx_ref)
 xlabel('Time (s)'); 
 ylabel('Force (N)');
 
@@ -302,6 +302,13 @@ hold on
 i_sv = lsim(G_c*1e-3  ,   x_ref-x_T ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","Tuned")
 
+%  plot
+axes(ax7); % Activate the existing axes
+hold on
+F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+plot(t_vector,F_p_isv,"DisplayName","Default")
+
+
 
 %% Finding Response Spectre for table tuned
 
@@ -367,19 +374,17 @@ mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2)
 %% State Space model
 
 
-% u = Fp
-% y = x_ss
-
-Css= eye(6);
-Dss = 0;
-
-MV = struct(Min=-lim_force,Max=lim_force);
-p = 20;
-m = 3;
-mpcobj = mpc(Plant,Ts,p,m,[],MV);
-
-
-
+% % u = Fp
+% % y = x_ss
+% 
+% Css= eye(6);
+% Dss = 0;
+% 
+% MV = struct(Min=-lim_force,Max=lim_force);
+% p = 20;
+% m = 3;
+% mpcobj = mpc(Plant,Ts,p,m,[],MV);
+% 
 
 
 

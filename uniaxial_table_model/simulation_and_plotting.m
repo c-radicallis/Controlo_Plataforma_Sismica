@@ -7,12 +7,18 @@ clc
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv , Ass , Bss ]=Compute_TFs_and_StateSpace(G_c);
+
+% Limits
+lim_displacement = 100 % mm
+lim_velocity = 0.4 % m/s
+lim_force = 200e3 % N
 
 %%
 dados = load('elcentro.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
+ddx_ref = dados(:,2);
 ddx = [t_vector dados(:,2)];
 ddy = [t_vector  dados(:,3)];
 
@@ -30,6 +36,8 @@ fig5= figure(5); clf;
 ax5 = axes(fig5); hold(ax5, 'on');
 fig6= figure(6); clf; 
 ax6 = axes(fig6); hold(ax6, 'on');
+fig7= figure(7); clf; 
+ax7 = axes(fig7); hold(ax7, 'on');
 
 % First plot
 axes(ax1); % Activate the existing axes
@@ -39,8 +47,28 @@ grid on
 
 
 % displacements in milimeters
-x_ref = lsim(1e3/s^2,  ddx(:,2) ,ddx(:,1),'foh');
-x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
+x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
+max_xref = max(x_ref)
+scale=1;
+while max_xref > lim_displacement
+    scale = 0.95*scale
+    ddx_ref = 0.95*ddx_ref;
+    x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
+    max_xref = max(x_ref)
+end
+
+v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
+max_vref = max(v_ref)
+while max_vref > lim_displacement
+    scale = 0.95*scale
+    ddx_ref = 0.95*ddx_ref;
+    v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
+    max_vref = max(v_ref)
+end
+
+
+
+x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
 erro = x_T-x_ref;
 mse = mean(erro.^2);
 % Third plot
@@ -48,8 +76,8 @@ axes(ax3); % Activate the existing axes
 grid on
 title(' Platen Displacement '); 
 hold on
-plot(ddx(:,1),x_ref,"DisplayName","Reference")
-plot(ddx(:,1),x_T,"DisplayName","MSE="+string(mse))
+plot(t_vector,x_ref,"DisplayName","Reference")
+plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
 legend()
 xlabel('Time (s)'); 
 ylabel('Displacement (mm)');
@@ -58,14 +86,14 @@ ylabel('Displacement (mm)');
 axes(ax5); % Activate the existing axes
 grid on
 title(' Platen Displacement Tracking Error '); 
-plot(ddx(:,1),erro,"DisplayName","Default")
+plot(t_vector,erro,"DisplayName","Default")
 legend()
 xlabel('Time (s)'); 
 ylabel('Error (mm)');
 
 
 % Fourth plot
-ddx_ref=ddx(:,2);
+ddx_ref=ddx_ref;
 ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 erro = ddx_T-ddx_ref;
 mse = mean(erro.^2);
@@ -73,8 +101,8 @@ axes(ax4); % Activate the existing axes
 grid on
 title('Platen Acceleration'); 
 hold on
-plot(ddx(:,1),ddx_ref,"DisplayName","Reference")
-plot(ddx(:,1),ddx_T,"DisplayName","MSE="+string(mse))
+plot(t_vector,ddx_ref,"DisplayName","Reference")
+plot(t_vector,ddx_T,"DisplayName","MSE="+string(mse))
 legend()
 xlabel('Time (s)'); 
 ylabel('Acceleration (m/s^2)');
@@ -83,10 +111,10 @@ ylabel('Acceleration (m/s^2)');
 axes(ax6); % Activate the existing axes
 grid on
 title(' Platen Acceleration Tracking Error '); 
-plot(ddx(:,1),erro,"DisplayName","Default")
+plot(t_vector,erro,"DisplayName","Default")
 legend()
 xlabel('Time (s)'); 
-ylabel('Error (mm/s^2)');
+ylabel('Error (m/s^2)');
 
 
 % Second plot
@@ -95,10 +123,24 @@ grid on
 hold on
 title('Input to Servo'); 
 legend();
-i_sv = lsim(G_c*1e-3 ,   x_ref-x_T ,ddx(:,1),'foh');
-plot(ddx(:,1),i_sv,"DisplayName","Default")
+i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh');
+plot(t_vector,i_sv,"DisplayName","Default")
 xlabel('Time (s)'); 
 ylabel('Voltage (V)');
+
+%  plot
+axes(ax7); % Activate the existing axes
+grid on
+hold on
+title('Force to Platen'); 
+legend();
+F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+F_p_xT =  lsim(1/G_xT_Fp,   x_T*1e-3  , t_vector,'foh');
+plot(t_vector,F_p_isv,"DisplayName","Default")
+plot(t_vector,F_p_xT,"DisplayName","Default")
+plot(t_vector, (1.9751*1e3+2e3)*ddx_ref)
+xlabel('Time (s)'); 
+ylabel('Force (N)');
 
 
 %% Finding Response Spectre
@@ -231,33 +273,34 @@ legend( 'Default'  ,  'Tuned');
 
 % displacements in milimeters
 axes(ax3); % Activate the existing axes
-x_T_tuned = lsim(G_xT_xref*1e3/s^2 ,  ddx(:,2) ,ddx(:,1),'foh');
+x_T_tuned = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
 erro = x_T_tuned-x_ref;
 mse = mean(erro.^2);
-plot(ddx(:,1),x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
+plot(t_vector,x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
 % 5th plot
 axes(ax5); % Activate the existing axes
 % hold on
-plot(ddx(:,1),erro,"DisplayName","Tuned")
+plot(t_vector,erro,"DisplayName","Tuned")
 
 % Fourth plot
 axes(ax4); % Activate the existing axes
-ddx_T_tuned = lsim(G_xT_xref, ddx(:,2) ,ddx(:,1),'foh');
+ddx_T_tuned = lsim(G_xT_xref, ddx_ref ,t_vector,'foh');
 erro = ddx_T_tuned-ddx_ref;
 mse = mean(erro.^2);
-plot(ddx(:,1),ddx_T_tuned,"DisplayName","Tuned MSE="+string(mse))
+plot(t_vector,ddx_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
 % 6th plot
 axes(ax6); % Activate the existing axes
 hold on
-plot(ddx(:,1),erro,"DisplayName","Tuned")
+plot(t_vector,erro,"DisplayName","Tuned")
 
 
 % Second plot
 axes(ax2); % Activate the existing axes
-i_sv = lsim(G_c*1e-3  ,   x_ref-x_T ,ddx(:,1),'foh');
-plot(ddx(:,1),i_sv,"DisplayName","Tuned")
+hold on
+i_sv = lsim(G_c*1e-3  ,   x_ref-x_T ,t_vector,'foh');
+plot(t_vector,i_sv,"DisplayName","Tuned")
 
 
 %% Finding Response Spectre for table tuned
@@ -320,6 +363,26 @@ mse_RS_x_table = mean(erro_RS_x_table.^2)
 erro_RS_x_table_tuned = filtered_picos_x_table_tuned-filtered_picos_x_ground;
 mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2)
 
+
+%% State Space model
+
+
+% u = Fp
+% y = x_ss
+
+Css= eye(6);
+Dss = 0;
+
+MV = struct(Min=-lim_force,Max=lim_force);
+p = 20;
+m = 3;
+mpcobj = mpc(Plant,Ts,p,m,[],MV);
+
+
+
+
+
+
 %% Save all figures after plotting
 saveas(fig1, 'Bode_of_G_xT_xref.png');
 saveas(fig2, 'Input_to_Servo.png');
@@ -328,7 +391,6 @@ saveas(fig4, 'Platen_Acceleration.png');
 saveas(fig5, 'Platen_Displacement_Tracking_Error.png');
 saveas(fig6, 'Platen_Acceleration_Tracking_Error.png');
 saveas(F1, 'Response_Spectra.png');
-
 
 
 %%

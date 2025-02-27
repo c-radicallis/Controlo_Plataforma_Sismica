@@ -1,20 +1,90 @@
 clear 
 close all
-clc
+%clc
 
-%%
+%% Plots
+
+fig1 = figure(1); %clf; % Clear figure if needed
+ax1 = axes(fig1); hold(ax1, 'on');
+title('Bode of G\_xT\_xref'); 
+opts1=bodeoptions('cstprefs');
+opts1.FreqUnits = 'Hz';
+opts1.XLim={[1 40]};
+% opts1.YLim={[-40 1]};
+% opts1.MagVisible='off';
+
+fig2 = figure(2); %clf;
+ax2 = axes(fig2); hold(ax2, 'on');
+grid on
+hold on
+title('Input to Servo'); 
+legend();
+xlabel('Time (s)'); 
+ylabel('Voltage (V)');
+
+fig3 = figure(3); %clf;
+ax3 = axes(fig3); hold(ax3, 'on');
+grid on
+title(' Platen Displacement '); 
+hold on
+legend()
+xlabel('Time (s)'); 
+ylabel('Displacement (mm)');
+
+fig4 = figure(4); %clf;
+ax4 = axes(fig4); hold(ax4, 'on');
+grid on
+title('Platen Acceleration'); 
+hold on
+legend()
+xlabel('Time (s)'); 
+ylabel('Acceleration (m/s^2)');
+
+fig5= figure(5); %clf; 
+ax5 = axes(fig5); hold(ax5, 'on');
+grid on
+title(' Platen Displacement Tracking Error '); 
+legend()
+xlabel('Time (s)'); 
+ylabel('Error (mm)');
+
+fig6= figure(6); %clf; 
+ax6 = axes(fig6); hold(ax6, 'on');
+grid on
+title(' Platen Acceleration Tracking Error '); 
+legend()
+xlabel('Time (s)'); 
+ylabel('Error (m/s^2)');
+
+fig7= figure(7); %clf; 
+ax7 = axes(fig7); hold(ax7, 'on');
+grid on
+hold on
+title('Force to Platen'); 
+legend();
+xlabel('Time (s)'); 
+ylabel('Force (kN)');
+
+
+%% Structure parameters
+mass=2e3;
+
+% 1st mode
+m1 = mass; % kg
+f1 = 2; % Hz   % 1.5 < f1 < 4
+zeta1 = 0.10 ; % 2 < zeta1 < 10
+%2nd mode
+m2 = m1; % kg
+f2 = 6; % Hz % 6 < f2 < 10
+zeta2 = 0.25; % 5 < zeta2 < 25
+
 % Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ]=Compute_TFs(G_c); %_and_StateSpace
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ]=Compute_TFs(G_c, m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
 
-% Limits
-lim_displacement = 100 % mm
-lim_velocity = 0.4 % m/s
-lim_force = 200e3 % N
-
-%%
+%%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
@@ -22,33 +92,12 @@ ddx_ref = dados(:,2);
 ddx = [t_vector dados(:,2)];
 ddy = [t_vector  dados(:,3)];
 
-%% Transfer function Bode plots & Output simulation
+% Limits
+lim_displacement = 100; % mm
+lim_velocity = 0.4; % m/s
+lim_force = 200e3; % N
 
-fig1 = figure(1); clf; % Clear figure if needed
-ax1 = axes(fig1); hold(ax1, 'on');
-fig2 = figure(2); clf;
-ax2 = axes(fig2); hold(ax2, 'on');
-fig3 = figure(3); clf;
-ax3 = axes(fig3); hold(ax3, 'on');
-fig4 = figure(4); clf;
-ax4 = axes(fig4); hold(ax4, 'on');
-fig5= figure(5); clf; 
-ax5 = axes(fig5); hold(ax5, 'on');
-fig6= figure(6); clf; 
-ax6 = axes(fig6); hold(ax6, 'on');
-fig7= figure(7); clf; 
-ax7 = axes(fig7); hold(ax7, 'on');
-
-% First plot
-axes(ax1); % Activate the existing axes
-title('Bode of G\_xT\_xref'); 
-opts1=bodeoptions('cstprefs');
-opts1.FreqUnits = 'Hz';
-opts1.XLim={[1 51]};
-bodeplot(G_xT_xref,opts1);
-grid on
-
-
+% Scaling down if necessary
 % displacements in milimeters
 x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref)
@@ -69,78 +118,45 @@ while max_vref > lim_displacement
     max_vref = max(v_ref)
 end
 
+%%
+% First plot
+axes(ax1); % Activate the existing axes
+bodeplot(G_xT_xref,opts1);
 
-
+% Third plot
+axes(ax3); % Activate the existing axes
 x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
 erro = x_T-x_ref;
 mse = mean(erro.^2);
-% Third plot
-axes(ax3); % Activate the existing axes
-grid on
-title(' Platen Displacement '); 
-hold on
 plot(t_vector,x_ref,"DisplayName","Reference")
 plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
-legend()
-xlabel('Time (s)'); 
-ylabel('Displacement (mm)');
 
 % 5th plot
 axes(ax5); % Activate the existing axes
-grid on
-title(' Platen Displacement Tracking Error '); 
 plot(t_vector,erro,"DisplayName","Default")
-legend()
-xlabel('Time (s)'); 
-ylabel('Error (mm)');
-
 
 % Fourth plot
+axes(ax4); % Activate the existing axes
 ddx_ref=ddx_ref;
 ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 erro = ddx_T-ddx_ref;
 mse = mean(erro.^2);
-axes(ax4); % Activate the existing axes
-grid on
-title('Platen Acceleration'); 
-hold on
 plot(t_vector,ddx_ref,"DisplayName","Reference")
 plot(t_vector,ddx_T,"DisplayName","MSE="+string(mse))
-legend()
-xlabel('Time (s)'); 
-ylabel('Acceleration (m/s^2)');
 
 % 6th plot
 axes(ax6); % Activate the existing axes
-grid on
-title(' Platen Acceleration Tracking Error '); 
 plot(t_vector,erro,"DisplayName","Default")
-legend()
-xlabel('Time (s)'); 
-ylabel('Error (m/s^2)');
-
 
 % Second plot
 axes(ax2); % Activate the existing axes
-grid on
-hold on
-title('Input to Servo'); 
-legend();
 i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","Default")
-xlabel('Time (s)'); 
-ylabel('Voltage (V)');
 
-%  plot
+% 7th  plot 
 axes(ax7); % Activate the existing axes
-grid on
-hold on
-title('Force to Platen'); 
-legend();
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-plot(t_vector,F_p_isv,"DisplayName","Default")
-xlabel('Time (s)'); 
-ylabel('Force (N)');
+plot(t_vector,F_p_isv/1e3,"DisplayName","Default")
 
 
 %% Finding Response Spectre
@@ -207,7 +223,7 @@ legend
 % Finding Response Spectre for table
 dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
- [picos_ddx_table , picos_x_table , media_picos_ddx_table , media_picos_x_table , filtered_picos_ddx_table , filtered_picos_x_table , filtered_media_picos_ddx_table , filtered_media_picos_x_table   ] = ResponseSpectre( dados_mesa , f_vector );
+[picos_ddx_table , picos_x_table , media_picos_ddx_table , media_picos_x_table , filtered_picos_ddx_table , filtered_picos_x_table , filtered_media_picos_ddx_table , filtered_media_picos_x_table   ] = ResponseSpectre( dados_mesa , f_vector );
 
 
 figure(F1);
@@ -258,18 +274,25 @@ semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', 
 legend
 
 
+% %%
+% [num, den] = tfdata(G_Fp_isv*G_xT_Fp, 'v')
+% [A,B,C,D] = tf2ss(num, den)
+
 %% Use PID tuner app to generate a PID controller for the system
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 % G_c  = pidtune(G_xT_xref,'PIDF',tuner_opts)
 % [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
-G_c  = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',tuner_opts)
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
+G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c,m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 
+%%
 % First plot
 axes(ax1); % Activate the existing axes
+grid on
 bodeplot(G_xT_xref);
 legend( 'Default'  ,  'Tuned');
+
 
 % displacements in milimeters
 axes(ax3); % Activate the existing axes
@@ -306,7 +329,7 @@ plot(t_vector,i_sv,"DisplayName","Tuned")
 axes(ax7); % Activate the existing axes
 hold on
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-plot(t_vector,F_p_isv,"DisplayName","Default")
+plot(t_vector,F_p_isv/1e3,"DisplayName","Tuned")
 
 
 
@@ -359,16 +382,16 @@ semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Co
 legend
 
 erro_RS_ddx_table = filtered_picos_ddx_table-filtered_picos_ddx_ground;
-mse_RS_ddx_table = mean(erro_RS_ddx_table.^2)
+mse_RS_ddx_table = mean(erro_RS_ddx_table.^2);
 
 erro_RS_ddx_table_tuned = filtered_picos_ddx_table_tuned-filtered_picos_ddx_ground;
-mse_RS_ddx_table_tuned = mean(erro_RS_ddx_table_tuned.^2)
+mse_RS_ddx_table_tuned = mean(erro_RS_ddx_table_tuned.^2);
 
 erro_RS_x_table = filtered_picos_x_table-filtered_picos_x_ground;
-mse_RS_x_table = mean(erro_RS_x_table.^2)
+mse_RS_x_table = mean(erro_RS_x_table.^2);
 
 erro_RS_x_table_tuned = filtered_picos_x_table_tuned-filtered_picos_x_ground;
-mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2)
+mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2);
 
 
 %% State Space model

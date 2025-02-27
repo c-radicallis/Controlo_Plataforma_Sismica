@@ -59,11 +59,27 @@ ylabel('Error (m/s^2)');
 fig7= figure(7); %clf; 
 ax7 = axes(fig7); hold(ax7, 'on');
 grid on
-hold on
 title('Force to Platen'); 
 legend();
 xlabel('Time (s)'); 
 ylabel('Force (kN)');
+
+fig8 = figure(8);%
+subplot(121);
+grid on;
+xlabel('Frequency (Hz)');
+ylabel('ddx_m (m/s^2)');
+title('Response Spectra');
+subplot(122);
+grid on;
+xlabel('Frequency (Hz)');
+ylabel('x_m (m)');
+title('Response Spectra');
+xlim([0 5]);
+% Define colors for lines 1/3 and 2/4
+color1 = 'r'; % MATLAB default blue
+color2 = 'b'; % MATLAB default orange
+color3 = 'g';
 
 
 %% Structure parameters
@@ -72,11 +88,11 @@ mass=2e3;
 % 1st mode
 m1 = mass; % kg
 f1 = 2; % Hz   % 1.5 < f1 < 4
-zeta1 = 0.10 ; % 2 < zeta1 < 10
+zeta1 = 0.02 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = m1; % kg
-f2 = 6; % Hz % 6 < f2 < 10
-zeta2 = 0.25; % 5 < zeta2 < 25
+f2 = 10; % Hz % 6 < f2 < 10
+zeta2 = 0.05; % 5 < zeta2 < 25
 
 % Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
@@ -117,6 +133,32 @@ while max_vref > lim_displacement
     v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
     max_vref = max(v_ref)
 end
+
+%% Finding Response Spectre
+
+f_i=0.1; %freq inicial
+f_n=30;  %freq final
+n_points = 1e2;
+f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
+
+[picos_ddx_ground , picos_x_ground , media_picos_ddx_ground , media_picos_x_ground , filtered_picos_ddx_ground , filtered_picos_x_ground , filtered_media_picos_ddx_ground , filtered_media_picos_x_ground   ] = ResponseSpectre( dados , f_vector );
+
+
+figure(fig8);
+subplot(121)
+grid on;
+legend();
+hold on
+semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
+semilogx(f_vector, filtered_picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+
+subplot(122)
+grid on;
+legend();
+hold on
+semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
+semilogx(f_vector, filtered_picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+
 
 %%
 % First plot
@@ -159,129 +201,27 @@ F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
 plot(t_vector,F_p_isv/1e3,"DisplayName","Default")
 
 
-%% Finding Response Spectre
 
-f_i=0.1; %freq inicial
-f_n=30;  %freq final
-n_points = 1e2;
-f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-
-[picos_ddx_ground , picos_x_ground , media_picos_ddx_ground , media_picos_x_ground , filtered_picos_ddx_ground , filtered_picos_x_ground , filtered_media_picos_ddx_ground , filtered_media_picos_x_ground   ] = ResponseSpectre( dados , f_vector );
-
-
-F1 = figure('Position', [100 100 1800 800]);
-grid on;
-hold on;
-
-% Define colors for lines 1/3 and 2/4
-color1 = 'r'; % MATLAB default blue
-color2 = 'b'; % MATLAB default orange
-color3 = 'g';
-
-subplot(121);
-grid on
-xlabel('Frequency (Hz)');
-ylabel('Acceleration (m/s^2)');
-title('Acceleration Response Spectra');
-% hold on;
-% % Plot the two lines for picos_ddx_ground with different colors
-% % semilogx(f_vector, picos_ddx_ground(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-% % semilogx(f_vector, picos_ddx_ground(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
-% % Plot the two lines for media_picos_ddx_ground with matching colors
-% %semilogx(f_vector, media_picos_ddx_ground, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos ddx ');
-
-
-subplot(122);
-xlabel('Frequency (Hz)');
-ylabel('Displacement (m)');
-title('Displacement Response Spectra');
-%xlim([0 5]);
-% hold on;
-% % Plot the two lines for picos_x_ground with different colors
-% % semilogx(f_vector, picos_x_ground(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-% % semilogx(f_vector, picos_x_ground(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
-% % Plot the two lines for media_picos_x_ground with matching colors
-% %semilogx(f_vector, media_picos_x_ground, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos x');
-
-
-
-subplot(121)
-hold on
-semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-semilogx(f_vector, filtered_picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
-%semilogx(f_vector, filtered_media_picos_ddx_ground,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
-legend
-
-subplot(122)
-hold on
-semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-semilogx(f_vector, filtered_picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
-%semilogx(f_vector, filtered_media_picos_x_ground,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos x');
-legend
-
-
-% Finding Response Spectre for table
+%% Finding Response Spectre for table
 dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
 [picos_ddx_table , picos_x_table , media_picos_ddx_table , media_picos_x_table , filtered_picos_ddx_table , filtered_picos_x_table , filtered_media_picos_ddx_table , filtered_media_picos_x_table   ] = ResponseSpectre( dados_mesa , f_vector );
 
-
-figure(F1);
-grid on;
-hold on;
-
-% Define colors for lines 1/3 and 2/4
-color1 = 'r'; % MATLAB default blue
-color2 = 'b'; % MATLAB default orange
-color3 = 'g';
-
-% subplot(121);
-% hold on;
-% % Plot the two lines for picos_ddx_table with different colors'LineWidth' , 1
-% %semilogx(f_vector, picos_ddx_table(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos - Normal');
-% %semilogx(f_vector, picos_ddx_table(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos - Parallel');
-% % Plot the two lines for media_picos_ddx_table with matching colors
-% %semilogx(f_vector, media_picos_ddx_table, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos ddx ');
-% xlabel('Frequency (Hz)');
-% ylabel('ddx_m (m/s^2)');
-% title('Response Spectra');
-% 
-% subplot(122);
-% hold on;
-% % Plot the two lines for picos_x_table with different colors
-% %semilogx(f_vector, picos_x_table(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'picos - Normal');
-% %semilogx(f_vector, picos_x_table(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'picos - Parallel');
-% % Plot the two lines for media_picos_x_table with matching colors
-% %semilogx(f_vector, media_picos_x_table, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos x');
-% % xlabel('Frequency (Hz)');
-% % ylabel('x_m (m)');
-% % title('Response Spectra');
-% % xlim([0 2.5]);
-
-
+figure(fig8);
 subplot(121)
 hold on
 semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Platform - Normal');
 semilogx(f_vector, filtered_picos_ddx_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Platform - Parallel');
-%semilogx(f_vector, filtered_media_picos_ddx_table,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
-legend
 
 subplot(122)
 hold on
 semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Platform - Normal');
 semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Platform - Parallel');
-%semilogx(f_vector, filtered_media_picos_x_table,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos x');
-legend
 
 
-% %%
-% [num, den] = tfdata(G_Fp_isv*G_xT_Fp, 'v')
-% [A,B,C,D] = tf2ss(num, den)
 
 %% Use PID tuner app to generate a PID controller for the system
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
-% G_c  = pidtune(G_xT_xref,'PIDF',tuner_opts)
-% [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c);
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c,m1 , m2 , f1, zeta1 , f2 , zeta2);
 
@@ -303,7 +243,6 @@ plot(t_vector,x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
 % 5th plot
 axes(ax5); % Activate the existing axes
-% hold on
 plot(t_vector,erro,"DisplayName","Tuned")
 
 % Fourth plot
@@ -337,49 +276,19 @@ plot(t_vector,F_p_isv/1e3,"DisplayName","Tuned")
 
 dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
- [picos_ddx_table_tuned , picos_x_table_tuned , media_picos_ddx_table_tuned , media_picos_x_table_tuned , filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned , filtered_media_picos_ddx_table_tuned , filtered_media_picos_x_table_tuned   ] = ResponseSpectre( dados_mesa , f_vector );
+[picos_ddx_table_tuned , picos_x_table_tuned , media_picos_ddx_table_tuned , media_picos_x_table_tuned , filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned , filtered_media_picos_ddx_table_tuned , filtered_media_picos_x_table_tuned   ] = ResponseSpectre( dados_mesa , f_vector );
 
 
-figure(F1);
-
-
-% subplot(121);
-% hold on;
-% % Plot the two lines for picos_ddx_table_tuned with different colors'LineWidth' , 1
-% %semilogx(f_vector, picos_ddx_table_tuned(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'tuned picos - Normal');
-% %semilogx(f_vector, picos_ddx_table_tuned(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'tuned picos - Parallel');
-% % Plot the two lines for media_picos_ddx_table_tuned with matching colors
-% %semilogx(f_vector, media_picos_ddx_table_tuned, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos ddx ');
-% xlabel('Frequency (Hz)');
-% ylabel('ddx_m (m/s^2)');
-% title('Response Spectra');
-% 
-% subplot(122);
-% hold on;
-% % Plot the two lines for picos_x_table_tuned with different colors
-% % semilogx(f_vector, picos_x_table_tuned(:, 1), '.', 'MarkerSize', 1, 'Color', color1, 'DisplayName', 'tuned picos - Normal');
-% % semilogx(f_vector, picos_x_table_tuned(:, 2), '.', 'MarkerSize', 1, 'Color', color2, 'DisplayName', 'tuned picos - Parallel');
-% % Plot the two lines for media_picos_x_table_tuned with matching colors
-% %semilogx(f_vector, media_picos_x_table_tuned, '.', 'MarkerSize', 1, 'Color', color3, 'DisplayName', 'media picos x');
-% xlabel('Frequency (Hz)');
-% ylabel('x_m (m)');
-% title('Response Spectra');
-% xlim([0 2.5]);
-
-
+figure(fig8);
 subplot(121)
 hold on
 semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Tuned Platform - Normal');
 semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
-%semilogx(f_vector, filtered_media_picos_ddx_table_tuned,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos ddx');
-legend
 
 subplot(122)
 hold on
 semilogx(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Tuned Platform - Normal');
 semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
-%semilogx(f_vector, filtered_media_picos_x_table_tuned,'LineWidth' , 1, 'Color', color3, 'DisplayName', 'filtered media picos x');
-legend
 
 erro_RS_ddx_table = filtered_picos_ddx_table-filtered_picos_ddx_ground;
 mse_RS_ddx_table = mean(erro_RS_ddx_table.^2);
@@ -396,6 +305,8 @@ mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2);
 
 %% State Space model
 
+% [num, den] = tfdata(G_Fp_isv*G_xT_Fp, 'v')
+% [A,B,C,D] = tf2ss(num, den)
 
 % % u = Fp
 % % y = x_ss
@@ -418,7 +329,8 @@ saveas(fig3, 'Platen_Displacement.png');
 saveas(fig4, 'Platen_Acceleration.png');
 saveas(fig5, 'Platen_Displacement_Tracking_Error.png');
 saveas(fig6, 'Platen_Acceleration_Tracking_Error.png');
-saveas(F1, 'Response_Spectra.png');
+saveas(fig7, 'Force_to_Platen.png');
+saveas(fig8, 'Response_Spectra.png');
 
 
 %%

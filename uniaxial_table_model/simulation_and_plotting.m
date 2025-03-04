@@ -138,11 +138,11 @@ while max_vref > lim_displacement
     max_vref = max(v_ref)
 end
 
-%% Finding Response Spectre
+%% Finding Response Spectre of Ground
 
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 1e2;
+n_points = 2e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 [picos_ddx_ground , picos_x_ground , media_picos_ddx_ground , media_picos_x_ground , filtered_picos_ddx_ground , filtered_picos_x_ground , filtered_media_picos_ddx_ground , filtered_media_picos_x_ground   ] = ResponseSpectre( dados , f_vector );
 
@@ -308,23 +308,8 @@ mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2);
 
 %% State Space model
 
-% Define the Mass matrix M
-M = [mT, 0,   0;
-     0,   m1, 0;
-     0,   0,   m2];
 
-% Define the Damping matrix C
-C = [cT + c1, -c1,       0;
-     -c1,      c1 + c2, -c2;
-     0,        -c2,       c2];
 
-% Define the Stiffness matrix K
-K = [k1, -k1,  0;
-     -k1, k1 + k2, -k2;
-     0,   -k2,  k2];
-
-% [num, den] = tfdata(G_Fp_isv*G_xT_Fp, 'v')
-% [A,B,C,D] = tf2ss(num, den)
 
 % % u = Fp
 % % y = x_ss

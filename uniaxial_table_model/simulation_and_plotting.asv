@@ -102,8 +102,7 @@ zeta2 = 0.1; % 5 < zeta2 < 25
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
-% s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2
-[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
 
 %%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
@@ -280,7 +279,7 @@ plot(t_vector,F_p_isv/1e3,"DisplayName","Tuned")
 
 dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
-[~ , ~ , ~ , ~ , filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned , ~ , ~  ] = ResponseSpectre( dados_mesa , f_vector );
+[picos_ddx_table_tuned , picos_x_table_tuned , media_picos_ddx_table_tuned , media_picos_x_table_tuned , filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned , filtered_media_picos_ddx_table_tuned , filtered_media_picos_x_table_tuned   ] = ResponseSpectre( dados_mesa , f_vector );
 
 
 figure(fig8);
@@ -293,8 +292,6 @@ subplot(122)
 hold on
 semilogx(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Tuned Platform - Normal');
 semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
-
-%% calcular MSE
 
 erro_RS_ddx_table = filtered_picos_ddx_table-filtered_picos_ddx_ground;
 mse_RS_ddx_table = mean(erro_RS_ddx_table.^2);

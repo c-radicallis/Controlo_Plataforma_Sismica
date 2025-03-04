@@ -111,7 +111,7 @@ t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
 ddx = [t_vector dados(:,2)];
-ddy = [t_vector  dados(:,3)];
+%ddy = [t_vector  dados(:,3)];
 
 % Limits
 lim_displacement = 100; % mm
@@ -124,44 +124,38 @@ x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref)
 scale=1;
 while max_xref > lim_displacement
-    scale = 0.95*scale
+    scale = 0.95*scale;
     ddx_ref = 0.95*ddx_ref;
     x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
-    max_xref = max(x_ref)
+    max_xref = max(x_ref);
 end
-
+scale
+max_xref
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref)
-while max_vref > lim_displacement
-    scale = 0.95*scale
-    ddx_ref = 0.95*ddx_ref;
-    v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
-    max_vref = max(v_ref)
-end
 
 %% Finding Response Spectre of Ground
 
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 2e2;
+n_points = 1e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[~ , ~ , ~ , ~ , filtered_picos_ddx_ground , filtered_picos_x_ground , ~ , ~  ] = ResponseSpectre( dados , f_vector );
-
+[filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( dados(:,1:2), f_vector );
 
 figure(fig8);
 subplot(121)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-semilogx(f_vector, filtered_picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+%semilogx(f_vector, filtered_picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 subplot(122)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground - Normal');
-semilogx(f_vector, filtered_picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+%semilogx(f_vector, filtered_picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 
 %%
@@ -202,25 +196,28 @@ plot(t_vector,i_sv,"DisplayName","Default")
 % 7th  plot 
 axes(ax7); % Activate the existing axes
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-plot(t_vector,F_p_isv/1e3,"DisplayName","Default")
+%plot(t_vector,ddx_ref*mT/1e3,"DisplayName","Reference") % weird values
+plot(t_vector,F_p_isv/1e3,"DisplayName","Default") %/1e3 to display as kN
 
 
 
 %% Finding Response Spectre for table
-dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
+dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh')];%, lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
-[ ~ , ~ , ~ , ~  , filtered_picos_ddx_table , filtered_picos_x_table ,  ~ , ~  ] = ResponseSpectre( dados_mesa , f_vector );
+[filtered_picos_ddx_table , filtered_picos_x_table ] = ResponseSpectre_filtered( dados_mesa , f_vector );
 
 figure(fig8);
 subplot(121)
 hold on
-semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Platform - Normal');
-semilogx(f_vector, filtered_picos_ddx_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Platform - Parallel');
+mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
+semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
+%semilogx(f_vector, filtered_picos_ddx_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));%- Parallel
 
 subplot(122)
 hold on
-semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Platform - Normal');
-semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Platform - Parallel');
+mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
+semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+%semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));
 
 
 
@@ -278,21 +275,23 @@ plot(t_vector,F_p_isv/1e3,"DisplayName","Tuned")
 
 %% Finding Response Spectre for table tuned
 
-dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh') , lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
+dados_mesa  = [ t_vector , lsim( G_xT_xref, dados(:,2) , t_vector ,'zoh')]; %, lsim( G_xT_xref, dados(:,3) , t_vector ,'zoh')] ;
 
-[~ , ~ , ~ , ~ , filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned , ~ , ~  ] = ResponseSpectre( dados_mesa , f_vector );
+[filtered_picos_ddx_table_tuned , filtered_picos_x_table_tuned] = ResponseSpectre_filtered( dados_mesa , f_vector );
 
 
 figure(fig8);
 subplot(121)
 hold on
-semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Tuned Platform - Normal');
-semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
+mse = mean((filtered_picos_ddx_table_tuned-filtered_picos_ddx_ground).^2);
+semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
+%semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 subplot(122)
 hold on
-semilogx(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Tuned Platform - Normal');
-semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
+mse = mean((filtered_picos_x_table_tuned-filtered_picos_x_ground).^2);
+semilogx(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
+%semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 %% calcular MSE
 
@@ -341,7 +340,7 @@ saveas(fig8, 'Response_Spectra.png');
 
 %%
 
-function [picos_ddx_m , picos_x_m , media_picos_ddx_m , media_picos_x_m , filtered_picos_ddx_m , filtered_picos_x_m , filtered_media_picos_ddx_m , filtered_media_picos_x_m   ] = ResponseSpectre( dados , f_vector )
+function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filtered( dados , f_vector )
 
      t_vector=dados(:,1);
     [ ~ , n_directions]=size(dados);
@@ -369,23 +368,11 @@ function [picos_ddx_m , picos_x_m , media_picos_ddx_m , media_picos_x_m , filter
     
         end
     end
-    
-    % valores medios
-   % media_picos_ddx_m=mean(picos_ddx_m,n_directions-1);
-    %media_picos_x_m=mean(picos_x_m,n_directions-1);
-    
+
     % Apply a filter to the data
-    
     % % Moving average filter
-    windowSize = length(f_vector)*0.25; % Adjust window size as needed as percentage of elements in f_vector
+    windowSize = length(f_vector)*0.3; % Adjust window size as needed as percentage of elements in f_vector
     filtered_picos_ddx_m             = movmean(picos_ddx_m, windowSize);
     filtered_picos_x_m                 = movmean(picos_x_m, windowSize);
-    %filtered_media_picos_ddx_m = movmean(media_picos_ddx_m, windowSize);
-    %filtered_media_picos_x_m     = movmean(media_picos_x_m, windowSize);
-    
-    % % Low pass filter
-    % cut=0.01;
-    % filtered_picos_ddx_m = lowpass(picos_ddx_m, cut);
-    % filtered_picos_x_m = lowpass(picos_x_m, cut);
 
 end

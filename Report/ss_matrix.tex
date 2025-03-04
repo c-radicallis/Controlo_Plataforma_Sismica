@@ -1,0 +1,73 @@
+\begin{align}
+\begin{bmatrix} 
+    \dot{x}_{sv} \\[6pt]
+    \dot{Q}_t \\[6pt]
+    \dot{P}_L \\[6pt]
+    \dot{F}_p \\[6pt]
+    \dot{x}_T \\[6pt]
+    \dot{x}_1 \\[6pt]
+    \dot{x}_2 \\[6pt]
+    \ddot{x}_T \\[6pt]
+    \ddot{x}_1 \\[6pt]
+    \ddot{x}_2 
+\end{bmatrix} =
+\begin{bmatrix}
+    -\frac{1}{T_{sv}} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\[6pt]
+    -\frac{k_q}{T_{sv}} - \frac{k_c k_q k_q}{A^2} & 0 & \frac{k_c k_h}{A^2} & 0 & 0 & 0 & 0 & \frac{k_c k_h}{A} & 0 & 0 \\[6pt]
+    \frac{k_h k_q}{A^2} & 0 & -\frac{k_h}{A^2} & 0 & 0 & 0 & 0 & \frac{ k_h}{A} & 0 & 0 \\[6pt]
+    \frac{k_h k_q}{A} & 0 & -\frac{k_h}{A} & 0 & 0 & 0 & 0 & k_h & 0 & 0 \\[6pt]
+  0 &  0 & 0 & 0              & 0 & 0 & 0 & 0 & 0 &   \\[6pt]
+  0 &  0 & 0 & 0              & 0 & 0 & 0 & 0 & 0 & I &   \\[6pt]
+  0 &  0 & 0 & 0              & 0 & 0 & 0 & 0 & 0 &   \\[6pt]
+  0 &  0 & 0 & \frac{1}{m_T}  & 0 & 0 & 0 & 0 & 0 &   \\[6pt]
+  0 &  0 & 0 &              0 & 0 & 0 & -M^{-1}\cdot K  0 & 0 & 0 & -M^{-1}\cdot C  0 &   \\[6pt]
+  0 &  0 & 0 &              0 & 0 & 0 & 0 & 0 & 0 &   
+\end{bmatrix}
+\begin{bmatrix}
+    x_{sv} \\[6pt]
+    Q_t \\[6pt]
+    P_L \\[6pt]
+    F_p \\[6pt]
+    x_T \\[6pt]
+    x_1 \\[6pt]
+    x_2 \\[6pt]
+    \dot{x}_T \\[6pt]
+    \dot{x}_1 \\[6pt]
+    \dot{x}_2
+\end{bmatrix} +
+\begin{bmatrix}
+    \frac{k_q}{T_{sv}}  \\[6pt]
+    \frac{k_q}{T_{sv}}  \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0 \\[6pt]
+    0
+\end{bmatrix}
+\cdot i_{sv}
+\end{align}
+
+%%%%%%%%%%
+
+\begin{bmatrix} 
+\frac{-c_T - c_1 }{m_T} & \frac{ c_1 }{m_T}   & 0               \\ 
+\frac{c_1}{m_1}         &\frac{-c_1-c_2}{m_1} & \frac{c_2}{m_1} \\ 
+0                       & \frac{c_2}{m_2}     & \frac{-c_2}{m_2}
+\end{bmatrix}
+
+
+\begin{bmatrix}
+    -\frac{1}{T_{sv}} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\[6pt]
+    -\frac{k_q}{T_{sv}} - \frac{k_c k_q k_q}{A^2} & 0 & \frac{k_c k_h}{A^2} & 0 & 0 & 0 & 0 & \frac{k_c k_h}{A} & 0 & 0 \\[6pt]
+    \frac{k_h k_q}{A^2} & 0 & -\frac{k_h}{A^2} & 0 & 0 & 0 & 0 & \frac{ k_h}{A} & 0 & 0 \\[6pt]
+    \frac{k_h k_q}{A} &  0 & -\frac{k_h}{A} & 0              & 0 & 0                & 0   & -k_h & 0               & 0 \\[6pt]
+                    0 &  0 &              0 & 0              & 0 & 0                & 0   & 1    & 0               & 0 \\[6pt]
+                    0 &  0 &              0 & 0              & 0 & 0                & 0   & 0    & 1               & 0 \\[6pt]
+                    0 &  0 &              0 & 0              & 0 & 0                & 0   & 0    & 0               & 1 \\[6pt]
+                    0 &  0 &              0 & \frac{1}{m_T} & \frac{-k_1}{m_T} & \frac{k_1}{m_T}     &  0              & \frac{-c_T - c_1 }{m_T} & \frac{ c_1 }{m_T}   & 0               \\ [6pt]
+                    0 &  0 &              0 & 0             & \frac{k_1}{m_1}  &\frac{-k_1-k_2}{m_1} & \frac{k_2}{m_1} & \frac{c_1}{m_1}         &\frac{-c_1-c_2}{m_1} & \frac{c_2}{m_1} \\ [6pt]
+                    0 &  0 &              0 & 0             &         0        & \frac{k_2}{m_2}     & \frac{-k_2}{m_2}& 0                       & \frac{c_2}{m_2}     & \frac{-c_2}{m_2}
+\end{bmatrix}             

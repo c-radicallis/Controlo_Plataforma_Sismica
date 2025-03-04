@@ -1,9 +1,9 @@
 \begin{align}\label{eq_2dof_system}
     \left\{
     \begin{aligned}
-        m_T \ddot{x}_T &+ c_1 (\dot{x}_T - \dot{x}_1) + k_1 (x_T - x_1) = F_p \\
-        m_1 \ddot{x}_1 &+ c_1 (\dot{x}_1 - \dot{x}_T) + c_2 (\dot{x}_1 - \dot{x}_2) + k_1 (x_1 - x_T) + k_2 (x_1 - x_2) = 0 \\
-        m_2 \ddot{x}_2 &+ c_2 (\dot{x}_2 - \dot{x}_1) + k_2 (x_2 - x_1) = 0
+        m_T \cdot \ddot{x}_T &+ c_T \cdot \ddot{x}_T + c_1 (\cdot \ddot{x}_T - \cdot \ddot{x}_1) + k_1 (x_T - x_1) = F_p \\
+        m_1 \cdot \ddot{x}_1 &+ c_1 (\cdot \ddot{x}_1 - \cdot \ddot{x}_T) + c_2 (\cdot \ddot{x}_1 - \cdot \ddot{x}_2) + k_1 (x_1 - x_T) + k_2 (x_1 - x_2) = 0 \\
+        m_2 \cdot \ddot{x}_2 &+ c_2 (\cdot \ddot{x}_2 - \cdot \ddot{x}_1) + k_2 (x_2 - x_1) = 0
     \end{aligned}
     \right. 
     \Longleftrightarrow
@@ -15,9 +15,9 @@
     \Longleftrightarrow
     \left\{
     \begin{aligned}
-        &m_T \ddot{x}_T + (c_1 + c_2) \dot{x}_T + k_1 x_T - c_1 \dot{x}_1 - k_1 x_1 = F_p \\
-        &m_1 \ddot{x}_1 + (c_1 + c_2) \dot{x}_1 + (k_1 + k_2) x_1 - c_1 \dot{x}_T - c_2 \dot{x}_2 - k_1 x_T - k_2 x_2 = 0 \\
-        &m_2 \ddot{x}_2 + c_2 \dot{x}_2 + k_2 x_2 - c_2 \dot{x}_1 - k_2 x_1 = 0
+        &m_T \cdot \ddot{x}_T + (c_1 + c_2) \cdot \ddot{x}_T + k_1 x_T - c_1 \cdot \ddot{x}_1 - k_1 x_1 = F_p \\
+        &m_1 \cdot \ddot{x}_1 + (c_1 + c_2) \cdot \ddot{x}_1 + (k_1 + k_2) x_1 - c_1 \cdot \ddot{x}_T - c_2 \cdot \ddot{x}_2 - k_1 x_T - k_2 x_2 = 0 \\
+        &m_2 \cdot \ddot{x}_2 + c_2 \cdot \ddot{x}_2 + k_2 x_2 - c_2 \cdot \ddot{x}_1 - k_2 x_1 = 0
     \end{aligned}
     \right.
     \Longleftrightarrow
@@ -33,7 +33,7 @@
         0 & 0 & m_2
     \end{bmatrix}
     \begin{bmatrix}
-        \ddot{x}_T \\ \ddot{x}_1 \\ \ddot{x}_2
+        \cdot \ddot{x}_T \\ \cdot \ddot{x}_1 \\ \cdot \ddot{x}_2
     \end{bmatrix}
     +
     \begin{bmatrix}
@@ -42,7 +42,7 @@
         0 & -c_2 & c_2
     \end{bmatrix}
     \begin{bmatrix}
-        \dot{x}_T \\ \dot{x}_1 \\ \dot{x}_2
+        \cdot \ddot{x}_T \\ \cdot \ddot{x}_1 \\ \cdot \ddot{x}_2
     \end{bmatrix}
     +
     \begin{bmatrix}

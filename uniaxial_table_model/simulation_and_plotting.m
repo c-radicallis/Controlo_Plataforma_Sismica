@@ -83,22 +83,26 @@ color3 = 'g';
 
 
 %% Structure parameters
-mass=2e3;
+
+mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
+cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)
+
+mass=1e3;
 
 % 1st mode
 m1 = mass; % kg
 f1 = 2; % Hz   % 1.5 < f1 < 4
-zeta1 = 0.02 ; % 2 < zeta1 < 10
+zeta1 = 0.05 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = m1; % kg
 f2 = 10; % Hz % 6 < f2 < 10
-zeta2 = 0.05; % 5 < zeta2 < 25
+zeta2 = 0.1; % 5 < zeta2 < 25
 
 % Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ]=Compute_TFs(G_c, m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
 
 %%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
@@ -140,7 +144,6 @@ f_i=0.1; %freq inicial
 f_n=30;  %freq final
 n_points = 1e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-
 [picos_ddx_ground , picos_x_ground , media_picos_ddx_ground , media_picos_x_ground , filtered_picos_ddx_ground , filtered_picos_x_ground , filtered_media_picos_ddx_ground , filtered_media_picos_x_ground   ] = ResponseSpectre( dados , f_vector );
 
 
@@ -223,7 +226,7 @@ semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', 
 %% Use PID tuner app to generate a PID controller for the system
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv ]=Compute_TFs(G_c,m1 , m2 , f1, zeta1 , f2 , zeta2);
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2 ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 
 %%
@@ -304,6 +307,21 @@ mse_RS_x_table_tuned = mean(erro_RS_x_table_tuned.^2);
 
 
 %% State Space model
+
+% Define the Mass matrix M
+M = [mT, 0,   0;
+     0,   m1, 0;
+     0,   0,   m2];
+
+% Define the Damping matrix C
+C = [cT + c1, -c1,       0;
+     -c1,      c1 + c2, -c2;
+     0,        -c2,       c2];
+
+% Define the Stiffness matrix K
+K = [k1, -k1,  0;
+     -k1, k1 + k2, -k2;
+     0,   -k2,  k2];
 
 % [num, den] = tfdata(G_Fp_isv*G_xT_Fp, 'v')
 % [A,B,C,D] = tf2ss(num, den)

@@ -68,53 +68,59 @@ max_xref
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref)
 
+% Finding Response Spectre of Ground
+
+f_i=0.1; %freq inicial
+f_n=30;  %freq final
+n_points = 1e3;
+f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
+[filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( [t_vector , ddx_ref], f_vector );
+
+figure(fig8);
+subplot(121)
+grid on;
+legend();
+hold on
+semilogx(f_vector, filtered_picos_ddx_ground,'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+
+subplot(122)
+grid on;
+legend();
+hold on
+semilogx(f_vector, filtered_picos_x_ground,'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+
+
 %% Structure parameters
 mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)
 
-mass=[1]*1e3;
+mass=[2.5]*1e3;
 for m_i = mass
     m1 = m_i; % kg
     m2 = m_i; % kg
 
     % 1.5 < f1 < 4
     % 6 < f2 < 10
-    for f_i = [ [1.5,6] ] % , [f1,f2]+3 ]
-        f_i
-        f1 = f_i(0)
-        f2 = f_i(1)
-
+    f_list = [ [1.5,6] ]; % Define the list
+    for i = 1:size(f_list, 1)
+        f1 = f_list( i, 1);
+        f2 = f_list( i, 2);
+        
         % 2 < zeta1 < 10
         % 5 < zeta2 < 25
-        for zeta_i =  [ [2/100,5/100] , [zeta1+0.1,zeta2+0.2] ]
-            zeta1 = zeta_i(1)
-            zeta2 = zeta_i(2)
+        zeta_list = [ [2,5]; [10,25] ]/100; % Define the list
+        for j = 1:size(zeta_list, 1)
+            zeta1 = zeta_list( j, 1);
+            zeta2 = zeta_list( j, 2);
 
+            % Controller
+            k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
+            G_c = tf(k_p,1);
+            [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
             % Use PID tuner app to generate a PID controller for the system
             tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
             G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
             [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
-
-            % Finding Response Spectre of Ground
-
-            f_i=0.1; %freq inicial
-            f_n=30;  %freq final
-            n_points = 1e2;
-            f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-            [filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( ddx_ref, f_vector );
-
-            figure(fig8);
-            subplot(121)
-            grid on;
-            legend();
-            hold on
-            semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
-
-            subplot(122)
-            grid on;
-            legend();
-            hold on
-            semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 
             %
 
@@ -139,12 +145,12 @@ for m_i = mass
             subplot(121)
             hold on
             mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
-            semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
+            semilogx(f_vector, filtered_picos_ddx_table,'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
 
             subplot(122)
             hold on
             mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
-            semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+            semilogx(f_vector, filtered_picos_x_table,'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
 
         end
     end
@@ -160,7 +166,7 @@ saveas(fig8, 'Response_Spectra.png');
 
 function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filtered( dados , f_vector )
 
-     t_vector=dados(:,1);
+    t_vector=dados(:,1);
     [ ~ , n_directions]=size(dados);
 
     m=1;%1kg
@@ -189,7 +195,7 @@ function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filt
 
     % Apply a filter to the data
     % % Moving average filter
-    windowSize = length(f_vector)*0.3; % Adjust window size as needed as percentage of elements in f_vector
+    windowSize = length(f_vector)*0.1; % Adjust window size as needed as percentage of elements in f_vector
     filtered_picos_ddx_m             = movmean(picos_ddx_m, windowSize);
     filtered_picos_x_m                 = movmean(picos_x_m, windowSize);
 

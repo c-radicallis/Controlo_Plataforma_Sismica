@@ -53,6 +53,7 @@ lim_force = 200e3; % N
 
 % Scaling down if necessary
 % displacements in milimeters
+s=tf('s');
 x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref)
 scale=1;
@@ -71,76 +72,82 @@ max_vref = max(v_ref)
 mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)
 
-mass=[1 , 2]*1e3;
+mass=[1]*1e3;
 for m_i = mass
+    m1 = m_i; % kg
+    m2 = m_i; % kg
 
-    % 1st mode
-    m1 = mass; % kg
-    f1 = 2; % Hz   % 1.5 < f1 < 4
-    zeta1 = 0.05 ; % 2 < zeta1 < 10
-    %2nd mode
-    m2 = m1; % kg
-    f2 = 10; % Hz % 6 < f2 < 10
-    zeta2 = 0.1; % 5 < zeta2 < 25
+    % 1.5 < f1 < 4
+    % 6 < f2 < 10
+    for f_i = [ [1.5,6] ] % , [f1,f2]+3 ]
+        f_i
+        f1 = f_i(0)
+        f2 = f_i(1)
 
-    % Use PID tuner app to generate a PID controller for the system
-    tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
-    G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
-    [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+        % 2 < zeta1 < 10
+        % 5 < zeta2 < 25
+        for zeta_i =  [ [2/100,5/100] , [zeta1+0.1,zeta2+0.2] ]
+            zeta1 = zeta_i(1)
+            zeta2 = zeta_i(2)
 
-    % Finding Response Spectre of Ground
+            % Use PID tuner app to generate a PID controller for the system
+            tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
+            G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
+            [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-    f_i=0.1; %freq inicial
-    f_n=30;  %freq final
-    n_points = 1e2;
-    f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-    [filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( ddx_ref, f_vector );
+            % Finding Response Spectre of Ground
 
-    figure(fig8);
-    subplot(121)
-    grid on;
-    legend();
-    hold on
-    semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+            f_i=0.1; %freq inicial
+            f_n=30;  %freq final
+            n_points = 1e2;
+            f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
+            [filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( ddx_ref, f_vector );
 
-    subplot(122)
-    grid on;
-    legend();
-    hold on
-    semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+            figure(fig8);
+            subplot(121)
+            grid on;
+            legend();
+            hold on
+            semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
 
+            subplot(122)
+            grid on;
+            legend();
+            hold on
+            semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 
-    %
+            %
 
-    x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
-    ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
+            x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
+            ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 
-    % Second plot
-    axes(ax2); % Activate the existing axes
-    i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh'); % 1e-3 converts from mm to meters
-    plot(t_vector,i_sv,"DisplayName","Default")
+            % Second plot
+            axes(ax2); % Activate the existing axes
+            i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh'); % 1e-3 converts from mm to meters
+            plot(t_vector,i_sv,"DisplayName","Default")
 
-    % 7th  plot 
-    axes(ax7); % Activate the existing axes
-    F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-    plot(t_vector,F_p_isv*1e-3,"DisplayName","Default") % 1e-3 to display as kN
-
-
-    % Finding Response Spectre for table
-    [filtered_picos_ddx_table , filtered_picos_x_table ] = ResponseSpectre_filtered( [ t_vector , ddx_T], f_vector );
-
-    figure(fig8);
-    subplot(121)
-    hold on
-    mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
-    semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
-
-    subplot(122)
-    hold on
-    mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
-    semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+            % 7th  plot 
+            axes(ax7); % Activate the existing axes
+            F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+            plot(t_vector,F_p_isv*1e-3,"DisplayName","Default") % 1e-3 to display as kN
 
 
+            % Finding Response Spectre for table
+            [filtered_picos_ddx_table , filtered_picos_x_table ] = ResponseSpectre_filtered( [ t_vector , ddx_T], f_vector );
+
+            figure(fig8);
+            subplot(121)
+            hold on
+            mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
+            semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
+
+            subplot(122)
+            hold on
+            mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
+            semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+
+        end
+    end
 end
 
 %% Save all figures after plotting

@@ -184,7 +184,6 @@ plot(t_vector,erro,"DisplayName","Default")
 
 % Fourth plot
 axes(ax4); % Activate the existing axes
-ddx_ref=ddx_ref;
 ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 erro = ddx_T-ddx_ref;
 mse = mean(erro.^2);

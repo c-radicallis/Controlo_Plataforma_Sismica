@@ -1,4 +1,4 @@
-function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
+function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , ss_model ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
 
 %coupled 2DOF system
 %  structure parameters
@@ -73,35 +73,41 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
-% % state space model
-% 
-% % Define the Mass matrix M
+% state space model
+
+% Define the Mass matrix M
 % M = [mT, 0,   0;
 %      0,   m1, 0;
 %      0,   0,   m2];
-% 
-% % Define the Damping matrix C
+
+% Define the Damping matrix C
 % C = [cT + c1, -c1,       0;
 %      -c1,      c1 + c2, -c2;
 %      0,        -c2,       c2];
 % 
-% % Define the Stiffness matrix K
+% Define the Stiffness matrix K
 % K = [k1, -k1,  0;
 %      -k1, k1 + k2, -k2;
 %      0,   -k2,  k2];
-% 
-% A = [
-%     -1/tau_sv, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-%     -k_q/tau_sv - (k_c * k_q^2) / A^2, 0, (k_c * k_h) / A^2, 0, 0, 0, 0, (k_c * k_h) / A, 0, 0;
-%     (k_h * k_q) / A^2, 0, -k_h / A^2, 0, 0, 0, 0, k_h / A, 0, 0;
-%     (k_h * k_q) / A, 0, -k_h / A, 0, 0, 0, 0, -k_h, 0, 0;
-%     0, 0, 0, 0, 0, 0, 0, 1, 0, 0;
-%     0, 0, 0, 0, 0, 0, 0, 0, 1, 0;
-%     0, 0, 0, 0, 0, 0, 0, 0, 0, 1;
-%     0, 0, 0, 1/m_T, -k_1/m_T, k_1/m_T, 0, (-c_T - c_1) / m_T, c_1 / m_T, 0;
-%     0, 0, 0, 0, k_1/m_1, (-k_1 - k_2) / m_1, k_2 / m_1, c_1 / m_1, (-c_1 - c_2) / m_1, c_2 / m_1;
-%     0, 0, 0, 0, 0, k_2 / m_2, -k_2 / m_2, 0, c_2 / m_2, -c_2 / m_2
-% ];
+
+A = [-1/tau_sv ,  0 , 0 , 0 , 0 , 0 , 0 , 0 , 0;
+k_h/A^2  , - k_h*k_pl/A^2 , 0 , 0 , 0 , 0 , -k_h/A , 0 , 0 ;
+k_h/A  , - k_h*k_pl/A , 0              , 0 , 0                , 0   , -k_h , 0               , 0 ;
+                0 ,                0 , 0              , 0 , 0                , 0   , 1    , 0               , 0 ;
+                0 ,                0 , 0              , 0 , 0                , 0   , 0    , 1               , 0 ;
+                0 ,                0 , 0              , 0 , 0                , 0   , 0    , 0               , 1 ;
+                0 ,               0 , 1/mT , -k1/mT , k1/mT     ,  0              , (-cT - c1) /mT ,  c1 /mT   , 0               ;
+                0 ,                0 , 0             , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1         ,(-c1-c2)/m1 , c2/m1 ;
+                0 ,                0 , 0             ,         0        , k2/m2     , -k2/m2, 0                       , c2/m2     , -c2/m2];
+
+B=[k_svk_q/tau_sv, zeros(1,8)]';
+
+C=[zeros(1,3), 1 , zeros(1,5)];%xT
+     %zeros(1,2), 1 , zeros(1,6)];%Fp
+
+D=0;
+
+ss_model = ss(A,B,C,D);
 
 
 

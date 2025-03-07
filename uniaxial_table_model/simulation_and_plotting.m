@@ -103,7 +103,9 @@ k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm)
 G_c = tf(k_p,1);
 
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2
-[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ss_isv_xT  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+
+ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
 
 %%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
@@ -162,15 +164,20 @@ semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color',
 % First plot
 axes(ax1); % Activate the existing axes
 bodeplot(G_xT_xref,opts1);
+hold on
+bodeplot(ss_xref_xT)
 
 % Third plot
 axes(ax3); % Activate the existing axes
+x_T_ss = lsim(ss_xref_xT,x_ref,t_vector);
 x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
 erro = x_T-x_ref;
 mse = mean(erro.^2);
 plot(t_vector,x_ref,"DisplayName","Reference")
 plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
+plot(t_vector,x_T_ss,'--',"DisplayName","State Space")
 
+%%
 % 5th plot
 axes(ax5); % Activate the existing axes
 plot(t_vector,erro,"DisplayName","Default")
@@ -224,7 +231,7 @@ semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', 
 %% Use PID tuner app to generate a PID controller for the system
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
-[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2 ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+[s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2 , ss_model ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 
 %%

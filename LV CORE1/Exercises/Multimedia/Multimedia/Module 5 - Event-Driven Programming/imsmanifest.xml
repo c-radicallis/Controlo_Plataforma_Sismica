@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest identifier="_6XQlsGmB7br_course_id" version="1.0" xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+    <lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd">
+      <general>
+        <title>
+          <langstring xml:lang="x-none">LabVIEW Core 1 Module 5 </langstring>
+        </title>
+      </general>
+      <lifecycle>
+        <version>
+          <langstring xml:lang="x-none">1</langstring>
+        </version>
+        <status>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">Final</langstring>
+          </value>
+        </status>
+      </lifecycle>
+      <metametadata>
+        <metadatascheme>ADL SCORM 1.2</metadatascheme>
+      </metametadata>
+      <educational>
+        <typicallearningtime>
+          <datetime>PT0H0M0S</datetime>
+        </typicallearningtime>
+      </educational>
+      <rights>
+        <cost>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </cost>
+        <copyrightandotherrestrictions>
+          <source>
+            <langstring xml:lang="x-none">LOMv1.0</langstring>
+          </source>
+          <value>
+            <langstring xml:lang="x-none">yes</langstring>
+          </value>
+        </copyrightandotherrestrictions>
+      </rights>
+    </lom>
+  </metadata>
+  <organizations default="LabVIEW_Core_1_Module_5__ORG">
+    <organization identifier="LabVIEW_Core_1_Module_5__ORG">
+      <title>LabVIEW Core 1 Module 5 </title>
+      <item identifier="LabVIEW_Core_1_Module_5_SCO" isvisible="true" identifierref="__6XQlsGmB7br_course_id_RES">
+        <title>LabVIEW Core 1 Module 5</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="__6XQlsGmB7br_course_id_RES" type="webcontent" href="index_lms.html" adlcp:scormtype="sco">
+      <file href="story_content/thumbnail.jpg" />
+      <file href="story_content/txt__default_6f9nEDGVwc1.swf" />
+      <file href="story_content/6oZ1MEnKfvg_90_DX832_DY832.swf" />
+      <file href="mobile/6oZ1MEnKfvg_90_DX832_DY832_CX416_CY76.png" />
+      <file href="story_content/5k5CrcveAXR_22050_56.mp3" />
+      <file href="story_content/5eQXL7x4LPP_90_DX1520_DY1520.swf" />
+      <file href="mobile/5eQXL7x4LPP_90_DX1520_DY1520_CX760_CY595.png" />
+      <file href="story_content/6lHDXXNJcit_90_DX488_DY488.jpg" />
+      <file href="mobile/6lHDXXNJcit_90_DX488_DY488_CX244_CY93.jpg" />
+      <file href="story_content/6gm7UeFcDm5_90_DX1916_DY1916.swf" />
+      <file href="mobile/6gm7UeFcDm5_90_DX1916_DY1916_CX958_CY64.png" />
+      <file href="story_content/5wgjkW9VYQE_22050_56.mp3" />
+      <file href="story_content/video_60zFYXnI2tv_29_56_1252x540.mp4" />
+      <file href="mobile/video_60zFYXnI2tv_29_56_1252x540.jpg" />
+      <file href="story_content/6Aj0fpAMYfd_22050_56.mp3" />
+      <file href="story_content/6o5kyaTuGVw_22050_56.mp3" />
+      <file href="story_content/video_5ky0HnGgjqI_29_56_706x570.mp4" />
+      <file href="mobile/video_5ky0HnGgjqI_29_56_706x570.jpg" />
+      <file href="story_content/6eJhFs9uh8a_90_P_288_0_735_569_DX1916_DY1916.swf" />
+      <file href="mobile/6eJhFs9uh8a_90_P_288_0_735_569_DX1916_DY1916_CX688_CY603.png" />
+      <file href="story_content/5ffCEE1sbGf_90_DX190_DY190.swf" />
+      <file href="mobile/5ffCEE1sbGf_90_DX190_DY190_CX42_CY95.png" />
+      <file href="story_content/5jicu99L4O1_90_P_178_183_413_244_DX1752_DY1752.swf" />
+      <file href="mobile/5jicu99L4O1_90_P_178_183_413_244_DX1752_DY1752_CX677_CY400.png" />
+      <file href="story_content/6N45y7DWPsp_90_DX178_DY178.swf" />
+      <file href="mobile/6N45y7DWPsp_90_DX178_DY178_CX39_CY89.png" />
+      <file href="story_content/5by4uC86LGW_22050_56.mp3" />
+      <file href="story_content/video_6i0K8MpWrTe_29_56_662x468.mp4" />
+      <file href="mobile/video_6i0K8MpWrTe_29_56_662x468.jpg" />
+      <file href="story_content/6Ljd1bvAE5H_22050_56.mp3" />
+      <file href="story_content/5gzG0jiXLWK_22050_56.mp3" />
+      <file href="story_content/6C5uSPKuBYZ_22050_56.mp3" />
+      <file href="story_content/video_5ZwAU7RJNOs_29_56_660x466.mp4" />
+      <file href="mobile/video_5ZwAU7RJNOs_29_56_660x466.jpg" />
+      <file href="story_content/5e1rminqrol_22050_56.mp3" />
+      <file href="story_content/5go1oo2uCAZ_22050_56.mp3" />
+      <file href="story_content/video_63ebMYA4M72_29_56_660x466.mp4" />
+      <file href="mobile/video_63ebMYA4M72_29_56_660x466.jpg" />
+      <file href="story_content/5XA0hcepSF3_22050_56.mp3" />
+      <file href="story_content/6U5acWGaAjG_90_P_167_182_428_245_DX1650_DY1650.swf" />
+      <file href="mobile/6U5acWGaAjG_90_P_167_182_428_245_DX1650_DY1650_CX685_CY392.png" />
+      <file href="story_content/6fLN6e325MK_22050_56.mp3" />
+      <file href="story_content/6np40ijy37F_22050_56.mp3" />
+      <file href="story_content/video_6Xf26r0u9lU_29_56_708x316.mp4" />
+      <file href="mobile/video_6Xf26r0u9lU_29_56_708x316.jpg" />
+      <file href="story_content/video_5cEp6gDPjPt_29_56_708x316.mp4" />
+      <file href="mobile/video_5cEp6gDPjPt_29_56_708x316.jpg" />
+      <file href="story_content/6OaISz1kBfL_22050_56.mp3" />
+      <file href="story_content/video_6gu3zVjB8SV_29_56_1280x544.mp4" />
+      <file href="mobile/video_6gu3zVjB8SV_29_56_1280x544.jpg" />
+      <file href="story_content/6E0kY9HP44T_22050_56.mp3" />
+      <file href="meta.xml" />
+      <file href="story_content/frame.xml" />
+      <file href="story_content/frame.js" />
+      <file href="story_content/user.js" />
+      <file href="story_html5.html" />
+      <file href="story_unsupported.html" />
+      <file href="mobile/txt__default_6f9nEDGVwc1.png" />
+      <file href="mobile/app_store.png" />
+      <file href="mobile/controls.png" />
+      <file href="mobile/icon_loading.gif" />
+      <file href="mobile/linen_background.jpg" />
+      <file href="mobile/mobile_icon.png" />
+      <file href="mobile/player.css" />
+      <file href="mobile/player_compiled.js" />
+      <file href="mobile/spinner.png" />
+      <file href="mobile/wait.gif" />
+      <file href="story_content/fonts.swf" />
+      <file href="mobile/fonts.js" />
+      <file href="story.swf" />
+      <file href="story_content/frame.swf" />
+      <file href="story_content/slides/5rKSZ4Cw3yj.swf" />
+      <file href="mobile/slides/5rKSZ4Cw3yj.js" />
+      <file href="story_content/slides/6Lu1ZrqWbve.swf" />
+      <file href="mobile/slides/6Lu1ZrqWbve.js" />
+      <file href="story_content/slides/6WKG0b5maN3.swf" />
+      <file href="mobile/slides/6WKG0b5maN3.js" />
+      <file href="story_content/slides/6Jgk6SIXN2I.swf" />
+      <file href="mobile/slides/6Jgk6SIXN2I.js" />
+      <file href="story_content/slides/6UIzlRp0b1Z.swf" />
+      <file href="mobile/slides/6UIzlRp0b1Z.js" />
+      <file href="story_content/slides/6g0u4sonu3j.swf" />
+      <file href="mobile/slides/6g0u4sonu3j.js" />
+      <file href="story_content/slides/6UXmC7WrBOq.swf" />
+      <file href="mobile/slides/6UXmC7WrBOq.js" />
+      <file href="story_content/data.swf" />
+      <file href="mobile/data.js" />
+      <file href="mobile/masks.js" />
+      <file href="story.html" />
+      <file href="index_lms_html5.html" />
+      <file href="story_content/blank.html" />
+      <file href="story_content/story.js" />
+      <file href="index_lms.html" />
+      <file href="lms/AICCComm.html" />
+      <file href="lms/AICCFunctions.js" />
+      <file href="lms/API.js" />
+      <file href="lms/APIConstants.js" />
+      <file href="lms/blank.html" />
+      <file href="lms/browsersniff.js" />
+      <file href="lms/Configuration.js" />
+      <file href="lms/goodbye.html" />
+      <file href="lms/lms.js" />
+      <file href="lms/LMSAPI.js" />
+      <file href="lms/NONEFunctions.js" />
+      <file href="lms/SCORM2004Functions.js" />
+      <file href="lms/SCORMFunctions.js" />
+      <file href="lms/UtilityFunctions.js" />
+    </resource>
+  </resources>
+</manifest>

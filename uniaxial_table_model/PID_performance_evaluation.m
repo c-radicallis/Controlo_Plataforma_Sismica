@@ -1,5 +1,5 @@
 clear 
-close all
+%close all
 %clc
 
 %% Plots
@@ -81,13 +81,13 @@ subplot(121)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_ddx_ground,'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+semilogx(f_vector, filtered_picos_ddx_ground,'-', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
 
 subplot(122)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_x_ground,'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+semilogx(f_vector, filtered_picos_x_ground,'-', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 
 
 %% Structure parameters
@@ -145,12 +145,12 @@ for m_i = mass
             subplot(121)
             hold on
             mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
-            semilogx(f_vector, filtered_picos_ddx_table,'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
+            semilogx(f_vector, filtered_picos_ddx_table,'-', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
 
             subplot(122)
             hold on
             mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
-            semilogx(f_vector, filtered_picos_x_table,'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+            semilogx(f_vector, filtered_picos_x_table,'-', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
 
         end
     end
@@ -196,7 +196,7 @@ function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filt
     % Apply a filter to the data
     % % Moving average filter
     windowSize = length(f_vector)*0.1; % Adjust window size as needed as percentage of elements in f_vector
-    filtered_picos_ddx_m             = movmean(picos_ddx_m, windowSize);
-    filtered_picos_x_m                 = movmean(picos_x_m, windowSize);
+    filtered_picos_ddx_m = movmean(picos_ddx_m, windowSize);
+    filtered_picos_x_m  = movmean(picos_x_m, windowSize);
 
 end

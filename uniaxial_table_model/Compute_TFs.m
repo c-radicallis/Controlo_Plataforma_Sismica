@@ -24,11 +24,13 @@ assume(k2 ,"positive")
 Y = vpasolve([
     (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  ,
     (m1*k2 + m2*(k1+k2))/(2*m1*m2)+ 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f2)^2,
-], [k1,k2]);
+], [k1,k2], [1e3 , 1e3]);
 
 k1 = double(Y.k1);
 k2 = double(Y.k2);
 
+sprintf("k1 = %e",k1)
+sprintf("k2 = %e",k2)
 
 %Servo-valve parameters
 % All converted to SI units

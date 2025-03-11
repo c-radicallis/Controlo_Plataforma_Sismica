@@ -91,11 +91,11 @@ mass=2e3;
 
 % 1st mode
 m1 = mass; % kg
-f1 = 1.5; % Hz   % 1.5 < f1 < 4
+f1 = 4; % Hz   % 1.5 < f1 < 4
 zeta1 = 0.02 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = m1; % kg
-f2 = 6; % Hz % 6 < f2 < 10
+f2 =9.7; % Hz % 6 < f2 < 10
 zeta2 = 0.05; % 5 < zeta2 < 25
 
 % Controller

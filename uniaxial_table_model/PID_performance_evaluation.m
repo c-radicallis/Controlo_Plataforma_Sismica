@@ -33,7 +33,7 @@ grid on;
 xlabel('Frequency (Hz)');
 ylabel('Displacement (m)');
 title('Displacement Response Spectra');
-xlim([.1 5]);
+xlim([0.1 5]);
 % % Define colors for lines 1/3 and 2/4
 % color1 = 'r'; % MATLAB default blue
 % color2 = 'b'; % MATLAB default orange
@@ -72,10 +72,11 @@ max_vref = max(v_ref)
 %% Finding Response Spectre of Ground
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 200;
-f_vector = linspace( f_i , f_n , n_points); %logspace( log10(f_i) , log10(f_n) , n_points);
+n_points = 500;
+%f_vector = linspace( f_i , f_n , n_points); 
+f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
-[filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( [t_vector , ddx_ref], f_vector );
+[filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( t_vector , ddx_ref , f_vector );
 
 %% Structure parameters
 mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
@@ -95,7 +96,7 @@ for m_i = mass
         
         % 2 < zeta1 < 10
         % 5 < zeta2 < 25
-        zeta_list = [ [0.02,0.05] ];%; [10,25] ]/100; % Define the list
+        zeta_list = [ [2 , 5] ; [2 , 25] ; [10 , 25] ; [2 , 25]]/100; % Define the list
         for j = 1:size(zeta_list, 1)
             zeta1 = zeta_list( j, 1);
             zeta2 = zeta_list( j, 2);
@@ -128,7 +129,7 @@ for m_i = mass
 
 
             % Finding Response Spectre for table
-            [filtered_picos_ddx_table , filtered_picos_x_table ] = ResponseSpectre_filtered( [ t_vector , ddx_T], f_vector );
+            [filtered_picos_ddx_table , filtered_picos_x_table ] = ResponseSpectre_filtered( t_vector , ddx_T, f_vector );
 
             figure(fig8);
             subplot(121)
@@ -169,15 +170,12 @@ saveas(fig8, 'Response_Spectra.png');
 
 %%
 
-function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filtered( dados , f_vector )
-
-    t_vector=dados(:,1);
-    [ ~ , n_directions]=size(dados);
+function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filtered( t_vector , accel , f_vector )
 
     m=1;%1kg
-    zeta=0.05; %damping ratio (%)
+    zeta=0.05; %damping ratio (%)s
     
-    picos_ddx_m = zeros( length(f_vector)  , n_directions-1 );
+    picos_ddx_m = zeros( length(f_vector) ,1 );
     picos_x_m = picos_ddx_m;
     
     for i=1:length(f_vector)    
@@ -186,16 +184,14 @@ function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filt
         k = m*(2*pi*f_vector(i))^2; %N/m
         c = zeta*2*m*2*pi*f_vector(i); %N/m/s
           
-        for j=2:n_directions
-            % simulacao do modelo 
-            s=tf('s');
-            ddx_m = lsim( (c*s+k)/(m*s^2+c*s+k) , dados(:,j) , t_vector ,'zoh'); % Funçao de tranferencia de mola massa amortecedor
-            picos_ddx_m(i,j-1)=max(abs( ddx_m(:,1) ));  
-    
-            x_m = lsim( (c*s+k)/(m*s^2+c*s+k)*1/s^2 , dados(:,j)  , t_vector ,'zoh');
-            picos_x_m(i,j-1)=max(abs( x_m(:,1) ));  
-    
-        end
+        % simulacao do modelo 
+        s=tf('s');
+        ddx_m = lsim( (c*s+k)/(m*s^2+c*s+k) , accel , t_vector ,'zoh'); % Funçao de tranferencia de mola massa amortecedor
+        picos_ddx_m(i)=max(abs( ddx_m(:,1) ));  
+
+        x_m = lsim( (c*s+k)/(m*s^2+c*s+k)*1/s^2 , accel  , t_vector ,'zoh');
+        picos_x_m(i)=max(abs( x_m(:,1) ));  
+
     end
 
     % Apply a filter to the data

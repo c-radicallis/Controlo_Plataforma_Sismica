@@ -9,8 +9,8 @@ f1_list = [1, 2 , 3 , 4 ];
 f2_list = 2.415*f1_list;%[ 6,  8 , 10];  % Ensure these vectors have the same length
 
 % Define range for k1 and k2 (stiffness in N/m)
-k1_vals = linspace(1e3, 8e6, 1000);
-k2_vals = linspace(1e3, 4e6, 1000);
+k1_vals = linspace(1e4, 8e6, 1000);
+k2_vals = linspace(1e4, 4e6, 1000);
 [K1, K2] = meshgrid(k1_vals, k2_vals);
 
 figure(1);
@@ -49,3 +49,5 @@ title('Contours for Multiple f_1 and f_2 Values');
 legend('show');
 grid on;
 hold off;
+xlim([1e3 8e6]);
+ylim([1e3 4e6]);

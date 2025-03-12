@@ -196,8 +196,8 @@ function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filt
 
     % Apply a filter to the data
     % % Moving average filter
-    windowSize = length(f_vector)*0.2; % Adjust window size as needed as percentage of elements in f_vector
-    filtered_picos_ddx_m = movmean(picos_ddx_m, windowSize);
-    filtered_picos_x_m  = movmean(picos_x_m, windowSize);
+    %windowSize = length(f_vector)*0.2; % Adjust window size as needed as percentage of elements in f_vector
+    filtered_picos_ddx_m = picos_ddx_m;%movmean(picos_ddx_m, windowSize);
+    filtered_picos_x_m  = picos_x_m;%movmean(picos_x_m, windowSize);
 
 end

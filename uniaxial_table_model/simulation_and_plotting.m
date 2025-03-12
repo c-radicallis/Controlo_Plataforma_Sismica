@@ -6,7 +6,6 @@ close all
 
 fig1 = figure(1); %clf; % Clear figure if needed
 ax1 = axes(fig1); hold(ax1, 'on');
-title('Bode of G\_xT\_xref'); 
 opts1=bodeoptions('cstprefs');
 opts1.FreqUnits = 'Hz';
 opts1.XLim={[1 40]};
@@ -70,6 +69,8 @@ grid on;
 xlabel('Frequency (Hz)');
 ylabel('ddx_m (m/s^2)');
 title('Response Spectra');
+xlim([1 30]);
+%ylim([3 inf]);
 subplot(122);
 grid on;
 xlabel('Frequency (Hz)');
@@ -139,7 +140,7 @@ max_vref = max(v_ref)
 
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 1e2;
+n_points = 2e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 [filtered_picos_ddx_ground , filtered_picos_x_ground] = ResponseSpectre_filtered( [ t_vector , ddx_ref], f_vector );
 
@@ -148,14 +149,14 @@ subplot(121)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+plot(f_vector, filtered_picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
 %semilogx(f_vector, filtered_picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 subplot(122)
 grid on;
 legend();
 hold on
-semilogx(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+plot(f_vector, filtered_picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 %semilogx(f_vector, filtered_picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 
@@ -215,13 +216,13 @@ figure(fig8);
 subplot(121)
 hold on
 mse = mean((filtered_picos_ddx_table-filtered_picos_ddx_ground).^2);
-semilogx(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
+plot(f_vector, filtered_picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
 %semilogx(f_vector, filtered_picos_ddx_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));%- Parallel
 
 subplot(122)
 hold on
 mse = mean((filtered_picos_x_table-filtered_picos_x_ground).^2);
-semilogx(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
+plot(f_vector, filtered_picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
 %semilogx(f_vector, filtered_picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));
 
 
@@ -234,10 +235,10 @@ G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 %%
 % First plot
 axes(ax1); % Activate the existing axes
-grid on
 bodeplot(G_xT_xref);
 legend( 'Default'  ,  'Tuned');
-
+title('Bode of G\_xT\_xref'); 
+grid on;
 
 % displacements in milimeters
 axes(ax3); % Activate the existing axes
@@ -286,13 +287,13 @@ figure(fig8);
 subplot(121)
 hold on
 mse = mean((filtered_picos_ddx_table_tuned-filtered_picos_ddx_ground).^2);
-semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
+plot(f_vector, filtered_picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
 %semilogx(f_vector, filtered_picos_ddx_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 subplot(122)
 hold on
 mse = mean((filtered_picos_x_table_tuned-filtered_picos_x_ground).^2);
-semilogx(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
+plot(f_vector, filtered_picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
 %semilogx(f_vector, filtered_picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 
@@ -359,8 +360,8 @@ function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filt
 
     % Apply a filter to the data
     % % Moving average filter
-    windowSize = length(f_vector)*0.3; % Adjust window size as needed as percentage of elements in f_vector
-    filtered_picos_ddx_m             = movmean(picos_ddx_m, windowSize);
-    filtered_picos_x_m                 = movmean(picos_x_m, windowSize);
+    % windowSize = length(f_vector)*0.3; % Adjust window size as needed as percentage of elements in f_vector
+    filtered_picos_ddx_m   =picos_ddx_m;%          = movmean(picos_ddx_m, windowSize);
+    filtered_picos_x_m  =picos_x_m;               %= movmean(picos_x_m, windowSize);
 
 end

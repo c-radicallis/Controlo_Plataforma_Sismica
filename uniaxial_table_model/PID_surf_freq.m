@@ -55,8 +55,8 @@ Fp_arr=[];
 
 %%
 freq_list =[];
-for i=[4]
-    for j=[9.66]
+for i=1:4
+    for j=2.415*i:2.415:4*2.415*i
         freq_list = [freq_list ; [i,j]];
     end
 end
@@ -97,19 +97,18 @@ for i = 1:size(freq_list, 1)
 end
 
 
-%% Scatter Generate a 3D plot: MSE vs. f1 and f2
-figure;
+%% Generate a 3D plot: MSE vs. f1 and f2
+figure(1);
 [Z1, Z2] = meshgrid(unique(f1_arr), unique(f2_arr));
 MSE_matrix = reshape(mse_arr, size(Z1));
 surf(Z1, Z2, MSE_matrix);
-%scatter3(f1_arr, f2_arr, mse_arr, 100, mse_arr, 'filled');
+
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
 title('3D Plot of MSE vs. f_1 and f_2');
 grid on;
 colorbar;
-
 
 %% Funtions
 function [ filtered_picos_ddx_m , filtered_picos_x_m    ] = ResponseSpectre_filtered( t_vector , accel , f_vector )

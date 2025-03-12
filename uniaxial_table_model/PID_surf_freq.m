@@ -100,20 +100,6 @@ for i = 1:size(freq_list, 1)
 end
 
 
-% %% Generate a 3D plot: MSE vs. f1 and f2
-% figure(1);
-% %[Z1, Z2] = meshgrid(unique(f1_arr), unique(f2_arr));
-% % MSE_matrix = reshape(mse_arr, size(Z1));
-% % surf(Z1, Z2, MSE_matrix);
-% scatter3(f1_arr, f2_arr, mse_arr, 100, mse_arr, 'filled');
-% xlabel('f_1');
-% ylabel('f_2');
-% zlabel('MSE');
-% title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
-% grid on;
-% colorbar;
-% 
-
 %% Generate a 3D plot: MSE vs. f1 and f2
 figure(1);
 f1_unique = unique(f1_arr);
@@ -128,8 +114,9 @@ surf(Z1, Z2, MSE_matrix);
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
- title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
+title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
 grid on;
 colormap(jet(256));
 colorbar;
-
+saveas(fig1, sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2);
+ 

@@ -67,20 +67,19 @@ fig8 = figure(8);%
 subplot(121);
 grid on;
 xlabel('Frequency (Hz)');
-ylabel('ddx_m (m/s^2)');
-title('Response Spectra');
+ylabel('Acceleration (m/s^2)');
+title('Acceleration Response Spectra');
 xlim([1 30]);
-%ylim([3 inf]);
 subplot(122);
 grid on;
 xlabel('Frequency (Hz)');
-ylabel('x_m (m)');
-title('Response Spectra');
-xlim([0 5]);
+ylabel('Displacement (m)');
+title('Displacement Response Spectra');
+xlim([0.1 5]);
 % Define colors for lines 1/3 and 2/4
 color1 = 'r'; % MATLAB default blue
 color2 = 'b'; % MATLAB default orange
-color3 = 'g';
+color3 = 'y';
 
 
 %% Structure parameters
@@ -95,8 +94,8 @@ m1 = mass; % kg
 f1 = 4; % Hz   % 1.5 < f1 < 4
 zeta1 = 0.02 ; % 2 < zeta1 < 10
 %2nd mode
-m2 = m1; % kg
-f2 =9.7; % Hz % 6 < f2 < 10
+m2 = mass; % kg
+f2 =10; % Hz % 6 < f2 < 10
 zeta2 = 0.05; % 5 < zeta2 < 25
 
 % Controller
@@ -149,15 +148,15 @@ subplot(121)
 grid on;
 legend();
 hold on
-plot(f_vector, picos_ddx_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground');% - Normal
-%semilogx(f_vector, picos_ddx_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+%semilogx(f_vector, picos_ddx_ground(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 subplot(122)
 grid on;
 legend();
 hold on
-plot(f_vector, picos_x_ground(:, 1),'-o', 'LineWidth' , 1, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
-%semilogx(f_vector, picos_x_ground(:, 2),'-o', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Ground - Parallel');
+plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+%semilogx(f_vector, picos_x_ground(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 
 %%
@@ -216,14 +215,14 @@ figure(fig8);
 subplot(121)
 hold on
 mse = mean((picos_ddx_table-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "Platform - MSE="+string(mse(1))); % - Normal
-%semilogx(f_vector, picos_ddx_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));%- Parallel
+plot(f_vector, picos_ddx_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName',  sprintf('Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_ddx_table(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));%- Parallel
 
 subplot(122)
 hold on
 mse = mean((picos_x_table-picos_x_ground).^2);
-plot(f_vector, picos_x_table(:, 1),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName',"Platform - MSE="+string(mse(1)));
-%semilogx(f_vector, picos_x_table(:, 2),'-+', 'LineWidth' , 1, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));
+plot(f_vector, picos_x_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', sprintf('Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_x_table(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));
 
 
 
@@ -269,7 +268,6 @@ axes(ax2); % Activate the existing axes
 hold on
 i_sv = lsim(G_c ,   (x_ref-x_T_tuned)*1e-3  ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","Tuned")
-
 %  plot
 axes(ax7); % Activate the existing axes
 hold on
@@ -287,14 +285,14 @@ figure(fig8);
 subplot(121)
 hold on
 mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
-%semilogx(f_vector, picos_ddx_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
+plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_ddx_table_tuned(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 subplot(122)
 hold on
 mse = mean((picos_x_table_tuned-picos_x_ground).^2);
-plot(f_vector, picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Tuned Platform - MSE='+string(mse(1)));
-%semilogx(f_vector, picos_x_table_tuned(:, 2),'-*', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
+plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_x_table_tuned(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 
 %% State Space model
@@ -317,7 +315,9 @@ plot(f_vector, picos_x_table_tuned(:, 1),'-*', 'LineWidth' , 1, 'Color', color3,
 
 
 %% Save all figures after plotting
-saveas(fig1, 'Bode_of_G_xT_xref.png');
+
+
+ saveas(fig1, 'Bode_of_G_xT_xref.png');
 saveas(fig2, 'Input_to_Servo.png');
 saveas(fig3, 'Platen_Displacement.png');
 saveas(fig4, 'Platen_Acceleration.png');
@@ -325,5 +325,6 @@ saveas(fig5, 'Platen_Displacement_Tracking_Error.png');
 saveas(fig6, 'Platen_Acceleration_Tracking_Error.png');
 saveas(fig7, 'Force_to_Platen.png');
 saveas(fig8, 'Response_Spectra.png');
+ 
 
 

@@ -33,7 +33,7 @@ max_vref = max(v_ref)
 %% Finding Response Spectre of Ground
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 200;
+n_points = 500;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
 [picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref , f_vector );
@@ -53,8 +53,8 @@ Fp_arr=[];
 
 %%
 zeta_list =[];
-for i=1:2
-    for j=1:2
+for i=1:10
+    for j=4:24
         zeta_list = [zeta_list ; [i,j]];
     end
 end
@@ -62,8 +62,8 @@ zeta_list = zeta_list/100;
 
 %%
 
-f1 =1.5;
-f2 = 6;
+f1 =4;
+f2 = 10;
 for j = 1:size(zeta_list, 1)
     zeta1 = zeta_list( j, 1);
     zeta2 = zeta_list( j, 2);
@@ -79,9 +79,10 @@ for j = 1:size(zeta_list, 1)
     x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
     ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 
-    i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh'); % converting mm to m
-    
-    F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+    % i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh'); % converting mm to m
+    % F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+    % isv_arr(end+1) = max(abs(i_sv));
+    % Fp_arr(end+1)= max(abs(F_p_isv));
 
     [picos_ddx_table , picos_x_table ] = ResponseSpectrum( t_vector , ddx_T, f_vector );
 
@@ -92,8 +93,7 @@ for j = 1:size(zeta_list, 1)
     zeta1_arr(end+1) = zeta1;
     zeta2_arr(end+1) = zeta2;
     mse_arr(end+1)   = mse;
-    isv_arr(end+1) = max(abs(i_sv));
-    Fp_arr(end+1)= max(abs(F_p_isv));
+
 end
 
 
@@ -106,8 +106,9 @@ surf(Z1, Z2, MSE_matrix);
 xlabel('\zeta_1');
 ylabel('\zeta_2');
 zlabel('MSE');
-title('3D Plot of MSE vs. \zeta_1 and \zeta_2');
+title(sprintf('3D Plot of MSE vs. ξ_1 and ξ_2 (m_i=%.0f ton , f_1=%.0f Hz & f_2=%.0f Hz)', mass*1e-3,f1,f2));
 grid on;
+colormap(jet(256));
 colorbar;
 
 

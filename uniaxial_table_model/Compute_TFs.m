@@ -29,8 +29,8 @@ Y = vpasolve([
 k1 = double(Y.k1);
 k2 = double(Y.k2);
 
-sprintf("k1 = %e",k1)
-sprintf("k2 = %e",k2)
+% sprintf("k1 = %e",k1)
+% sprintf("k2 = %e",k2)
 
 %Servo-valve parameters
 % All converted to SI units

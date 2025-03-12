@@ -55,18 +55,18 @@ Fp_arr=[];
 
 %%
 freq_list =[];
-for i=1:0.1:4
+for i=1:4
     % n_f2_calculados=linspace(2.415*i,4*2.415*i,4);
     % for j=n_f2_calculados
-    for j=10:-0.1:2.415*i
+    for j=2.415*i:4*
         freq_list = [freq_list ; [i,j]];
     end
 end
 
 
 %%
-zeta1=0.1;
-zeta2=0.25;
+zeta1=0.02;
+zeta2=0.05;
 
 for i = 1:size(freq_list, 1)
     f1 = freq_list( i, 1);
@@ -100,36 +100,16 @@ for i = 1:size(freq_list, 1)
 end
 
 
-% %% Generate a 3D plot: MSE vs. f1 and f2
-% figure(1);
-% %[Z1, Z2] = meshgrid(unique(f1_arr), unique(f2_arr));
-% % MSE_matrix = reshape(mse_arr, size(Z1));
-% % surf(Z1, Z2, MSE_matrix);
-% scatter3(f1_arr, f2_arr, mse_arr, 100, mse_arr, 'filled');
-% xlabel('f_1');
-% ylabel('f_2');
-% zlabel('MSE');
-% title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
-% grid on;
-% colorbar;
-% 
-
 %% Generate a 3D plot: MSE vs. f1 and f2
 figure(1);
-f1_unique = unique(f1_arr);
-f2_unique = unique(f2_arr);
-[Z1, Z2] = meshgrid(f1_unique, f2_unique);
-
-% Interpolating scattered data onto a grid
-MSE_matrix = griddata(f1_arr, f2_arr, mse_arr, Z1, Z2, 'linear');
-
-% Surface plot
+[Z1, Z2] = meshgrid(unique(f1_arr), unique(f2_arr));
+MSE_matrix = reshape(mse_arr, size(Z1));
 surf(Z1, Z2, MSE_matrix);
+%scatter3(zeta1_arr, zeta2_arr, mse_arr, 100, mse_arr, 'filled');
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
- title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
+title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
 grid on;
-colormap(jet(256));
 colorbar;
 

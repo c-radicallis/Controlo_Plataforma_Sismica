@@ -140,7 +140,7 @@ max_vref = max(v_ref)
 
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 2e2;
+n_points = 5e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 [picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref, f_vector );
 

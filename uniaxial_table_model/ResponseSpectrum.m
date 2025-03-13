@@ -1,4 +1,4 @@
-function [ picos_ddx_m , picos_x_m ] = ResponseSpectrum( t_vector , accel , f_vector )
+function [ picos_ddx_m , picos_x_m ] = ResponseSpectrum( t_vector , accel , f_vector , do_displacement )
 
     m=1;%1kg
     zeta=0.05; %damping ratio (%)s
@@ -16,9 +16,11 @@ function [ picos_ddx_m , picos_x_m ] = ResponseSpectrum( t_vector , accel , f_ve
         s=tf('s');
         ddx_m = lsim( (c*s+k)/(m*s^2+c*s+k) , accel , t_vector ,'zoh'); % Funçao de tranferencia de mola massa amortecedor
         picos_ddx_m(i)=max(abs( ddx_m(:,1) ));  
-
-        x_m = lsim( (c*s+k)/(m*s^2+c*s+k)*1/s^2 , accel  , t_vector ,'zoh');
-        picos_x_m(i)=max(abs( x_m(:,1) ));  
+        
+        if do_displacement==1
+            x_m = lsim( (c*s+k)/(m*s^2+c*s+k)*1/s^2 , accel  , t_vector ,'zoh');
+            picos_x_m(i)=max(abs( x_m(:,1) ));  
+        end
 
     end
 end

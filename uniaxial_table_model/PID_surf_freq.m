@@ -38,19 +38,12 @@ n_points = 200;
 %f_vector = linspace( f_i , f_n , n_points); 
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
-[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref , f_vector );
+[picos_ddx_ground , ~] = ResponseSpectrum( t_vector , ddx_ref , f_vector , 0 );
 
 %% Structure parameters
 mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)
 mass=2e3;
-
-% Before the loops, initialize arrays to store f1, f2, and mse values
-f1_arr = [];
-f2_arr = [];
-mse_arr   = [];
-isv_arr=[];
-Fp_arr=[];
 
 
 %%
@@ -63,10 +56,16 @@ for i=1:0.1:4
     end
 end
 
-
-%%
 zeta1=0.1;
 zeta2=0.25;
+
+elements =size(zeta_list, 1);
+% Before the loops, initialize arrays to store zeta1, zeta2, and mse values
+f1_arr = zeros(elements,1);
+f2_arr =zeros(elements,1);
+mse_arr   = zeros(elements,1);
+% isv_arr=zeros(elements,1);
+% Fp_arr=zeros(elements,1);
 
 for i = 1:size(freq_list, 1)
     f1 = freq_list( i, 1);
@@ -80,28 +79,27 @@ for i = 1:size(freq_list, 1)
     G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
     [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , mass,mass , f1, zeta1 , f2 , zeta2);
 
-    x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
+    %x_T = lsim(G_xT_xref*1e3/s^2 ,  ddx_ref ,t_vector,'foh');
     ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
 
     % i_sv = lsim(G_c,   (x_ref-x_T)*1e-3  , t_vector,'foh'); % converting mm to m
     % F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
 
-    [picos_ddx_table , picos_x_table ] = ResponseSpectrum( t_vector , ddx_T, f_vector );
+    [picos_ddx_table , ~ ] = ResponseSpectrum( t_vector , ddx_T, f_vector , 0 );
 
     % Compute MSE for acceleration response (you can also compute for displacement)
     mse = mean((picos_ddx_table - picos_ddx_ground).^2);
 
     % Save the values for the 3D plot (here we use the acceleration MSE)
-    f1_arr(end+1) = f1;
-    f2_arr(end+1) = f2;
-    mse_arr(end+1)   = mse;
-    % isv_arr(end+1) = max(abs(i_sv));
-    % Fp_arr(end+1)= max(abs(F_p_isv));
+    f1_arr(j) =f1;
+    f2_arr(j) = f2;
+    mse_arr(j)   = mse;
+
 end
 
 
 %% Generate a 3D plot: MSE vs. f1 and f2
-figure(1);
+fig1 = figure(1);
 f1_unique = unique(f1_arr);
 f2_unique = unique(f2_arr);
 [Z1, Z2] = meshgrid(f1_unique, f2_unique);
@@ -114,9 +112,19 @@ surf(Z1, Z2, MSE_matrix);
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
-title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2));
+title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.1f ton ,ξ_1=%.0f & ξ_2=%.0f )', mass*1e-3,zeta1,zeta2));
 grid on;
 colormap(jet(256));
 colorbar;
-saveas(fig1, sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.0f ton ,ξ_1=%.0f Hz & ξ_2=%.0f Hz)', mass*1e-3,zeta1,zeta2);
+
+% Folder path where you want to save the images
+folderName = 'MSE_Freq';
+
+% Check if the folder already exists
+if ~exist(folderName, 'dir')
+    % Create the folder if it doesn't exist
+    mkdir(folderName);
+end
+saveas(fig1,fullfile(folderName, sprintf('MSE vs Freq (m_i=%.1f,zeta1=%.1f,zeta2=%.1f).fig', mass*1e-3,zeta1,zeta2)));
+ 
  

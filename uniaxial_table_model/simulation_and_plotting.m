@@ -315,16 +315,29 @@ plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 
 
 
 %% Save all figures after plotting
+% Folder path where you want to save the images
+folderName = 'Sim_Res';
 
+% Check if the folder already exists
+if ~exist(folderName, 'dir')
+    % Create the folder if it doesn't exist
+    mkdir(folderName);
+end
 
- saveas(fig1, 'Bode_of_G_xT_xref.png');
-saveas(fig2, 'Input_to_Servo.png');
-saveas(fig3, 'Platen_Displacement.png');
-saveas(fig4, 'Platen_Acceleration.png');
-saveas(fig5, 'Platen_Displacement_Tracking_Error.png');
-saveas(fig6, 'Platen_Acceleration_Tracking_Error.png');
-saveas(fig7, 'Force_to_Platen.png');
-saveas(fig8, 'Response_Spectra.png');
+saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'));
+saveas(fig2,fullfile(folderName,'Input_to_Servo.png'));
+saveas(fig3,fullfile(folderName,'Platen_Displacement.png'));
+saveas(fig4,fullfile(folderName,'Platen_Acceleration.png'));
+saveas(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'));
+saveas(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'));
+saveas(fig7,fullfile(folderName,'Force_to_Platen.png'));
+saveas(fig8,fullfile(folderName,'Response_Spectra.png'));
  
-
-
+saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.fig'));
+saveas(fig2,fullfile(folderName,'Input_to_Servo.fig'));
+saveas(fig3,fullfile(folderName,'Platen_Displacement.fig'));
+saveas(fig4,fullfile(folderName,'Platen_Acceleration.fig'));
+saveas(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.fig'));
+saveas(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.fig'));
+saveas(fig7,fullfile(folderName,'Force_to_Platen.fig'));
+saveas(fig8,fullfile(folderName,'Response_Spectra.fig'));

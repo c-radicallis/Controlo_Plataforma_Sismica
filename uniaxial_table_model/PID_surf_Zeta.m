@@ -33,7 +33,7 @@ max_vref = max(v_ref)
 %% Finding Response Spectre of Ground
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 500;
+n_points = 200;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
 [picos_ddx_ground , ~] = ResponseSpectrum( t_vector , ddx_ref , f_vector , 0);
@@ -49,8 +49,10 @@ mass=2e3;
 zeta_list =[];
 % for i=1:0.2:6
 %     for j=4:24
-for i=1:2:6
-    for j=4:2:6
+% for i=1:0.1:6
+%     for j=4:0.5:24
+for i=1:6
+    for j=7:16
         zeta_list = [zeta_list ; [i,j]];
     end
 end
@@ -58,7 +60,7 @@ zeta_list = zeta_list/100;
 
 %%
 
-f1 =4;
+f1 = 4;
 f2 = 10;
 
 elements =size(zeta_list, 1);
@@ -69,10 +71,10 @@ mse_arr   = zeros(elements,1);
 % isv_arr=zeros(elements,1);
 % Fp_arr=zeros(elements,1);
 
-for j = 1:elements
-    sprintf('Step %.0f of %.0f',j , size(zeta_list, 1))
-    zeta1 = zeta_list( j, 1);
-    zeta2 = zeta_list( j, 2);
+for i= 1:elements
+    sprintf('Step %.0f of %.0f',i,elements)
+    zeta1 = zeta_list( i, 1);
+    zeta2 = zeta_list( i, 2);
 
     % --- Controller and transfer function computations ---
     k_p=1.2993/1e-2;
@@ -96,9 +98,9 @@ for j = 1:elements
     mse = mean((picos_ddx_table - picos_ddx_ground).^2);
 
     % Save the values for the 3D plot (here we use the acceleration MSE)
-    zeta1_arr(j) = zeta1;
-    zeta2_arr(j) = zeta2;
-    mse_arr(j)   = mse;
+    zeta1_arr(i) = zeta1;
+    zeta2_arr(i) = zeta2;
+    mse_arr(i)   = mse;
 
 end
 
@@ -120,10 +122,10 @@ colorbar;
 % Folder path where you want to save the images
 folderName = 'MSE_Zeta';
 
-% Check if the folder already exists
-if ~exist(folderName, 'dir')
-    % Create the folder if it doesn't exist
-    mkdir(folderName);
-end
+% % Check if the folder already exists
+% if ~exist(folderName, 'dir')
+%     % Create the folder if it doesn't exist
+%     mkdir(folderName);
+% end
 saveas(fig1, fullfile(folderName,sprintf('MSE vs Zeta (m_i=%.1f,f_1=%.1f, f_2=%.1f).fig', mass*1e-3,f1,f2)));
  

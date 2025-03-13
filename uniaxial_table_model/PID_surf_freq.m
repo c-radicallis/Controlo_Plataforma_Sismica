@@ -1,6 +1,6 @@
-clear 
-close all
-%clc
+% clear 
+% close all
+% %clc
 
 %%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
@@ -56,10 +56,10 @@ for i=1:0.1:4
     end
 end
 
-zeta1=0.1;
-zeta2=0.25;
+zeta1=0.02;
+zeta2=0.05;
 
-elements =size(zeta_list, 1);
+elements =size(freq_list, 1);
 % Before the loops, initialize arrays to store zeta1, zeta2, and mse values
 f1_arr = zeros(elements,1);
 f2_arr =zeros(elements,1);
@@ -68,6 +68,7 @@ mse_arr   = zeros(elements,1);
 % Fp_arr=zeros(elements,1);
 
 for i = 1:size(freq_list, 1)
+    sprintf('Step %.0f of %.0f',i , elements)
     f1 = freq_list( i, 1);
     f2 = freq_list( i, 2);
 
@@ -91,9 +92,9 @@ for i = 1:size(freq_list, 1)
     mse = mean((picos_ddx_table - picos_ddx_ground).^2);
 
     % Save the values for the 3D plot (here we use the acceleration MSE)
-    f1_arr(j) =f1;
-    f2_arr(j) = f2;
-    mse_arr(j)   = mse;
+    f1_arr(i) =f1;
+    f2_arr(i) = f2;
+    mse_arr(i)   = mse;
 
 end
 
@@ -112,19 +113,19 @@ surf(Z1, Z2, MSE_matrix);
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
-title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.1f ton ,ξ_1=%.0f & ξ_2=%.0f )', mass*1e-3,zeta1,zeta2));
+
 grid on;
 colormap(jet(256));
 colorbar;
-
+title(sprintf('3D Plot of MSE vs. f_1 and f_2 (m_i=%.1f ton ,ξ_1=%.2f & ξ_2=%.2f )', mass*1e-3,zeta1,zeta2));
 % Folder path where you want to save the images
 folderName = 'MSE_Freq';
+% % Check if the folder already exists
+% if ~exist(folderName, 'dir')
+%     % Create the folder if it doesn't exist
+%     mkdir(folderName);
+% end
 
-% Check if the folder already exists
-if ~exist(folderName, 'dir')
-    % Create the folder if it doesn't exist
-    mkdir(folderName);
-end
-saveas(fig1,fullfile(folderName, sprintf('MSE vs Freq (m_i=%.1f,zeta1=%.1f,zeta2=%.1f).fig', mass*1e-3,zeta1,zeta2)));
+saveas(fig1,fullfile(folderName, sprintf('MSE vs Freq (m_i=%.1f,zeta1=%.2f,zeta2=%.2f).fig', mass*1e-3,zeta1,zeta2)));
  
  

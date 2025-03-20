@@ -109,7 +109,7 @@ f2_unique = unique(f2_arr);
 MSE_matrix = griddata(f1_arr, f2_arr, mse_arr, Z1, Z2, 'linear');
 
 % Surface plot
-surf(Z1, Z2, MSE_matrix);
+surf(Z1, Z2, MSE_matrix,"EdgeColor","interp","FaceColor","interp");
 xlabel('f_1');
 ylabel('f_2');
 zlabel('MSE');
@@ -126,6 +126,6 @@ folderName = 'MSE_Freq';
 %     mkdir(folderName);
 % end
 
-saveas(fig1,fullfile(folderName, sprintf('MSE vs Freq (m_i=%.1f,zeta1=%.2f,zeta2=%.2f).fig', mass*1e-3,zeta1,zeta2)));
+exportgraphics(fig1,fullfile(folderName, sprintf('MSE vs Freq (m_i=%.1f,zeta1=%.2f,zeta2=%.2f).fig', mass*1e-3,zeta1,zeta2)));
  
  

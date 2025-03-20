@@ -89,14 +89,14 @@ for m_i = mass
 
     % 1.5 < f1 < 4
     % 6 < f2 < 10
-    f_list =  [ [1.5,10] ; [4,10] ]; % Define the list
+    f_list =  [ [6/2.415,6]  ;[8/2.415,8] ; [10/2.415,10]]; % Define the list
     for i = 1:size(f_list, 1)
         f1 = f_list( i, 1);
         f2 = f_list( i, 2);
         
         % 2 < zeta1 < 10
         % 5 < zeta2 < 25
-        zeta_list = [ [2 , 5] ; [10 , 25] ]/100; % Define the list  [2 , 25] 
+        zeta_list = [  [10 , 25] ]/100; % Define the list  [2 , 25] 
         for j = 1:size(zeta_list, 1)
             zeta1 = zeta_list( j, 1);
             zeta2 = zeta_list( j, 2);

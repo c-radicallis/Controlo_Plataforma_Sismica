@@ -52,7 +52,7 @@ zeta_list =[];
 % for i=1:0.1:6
 %     for j=4:0.5:24
 for i=1:6
-    for j=7:16
+    for j=4:24
         zeta_list = [zeta_list ; [i,j]];
     end
 end
@@ -60,8 +60,8 @@ zeta_list = zeta_list/100;
 
 %%
 
-f1 = 4;
-f2 = 10;
+f1 = 3;
+f2 = 2.415*f1;
 
 elements =size(zeta_list, 1);
 % Before the loops, initialize arrays to store zeta1, zeta2, and mse values
@@ -109,7 +109,7 @@ end
 fig1 = figure(1);
 [Z1, Z2] = meshgrid(unique(zeta1_arr), unique(zeta2_arr));
 MSE_matrix = reshape(mse_arr, size(Z1));
-surf(Z1, Z2, MSE_matrix);
+surf(Z1, Z2, MSE_matrix)%,"FaceColor","interp");%,"EdgeColor","interp"
 %scatter3(zeta1_arr, zeta2_arr, mse_arr, 100, mse_arr, 'filled');
 xlabel('\zeta_1');
 ylabel('\zeta_2');
@@ -127,5 +127,8 @@ folderName = 'MSE_Zeta';
 %     % Create the folder if it doesn't exist
 %     mkdir(folderName);
 % end
+
+%%
+
 saveas(fig1, fullfile(folderName,sprintf('MSE vs Zeta (m_i=%.1f,f_1=%.1f, f_2=%.1f).fig', mass*1e-3,f1,f2)));
- 
+%exportgraphics(gca,fullfile(folderName,sprintf('MSE vs Zeta (m_i=%.1f,f_1=%.1f, f_2=%.1f).fig', mass*1e-3,f1,f2)),'BackgroundColor','none');

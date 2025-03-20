@@ -5,12 +5,12 @@ m1 = 2000;
 m2 = 2000; 
 
 % Define lists of frequencies (Hz)
-f1_list = [1, 2 , 3 , 4 ];  
+f1_list = [1.5, 2 , 3 , 4 ];  
 f2_list = 2.415*f1_list;%[ 6,  8 , 10];  % Ensure these vectors have the same length
 
 % Define range for k1 and k2 (stiffness in N/m)
-k1_vals = linspace(1e3, 8e6, 1000);
-k2_vals = linspace(1e3, 4e6, 1000);
+k1_vals = linspace(1e3, 8e6, 100);
+k2_vals = linspace(1e3, 4e6, 100);
 [K1, K2] = meshgrid(k1_vals, k2_vals);
 
 figure(1);

@@ -31,7 +31,7 @@ v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref)
 
 %% Finding Response Spectre of Ground
-f_i=0.1; %freq inicial
+f_i=0.01; %freq inicial
 f_n=30;  %freq final
 n_points = 200;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
@@ -51,8 +51,8 @@ zeta_list =[];
 %     for j=4:24
 % for i=1:0.1:6
 %     for j=4:0.5:24
-for i=1:6
-    for j=4:24
+for i=1:15
+    for j=1:25
         zeta_list = [zeta_list ; [i,j]];
     end
 end
@@ -60,8 +60,8 @@ zeta_list = zeta_list/100;
 
 %%
 
-f1 = 3;
-f2 = 2.415*f1;
+f1 = 0.4;
+f2 = 3.5;
 
 elements =size(zeta_list, 1);
 % Before the loops, initialize arrays to store zeta1, zeta2, and mse values
@@ -77,7 +77,7 @@ for i= 1:elements
     zeta2 = zeta_list( i, 2);
 
     % --- Controller and transfer function computations ---
-    k_p=1.2993/1e-2;
+    k_p=1.2993/1e-2;  %V/m
     G_c = tf(k_p,1);
     [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,~,~,~ , G_Fp_isv  ,~,~,~,~ , ~ ]=Compute_TFs(G_c, mT , cT , mass,mass , f1, zeta1 , f2 , zeta2);
     tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');

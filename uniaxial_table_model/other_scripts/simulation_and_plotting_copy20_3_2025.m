@@ -134,6 +134,7 @@ color1 = 'r'; % MATLAB default blue
 color2 = 'b'; % MATLAB default orange
 color3 = 'y';
 
+
 %% Finding Response Spectre of Ground
 
 f_i=0.1; %freq inicial
@@ -148,12 +149,14 @@ grid on;
 legend();
 hold on
 plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+%semilogx(f_vector, picos_ddx_ground(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 subplot(122)
 grid on;
 legend();
 hold on
 plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+%semilogx(f_vector, picos_x_ground(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Ground - Parallel');
 
 
 %%
@@ -199,6 +202,7 @@ plot(t_vector,i_sv,"DisplayName","Default")
 % 7th  plot 
 axes(ax7); % Activate the existing axes
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+%plot(t_vector,ddx_ref*mT/1e3,"DisplayName","Reference") % weird values
 plot(t_vector,F_p_isv/1e3,"DisplayName","Default") %/1e3 to display as kN
 
 
@@ -212,11 +216,13 @@ subplot(121)
 hold on
 mse = mean((picos_ddx_table-picos_ddx_ground).^2);
 plot(f_vector, picos_ddx_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName',  sprintf('Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_ddx_table(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));%- Parallel
 
 subplot(122)
 hold on
 mse = mean((picos_x_table-picos_x_ground).^2);
 plot(f_vector, picos_x_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', sprintf('Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_x_table(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', "MSE="+string(mse(2)));
 
 
 
@@ -280,19 +286,34 @@ subplot(121)
 hold on
 mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
 plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_ddx_table_tuned(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
 
 subplot(122)
 hold on
 mse = mean((picos_x_table_tuned-picos_x_ground).^2);
 plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+%semilogx(f_vector, picos_x_table_tuned(:, 2),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned Platform - Parallel');
+
+
 
 
 %% State Space model
 
-MV = struct(Min=-lim_force,Max=lim_force);
-p = 20;
-m = 3;
-mpcobj = mpc(Plant,Ts,p,m,[],MV);
+
+
+
+% % u = Fp
+% % y = x_ss
+% 
+% Css= eye(6);
+% Dss = 0;
+% 
+% MV = struct(Min=-lim_force,Max=lim_force);
+% p = 20;
+% m = 3;
+% mpcobj = mpc(Plant,Ts,p,m,[],MV);
+% 
+
 
 
 %% Save all figures after plotting

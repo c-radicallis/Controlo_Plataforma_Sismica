@@ -117,8 +117,8 @@ obs = vpa(obsv(A,C),500);
 
 r_obsv = rank(obs);
 
-controlability = vpa(ctrb(A,B),500)
+controlability = vpa(ctrb(A,B),500);
 
-r_controlability = rank(controlability)
+r_controlability = rank(controlability);
 
 end

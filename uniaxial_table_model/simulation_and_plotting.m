@@ -24,7 +24,7 @@ G_c = tf(k_p,1);
 
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
 [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ss_isv_xT  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
-%ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
+ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
 
 %%  Load seismic signal and scale down if necessary
 dados = load('elcentro.txt');
@@ -32,7 +32,6 @@ t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
 ddx = [t_vector dados(:,2)];
-%ddy = [t_vector  dados(:,3)];
 
 % Limits
 lim_displacement = 100; % mm
@@ -130,9 +129,9 @@ ylabel('Displacement (m)');
 title('Displacement Response Spectra');
 xlim([0.1 5]);
 % Define colors for lines 1/3 and 2/4
-color1 = 'r'; % MATLAB default blue
-color2 = 'b'; % MATLAB default orange
-color3 = 'o';
+color1 = 'blue';
+color2 = 'red' ;
+color3 = '#EDB120';
 
 %% Finding Response Spectre of Ground
 
@@ -160,8 +159,8 @@ plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'Disp
 % First plot
 axes(ax1); % Activate the existing axes
 bodeplot(G_xT_xref,opts1);
-% hold on
-% bodeplot(ss_xref_xT)
+hold on
+bodeplot(ss_xref_xT,opts1);
 
 % Third plot
 axes(ax3); % Activate the existing axes
@@ -171,8 +170,8 @@ erro = x_T-x_ref;
 mse = mean(erro.^2);
 plot(t_vector,x_ref,"DisplayName","Reference")
 plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
-%x_T_ss = lsim(ss_xref_xT,x_ref,t_vector);
-%plot(t_vector,x_T_ss,'--',"DisplayName","State Space")
+x_T_ss = lsim(ss_xref_xT,x_ref,t_vector);
+plot(t_vector,x_T_ss,'--',"DisplayName","State Space")
 
 %%
 % 5th plot
@@ -229,7 +228,7 @@ G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 % First plot
 axes(ax1); % Activate the existing axes
 bodeplot(G_xT_xref);
-legend( 'Default'  ,  'Tuned');
+legend( 'Default'  ,'Default(state space)', 'Tuned');
 title('Bode of G\_xT\_xref'); 
 grid on;
 

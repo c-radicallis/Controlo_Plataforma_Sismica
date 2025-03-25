@@ -93,31 +93,45 @@ G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 %      0,   -k2,  k2];
 
 A = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
-            k_h/A , - k_h*k_pl/A^2 , 0      , 0          , 0     , 0              , -k_h      , 0     ;
+            k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
                 0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
                 0 ,              0 , 0      , 0          , 0     , 0              , 1         , 0     ;
                 0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
                 0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
                 0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
-                0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2], 500);
+                0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2],5000);
 
 
-B=vpa([k_svk_q/tau_sv ; zeros(7,1)],500);
+B=vpa([k_svk_q/tau_sv ; zeros(7,1)],5000);
 
-C=vpa([zeros(1,2), 1 , zeros(1,5)],500);%xT
+C=vpa([zeros(1,2), 1 , zeros(1,5)],5000);%xT
      %zeros(1,2), 1 , zeros(1,6)];%Fp
-%C=ones(1,9);
+%C=vpa(ones(1,8),500);
 
 D=0;
 
-ss_model = ss(double(A),double(B),double(C),D);
+ss_model = ss(double(A),double(B),double(C),D)
 
-obs = vpa(obsv(A,C),500);
+obs = vpa(obsv(A,C),5000);
+r_obsv = rank(obs)
+controlability = vpa(ctrb(A,B),5000);
+r_controlability = rank(controlability)
 
-r_obsv = rank(obs);
+%Construct the optimal state-feedback gain using the given cost function by typing the following commands:
+nx = 8;    %Number of states
+nu = 1; %inputs
+ny = 1;    %Number of outputs
+Q = blkdiag( eye(nx) , eye(ny));
+R = eye(nu);
+K = lqi(ss_model,Q,R)
+ 
+%Construct the Kalman state estimator using the given noise covariance data by typing the following commands:
+Qn = eye(nu); 
+Rn = 1;
+kest = kalman(ss_model,Qn,Rn)
 
-controlability = vpa(ctrb(A,B),500);
+%Connect the Kalman state estimator and the optimal state-feedback gain to form the LQG servo controller by typing the following command:
+trksys = lqgtrack(kest,K,"2dof")
 
-r_controlability = rank(controlability);
 
 end

@@ -1,6 +1,6 @@
 clear 
 close all
-%clc
+clc
 
 %% Structure parameters
 

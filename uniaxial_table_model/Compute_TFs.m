@@ -92,8 +92,7 @@ G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 %      -k1, k1 + k2, -k2;
 %      0,   -k2,  k2];
 
-% Define original system parameters (assumed defined: tau_sv, k_h, A, k_pl, mT, k1, cT, c1, m1, k2, c2, m2, k_svk_q)
-% Original system matrices (8 states)
+%% Original Plant Definition
 A = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
@@ -102,57 +101,52 @@ A = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0            
               0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
               0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2],5000);
-
+          
 B = vpa([k_svk_q/tau_sv ; zeros(7,1)],5000);
-C = vpa([zeros(1,2), 1 , zeros(1,5)],5000); % measuring xT
+C = eye(8); %vpa([zeros(1,2), 1 , zeros(1,5)],5000);  % measuring xT
 D = 0;
 
-% Create the original plant model (for observability/controllability checks)
-ss_model = ss(double(A), double(B), double(C), D)
-obs = vpa(obsv(A,C),5000);
+ss_model = ss(double(A), double(B), double(C), D);
+
+obs = obsv(double(A), double(C));
 r_obsv = rank(obs)
-ctrlb = vpa(ctrb(A,B),5000);
+ctrlb = ctrb(double(A), double(B));
 r_ctrlb = rank(ctrlb)
 
-%% Augment the plant for servo tracking (LQI design)
-nx = 8;  % Number of original states
-nu = 1;  % number of inputs
-ny = 1;  % number of outputs
+%% LQI Design (using original plant)
+nx = size(ss_model.A,1);  % 8 states
+ny = size(ss_model.C,1);  % 1 output
+nu = size(ss_model.B,2);
 
-% Augmented state: x_a = [x; x_int], where x_int integrates the error r - y.
+% Q weighting matrix for the augmented system (8+1 = 9 states)
+Q_lqi = blkdiag(eye(nx), eye(ny));  % 9x9 matrix
+R = eye(nu);
+
+% lqi will internally augment ss_model (adds an integrator) to form a 9-state system.
+K = lqi(ss_model, Q_lqi, R)
+
+%% Kalman Estimator Design for Tracking
+% Augment the plant manually to include an integrator:
 A_aug = [double(A), zeros(nx,ny);
          -double(C), zeros(ny,ny)];
-B_aug_lqi = [double(B); zeros(ny,nu)];
-C_aug = [double(C), zeros(ny,ny)];
-D_aug = 0;
+%B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
+% Form the estimator plant with two inputs:
+B_aug = [double(B), zeros(nx,nu);
+                   0            ,   1];  
+C_aug = [double(C), eye(ny,ny)];
+D_aug = zeros(ny, 2);
 
-ss_model_aug = ss(A_aug, B_aug_lqi, C_aug, D_aug)
+ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug);
 
-% LQI weighting matrices (tune Q and R as needed)
-Q = eye(size(A_aug,1)) ;%blkdiag( eye(size(A_aug,1)) , eye(ny));
-R = eye(nu);
-K = lqi(ss_model_aug, Q, R)
-
-%% Augment the plant for Kalman filter design
-% Here we add a second input that directly feeds the integrator:
-% u_total = [ u; r ]
-B_aug2 = [zeros(nx,ny); eye(ny)]; % reference input directly affecting the integrator
-B_aug = [double(B), B_aug2];       % now the augmented system has 2 inputs
-
-% The output equation remains the same
-D_aug2 = zeros(ny, 2);
-
-ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug2);
-
-% Kalman filter noise covariance matrices (adjust Qn_aug and Rn_aug as needed)
-Qn_aug = eye(nx+ny);  % process noise covariance (for the augmented states)
-Rn_aug = 1;           % measurement noise covariance
+% Noise covariance matrices (tune as needed)
+Qn_aug = eye(size(B_aug,2));  % Process noise covariance (9x9)
+Rn_aug = 1;           % Measurement noise covariance
 
 kest = kalman(ss_model_kalman, Qn_aug, Rn_aug)
 
-%% Connect the estimator and the LQI gain to form the LQG servo controller
-% Use the "2dof" option to indicate the controller uses a two-degree-of-freedom structure.
+%% Connect Estimator and State-Feedback Gain to Form LQG Servo Controller
+% 'lqgtrack' requires that the estimator (kest) has at least 2 inputs and 
+% an appropriate number of outputs (state estimates) that match the augmented plant.
 trksys = lqgtrack(kest, K, "2dof")
-
 
 end

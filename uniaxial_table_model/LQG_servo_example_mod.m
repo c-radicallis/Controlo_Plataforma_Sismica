@@ -2,37 +2,45 @@ clear; clc
 % Design an LQG Servo Controller  - Example 
 % https://www.mathworks.com/help/control/getstart/design-an-lqg-servo-controller.html
 
+% Define the original system
 A = [0 1 0;
-        0 0 1;
-        1 0 0];    
-nx = size(A,1);    %Number of states
-B = [0.3; 1 ; -0.3];
-nu = size(B,2) ; % Number of inputs
+     0 0 1;
+     1 0 0];    
+nx = size(A,1);    % Number of states
+B = [0.3; 1; -0.3];
+nu = size(B,2);    % Number of control inputs (should be 1)
 C = [1.9 1.3 1];  
-ny = size(C,1);    %Number of outputs
-D = 0 ;%[0.53 -0.61];
-%sys = ss(A,[B G],C,[D H]);
-sys = ss(A,B,C,D)
+ny = size(C,1);    % Number of outputs
+D = 0;
 
-% obs = obsv(A,C);
-% r_obsv = rank(obs)
-% controlability = ctrb(A,B);
-% r_controlability = rank(controlability)
+% Define process noise matrices
+G = eye(nx);         % Process noise matrix (assuming full-state noise)
+H = zeros(ny, nx);   % No direct noise feedthrough
 
-%Construct the optimal state-feedback gain using the given cost function by typing the following commands:
-Q = blkdiag(eye(nx),eye(ny));
+% Create the augmented system
+sys_aug = ss(A, [B G], C, [D H]);
+
+% Assign input groups:
+% - Channel 1 is control,
+% - Channels 2 to (nx+1) are noise.
+sys_aug.InputGroup.control = 1;
+sys_aug.InputGroup.noise   = 2:(nx+1);
+% Explicitly set the KnownInput group to only the control input
+sys_aug.InputGroup.KnownInput = 1;
+
+% Design the LQI controller for the original system
+Q = blkdiag(eye(nx), eye(ny));
 R = eye(nu);
-K = lqi(ss(A,B,C,D),Q,R);
+K = lqi(ss(A, B, C, D), Q, R)
 
-%Construct the Kalman state estimator using the given noise covariance data by typing the following commands:
-Qn = eye(nu) 
-Rn = eye(nu);
-G = eye(nx);   % Process noise affecting all states
-H = zeros(ny, nx);  % No direct feedthrough of noise to output
+% Define noise covariance data
+% Here Qn should be for process noise (nx-by-nx) and Rn for measurement noise (ny-by-ny)
+Qn = eye(nx);
+Rn = eye(ny);
 
-sys_aug = ss(A, [B G], C, [D H]);  % Augment the system with noise
-kest = kalman(sys_aug, Qn, Rn);  % Compute Kalman estimator
+% Construct the Kalman estimator using the augmented system
+kest = kalman(sys_aug, Qn, Rn)
 
-%Connect the Kalman state estimator and the optimal state-feedback gain to form the LQG servo controller by typing the following command:
-trksys = lqgtrack(kest,K)
-
+% Now, lqgtrack expects that the number of rows in K (control actions) matches 
+% the number of known input channels in kest (which is now 1).
+trksys = lqgtrack(kest, K)

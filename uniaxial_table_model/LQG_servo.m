@@ -1,20 +1,25 @@
-function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , ss_model ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
+%% Structure parameters
+
+mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
+cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)
+
+mass=2e3;
+
+% 1st mode
+m1 = mass; % kg
+f1 = 0.4; % Hz   % 1.5 < f1 < 4
+zeta1 = 0.1 ; % 2 < zeta1 < 10
+%2nd mode
+m2 = mass; % kg
+f2 =3; % Hz % 6 < f2 < 10
+zeta2 = 0.06; % 5 < zeta2 < 25r
+
+% Controller
+k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
+G_c = tf(k_p,1);
 
 %coupled 2DOF system
-%  structure parameters
-% 1st mode
-% m1 = mass; % kg
-% f1 = 2; % Hz
-% zeta1 = 0.02 ; 
-
-% % k1 = m1*(2*pi*f1)^2; %N/m
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s
-
-% %2nd mode
-% m2= m1; % kg
-% f2 = 10; % Hz
-% zeta2 = 0.05; %
-
 c2 = zeta2*2*m2*2*pi*f2; %N/m/s
 
 syms k1 k2
@@ -28,9 +33,6 @@ Y = vpasolve([
 
 k1 = double(Y.k1);
 k2 = double(Y.k2);
-
-% sprintf("k1 = %e",k1)
-% sprintf("k2 = %e",k2)
 
 %Servo-valve parameters
 % All converted to SI units
@@ -76,23 +78,7 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
 % state space model
-
-% Define the Mass matrix M
-% M = [mT, 0,   0;
-%      0,   m1, 0;
-%      0,   0,   m2];
-
-% Define the Damping matrix C
-% C = [cT + c1, -c1,       0;
-%      -c1,      c1 + c2, -c2;
-%      0,        -c2,       c2];
-% 
-% Define the Stiffness matrix K
-% K = [k1, -k1,  0;
-%      -k1, k1 + k2, -k2;
-%      0,   -k2,  k2];
-
-%% Original Plant Definition
+digits(1e5)
 AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
@@ -103,50 +89,46 @@ AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0           
               0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]);
           
 BB = vpa([k_svk_q/tau_sv ; zeros(7,1)]);
-CC = eye(8); %vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
+CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
 DD = 0;
 
-ss_model = ss(double(AA), double(BB), double(CC), DD)
+%%
+%'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
+load('mat and fig files\obsv_ctrb_vpa1e5.mat')
 
-obs = obsv(double(AA), double(CC));
-r_obsv = rank(obs)
-ctrlb = ctrb(double(AA), double(BB));
-r_ctrlb = rank(ctrlb)
+nx = size(AA,1);    % Number of states
+nu = size(BB,2);    % Number of control inputs (should be 1)
+ny = size(CC,1);    % Number of outputs
 
-%% LQI Design (using original plant)
-nx = size(ss_model.A,1);  % 8 states
-ny = size(ss_model.C,1);  % 1 output
-nu = size(ss_model.B,2);
+% Define process noise matrices
+G = eye(nx);         % Process noise matrix (assuming full-state noise)
+H = zeros(ny, nx);   % No direct noise feedthrough
 
-% Q weighting matrix for the augmented system (8+1 = 9 states)
-Q_lqi = blkdiag(eye(nx), eye(ny));  % 9x9 matrix
+% Create the augmented system
+sys_aug = ss(AA, [BB G], CC, [DD H]);
+
+% Assign input groups:
+% - Channel 1 is control,
+% - Channels 2 to (nx+1) are noise.
+sys_aug.InputGroup.control = 1;
+sys_aug.InputGroup.noise   = 2:(nx+1);
+% Explicitly set the KnownInput group to only the control input
+sys_aug.InputGroup.KnownInput = 1;
+
+% Design the LQI controller for the original system
+Q = blkdiag(eye(nx), eye(ny));
 R = eye(nu);
+K = lqi(ss(AA, BB, CC, DD), Q, R)
 
-% lqi will internally augment ss_model (adds an integrator) to form a 9-state system.
-K = lqi(ss_model, Q_lqi, R)
+% Define noise covariance data
+% Here Qn should be for process noise (nx-by-nx) and Rn for measurement noise (ny-by-ny)
+Qn = eye(nx);
+Rn = eye(ny);
 
-%% Kalman Estimator Design for Tracking
-% Augment the plant manually to include an integrator:
-A_aug = [double(AA), zeros(nx,ny);
-         -double(C), zeros(ny,ny)];
-%B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
-% Form the estimator plant with two inputs:
-B_aug = [double(BB), zeros(nx,nu);
-                   0            ,   1];  
-C_aug = [double(CC), eye(ny,ny)];
-D_aug = zeros(ny, 2);
+% Construct the Kalman estimator using the augmented system
+kest = kalman(sys_aug, Qn, Rn)
 
-ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug);
+% Now, lqgtrack expects that the number of rows in K (control actions) matches 
+% the number of known input channels in kest (which is now 1).
+trksys = lqgtrack(kest, K)
 
-% Noise covariance matrices (tune as needed)
-Qn_aug = eye(size(B_aug,2));  % Process noise covariance (9x9)
-Rn_aug = 1;           % Measurement noise covariance
-
-kest = kalman(ss_model_kalman, Qn_aug, Rn_aug)
-
-%% Connect Estimator and State-Feedback Gain to Form LQG Servo Controller
-% 'lqgtrack' requires that the estimator (kest) has at least 2 inputs and 
-% an appropriate number of outputs (state estimates) that match the augmented plant.
-trksys = lqgtrack(kest, K, "2dof")
-
-end

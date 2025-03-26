@@ -1,7 +1,20 @@
 function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , ss_model ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
 
 %coupled 2DOF system
+%  structure parameters
+% 1st mode
+% m1 = mass; % kg
+% f1 = 2; % Hz
+% zeta1 = 0.02 ; 
+
+% % k1 = m1*(2*pi*f1)^2; %N/m
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s
+
+% %2nd mode
+% m2= m1; % kg
+% f2 = 10; % Hz
+% zeta2 = 0.05; %
+
 c2 = zeta2*2*m2*2*pi*f2; %N/m/s
 
 syms k1 k2
@@ -15,6 +28,9 @@ Y = vpasolve([
 
 k1 = double(Y.k1);
 k2 = double(Y.k2);
+
+% sprintf("k1 = %e",k1)
+% sprintf("k2 = %e",k2)
 
 %Servo-valve parameters
 % All converted to SI units
@@ -77,7 +93,6 @@ G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 %      0,   -k2,  k2];
 
 %% Original Plant Definition
-digits(1e4)
 AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
@@ -88,14 +103,14 @@ AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0           
               0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]);
           
 BB = vpa([k_svk_q/tau_sv ; zeros(7,1)]);
-CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
+CC = eye(8); %vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
 DD = 0;
 
-ss_model = ss(double(AA),double(BB),double(CC),double(DD))
+ss_model = ss(double(AA), double(BB), double(CC), DD)
 
-obs = vpa(obsv(AA, CC));
+obs = obsv(double(AA), double(CC));
 r_obsv = rank(obs)
-ctrlb = vpa(ctrb(AA,BB));
+ctrlb = ctrb(double(AA), double(BB));
 r_ctrlb = rank(ctrlb)
 
 %% LQI Design (using original plant)
@@ -113,7 +128,7 @@ K = lqi(ss_model, Q_lqi, R)
 %% Kalman Estimator Design for Tracking
 % Augment the plant manually to include an integrator:
 A_aug = [double(AA), zeros(nx,ny);
-         -double(CC), zeros(ny,ny)];
+         -double(C), zeros(ny,ny)];
 %B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
 % Form the estimator plant with two inputs:
 B_aug = [double(BB), zeros(nx,nu);

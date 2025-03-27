@@ -44,3 +44,22 @@ kest = kalman(sys_aug, Qn, Rn)
 % Now, lqgtrack expects that the number of rows in K (control actions) matches 
 % the number of known input channels in kest (which is now 1).
 trksys = lqgtrack(kest, K)
+
+%% Simulation
+% Define simulation time
+clsys = connect(sys, trksys, {'r'}, {'y'});
+
+% Define simulation time and reference signal (a step of 1)
+t = 0:0.01:10;          % simulation time from 0 to 10 seconds
+r = ones(length(t),1);  % step reference input
+
+% Simulate the closed-loop response using lsim:
+[y_out, t_out, x] = lsim(clsys, r, t);
+
+% Plot the system output versus time
+figure
+plot(t_out, y, 'LineWidth', 2)
+xlabel('Time (s)')
+ylabel('Output')
+title('LQG Tracking Controller Closed-Loop Response')
+grid on

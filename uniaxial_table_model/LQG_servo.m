@@ -93,6 +93,90 @@ CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
 DD = 0;
 
 %%
+clear
+%'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
+load('mat and fig files\obsv_ctrb_vpa1e5.mat')
+
+% ss_model =
+% 
+%   A = 
+%                x1          x2          x3          x4          x5          x6          x7          x8
+%    x1      -40.65           0           0           0           0           0           0           0
+%    x2    3.63e+12  -4.878e+04           0           0           0  -4.521e+10           0           0
+%    x3           0           0           0           0           0           1           0           0
+%    x4           0           0           0           0           0           0           1           0
+%    x5           0           0           0           0           0           0           0           1
+%    x6           0   0.0005063      -13.03       13.03           0      -3.435       0.509           0
+%    x7           0           0       12.87      -187.2       174.4      0.5027      -2.765       2.262
+%    x8           0           0           0       174.4      -174.4           0       2.262      -2.262
+% 
+%   B = 
+%             u1
+%    x1  0.07864
+%    x2        0
+%    x3        0
+%    x4        0
+%    x5        0
+%    x6        0
+%    x7        0
+%    x8        0
+% 
+%   C = 
+%        x1  x2  x3  x4  x5  x6  x7  x8
+%    y1   0   0   1   0   0   0   0   0
+% 
+%   D = 
+%        u1
+%    y1   0
+
+
+%%
+obs = vpa(obsv(AA, CC));
+r_obsv = rank(obs)
+obs=double(obs)
+ctrlb = vpa(ctrb(AA,BB));
+r_ctrlb = rank(ctrlb)
+ctrlb = double(ctrlb)
+
+% r_obsv =
+% 
+%      8
+% 
+% 
+% obs =
+% 
+%    1.0e+28 *
+% 
+%          0         0    0.0000         0         0         0         0         0
+%          0         0         0         0         0    0.0000         0         0
+%          0    0.0000   -0.0000    0.0000         0   -0.0000    0.0000         0
+%     0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000
+%    -0.0000    0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000
+%     0.0000   -0.0000   -0.0000    0.0000   -0.0000   -0.0000    0.0000   -0.0000
+%    -0.0000    0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000
+%     1.0118   -0.0000   -0.0000    0.0000   -0.0000   -0.0126    0.0000   -0.0000
+% 
+% 
+% r_ctrlb =
+% 
+%      8
+% 
+%  ctrlb =
+% 
+% 1.0e+39 *
+% 
+% 0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+%      0    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0001    3.6671
+%      0         0         0    0.0000   -0.0000    0.0000   -0.0000    0.0000
+%      0         0         0         0    0.0000   -0.0000    0.0000   -0.0000
+%      0         0         0         0         0    0.0000   -0.0000    0.0000
+%      0         0    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+%      0         0         0    0.0000   -0.0000    0.0000   -0.0000    0.0000
+%      0         0         0         0    0.0000   -0.0000    0.0000   -0.0000
+
+
+%%
+clear
 %'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
 load('mat and fig files\obsv_ctrb_vpa1e5.mat')
 
@@ -105,7 +189,8 @@ G = eye(nx);         % Process noise matrix (assuming full-state noise)
 H = zeros(ny, nx);   % No direct noise feedthrough
 
 % Create the augmented system
-sys_aug = ss(AA, [BB G], CC, [DD H]);
+digits(1e4)
+sys_aug = ss(double(AA), [double(BB) G], double(CC), [double(DD) H]);
 
 % Assign input groups:
 % - Channel 1 is control,
@@ -118,7 +203,7 @@ sys_aug.InputGroup.KnownInput = 1;
 % Design the LQI controller for the original system
 Q = blkdiag(eye(nx), eye(ny));
 R = eye(nu);
-K = lqi(ss(AA, BB, CC, DD), Q, R)
+K = lqi(ss(double(AA), double(BB),  double(CC),  double(DD)), Q, R)
 
 % Define noise covariance data
 % Here Qn should be for process noise (nx-by-nx) and Rn for measurement noise (ny-by-ny)

@@ -1,3 +1,5 @@
+clear; clc
+
 %% --- Define the Original System (Plant) ---
 A = [0 1 0;
      0 0 1;
@@ -6,80 +8,100 @@ B = [0.3; 1; -0.3];
 C = [1.9 1.3 1];  
 D = 0;
 sys = ss(A, B, C, D);
-% Label plant inputs/outputs for interconnection:
-sys.InputName = {'u'};   % plant input: control signal
+% Label plant I/O for interconnection:
+sys.InputName = {'u'};   % plant input (control action)
 sys.OutputName = {'y'};  % plant output
 
 %% --- Build the Augmented System for Estimator Design ---
-nx = size(A,1);  
+nx = size(A,1);
 ny = size(C,1);
-% Define process noise matrices
-G = eye(nx);         % Process noise matrix (assumed affecting all states)
-H = zeros(ny, nx);   % No direct noise feedthrough
-
-% Create the augmented system
+% Define process noise matrices:
+G = eye(nx);         % process noise matrix (affects all states)
+H = zeros(ny, nx);   % no direct noise feedthrough
 sys_aug = ss(A, [B G], C, [D H]);
-% Assign input groups:
-%   Channel 1: control input (B)
-%   Channels 2 to (nx+1): noise (G)
+% Specify input groups:
+%   Channel 1 is the control input, channels 2 to (nx+1) are noise.
 sys_aug.InputGroup.control = 1;
 sys_aug.InputGroup.noise   = 2:(nx+1);
-% Explicitly mark the control channel as KnownInput
+% Indicate that only the first input is a known control input:
 sys_aug.InputGroup.KnownInput = 1;
 
 %% --- Design the LQI Controller ---
-% We design the LQI controller for the original plant.
 Q = blkdiag(eye(nx), eye(ny));
-R = eye(size(B,2));  % Note: size(B,2) is the number of control inputs (should be 1)
+R = eye(size(B,2));  % should be 1-by-1
 K = lqi(ss(A, B, C, D), Q, R);
-% K is the state-feedback gain that computes the control action.
 
-%% --- Construct the Kalman Estimator ---
-% Define noise covariance data.
-% Qn: process noise covariance (nx-by-nx)
-% Rn: measurement noise covariance (ny-by-ny)
-Qn = eye(nx);
-Rn = eye(ny);
+%% --- Design the Kalman Estimator ---
+Qn = eye(nx);   % process noise covariance (nx-by-nx)
+Rn = eye(ny);   % measurement noise covariance (ny-by-ny)
 kest = kalman(sys_aug, Qn, Rn);
 
-%% --- Build the LQG Tracking Controller ---
-% Combine the estimator and state-feedback gain into the tracking controller.
+%% --- Form the LQG Tracking Controller ---
+% Combine the estimator and state-feedback gain.
 trksys = lqgtrack(kest, K);
-% Label the controller’s I/O:
-% The controller expects:
-%   1st input: reference (r)
-%   2nd input: measured output from the plant (y)
-% And it produces:
-%   output: control action (u)
-trksys.InputName = {'r', 'y'};
-trksys.OutputName = {'u'};
+% Specify the controller’s input names:
+%  - First input: reference signal "r"
+%  - Second input: measured plant output "y"
+trksys.InputName = {'r','y'};
+% (Do not reassign the OutputName property here; use the default names.)
+%
+% By default, lqgtrack returns a controller whose outputs are grouped as follows:
+%   - The first output (in group "OutputEstimate") is the control action.
+%   - The remaining outputs (in group "StateEstimate") are the observer states.
+% We can retrieve these default output names as follows:
+ctrlOutNames = trksys.OutputName;  % For example: {'OutputEstimate','StateEstimate1','StateEstimate2','StateEstimate3'}
 
 %% --- Close the Loop ---
-% Now, interconnect the plant (sys) and the controller (trksys)
-% using the connect function.
+% Build the closed-loop system by connecting the plant and controller.
+% The interconnection is:
+%   - The controller’s output (its first output, i.e. the control action) drives the plant.
+%   - The plant output "y" is fed back to the controller.
+% The free external input is the reference "r".
 %
-% The interconnection works as follows:
-%  - The controller takes as input the reference 'r' and the plant output 'y'.
-%  - The controller outputs 'u', which drives the plant.
-%
-% Define the connection:
-%   External input: 'r'
-%   External output: 'y'
-%
-clsys = connect(sys, trksys, {'r'}, {'y'});
+% We specify external outputs as the plant’s "y" and all outputs from the controller.
+clsys = connect(sys, trksys, {'r'}, [{'y'}, ctrlOutNames]);
 
 %% --- Simulation ---
-% Define simulation time and reference signal (a step input of 1)
-t = 0:0.01:10;          % time vector from 0 to 10 seconds
-r = ones(length(t), 1); % step reference
+t = 0:0.01:10;           % simulation time vector (0 to 10 seconds)
+r = ones(length(t), 1);   % step reference input (magnitude 1)
 
-% Simulate the closed-loop response using lsim:
-[y_out, t_out, x] = lsim(clsys, r, t);
+% Simulate the closed-loop response.
+[Y, t_out, X_out] = lsim(clsys, r, t);
+%
+% The external outputs of clsys are:
+%   Column 1: Plant output "y"
+%   Column 2: Controller output channel 1 (control action)
+%   Columns 3-end: Controller output channels 2,3,... (observer state estimates)
+%
+% In our case, if the plant output has 1 channel and the controller has 4 outputs,
+% Y will have 1 + 4 = 5 columns. We assume:
+%   Y(:,1)  -> y (plant output)
+%   Y(:,2)  -> control action (u)
+%   Y(:,3:5)-> observer states
 
-% Plot the response:
+%% --- Plot the Results ---
 figure
-plot(t_out, y_out, 'LineWidth', 2)
+
+subplot(3,1,1)
+plot(t_out, Y(:,1), 'b','LineWidth',2)
 xlabel('Time (s)')
-ylabel('Output y')
-title('Closed-Loop Response with LQG Tracking Controller')
+ylabel('y (Plant Output)')
+title('Plant Output vs. Time')
+grid on
+
+subplot(3,1,2)
+plot(t_out, Y(:,2), 'r','LineWidth',2)
+xlabel('Time (s)')
+ylabel('u (Control Action)')
+title('Control Action vs. Time')
+grid on
+
+subplot(3,1,3)
+plot(t_out, Y(:,3), 'k--','LineWidth',1.5), hold on
+plot(t_out, Y(:,4), 'm--','LineWidth',1.5)
+plot(t_out, Y(:,5), 'g--','LineWidth',1.5)
+xlabel('Time (s)')
+ylabel('Observer States')
+title('Observer (Kalman Filter) State Estimates vs. Time')
+legend('StateEstimate1','StateEstimate2','StateEstimate3')
 grid on

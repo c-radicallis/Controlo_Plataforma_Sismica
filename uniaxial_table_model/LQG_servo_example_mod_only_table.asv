@@ -141,15 +141,15 @@ kest = kalman(sys_aug, Qn, Rn);
 
 %% --- Build the LQG Tracking Controller ---
 % Combine the estimator and state-feedback gain into the tracking controller.
-trksys = lqgtrack(kest, K);
+trksys = lqgtrack(kest, K,'1dof');
 % Label the controller’s I/O:
 % The controller expects:
 %   1st input: reference (r)
 %   2nd input: measured output from the plant (y)
 % And it produces:
 %   output: control action (u)
-trksys.InputName = {'x_ref', 'xT'};
-trksys.OutputName = {'i_sv'};
+trksys.InputName = {'r', 'xT'};
+trksys.OutputName = {'u'};
 
 %% --- Close the Loop ---
 % Now, interconnect the plant (sys) and the controller (trksys)
@@ -162,7 +162,7 @@ trksys.OutputName = {'i_sv'};
 % Define the connection:
 %   External input: 'r'
 %   External output: 'y'
-clsys = connect(sys, trksys, {'x_ref'}, {'xT'});
+clsys = connect(sys, trksys, {'r'}, {'xT'});
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)

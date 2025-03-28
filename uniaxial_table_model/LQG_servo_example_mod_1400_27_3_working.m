@@ -1,4 +1,4 @@
-clear;clc
+close all;clear;clc
 
 A = [0 1 0;
      0 0 1;
@@ -8,8 +8,8 @@ C = [0 1 0];
 D = 0;
 sys = ss(A, B, C, D);
 % Label plant inputs/outputs for interconnection:
-sys.InputName = {'u'};   % plant input: control signal
-sys.OutputName = {'y'};  % plant output
+sys.InputName = {'i_sv'};   % plant input: control signal
+sys.OutputName = {'xT'};  % plant output
 
 
 %% --- Build the Augmented System for Estimator Design ---
@@ -53,8 +53,8 @@ trksys = lqgtrack(kest, K);
 %   2nd input: measured output from the plant (y)
 % And it produces:
 %   output: control action (u)
-trksys.InputName = {'r', 'y'};
-trksys.OutputName = {'u'};
+trksys.InputName = {'r', 'xT'};
+trksys.OutputName = {'i_sv'};
 
 %% --- Close the Loop ---
 % Now, interconnect the plant (sys) and the controller (trksys)
@@ -67,8 +67,7 @@ trksys.OutputName = {'u'};
 % Define the connection:
 %   External input: 'r'
 %   External output: 'y'
-%
-clsys = connect(sys, trksys, {'r'}, {'y'});
+clsys = connect(sys, trksys, {'r'}, {'xT'});
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)

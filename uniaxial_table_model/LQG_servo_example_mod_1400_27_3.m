@@ -1,6 +1,5 @@
 close all;clear;clc
 
-%% --- Define the Plant with C = [0 1 0] ---
 A = [0 1 0;
      0 0 1;
      1 0 0];

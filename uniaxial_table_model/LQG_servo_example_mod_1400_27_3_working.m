@@ -1,6 +1,5 @@
 clear;clc
 
-%% --- Define the Original System (Plant) ---
 A = [0 1 0;
      0 0 1;
      1 0 0];    
@@ -12,18 +11,6 @@ sys = ss(A, B, C, D);
 sys.InputName = {'u'};   % plant input: control signal
 sys.OutputName = {'y'};  % plant output
 
-observability = rank(obsv(A,C))
-controlability = rank(ctrb(A,B))
-
-% digits(1e5)
-% A = vpa([0 1 0;
-%      0 0 1;
-%      1 0 0]);    
-% B = vpa([0.3; 0; -0.3]);
-% C = vpa([0 1 0]);  
-% D = 0;
-% observability_vpa= rank(vpa(obsv(A,C)))
-% controlability_vpa = rank(vpa(ctrb(A,B)))
 
 %% --- Build the Augmented System for Estimator Design ---
 nx = size(A,1);  
@@ -85,7 +72,7 @@ clsys = connect(sys, trksys, {'r'}, {'y'});
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)
-t = 0:0.01:10;          % time vector from 0 to 10 seconds
+t = 0:0.01:30;          % time vector from 0 to 10 seconds
 r = ones(length(t), 1); % step reference
 
 % Simulate the closed-loop response using lsim:

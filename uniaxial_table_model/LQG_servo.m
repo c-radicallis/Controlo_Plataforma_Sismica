@@ -95,13 +95,16 @@ CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
 DD = 0;
 
 %%
-
 obs = vpa(obsv(AA, CC));
 r_obsv = rank(obs)
-%obs=double(obs)
 ctrlb = vpa(ctrb(AA,BB));
 r_ctrlb = rank(ctrlb)
-%ctrlb = double(ctrlb)
+
+%%
+format short g
+obs=double(obs)
+ctrlb = double(ctrlb)
+format
 
 %% 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
 % clear

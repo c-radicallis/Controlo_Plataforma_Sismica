@@ -8,8 +8,8 @@ C = [0 1 0];   % measured output is the second state only
 D = 0;
 sys = ss(A, B, C, D);
 % Label the plant’s I/O:
-sys.InputName = {'u'};   % plant input (control action)
-sys.OutputName = {'y'};  % plant output (only x2)
+sys.InputName = {'i_sv'};   % plant input (control action)
+sys.OutputName = {'xT'};  % plant output (only x2)
 
 %% --- Build the Augmented System for Estimator Design ---
 % Here, we use the same A and B, but the output remains C = [0 1 0].
@@ -47,7 +47,7 @@ trksys = lqgtrack(kest, K);
 % Specify its inputs:
 %   First input: reference (r)
 %   Second input: measured output (y)
-trksys.InputName = {'r','y'};
+trksys.InputName = {'r','xT'};
 % Do not reassign the OutputName; we use the default.
 % (Typically, the controller outputs its computed control action.)
 
@@ -58,8 +58,9 @@ trksys.InputName = {'r','y'};
 % The free external input is the reference signal r.
 %
 % Use the plant output name ("y") and the controller’s default output names.
-ctrlOutNames = trksys.OutputName;  % e.g., {"OutputEstimate"} if only one output exists.
-clsys = connect(sys, trksys, {'r'}, [{'y'}, ctrlOutNames]);
+%ctrlOutNames = trksys.OutputName;  % e.g., {"OutputEstimate"} if only one output exists.
+%clsys = connect(sys, trksys, {'r'}, [{'y'}, ctrlOutNames]);
+clsys = connect(sys, trksys, {'r'}, {'xT'});
 
 %% --- Simulate the Closed-Loop System ---
 t = 0:0.01:10;           % time vector (0 to 10 seconds)

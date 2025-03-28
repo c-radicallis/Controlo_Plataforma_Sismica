@@ -176,7 +176,7 @@ t_step = t_vector(2);
 ddx_ref = dados(:,2);
 
 % Limits
-lim_displacement = 100; % mm
+lim_displacement = 0.100; %m
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
@@ -188,7 +188,7 @@ scale=1;
 while max_xref > lim_displacement
     scale = 0.95*scale;
     ddx_ref = 0.95*ddx_ref;
-    x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
+    x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
     max_xref = max(x_ref);
 end
 scale

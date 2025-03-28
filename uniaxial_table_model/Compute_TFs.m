@@ -76,45 +76,45 @@ DD = 0;
 
 ss_model = ss(double(AA),double(BB),double(CC),double(DD))
 
-obs = vpa(obsv(AA, CC));
-r_obsv = rank(obs)
-ctrlb = vpa(ctrb(AA,BB));
-r_ctrlb = rank(ctrlb)
-
-%% LQI Design (using original plant)
-nx = size(ss_model.A,1);  % 8 states
-ny = size(ss_model.C,1);  % 1 output
-nu = size(ss_model.B,2);
-
-% Q weighting matrix for the augmented system (8+1 = 9 states)
-Q_lqi = blkdiag(eye(nx), eye(ny));  % 9x9 matrix
-R = eye(nu);
-
-% lqi will internally augment ss_model (adds an integrator) to form a 9-state system.
-K = lqi(ss_model, Q_lqi, R)
-
-%% Kalman Estimator Design for Tracking
-% Augment the plant manually to include an integrator:
-A_aug = [double(AA), zeros(nx,ny);
-         -double(CC), zeros(ny,ny)];
-%B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
-% Form the estimator plant with two inputs:
-B_aug = [double(BB), zeros(nx,nu);
-                   0            ,   1];  
-C_aug = [double(CC), eye(ny,ny)];
-D_aug = zeros(ny, 2);
-
-ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug);
-
-% Noise covariance matrices (tune as needed)
-Qn_aug = eye(size(B_aug,2));  % Process noise covariance (9x9)
-Rn_aug = 1;           % Measurement noise covariance
-
-kest = kalman(ss_model_kalman, Qn_aug, Rn_aug)
-
-%% Connect Estimator and State-Feedback Gain to Form LQG Servo Controller
-% 'lqgtrack' requires that the estimator (kest) has at least 2 inputs and 
-% an appropriate number of outputs (state estimates) that match the augmented plant.
-trksys = lqgtrack(kest, K, "2dof")
+% obs = vpa(obsv(AA, CC));
+% r_obsv = rank(obs)
+% ctrlb = vpa(ctrb(AA,BB));
+% r_ctrlb = rank(ctrlb)
+% 
+% %% LQI Design (using original plant)
+% nx = size(ss_model.A,1);  % 8 states
+% ny = size(ss_model.C,1);  % 1 output
+% nu = size(ss_model.B,2);
+% 
+% % Q weighting matrix for the augmented system (8+1 = 9 states)
+% Q_lqi = blkdiag(eye(nx), eye(ny));  % 9x9 matrix
+% R = eye(nu);
+% 
+% % lqi will internally augment ss_model (adds an integrator) to form a 9-state system.
+% K = lqi(ss_model, Q_lqi, R)
+% 
+% %% Kalman Estimator Design for Tracking
+% % Augment the plant manually to include an integrator:
+% A_aug = [double(AA), zeros(nx,ny);
+%          -double(CC), zeros(ny,ny)];
+% %B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
+% % Form the estimator plant with two inputs:
+% B_aug = [double(BB), zeros(nx,nu);
+%                    0            ,   1];  
+% C_aug = [double(CC), eye(ny,ny)];
+% D_aug = zeros(ny, 2);
+% 
+% ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug);
+% 
+% % Noise covariance matrices (tune as needed)
+% Qn_aug = eye(size(B_aug,2));  % Process noise covariance (9x9)
+% Rn_aug = 1;           % Measurement noise covariance
+% 
+% kest = kalman(ss_model_kalman, Qn_aug, Rn_aug)
+% 
+% %% Connect Estimator and State-Feedback Gain to Form LQG Servo Controller
+% % 'lqgtrack' requires that the estimator (kest) has at least 2 inputs and 
+% % an appropriate number of outputs (state estimates) that match the augmented plant.
+% trksys = lqgtrack(kest, K, "2dof")
 
 end

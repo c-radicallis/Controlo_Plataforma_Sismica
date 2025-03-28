@@ -10,12 +10,12 @@ mass=2e3;
 
 % 1st mode
 m1 = mass; % kg
-f1 = 0.4; % Hz   % 1.5 < f1 < 4
+f1 = 0.2; % Hz   % 1.5 < f1 < 4
 zeta1 = 0.1 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = mass; % kg
-f2 =3; % Hz % 6 < f2 < 10
-zeta2 = 0.06; % 5 < zeta2 < 25r
+f2 =10; % Hz % 6 < f2 < 10
+zeta2 = 0.25; % 5 < zeta2 < 25
 
 % Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
@@ -81,27 +81,25 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
 % state space model
-digits(1e5)
-AA = vpa([-1/tau_sv, 0              , 0 , 0      ;% Q_sv
+AA = [-1/tau_sv, 0              , 0 , 0      ;% Q_sv
              k_h/A , -k_h*k_pl/(A^2), 0 , -k_h   ;% Fp
                  0 ,              0 , 0 , 1      ;% xT
-                 0 ,           1/mT , 0 , cT/mT]);% dxT
+                 0 ,           1/mT , 0 , cT/mT];% dxT
           
-BB = vpa([k_svk_q/tau_sv ; zeros(3,1)]);
-CC = vpa([0,0, 1 , 0]);  % measuring xT
+BB = [k_svk_q/tau_sv ; zeros(3,1)];
+CC = [0,0, 1 , 0];  % measuring xT
 DD = 0;
-sys = ss(double(AA), double(BB),  double(CC),  double(DD));
+sys = ss(AA,BB,CC,DD);
 % Label plant inputs/outputs for interconnection:
 sys.InputName = {'i_sv'};   % plant input: control signal
 sys.OutputName = {'xT'};  % plant output
 
-%%
-obs = vpa(obsv(AA, CC));
+%
+obs = obsv(AA, CC);
 r_obsv = rank(obs)
-ctrlb = vpa(ctrb(AA,BB));
+ctrlb =ctrb(AA,BB);
 r_ctrlb = rank(ctrlb)
 
-%%
 format short g
 obs=double(obs)
 ctrlb = double(ctrlb)
@@ -115,7 +113,7 @@ G = eye(nx);         % Process noise matrix (assumed affecting all states)
 H = zeros(ny, nx);   % No direct noise feedthrough
 
 % Create the augmented system
-sys_aug = ss(double(AA), [double(BB) G], double(CC), [double(DD) H]);
+sys_aug = ss(AA,[BB G], CC,[DD H]);
 % Assign input groups:
 %   Channel 1: control input (B)
 %   Channels 2 to (nx+1): noise (G)
@@ -127,7 +125,7 @@ sys_aug.InputGroup.KnownInput = 1;
 %% --- Design the LQI Controller ---
 % We design the LQI controller for the original plant.
 Q = blkdiag(eye(nx), eye(ny));
-R = eye(size(BB,2));  % Note: size(B,2) is the number of control inputs (should be 1)
+R = 1e3*eye(size(BB,2));  % Note: size(B,2) is the number of control inputs (should be 1)
 K = lqi(sys, Q, R)
 % K is the state-feedback gain that computes the control action.
 
@@ -148,8 +146,10 @@ trksys = lqgtrack(kest, K,'1dof');
 %   2nd input: measured output from the plant (y)
 % And it produces:
 %   output: control action (u)
-trksys.InputName = {'r', 'xT'};
-trksys.OutputName = {'u'};
+trksys.InputName = {'e'};
+trksys.OutputName = {'i_sv'};
+
+Erro_soma = sumblk("e = x_ref - xT");
 
 %% --- Close the Loop ---
 % Now, interconnect the plant (sys) and the controller (trksys)
@@ -162,7 +162,7 @@ trksys.OutputName = {'u'};
 % Define the connection:
 %   External input: 'r'
 %   External output: 'y'
-clsys = connect(sys, trksys, {'r'}, {'xT'});
+clsys = connect(sys, trksys, Erro_soma, {'x_ref'}, {'xT'});
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)
@@ -201,7 +201,7 @@ max_vref = max(v_ref)
 [y_out, t_out, x] = lsim(clsys, x_ref, t_vector);
 
 % Plot the response:
-figure
+%figure
 hold on
 plot(t_vector,x_ref)
 plot(t_out, y_out, 'LineWidth', 2)

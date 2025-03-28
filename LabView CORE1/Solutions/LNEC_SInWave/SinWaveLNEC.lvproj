@@ -12,7 +12,9 @@
 		<Property Name="server.vi.callsEnabled" Type="Bool">true</Property>
 		<Property Name="server.vi.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="specify.custom.address" Type="Bool">false</Property>
-		<Item Name="generator_and_acquisition.vi" Type="VI" URL="../generator_and_acquisition.vi"/>
+		<Item Name="MainSin.vi" Type="VI" URL="../MainSin.vi"/>
+		<Item Name="MySin.vi" Type="VI" URL="../MySin.vi"/>
+		<Item Name="StateMachineCTL.ctl" Type="VI" URL="../StateMachineCTL.ctl"/>
 		<Item Name="Dependencies" Type="Dependencies"/>
 		<Item Name="Build Specifications" Type="Build"/>
 	</Item>

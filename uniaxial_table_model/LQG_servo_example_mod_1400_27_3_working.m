@@ -5,12 +5,25 @@ A = [0 1 0;
      0 0 1;
      1 0 0];    
 B = [0.3; 1; -0.3];
-C = [1.9 1.3 1];  
+C = [0 1 0];  
 D = 0;
 sys = ss(A, B, C, D);
 % Label plant inputs/outputs for interconnection:
 sys.InputName = {'u'};   % plant input: control signal
 sys.OutputName = {'y'};  % plant output
+
+observability = rank(obsv(A,C))
+controlability = rank(ctrb(A,B))
+
+% digits(1e5)
+% A = vpa([0 1 0;
+%      0 0 1;
+%      1 0 0]);    
+% B = vpa([0.3; 0; -0.3]);
+% C = vpa([0 1 0]);  
+% D = 0;
+% observability_vpa= rank(vpa(obsv(A,C)))
+% controlability_vpa = rank(vpa(ctrb(A,B)))
 
 %% --- Build the Augmented System for Estimator Design ---
 nx = size(A,1);  

@@ -223,3 +223,128 @@ kest = kalman(sys_aug, Qn, Rn)
 % the number of known input channels in kest (which is now 1).
 trksys = lqgtrack(kest, K)
 
+
+r_obsv =
+
+     8
+
+
+r_ctrlb =
+
+     8
+
+
+K =
+
+   1.0e+06 *
+
+    9.0069    0.0000    0.0001   -0.0000    0.0000   -0.1122    0.0000    0.0000   -0.0000
+
+
+kest =
+ 
+  A = 
+               x1_e        x2_e        x3_e        x4_e        x5_e        x6_e        x7_e        x8_e
+   x1_e      -40.65           0    -0.02107           0           0           0           0           0
+   x2_e    3.63e+12  -4.878e+04   1.035e+05           0           0  -4.521e+10           0           0
+   x3_e           0           0      -2.146           0           0           1           0           0
+   x4_e           0           0      -1.317           0           0           0           1           0
+   x5_e           0           0      -1.285           0           0           0           0           1
+   x6_e           0   0.0005063      -14.84       13.03           0      -3.435       0.509           0
+   x7_e           0           0       10.17      -187.2       174.4      0.5027      -2.765       2.262
+   x8_e           0           0      -2.653       174.4      -174.4           0       2.262      -2.262
+ 
+  B = 
+                 u1          y1
+   x1_e     0.07864     0.02107
+   x2_e           0  -1.035e+05
+   x3_e           0       2.146
+   x4_e           0       1.317
+   x5_e           0       1.285
+   x6_e           0       1.803
+   x7_e           0       2.698
+   x8_e           0       2.653
+ 
+  C = 
+         x1_e  x2_e  x3_e  x4_e  x5_e  x6_e  x7_e  x8_e
+   y1_e     0     0     1     0     0     0     0     0
+   x1_e     1     0     0     0     0     0     0     0
+   x2_e     0     1     0     0     0     0     0     0
+   x3_e     0     0     1     0     0     0     0     0
+   x4_e     0     0     0     1     0     0     0     0
+   x5_e     0     0     0     0     1     0     0     0
+   x6_e     0     0     0     0     0     1     0     0
+   x7_e     0     0     0     0     0     0     1     0
+   x8_e     0     0     0     0     0     0     0     1
+ 
+  D = 
+         u1  y1
+   y1_e   0   0
+   x1_e   0   0
+   x2_e   0   0
+   x3_e   0   0
+   x4_e   0   0
+   x5_e   0   0
+   x6_e   0   0
+   x7_e   0   0
+   x8_e   0   0
+ 
+Input groups:              
+       Name        Channels
+    KnownInput        1    
+    Measurement       2    
+                           
+Output groups:                       
+         Name            Channels    
+    OutputEstimate           1       
+    StateEstimate     2,3,4,5,6,7,8,9
+                                     
+Continuous-time state-space model.
+Model Properties
+
+trksys =
+ 
+  A = 
+               x1_e        x2_e        x3_e        x4_e        x5_e        x6_e        x7_e        x8_e         xi1
+   x1_e  -7.083e+05    -0.06911      -8.666      0.1351    -0.02725        8820       -2.92      -2.926     0.07864
+   x2_e    3.63e+12  -4.878e+04   1.035e+05           0           0  -4.521e+10           0           0           0
+   x3_e           0           0      -2.146           0           0           1           0           0           0
+   x4_e           0           0      -1.317           0           0           0           1           0           0
+   x5_e           0           0      -1.285           0           0           0           0           1           0
+   x6_e           0   0.0005063      -14.84       13.03           0      -3.435       0.509           0           0
+   x7_e           0           0       10.17      -187.2       174.4      0.5027      -2.765       2.262           0
+   x8_e           0           0      -2.653       174.4      -174.4           0       2.262      -2.262           0
+   xi1            0           0           0           0           0           0           0           0           0
+ 
+  B = 
+                 r1          y1
+   x1_e           0     0.02107
+   x2_e           0  -1.035e+05
+   x3_e           0       2.146
+   x4_e           0       1.317
+   x5_e           0       1.285
+   x6_e           0       1.803
+   x7_e           0       2.698
+   x8_e           0       2.653
+   xi1            1          -1
+ 
+  C = 
+             x1_e        x2_e        x3_e        x4_e        x5_e        x6_e        x7_e        x8_e         xi1
+   u1  -9.007e+06     -0.8789      -109.9       1.718     -0.3465   1.122e+05      -37.13      -37.21           1
+ 
+  D = 
+       r1  y1
+   u1   0   0
+ 
+Input groups:              
+       Name        Channels
+     Setpoint         1    
+    Measurement       2    
+                           
+Output groups:          
+      Name      Channels
+    Controls       1    
+                        
+Continuous-time state-space model.
+Model Properties
+>> 

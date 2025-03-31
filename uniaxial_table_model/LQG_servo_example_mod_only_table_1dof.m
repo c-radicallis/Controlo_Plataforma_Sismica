@@ -1,6 +1,8 @@
-%clear;
+clear;
 close all;
 clc;
+
+%%
 
 % Structure parameters
 mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
@@ -94,16 +96,16 @@ sys = ss(AA,BB,CC,DD);
 sys.InputName = {'i_sv'};   % plant input: control signal
 sys.OutputName = {'xT'};  % plant output
 
-%
-obs = obsv(AA, CC);
-r_obsv = rank(obs)
-ctrlb =ctrb(AA,BB);
-r_ctrlb = rank(ctrlb)
-
-format short g
-obs=double(obs)
-ctrlb = double(ctrlb)
-format("default")
+% %
+% obs = obsv(AA, CC);
+% r_obsv = rank(obs)
+% ctrlb =ctrb(AA,BB);
+% r_ctrlb = rank(ctrlb)
+% 
+% format short g
+% obs=double(obs)
+% ctrlb = double(ctrlb)
+% format("default")
 
 %% --- Build the Augmented System for Estimator Design ---
 nx = size(AA,1);  
@@ -135,21 +137,27 @@ K = lqi(sys, Q, R)
 % Rn: measurement noise covariance (ny-by-ny)
 Qn = eye(nx);
 Rn = eye(ny);
-kest = kalman(sys_aug, Qn, Rn);
+kest = kalman(sys_aug, Qn, Rn)
 
 %% --- Build the LQG Tracking Controller ---
 % Combine the estimator and state-feedback gain into the tracking controller.
-trksys = lqgtrack(kest, K,'1dof');
 % Label the controller’s I/O:
 % The controller expects:
 %   1st input: reference (r)
 %   2nd input: measured output from the plant (y)
 % And it produces:
 %   output: control action (u)
+
+trksys = lqgtrack(kest, K,'1dof');
 trksys.InputName = {'e'};
 trksys.OutputName = {'i_sv'};
-
 Erro_soma = sumblk("e = x_ref - xT");
+
+% trksys = lqgtrack(kest, K,'2dof');
+% trksys.InputName = {'x_ref','xT'};
+% trksys.OutputName = {'i_sv'};
+
+trksys
 
 %% --- Close the Loop ---
 % Now, interconnect the plant (sys) and the controller (trksys)
@@ -162,7 +170,10 @@ Erro_soma = sumblk("e = x_ref - xT");
 % Define the connection:
 %   External input: 'r'
 %   External output: 'y'
+
 clsys = connect(sys, trksys, Erro_soma, {'x_ref'}, {'xT'});
+
+% clsys = connect(sys, trksys, {'x_ref'}, {'xT'})
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)
@@ -176,19 +187,18 @@ t_step = t_vector(2);
 ddx_ref = dados(:,2);
 
 % Limits
-lim_displacement = 100; % mm
+lim_displacement = 0.1; % m
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
-% Scaling down if necessary
-% displacements in milimeters
 x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref);
 scale=1;
+% Scaling down if necessary
 while max_xref > lim_displacement
     scale = 0.95*scale;
     ddx_ref = 0.95*ddx_ref;
-    x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
+    x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
     max_xref = max(x_ref);
 end
 scale
@@ -205,6 +215,7 @@ max_vref = max(v_ref)
 hold on
 plot(t_vector,x_ref)
 plot(t_out, y_out, 'LineWidth', 2)
+plot(t_vector,x)
 xlabel('Time (s)')
 ylabel('Output y')
 title('Closed-Loop Response with LQG Tracking Controller')

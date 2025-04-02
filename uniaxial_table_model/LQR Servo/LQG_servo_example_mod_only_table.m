@@ -71,7 +71,7 @@ G_csv=G_c*G_svq;
 G_x2_x1= G_21/G_2;
 G_x1_xT = G_T1*G_2/(G_1*G_2-G_21^2);
 G_xT_Fp = (G_1*G_2-G_21^2)/(G_T*G_1*G_2-G_T*G_21^2-G_2*G_T1^2);
-
+5
 G_Fp_xref = G_csv/( k_pl/A + A*s/k_h +G_xT_Fp*(G_csv + A*s));
 
 G_xT_xref = G_Fp_xref * G_xT_Fp;
@@ -81,7 +81,7 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
 % state space model
-digits(1e5)
+digits(1e2)
 AA = vpa([-1/tau_sv, 0              , 0 , 0      ;% Q_sv
              k_h/A , -k_h*k_pl/(A^2), 0 , -k_h   ;% Fp
                  0 ,              0 , 0 , 1      ;% xT
@@ -91,120 +91,104 @@ BB = vpa([k_svk_q/tau_sv ; zeros(3,1)]);
 CC = vpa([0,0, 1 , 0]);  % measuring xT
 DD = 0;
 sys = ss(double(AA), double(BB),  double(CC),  double(DD));
-% Label plant inputs/outputs for interconnection:
 sys.InputName = {'i_sv'};   % plant input: control signal
 sys.OutputName = {'xT'};  % plant output
 
 %%
-obs = vpa(obsv(AA, CC));
-r_obsv = rank(obs)
-ctrlb = vpa(ctrb(AA,BB));
-r_ctrlb = rank(ctrlb)
+% obs = vpa(obsv(AA, CC));
+% r_obsv = rank(obs)
+% ctrlb = vpa(ctrb(AA,BB));
+% r_ctrlb = rank(ctrlb)
+
+% format short g
+% obs=double(obs)
+% ctrlb = double(ctrlb)
+% format("default")
 
 %%
-format short g
-obs=double(obs)
-ctrlb = double(ctrlb)
-format("default")
+nx = size(AA,1);  % number of states
+ny = size(CC,1); % number of outputs
 
-%% --- Build the Augmented System for Estimator Design ---
-nx = size(AA,1);  
-ny = size(CC,1);
-% Define process noise matrices
 G = eye(nx);         % Process noise matrix (assumed affecting all states)
 H = zeros(ny, nx);   % No direct noise feedthrough
 
-% Create the augmented system
-sys_aug = ss(double(AA), [double(BB) G], double(CC), [double(DD) H]);
-% Assign input groups:
-%   Channel 1: control input (B)
-%   Channels 2 to (nx+1): noise (G)
-sys_aug.InputGroup.control = 1;
-sys_aug.InputGroup.noise   = 2:(nx+1);
-% Explicitly mark the control channel as KnownInput
-sys_aug.InputGroup.KnownInput = 1;
+sys_aug = ss(double(AA), [double(BB) G], double(CC), [double(DD) H]); %% --- Build the Augmented System for Estimator Design ---
 
-%% --- Design the LQI Controller ---
-% We design the LQI controller for the original plant.
-Q = blkdiag(eye(nx), eye(ny));
+Q = blkdiag(eye(nx), eye(ny));% We design the LQI controller for the original plant.
 R = eye(size(BB,2));  % Note: size(B,2) is the number of control inputs (should be 1)
-K = lqi(sys, Q, R)
-% K is the state-feedback gain that computes the control action.
+K = lqi(sys, Q, R) % K is the state-feedback gain that computes the control action.
 
-%% --- Construct the Kalman Estimator ---
-% Define noise covariance data.
-% Qn: process noise covariance (nx-by-nx)
-% Rn: measurement noise covariance (ny-by-ny)
-Qn = eye(nx);
-Rn = eye(ny);
-kest = kalman(sys_aug, Qn, Rn);
 
-%% --- Build the LQG Tracking Controller ---
-% Combine the estimator and state-feedback gain into the tracking controller.
-trksys = lqgtrack(kest, K);
-% Label the controller’s I/O:
-% The controller expects:
-%   1st input: reference (r)
-%   2nd input: measured output from the plant (y)
-% And it produces:
-%   output: control action (u)
+Qn = eye(nx);% Qn: process noise covariance (nx-by-nx)
+Rn = eye(ny);% Rn: measurement noise covariance (ny-by-ny)
+kest = kalman(sys_aug, Qn, Rn);%% --- Construct the Kalman Estimator ---
+
+trksys = lqgtrack(kest, K); % Build the LQG Tracking Controller --- Combine the estimator and state-feedback gain into the tracking controller
 trksys.InputName = {'x_ref', 'xT'};
 trksys.OutputName = {'i_sv'};
 
-%% --- Close the Loop ---
-% Now, interconnect the plant (sys) and the controller (trksys)
-% using the connect function.
-%
-% The interconnection works as follows:
-%  - The controller takes as input the reference 'r' and the plant output 'y'.
-%  - The controller outputs 'u', which drives the plant.
-%
-% Define the connection:
-%   External input: 'r'
-%   External output: 'y'
-clsys = connect(sys, trksys, {'x_ref'}, {'xT'});
+clsys = connect(sys, trksys, {'x_ref'}, {'xT'}); %% --- Close the Loop ---
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)
-% t = 0:0.001:60;          % time vector from 0 to 10 seconds
-% r = 10e-3*ones(length(t), 1); % step reference
+t = 0:0.01:15;          % time vector from 0 to 10 seconds
+r = 0.01*ones(length(t), 1); % step reference
 
-%%  Load seismic signal and scale down if necessary
-dados = load('elcentro.txt');
+% Simulate the closed-loop response using lsim:
+[y_out, t_out, x] = lsim(clsys, r, t);
+
+% Plot the response:
+figure(1)
+hold on
+plot(t,r,'-.')
+plot(t_out, y_out, 'LineWidth', 2)
+plot(t_out,x(:,1:nx))
+plot(t_out,x(:,nx+1:end-1),'--')
+plot(t_out,x(:,end),':')
+xlabel('Time (s)')
+ylabel('Output y')
+title('Closed-Loop Response with LQG Tracking Controller')
+grid on
+
+%  Load seismic signal and scale down if necessary
+dados = load('uniaxial_table_model\elcentro.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
 
 % Limits
-lim_displacement = 0.100; %m
+lim_displacement = 0.1; % m
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
-% Scaling down if necessary
-% displacements in milimeters
+s=tf('s')  ;
 x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref);
 scale=1;
+% Scaling down if necessary
 while max_xref > lim_displacement
     scale = 0.95*scale;
     ddx_ref = 0.95*ddx_ref;
     x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
     max_xref = max(x_ref);
 end
-scale
-max_xref
+scale;
+max_xref;
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
-max_vref = max(v_ref)
+max_vref = max(v_ref);
 
 
 % Simulate the closed-loop response using lsim:
 [y_out, t_out, x] = lsim(clsys, x_ref, t_vector);
 
 % Plot the response:
-figure
+figure(2)
 hold on
-plot(t_vector,x_ref)
+plot(t_vector,x_ref,'-.')
 plot(t_out, y_out, 'LineWidth', 2)
+plot(t_out,x(:,1:3))
+plot(t_out,x(:,4:6),'--')
+plot(t_out,x(:,7),':')
 xlabel('Time (s)')
 ylabel('Output y')
 title('Closed-Loop Response with LQG Tracking Controller')

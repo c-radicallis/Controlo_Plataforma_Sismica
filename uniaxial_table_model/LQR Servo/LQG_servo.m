@@ -222,7 +222,7 @@ sys_aug = ss(AA,[BB G], CC,[DD H]);
 % sys_aug.InputGroup.KnownInput = 1;
 
 % Design the LQI controller for the original system
-Q = diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
+Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(nu);
 K = lqi(sys, Q, R)
 
@@ -241,26 +241,27 @@ trksys.OutputName = {'i_sv'};
 clsys = connect(sys, trksys, {'x_ref'}, {'xT'}) %% --- Close the Loop ---
 
 %% --- Simulation ---
-% Define simulation time and reference signal (a step input of 1)
-t = 0:0.005:3;          % time vector from 0 to 10 seconds
-r = 0.1*ones(length(t), 1); % step reference
 
+% % Define simulation time and reference signal (a step input of 1)
+% t = 0:0.005:3;          % time vector from 0 to 10 seconds
+% r = 0.1*ones(length(t), 1); % step reference
+% 
 % Simulate the closed-loop response using lsim:
-[y_out, t_out, x] = lsim(clsys, r, t);
-
+% [y_out, t_out, x] = lsim(clsys, r, t);
+% 
 % Plot the response:
-figure(1)
-hold on
-plot(t,r,'-.')
-plot(t_out, y_out, 'LineWidth', 2)
+% figure(1)
+% hold on
+% plot(t,r,'-.')
+% plot(t_out, y_out, 'LineWidth', 2)
 % plot(t_out,x(:,1:nx))
 % plot(t_out,x(:,nx+1:end-1),'--')
 % plot(t_out,x(:,end),':')
-xlabel('Time (s)')
-ylabel('Output y')
-title('Closed-Loop Response with LQG Tracking Controller')
-grid on
-legend
+% xlabel('Time (s)')
+% ylabel('Output y')
+% title('Closed-Loop Response with LQG Tracking Controller')
+% grid on
+% legend
 
 %  Load seismic signal and scale down if necessary
 dados = load('uniaxial_table_model\elcentro.txt');
@@ -291,13 +292,13 @@ max_vref = max(v_ref);
 
 
 % Simulate the closed-loop response using lsim:
-[y_out, t_out, x] = lsim(clsys, x_ref, t_vector);
+[x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh');
 
 % Plot the response:
 figure(2)
 hold on
 plot(t_vector,x_ref,'-.')
-plot(t_out, y_out, 'LineWidth', 2)
+plot(t_out, x_T_LQG, 'LineWidth', 2)
 % plot(t_out,x(:,1:nx))
 % plot(t_out,x(:,nx+1:end-1),'--')
 % plot(t_out,x(:,end),':')
@@ -306,4 +307,258 @@ ylabel('Output y')
 title('Closed-Loop Response with LQG Tracking Controller')
 grid on
 legend
+
+%% Plots
+% clear;
+% load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat')
+% x_T_LQG = y_out;
+
+close all;
+
+fig1 = figure(1); %clf; % Clear figure if needed
+ax1 = axes(fig1); hold(ax1, 'on');
+opts1=bodeoptions('cstprefs');
+opts1.FreqUnits = 'Hz';
+opts1.XLim={[1 40]};
+% opts1.YLim={[-40 1]};
+% opts1.MagVisible='off';
+
+fig2 = figure(2); %clf;
+ax2 = axes(fig2); hold(ax2, 'on');
+grid on
+hold on
+title('Input to Servo'); 
+legend();
+xlabel('Time (s)'); 
+ylabel('Voltage (V)');
+
+fig3 = figure(3); %clf;
+ax3 = axes(fig3); hold(ax3, 'on');
+grid on
+title(' Platen Displacement '); 
+hold on
+legend()
+xlabel('Time (s)'); 
+ylabel('Displacement (mm)');
+
+fig4 = figure(4); %clf;
+ax4 = axes(fig4); hold(ax4, 'on');
+grid on
+title('Platen Acceleration'); 
+hold on
+legend()
+xlabel('Time (s)'); 
+ylabel('Acceleration (m/s^2)');
+
+fig5= figure(5); %clf; 
+ax5 = axes(fig5); hold(ax5, 'on');
+grid on
+title(' Platen Displacement Tracking Error '); 
+legend()
+xlabel('Time (s)'); 
+ylabel('Error (mm)');
+
+fig6= figure(6); %clf; 
+ax6 = axes(fig6); hold(ax6, 'on');
+grid on
+title(' Platen Acceleration Tracking Error '); 
+legend()
+xlabel('Time (s)'); 
+ylabel('Error (m/s^2)');
+
+fig7= figure(7); %clf; 
+ax7 = axes(fig7); hold(ax7, 'on');
+grid on
+title('Force to Platen'); 
+legend();
+xlabel('Time (s)'); 
+ylabel('Force (kN)');
+
+fig8 = figure(8);%
+subplot(121);
+grid on;
+xlabel('Frequency (Hz)');
+ylabel('Acceleration (m/s^2)');
+title('Acceleration Response Spectra');
+xlim([1 30]);
+subplot(122);
+grid on;
+xlabel('Frequency (Hz)');
+ylabel('Displacement (m)');
+title('Displacement Response Spectra');
+xlim([0.1 5]);
+% Define colors for lines 1/3 and 2/4
+color1 = 'blue';
+color2 = 'red' ;
+color3 = '#EDB120';
+
+%% Finding Response Spectre of Ground
+
+f_i=0.1; %freq inicial
+f_n=30;  %freq final
+n_points = 5e2;
+f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
+[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref, f_vector , 1);
+
+figure(fig8);
+subplot(121)
+grid on;
+legend();
+hold on
+plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+
+subplot(122)
+grid on;
+legend();
+hold on
+plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+
+
+%%
+% First plot
+axes(ax1); % Activate the existing axes
+bodeplot(G_xT_xref,opts1);
+
+% Third plot
+axes(ax3); % Activate the existing axes
+
+x_T = lsim(G_xT_xref/s^2 ,  ddx_ref ,t_vector,'foh');
+erro = x_T-x_ref;
+mse = mean(erro.^2);
+plot(t_vector,x_ref,"DisplayName","Reference")
+plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
+
+%%
+% 5th plot
+axes(ax5); % Activate the existing axes
+plot(t_vector,erro,"DisplayName","Default")
+
+% Fourth plot
+axes(ax4); % Activate the existing axes
+ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
+erro = ddx_T-ddx_ref;
+mse = mean(erro.^2);
+plot(t_vector,ddx_ref,"DisplayName","Reference")
+plot(t_vector,ddx_T,"DisplayName","MSE="+string(mse))
+
+% 6th plot
+axes(ax6); % Activate the existing axes
+plot(t_vector,erro,"DisplayName","Default")
+
+% Second plot
+axes(ax2); % Activate the existing axes
+i_sv = lsim(G_c,  x_ref-x_T  , t_vector,'foh');
+plot(t_vector,i_sv,"DisplayName","Default")
+
+% 7th  plot 
+axes(ax7); % Activate the existing axes
+F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+plot(t_vector,F_p_isv/1e3,"DisplayName","Default") %/1e3 to display as kN
+
+
+
+%% Finding Response Spectre for table
+
+[picos_ddx_table , picos_x_table ] = ResponseSpectrum(  t_vector , ddx_T , f_vector, 1 );
+
+figure(fig8);
+subplot(121)
+hold on
+mse = mean((picos_ddx_table-picos_ddx_ground).^2);
+plot(f_vector, picos_ddx_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName',  sprintf('Platform - MSE= %.2e', mse(1)));
+
+subplot(122)
+hold on
+mse = mean((picos_x_table-picos_x_ground).^2);
+plot(f_vector, picos_x_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', sprintf('Platform - MSE= %.2e', mse(1)));
+
+
+%%
+% First plot
+axes(ax1); % Activate the existing axes
+bodeplot(clsys,opts1);
+legend( 'Default'   ,'LQG');
+title('Bode of G\_xT\_xref'); 
+grid on;
+
+% displacements in milimeters
+axes(ax3); % Activate the existing axes
+erro = x_T_LQG-x_ref;
+mse = mean(erro.^2);
+plot(t_vector,x_T_LQG,"DisplayName","LQG MSE="+string(mse))
+
+% 5th plot
+axes(ax5); % Activate the existing axes
+plot(t_vector,erro,"DisplayName","Tuned")
+
+% Fourth plot
+axes(ax4); % Activate the existing axes
+ddx_T_LQG = lsim(clsys, ddx_ref ,t_vector,'foh');
+erro = ddx_T_LQG-ddx_ref;
+mse = mean(erro.^2);
+plot(t_vector,ddx_T_LQG,"DisplayName","Tuned MSE="+string(mse))
+
+% 6th plot
+axes(ax6); % Activate the existing axes
+hold on
+plot(t_vector,erro,"DisplayName","Tuned")
+
+
+% % Second plot
+% axes(ax2); % Activate the existing axes
+% hold on
+% i_sv = lsim(G_c ,   x_ref-x_T_LQG  ,t_vector,'foh');
+% plot(t_vector,i_sv,"DisplayName","Tuned")
+%  plot
+axes(ax7); % Activate the existing axes
+hold on
+F_p_isv = x(:,2);
+plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
+
+
+
+%% Finding Response Spectre for table tuned
+
+[picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
+
+
+figure(fig8);
+subplot(121)
+hold on
+mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
+plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+
+subplot(122)
+hold on
+mse = mean((picos_x_table_tuned-picos_x_ground).^2);
+plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+
+
+%% Save all figures after plotting
+% Folder path where you want to save the images
+folderName = sprintf('Sim_Res_LQG/m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',mass*1e-3,f1,f2,zeta1,zeta2);
+
+% Check if the folder already exists
+if ~exist(folderName, 'dir')
+    % Create the folder if it doesn't exist
+    mkdir(folderName);
+end
+
+saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'));
+saveas(fig2,fullfile(folderName,'Input_to_Servo.png'));
+saveas(fig3,fullfile(folderName,'Platen_Displacement.png'));
+saveas(fig4,fullfile(folderName,'Platen_Acceleration.png'));
+saveas(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'));
+saveas(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'));
+saveas(fig7,fullfile(folderName,'Force_to_Platen.png'));
+saveas(fig8,fullfile(folderName,'Response_Spectra.png'));
+ 
+saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.fig'));
+saveas(fig2,fullfile(folderName,'Input_to_Servo.fig'));
+saveas(fig3,fullfile(folderName,'Platen_Displacement.fig'));
+saveas(fig4,fullfile(folderName,'Platen_Acceleration.fig'));
+saveas(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.fig'));
+saveas(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.fig'));
+saveas(fig7,fullfile(folderName,'Force_to_Platen.fig'));
+saveas(fig8,fullfile(folderName,'Response_Spectra.fig'));
 

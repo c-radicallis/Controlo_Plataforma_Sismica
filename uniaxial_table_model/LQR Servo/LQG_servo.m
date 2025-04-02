@@ -9,11 +9,11 @@ mass=2e3;
 
 % 1st mode
 m1 = mass; % kg
-f1 = 0.4; % Hz   % 1.5 < f1 < 4
+f1 = 2; % Hz   % 1.5 < f1 < 4
 zeta1 = 0.1 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = mass; % kg
-f2 =3; % Hz % 6 < f2 < 10
+f2 =10; % Hz % 6 < f2 < 10
 zeta2 = 0.06; % 5 < zeta2 < 25r
 
 % Controller
@@ -80,31 +80,43 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
 % state space model
-digits(1e5)
-AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
+% digits(1e2)
+% AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
+%           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
+%               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
+%               0 ,              0 , 0      , 0          , 0     , 0              , 1         , 0     ;
+%               0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
+%               0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
+%               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
+%               0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]);
+% 
+% BB = vpa([k_svk_q/tau_sv ; zeros(7,1)]);
+AA = [-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 0              , 1         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
               0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
-              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]);
+              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2];
           
-BB = vpa([k_svk_q/tau_sv ; zeros(7,1)]);
-CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
+BB = [k_svk_q/tau_sv ; zeros(7,1)];
+CC = [zeros(1,2), 1 , zeros(1,5)];  % measuring xT
 DD = 0;
-
-%%
-obs = vpa(obsv(AA, CC));
-r_obsv = rank(obs)
-ctrlb = vpa(ctrb(AA,BB));
-r_ctrlb = rank(ctrlb)
-
-%%
-format short g
-obs=double(obs)
-ctrlb = double(ctrlb)
-format
+sys = ss(AA,BB,CC,DD);
+sys.InputName = {'i_sv'};   % plant input: control signal
+sys.OutputName = {'xT'};  % plant output
+% %%
+% obs = vpa(obsv(AA, CC));
+% r_obsv = rank(obs)
+% ctrlb = vpa(ctrb(AA,BB));
+% r_ctrlb = rank(ctrlb)
+% 
+% %%
+% format short g
+% obs=double(obs)
+% ctrlb = double(ctrlb)
+% format
 
 %% 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
 % clear
@@ -199,20 +211,20 @@ G = eye(nx);         % Process noise matrix (assuming full-state noise)
 H = zeros(ny, nx);   % No direct noise feedthrough
 
 % Create the augmented system
-sys_aug = ss(double(AA), [double(BB) G], double(CC), [double(DD) H]);
+sys_aug = ss(AA,[BB G], CC,[DD H]); 
 
 % Assign input groups:
-% - Channel 1 is control,
-% - Channels 2 to (nx+1) are noise.
-sys_aug.InputGroup.control = 1;
-sys_aug.InputGroup.noise   = 2:(nx+1);
-% Explicitly set the KnownInput group to only the control input
-sys_aug.InputGroup.KnownInput = 1;
+% % - Channel 1 is control,
+% % - Channels 2 to (nx+1) are noise.
+% sys_aug.InputGroup.control = 1;
+% sys_aug.InputGroup.noise   = 2:(nx+1);
+% % Explicitly set the KnownInput group to only the control input
+% sys_aug.InputGroup.KnownInput = 1;
 
 % Design the LQI controller for the original system
-Q = blkdiag(eye(nx), eye(ny));
-R = eye(nu);
-K = lqi(ss(double(AA), double(BB),  double(CC),  double(DD)), Q, R)
+Q = diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
+R = 1e-9*eye(nu);
+K = lqi(sys, Q, R)
 
 % Define noise covariance data
 % Here Qn should be for process noise (nx-by-nx) and Rn for measurement noise (ny-by-ny)
@@ -222,7 +234,76 @@ Rn = eye(ny);
 % Construct the Kalman estimator using the augmented system
 kest = kalman(sys_aug, Qn, Rn)
 
-% Now, lqgtrack expects that the number of rows in K (control actions) matches 
-% the number of known input channels in kest (which is now 1).
-trksys = lqgtrack(kest, K)
+trksys = lqgtrack(kest, K) % Build the LQG Tracking Controller --- Combine the estimator and state-feedback gain into the tracking controller
+trksys.InputName = {'x_ref', 'xT'};
+trksys.OutputName = {'i_sv'};
+
+clsys = connect(sys, trksys, {'x_ref'}, {'xT'}) %% --- Close the Loop ---
+
+%% --- Simulation ---
+% Define simulation time and reference signal (a step input of 1)
+t = 0:0.005:3;          % time vector from 0 to 10 seconds
+r = 0.1*ones(length(t), 1); % step reference
+
+% Simulate the closed-loop response using lsim:
+[y_out, t_out, x] = lsim(clsys, r, t);
+
+% Plot the response:
+figure(1)
+hold on
+plot(t,r,'-.')
+plot(t_out, y_out, 'LineWidth', 2)
+% plot(t_out,x(:,1:nx))
+% plot(t_out,x(:,nx+1:end-1),'--')
+% plot(t_out,x(:,end),':')
+xlabel('Time (s)')
+ylabel('Output y')
+title('Closed-Loop Response with LQG Tracking Controller')
+grid on
+legend
+
+%  Load seismic signal and scale down if necessary
+dados = load('uniaxial_table_model\elcentro.txt');
+t_vector = dados(:,1);
+t_step = t_vector(2);
+ddx_ref = dados(:,2);
+
+% Limits
+lim_displacement = 0.1; % m
+lim_velocity = 0.4; % m/s
+lim_force = 200e3; % N
+
+s=tf('s')  ;
+x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
+max_xref = max(x_ref);
+scale=1;
+% Scaling down if necessary
+while max_xref > lim_displacement
+    scale = 0.95*scale;
+    ddx_ref = 0.95*ddx_ref;
+    x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
+    max_xref = max(x_ref);
+end
+scale;
+max_xref;
+v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
+max_vref = max(v_ref);
+
+
+% Simulate the closed-loop response using lsim:
+[y_out, t_out, x] = lsim(clsys, x_ref, t_vector);
+
+% Plot the response:
+figure(2)
+hold on
+plot(t_vector,x_ref,'-.')
+plot(t_out, y_out, 'LineWidth', 2)
+% plot(t_out,x(:,1:nx))
+% plot(t_out,x(:,nx+1:end-1),'--')
+% plot(t_out,x(:,end),':')
+xlabel('Time (s)')
+ylabel('Output y')
+title('Closed-Loop Response with LQG Tracking Controller')
+grid on
+legend
 

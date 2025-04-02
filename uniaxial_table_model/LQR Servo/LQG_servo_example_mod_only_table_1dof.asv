@@ -119,14 +119,14 @@ sys_aug = ss(AA,[BB G], CC,[DD H]);
 % Assign input groups:
 %   Channel 1: control input (B)
 %   Channels 2 to (nx+1): noise (G)
-% sys_aug.InputGroup.control = 1;
-% sys_aug.InputGroup.noise   = 2:(nx+1);
-% % Explicitly mark the control channel as KnownInput
-% sys_aug.InputGroup.KnownInput = 1;
+sys_aug.InputGroup.control = 1;
+sys_aug.InputGroup.noise   = 2:(nx+1);
+% Explicitly mark the control channel as KnownInput
+sys_aug.InputGroup.KnownInput = 1;
 
 %% --- Design the LQI Controller ---
 % We design the LQI controller for the original plant.
-Q =  diag([0, 0, 0,0,1]);%blkdiag(eye(nx), eye(ny));
+Q = blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(size(BB,2));  % Note: size(B,2) is the number of control inputs (should be 1)
 K = lqi(sys, Q, R)
 % K is the state-feedback gain that computes the control action.
@@ -177,8 +177,8 @@ clsys = connect(sys, trksys, Erro_soma, {'x_ref'}, {'xT'});
 
 %% --- Simulation ---
 % Define simulation time and reference signal (a step input of 1)
-t = 0:0.005:2;          % time vector from 0 to 10 seconds
-r = 0.1*ones(length(t), 1); % step reference
+t = 0:0.01:30;          % time vector from 0 to 10 seconds
+r = 0.01*ones(length(t), 1); % step reference
 
 % Simulate the closed-loop response using lsim:
 [y_out, t_out, x] = lsim(clsys, r, t);

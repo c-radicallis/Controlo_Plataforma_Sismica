@@ -1,5 +1,6 @@
-%clear;
+clear;
 clc;
+close all;
 
 %%
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
@@ -147,13 +148,16 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 
 %% Use PID tuner app to generate a PID controller for the system
+axes(ax1);
+bodeplot(G_xT_xref);
+
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 x_T_tuned = lsim(G_xT_xref/s^2 ,  ddx_ref ,t_vector,'foh');
 ddx_T_tuned = lsim(G_xT_xref, ddx_ref ,t_vector,'foh');
 
-axes(ax1);
+axes(ax1); hold on;
 bodeplot(G_xT_xref);
 
 axes(ax3); % Activate the existing axes
@@ -173,22 +177,22 @@ axes(ax6); hold on;
 plot(t_vector,erro,"DisplayName","Tuned")
 
 axes(ax2); hold on;
-i_sv = lsim(G_c ,   (x_ref-x_T_tuned)*1e-3  ,t_vector,'foh');
+i_sv = lsim(G_c ,  x_ref-x_T_tuned  ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","Tuned")
 
 axes(ax7); hold on;
 F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
 plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
 
-% Finding Response Spectre for table tuned
+%% Finding Response Spectre for table tuned
 [picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_tuned, f_vector , 1 );
 
 figure(fig8);subplot(121);hold on;
 mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 subplot(122);hold on;
 mse = mean((picos_x_table_tuned-picos_x_ground).^2);
-plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 
 %% LQG results
 axes(ax1);grid on;
@@ -220,16 +224,16 @@ axes(ax7); hold on;
 F_p_isv = x(:,2); % 2nd element of state vector
 plot(t_vector,F_p_isv*1e-3,"DisplayName","LQG")
 
-% % Finding Response Spectre for table LQG
+%% Finding Response Spectre for table LQG
 [picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;
 mse = mean((picos_ddx_table_LQG-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('LQG Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 subplot(122);hold on;
 mse = mean((picos_x_table_LQG-picos_x_ground).^2);
-plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting
 folderName = sprintf('Sim_Res_LQG/m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images

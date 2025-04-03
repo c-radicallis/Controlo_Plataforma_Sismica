@@ -11,8 +11,8 @@ m2 = mass; % kg %2nd mode
 f2 =6; % Hz % 6 < f2 < 10
 zeta2 = 0.05; % 5 < zeta2 < 25r
 
-c1 = zeta1*2*m1*2*pi*f1; %N/m/s %coupled 2DOF system
-c2 = zeta2*2*m2*2*pi*f2; %N/m/s
+c1 = zeta1*2*m1*2*pi*f1; c2 = zeta2*2*m2*2*pi*f2; %N/m/s%coupled 2DOF system
+
 syms k1 k2
 assume(k1 ,"positive")
 assume(k2 ,"positive")
@@ -20,8 +20,7 @@ Y = vpasolve([
     (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  ,
     (m1*k2 + m2*(k1+k2))/(2*m1*m2)+ 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f2)^2,
 ], [k1,k2]);
-k1 = double(Y.k1);
-k2 = double(Y.k2);
+k1 = double(Y.k1); k2 = double(Y.k2);
 
 tau_sv=0.0246     ; %Valve time constant (tsv=0.0246 s) % All converted to SI units
 k_svk_q=1934.5*(1e-2)^3   ; %Valve flow gain (ksv∙kq=1934.5 cm3/s/V)
@@ -115,10 +114,12 @@ v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref);
 
 [x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
+[ddx_T_LQG, t_out_ddx, x_ddx] = lsim(clsys, ddx_ref ,t_vector,'foh');
 
 figure(2); hold on; grid on; legend; % Plot the response:
 plot(t_vector,x_ref,'-.')
 plot(t_out, x_T_LQG, 'LineWidth', 2)
+plot(t_out, ddx_T_LQG, 'LineWidth', 2) % #######################################################
 % plot(t_out,x(:,1:nx))
 % plot(t_out,x(:,nx+1:end-1),'--')
 % plot(t_out,x(:,end),':')
@@ -153,73 +154,72 @@ plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'Di
 subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
 
-%%
-axes(ax1); % First plot % Activate the existing axes
-bodeplot(G_xT_xref,opts1);
+%% Use PID tuner app to generate a PID controller for the system
+tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
+G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
+[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+x_T_tuned = lsim(G_xT_xref/s^2 ,  ddx_ref ,t_vector,'foh');
+ddx_T_tuned = lsim(G_xT_xref, ddx_ref ,t_vector,'foh');
 
-axes(ax3);% Third plot % Activate the existing axes
-x_T = lsim(G_xT_xref/s^2 ,  ddx_ref ,t_vector,'foh');
-erro = x_T-x_ref;
-mse = mean(erro.^2);
-plot(t_vector,x_ref,"DisplayName","Reference")
-plot(t_vector,x_T,"DisplayName","MSE="+string(mse))
-
-axes(ax5);% 5th plot % Activate the existing axes
-plot(t_vector,erro,"DisplayName","Default")
-
-axes(ax4); % Activate the existing axes
-ddx_T = lsim(G_xT_xref, ddx_ref , t_vector ,'foh');
-erro = ddx_T-ddx_ref;
-mse = mean(erro.^2);
-plot(t_vector,ddx_ref,"DisplayName","Reference")
-plot(t_vector,ddx_T,"DisplayName","MSE="+string(mse))
-
-axes(ax6); % Activate the existing axes
-plot(t_vector,erro,"DisplayName","Default")
-
-axes(ax2); % Activate the existing axes
-i_sv = lsim(G_c,  x_ref-x_T  , t_vector,'foh');
-plot(t_vector,i_sv,"DisplayName","Default")
-
-axes(ax7); % Activate the existing axes
-F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
-plot(t_vector,F_p_isv/1e3,"DisplayName","Default") %/1e3 to display as kN
-
-%% Finding Response Spectre for table
-[picos_ddx_table , picos_x_table ] = ResponseSpectrum(  t_vector , ddx_T , f_vector, 1 );
-
-figure(fig8); subplot(121); hold on;
-mse = mean((picos_ddx_table-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName',  sprintf('Platform - MSE= %.2e', mse(1)));
-
-subplot(122);hold on;
-mse = mean((picos_x_table-picos_x_ground).^2);
-plot(f_vector, picos_x_table(:, 1),'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', sprintf('Platform - MSE= %.2e', mse(1)));
-
-%%
-axes(ax1); % Activate the existing axes
-bodeplot(clsys,opts1);
-legend( 'Default'   ,'LQG');
-title('Bode of G\_xT\_xref'); 
-grid on;
+axes(ax1);
+bodeplot(G_xT_xref);
 
 axes(ax3); % Activate the existing axes
-erro = x_T_LQG-x_ref;
+erro = x_T_tuned-x_ref;
 mse = mean(erro.^2);
-plot(t_vector,x_T_LQG,"DisplayName","LQG MSE="+string(mse))
+plot(t_vector,x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
 axes(ax5); % Activate the existing axes
-plot(t_vector,erro,"DisplayName","LQG")
+plot(t_vector,erro,"DisplayName","Tuned")
 
 axes(ax4); % Activate the existing axes
-ddx_T_LQG = lsim(clsys, ddx_ref ,t_vector,'foh');
+erro = ddx_T_tuned-ddx_ref;
+mse = mean(erro.^2);
+plot(t_vector,ddx_T_tuned,"DisplayName","Tuned MSE="+string(mse))
+
+axes(ax6); hold on;
+plot(t_vector,erro,"DisplayName","Tuned")
+
+axes(ax2); hold on;
+i_sv = lsim(G_c ,   (x_ref-x_T_tuned)*1e-3  ,t_vector,'foh');
+plot(t_vector,i_sv,"DisplayName","Tuned")
+
+axes(ax7); hold on;
+F_p_isv = lsim(G_Fp_isv,   i_sv  , t_vector,'foh');
+plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
+
+% Finding Response Spectre for table tuned
+[picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_tuned, f_vector , 1 );
+
+figure(fig8);subplot(121);hold on;
+mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
+plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+subplot(122);hold on;
+mse = mean((picos_x_table_tuned-picos_x_ground).^2);
+plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+
+%% LQG results
+axes(ax1);grid on;
+bodeplot(clsys,opts1);
+legend( 'Default' , 'PIDF'  ,'LQG');
+title('Bode of G\_xT\_xref'); 
+
+axes(ax3);% Third plot % Activate the existing axes
+erro = x_T_LQG-x_ref;
+mse = mean(erro.^2);
+plot(t_vector,x_T_LQG,"DisplayName","MSE="+string(mse))
+
+axes(ax5); hold on;% 5th plot % Activate the existing axes
+plot(t_vector,erro,"DisplayName","LQG")
+
+axes(ax4); hold on; % Activate the existing axes
 erro = ddx_T_LQG-ddx_ref;
 mse = mean(erro.^2);
-plot(t_vector,ddx_T_LQG,"DisplayName","LQG MSE="+string(mse))
+plot(t_vector,ddx_T_LQG,"DisplayName","MSE="+string(mse))
 
 axes(ax6); hold on;% Activate the existing axes
 plot(t_vector,erro,"DisplayName","LQG")
-%%
+
 axes(ax2); hold on;
 i_sv = lsim(trksys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","LQG")
@@ -228,7 +228,7 @@ axes(ax7); hold on;
 F_p_isv = x(:,2); % 2nd element of state vector
 plot(t_vector,F_p_isv*1e-3,"DisplayName","LQG")
 
-%% Finding Response Spectre for table LQG
+% % Finding Response Spectre for table LQG
 [picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;

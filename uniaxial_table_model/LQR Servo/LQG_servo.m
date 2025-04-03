@@ -1,6 +1,7 @@
 %clear;
 clc;
 
+%%
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
 mass=2e3;
@@ -114,18 +115,9 @@ v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref);
 
 [x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
-[ddx_T_LQG, t_out_ddx, x_ddx] = lsim(clsys, ddx_ref ,t_vector,'foh');
+diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
+ddx_T_LQG=[diff([diff_x_T_LQG;0])./diff(t_out); 0];
 
-figure(2); hold on; grid on; legend; % Plot the response:
-plot(t_vector,x_ref,'-.')
-plot(t_out, x_T_LQG, 'LineWidth', 2)
-plot(t_out, ddx_T_LQG, 'LineWidth', 2) % #######################################################
-% plot(t_out,x(:,1:nx))
-% plot(t_out,x(:,nx+1:end-1),'--')
-% plot(t_out,x(:,end),':')
-xlabel('Time (s)')
-ylabel('Output y')
-title('Closed-Loop Response with LQG Tracking Controller')
 
 %% Plots
 % clear; load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat'); x_T_LQG = y_out;

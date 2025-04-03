@@ -209,35 +209,35 @@ mse = mean(erro.^2);
 plot(t_vector,x_T_LQG,"DisplayName","LQG MSE="+string(mse))
 
 axes(ax5); % Activate the existing axes
-plot(t_vector,erro,"DisplayName","Tuned")
+plot(t_vector,erro,"DisplayName","LQG")
 
 axes(ax4); % Activate the existing axes
 ddx_T_LQG = lsim(clsys, ddx_ref ,t_vector,'foh');
 erro = ddx_T_LQG-ddx_ref;
 mse = mean(erro.^2);
-plot(t_vector,ddx_T_LQG,"DisplayName","Tuned MSE="+string(mse))
+plot(t_vector,ddx_T_LQG,"DisplayName","LQG MSE="+string(mse))
 
 axes(ax6); hold on;% Activate the existing axes
-plot(t_vector,erro,"DisplayName","Tuned")
-
+plot(t_vector,erro,"DisplayName","LQG")
+%%
 axes(ax2); hold on;
-i_sv = lsim(trksys ,   [x_ref ; x_T_LQG]  ,t_vector,'foh');
-plot(t_vector,i_sv,"DisplayName","Tuned")
+i_sv = lsim(trksys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
+plot(t_vector,i_sv,"DisplayName","LQG")
 
 axes(ax7); hold on;
 F_p_isv = x(:,2); % 2nd element of state vector
-plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
+plot(t_vector,F_p_isv*1e-3,"DisplayName","LQG")
 
-%% Finding Response Spectre for table tuned
-[picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
+%% Finding Response Spectre for table LQG
+[picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;
-mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+mse = mean((picos_ddx_table_LQG-picos_ddx_ground).^2);
+plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 subplot(122);hold on;
-mse = mean((picos_x_table_tuned-picos_x_ground).^2);
-plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+mse = mean((picos_x_table_LQG-picos_x_ground).^2);
+plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting
 folderName = sprintf('Sim_Res_LQG/m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images

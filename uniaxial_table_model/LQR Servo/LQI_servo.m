@@ -69,8 +69,8 @@ nu = size(BB,2);    % Number of control inputs (should be 1)
 ny = size(CC,1);    % Number of outputs
 
 plant_aug = ss(AA, BB,[eye(nx);CC],DD);
-sys.InputName = {'i_sv'};   % plant input: control signal
-sys.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
+plant_aug.InputName = {'i_sv'};   % plant input: control signal
+plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
 
 sumblk1 = sumblk('e = x_ref - y_xT'); % Compute the error signal: e = r - y
 
@@ -81,6 +81,8 @@ integrator.OutputName = {'xi'};  % integrated error
 Q = 1e9*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(nu);
 K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
+K  = K_lqi(1:nx);      % state feedback gains
+Ki = K_lqi(end);        % integrator gain
 controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
 controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
 controller.OutputName = {'i_sv'};
@@ -160,42 +162,42 @@ axes(ax3); % Activate the existing axes
 plot(t_vector,x_ref,"DisplayName","Reference")
 erro = x_T_tuned-x_ref;
 mse = mean(erro.^2);
-plot(t_vector,x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
+plot(t_vector,x_T_tuned,"DisplayName","Tuned PIDF MSE="+string(mse))
 
 axes(ax5); % Activate the existing axes
-plot(t_vector,erro,"DisplayName","Tuned")
+plot(t_vector,erro,"DisplayName","Tuned PIDF")
 
 axes(ax4); % Activate the existing 
 plot(t_vector,ddx_ref,"DisplayName","Reference")
 erro = ddx_T_tuned-ddx_ref;
 mse = mean(erro.^2);
-plot(t_vector,ddx_T_tuned,"DisplayName","Tuned MSE="+string(mse))
+plot(t_vector,ddx_T_tuned,"DisplayName","Tuned PIDF MSE="+string(mse))
 
 axes(ax6); hold on;
-plot(t_vector,erro,"DisplayName","Tuned")
+plot(t_vector,erro,"DisplayName","Tuned PIDF")
 
 axes(ax2); hold on;
 i_sv_tuned = lsim(G_c ,  x_ref-x_T_tuned  ,t_vector,'foh');
-plot(t_vector,i_sv_tuned,"DisplayName","Tuned")
+plot(t_vector,i_sv_tuned,"DisplayName","Tuned PIDF")
 
 axes(ax7); hold on;
 F_p_isv = lsim(G_Fp_isv,   i_sv_tuned  , t_vector,'foh');
-plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
+plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned PIDF")
 
 %% Finding Response Spectre for table tuned
 [picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_tuned, f_vector , 1 );
 
 figure(fig8);subplot(121);hold on;
 mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('Tuned PIDF Platform - MSE= %.2e', mse(1)));
 subplot(122);hold on;
 mse = mean((picos_x_table_tuned-picos_x_ground).^2);
-plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('Tuned PIDF Platform - MSE= %.2e', mse(1)));
 
-%% LQG results
+%% LQI results
 axes(ax1);
 bodeplot(clsys,opts1);
-legend( 'Default' , 'PIDF'  ,'LQG');
+legend( 'Default' , 'Tuned PIDF'  ,'LQI');
 title('Bode of G\_xT\_xref'); 
 grid on;
 
@@ -205,7 +207,7 @@ mse = mean(erro.^2);
 plot(t_vector,x_T_LQG,"DisplayName","MSE="+string(mse))
 
 axes(ax5); hold on;% 5th plot % Activate the existing axes
-plot(t_vector,erro,"DisplayName","LQG")
+plot(t_vector,erro,"DisplayName","LQI")
 
 axes(ax4); hold on; % Activate the existing axes
 erro = ddx_T_LQG-ddx_ref(1:end-2);
@@ -213,26 +215,26 @@ mse = mean(erro.^2);
 plot(t_vector(1:end-2),ddx_T_LQG,"DisplayName","MSE="+string(mse))
 %%
 axes(ax6); hold on;% Activate the existing axes
-plot(t_vector(1:end-2),erro,"DisplayName","LQG")
+plot(t_vector(1:end-2),erro,"DisplayName","LQI")
 
 axes(ax2); hold on;
-i_sv = lsim(trksys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
-plot(t_vector,i_sv,"DisplayName","LQG")
+%i_sv = lsim(trksys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
+plot(t_vector,-K_lqi*x',"DisplayName","LQI")
 
 axes(ax7); hold on;
 F_p_isv = x(:,2); % 2nd element of state vector
-plot(t_vector,F_p_isv*1e-3,"DisplayName","LQG")
+plot(t_vector,F_p_isv*1e-3,"DisplayName","LQI")
 
-%% Finding Response Spectre for table LQG
+%% Finding Response Spectre for table LQI
 [picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;
 mse = mean((picos_ddx_table_LQG-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQG Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQI Platform - MSE= %.2e', mse(1)));
 
 subplot(122);hold on;
 mse = mean((picos_x_table_LQG-picos_x_ground).^2);
-plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
+plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQI Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting
 folderName = sprintf('Sim_Res_LQG/Q=%.1f,m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',Q(9,9),mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images

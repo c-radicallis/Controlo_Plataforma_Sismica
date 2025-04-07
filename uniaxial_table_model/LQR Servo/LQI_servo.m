@@ -19,7 +19,7 @@ syms k1 k2
 assume(k1 ,"positive")
 assume(k2 ,"positive")
 Y = vpasolve([
-    (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  ,
+    (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  , ...
     (m1*k2 + m2*(k1+k2))/(2*m1*m2)+ 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f2)^2,
 ], [k1,k2]);
 k1 = double(Y.k1); k2 = double(Y.k2);
@@ -64,30 +64,28 @@ BB = [k_svk_q/tau_sv ; zeros(7,1)];
 CC = [zeros(1,2), 1 , zeros(1,5)];  % measuring xT
 DD = 0;
 sys = ss(AA,BB,CC,DD);
-sys.InputName = {'i_sv'};   % plant input: control signal
-sys.OutputName = {'xT'};  % plant output
-
-%% 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
-%load('mat and fig files\obsv_ctrb_vpa1e5.mat')
-
 nx = size(AA,1);    % Number of states
 nu = size(BB,2);    % Number of control inputs (should be 1)
 ny = size(CC,1);    % Number of outputs
 
+plant_aug = ss(AA, BB,[eye(nx);CC],DD);
+sys.InputName = {'i_sv'};   % plant input: control signal
+sys.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
+
+sumblk1 = sumblk('e = x_ref - y_xT'); % Compute the error signal: e = r - y
+
+integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
+integrator.InputName = {'e'};    % error: e = r - y
+integrator.OutputName = {'xi'};  % integrated error
+
 Q = 1e9*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(nu);
-K = lqi(sys, Q, R)% Design the LQI controller for the original system
-controller = ss([], [], [], -K);  %   u = -[K  Ki] * [x; xi]
-controller.InputName = {'x','xi'};
+K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
+controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
+controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
 controller.OutputName = {'i_sv'};
 
-integrator = 1/s;
-integrator.InputName='e';
-integrator.OutputName='x_i';
-
-erro_soma = sumblk("e = x_ref - xT");
-
-clsys = connect(erro_soma, integrator , sys, {'x_ref'}, {'xT'}); %% --- Close the Loop ---
+clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
 
 %% --- Simulation --
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'

@@ -117,7 +117,7 @@ sys_aug = ss(AA,[BB G], CC,[DD H]); %% --- Build the Augmented System for Estima
 % % Explicitly mark the control channel as KnownInput
 % sys_aug.InputGroup.KnownInput = 1;
 
-Q = diag([0, 0, 0,0,1]); %blkdiag(eye(nx), eye(ny));% We design the LQI controller for the original plant.
+Q = 1e3*diag([0, 0, 0,0,1]); %blkdiag(eye(nx), eye(ny));% We design the LQI controller for the original plant.
 R = 1e-9*eye(size(BB,2));  % Note: size(B,2) is the number of control inputs (should be 1)
 K = lqi(sys, Q, R) % K is the state-feedback gain that computes the control action.
 
@@ -180,7 +180,6 @@ max_xref;
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref);
 
-
 % Simulate the closed-loop response using lsim:
 [y_out, t_out, x] = lsim(clsys, x_ref, t_vector);
 
@@ -189,9 +188,9 @@ figure(2)
 hold on
 plot(t_vector,x_ref,'-.')
 plot(t_out, y_out, 'LineWidth', 2)
-% plot(t_out,x(:,1:nx))
-% plot(t_out,x(:,nx+1:end-1),'--')
-% plot(t_out,x(:,end),':')
+plot(t_out,x(:,1:nx))
+plot(t_out,x(:,nx+1:end-1),'--')
+plot(t_out,x(:,end),':')
 xlabel('Time (s)')
 ylabel('Output y')
 title('Closed-Loop Response with LQG Tracking Controller')

@@ -7,10 +7,10 @@ mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
 mass=2e3;
 m1 = mass; % kg % 1st mode
-f1 = 1.5; % Hz   % 1.5 < f1 < 4
+f1 = 4; % Hz   % 1.5 < f1 < 4
 zeta1 = 0.02 ; % 2 < zeta1 < 10
 m2 = mass; % kg %2nd mode
-f2 =6; % Hz % 6 < f2 < 10
+f2 =10; % Hz % 6 < f2 < 10
 zeta2 = 0.05; % 5 < zeta2 < 25r
 
 c1 = zeta1*2*m1*2*pi*f1; c2 = zeta2*2*m2*2*pi*f2; %N/m/s%coupled 2DOF system
@@ -113,13 +113,13 @@ end
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref);
 
-[x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
-diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
-ddx_T_LQG=diff(diff_x_T_LQG)./diff(t_out(1:end-1));
+[x_T_LQI, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
+diff_x_T_LQI=diff(x_T_LQI)./diff(t_out);
+ddx_T_LQI=diff(diff_x_T_LQI)./diff(t_out(1:end-1));
 
 
 %% Plots
-% clear; load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat'); x_T_LQG = y_out;
+% clear; load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat'); x_T_LQI = y_out;
 
 close all;
 fig1 = figure(1); ax1 = axes(fig1); hold(ax1, 'on'); opts1=bodeoptions('cstprefs'); opts1.FreqUnits = 'Hz'; opts1.XLim={[1 50]}; % opts1.YLim={[-40 1]}; % opts1.MagVisible='off';
@@ -129,7 +129,7 @@ fig4 = figure(4); ax4 = axes(fig4); hold(ax4, 'on'); grid on; title('Platen Acce
 fig5 = figure(5); ax5 = axes(fig5); hold(ax5, 'on');grid on;title(' Platen Displacement Tracking Error '); legend();xlabel('Time (s)'); ylabel('Error (mm)');
 fig6 = figure(6); ax6 = axes(fig6); hold(ax6, 'on');grid on;title(' Platen Acceleration Tracking Error '); legend();xlabel('Time (s)'); ylabel('Error (m/s^2)');
 fig7 = figure(7); ax7 = axes(fig7); hold(ax7, 'on');grid on;title('Force to Platen'); legend();xlabel('Time (s)'); ylabel('Force (kN)');
-fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+fig8 = figure(8);set(fig8, 'WindowState', 'maximized');subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; % Define colors for lines 1/3 and 2/4
 
 %% Finding Response Spectre of Ground
@@ -162,7 +162,7 @@ axes(ax3); % Activate the existing axes
 plot(t_vector,x_ref,"DisplayName","Reference")
 erro = x_T_tuned-x_ref;
 mse = mean(erro.^2);
-plot(t_vector,x_T_tuned,"DisplayName","Tuned PIDF MSE="+string(mse))
+plot(t_vector,x_T_tuned,"DisplayName",sprintf('Tuned PIDF MSE= %.2e', mse))
 
 axes(ax5); % Activate the existing axes
 plot(t_vector,erro,"DisplayName","Tuned PIDF")
@@ -171,7 +171,7 @@ axes(ax4); % Activate the existing
 plot(t_vector,ddx_ref,"DisplayName","Reference")
 erro = ddx_T_tuned-ddx_ref;
 mse = mean(erro.^2);
-plot(t_vector,ddx_T_tuned,"DisplayName","Tuned PIDF MSE="+string(mse))
+plot(t_vector,ddx_T_tuned,"DisplayName",sprintf('Tuned PIDF MSE= %.2e', mse))
 
 axes(ax6); hold on;
 plot(t_vector,erro,"DisplayName","Tuned PIDF")
@@ -202,23 +202,23 @@ title('Bode of G\_xT\_xref');
 grid on;
 
 axes(ax3);% Third plot % Activate the existing axes
-erro = x_T_LQG-x_ref;
+erro = x_T_LQI-x_ref;
 mse = mean(erro.^2);
-plot(t_vector,x_T_LQG,"DisplayName","MSE="+string(mse))
+plot(t_vector,x_T_LQI,"DisplayName",sprintf("LQI MSE= %.2e",mse))
 
 axes(ax5); hold on;% 5th plot % Activate the existing axes
 plot(t_vector,erro,"DisplayName","LQI")
 
 axes(ax4); hold on; % Activate the existing axes
-erro = ddx_T_LQG-ddx_ref(1:end-2);
+erro = ddx_T_LQI-ddx_ref(1:end-2);
 mse = mean(erro.^2);
-plot(t_vector(1:end-2),ddx_T_LQG,"DisplayName","MSE="+string(mse))
+plot(t_vector(1:end-2),ddx_T_LQI,"DisplayName",sprintf("LQI MSE= %.2e",mse))
 %%
 axes(ax6); hold on;% Activate the existing axes
 plot(t_vector(1:end-2),erro,"DisplayName","LQI")
 
 axes(ax2); hold on;
-%i_sv = lsim(trksys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
+%i_sv = lsim(trksys ,   [x_ref , x_T_LQI]  ,t_vector,'foh');
 plot(t_vector,-K_lqi*x',"DisplayName","LQI")
 
 axes(ax7); hold on;
@@ -226,18 +226,18 @@ F_p_isv = x(:,2); % 2nd element of state vector
 plot(t_vector,F_p_isv*1e-3,"DisplayName","LQI")
 
 %% Finding Response Spectre for table LQI
-[picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
+[picos_ddx_table_LQI , picos_x_table_LQI ] = ResponseSpectrum( t_vector , ddx_T_LQI, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;
-mse = mean((picos_ddx_table_LQG-picos_ddx_ground).^2);
-plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQI Platform - MSE= %.2e', mse(1)));
+mse = mean((picos_ddx_table_LQI-picos_ddx_ground).^2);
+plot(f_vector, picos_ddx_table_LQI(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQI Platform - MSE= %.2e', mse(1)));
 
 subplot(122);hold on;
-mse = mean((picos_x_table_LQG-picos_x_ground).^2);
-plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQI Platform - MSE= %.2e', mse(1)));
+mse = mean((picos_x_table_LQI-picos_x_ground).^2);
+plot(f_vector, picos_x_table_LQI(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQI Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting
-folderName = sprintf('Sim_Res_LQG/Q=%.1f,m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',Q(9,9),mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images
+folderName = sprintf('Sim_Res_LQI/Q=%.1e,m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',Q(9,9),mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images
 if ~exist(folderName, 'dir')% Check if the folder already exists
     % Create the folder if it doesn't exist
     mkdir(folderName);

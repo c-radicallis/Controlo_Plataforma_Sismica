@@ -1,4 +1,4 @@
-function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , ss_model ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
+function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , AA , BB , CC , DD ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
 
 %coupled 2DOF system
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s
@@ -60,61 +60,16 @@ G_x2_xT = G_x2_x1 * G_x1_xT;
 G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
 
 %% Original Plant Definition
-digits(1e5)
-AA = vpa([-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
+AA = [-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
           k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 0              , 1         , 0     ;
               0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
               0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
-              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]);
-          
-BB = vpa([k_svk_q/tau_sv ; zeros(7,1)]);
-CC = vpa([zeros(1,2), 1 , zeros(1,5)]);  % measuring xT
+              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2];        
+BB = [k_svk_q/tau_sv ; zeros(7,1)];
+CC = [zeros(1,2), 1 , zeros(1,5)];  % measuring xT
 DD = 0;
-
-ss_model = ss(double(AA),double(BB),double(CC),double(DD))
-
-% obs = vpa(obsv(AA, CC));
-% r_obsv = rank(obs)
-% ctrlb = vpa(ctrb(AA,BB));
-% r_ctrlb = rank(ctrlb)
-% 
-% %% LQI Design (using original plant)
-% nx = size(ss_model.A,1);  % 8 states
-% ny = size(ss_model.C,1);  % 1 output
-% nu = size(ss_model.B,2);
-% 
-% % Q weighting matrix for the augmented system (8+1 = 9 states)
-% Q_lqi = blkdiag(eye(nx), eye(ny));  % 9x9 matrix
-% R = eye(nu);
-% 
-% % lqi will internally augment ss_model (adds an integrator) to form a 9-state system.
-% K = lqi(ss_model, Q_lqi, R)
-% 
-% %% Kalman Estimator Design for Tracking
-% % Augment the plant manually to include an integrator:
-% A_aug = [double(AA), zeros(nx,ny);
-%          -double(CC), zeros(ny,ny)];
-% %B_aug2 = [zeros(nx,ny); eye(ny)];  % extra input channel for the reference
-% % Form the estimator plant with two inputs:
-% B_aug = [double(BB), zeros(nx,nu);
-%                    0            ,   1];  
-% C_aug = [double(CC), eye(ny,ny)];
-% D_aug = zeros(ny, 2);
-% 
-% ss_model_kalman = ss(A_aug, B_aug, C_aug, D_aug);
-% 
-% % Noise covariance matrices (tune as needed)
-% Qn_aug = eye(size(B_aug,2));  % Process noise covariance (9x9)
-% Rn_aug = 1;           % Measurement noise covariance
-% 
-% kest = kalman(ss_model_kalman, Qn_aug, Rn_aug)
-% 
-% %% Connect Estimator and State-Feedback Gain to Form LQG Servo Controller
-% % 'lqgtrack' requires that the estimator (kest) has at least 2 inputs and 
-% % an appropriate number of outputs (state estimates) that match the augmented plant.
-% trksys = lqgtrack(kest, K, "2dof")
 
 end

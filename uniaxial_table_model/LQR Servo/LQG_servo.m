@@ -37,34 +37,9 @@ k_h=4*Be*A^2/Vt*1e3; %(kPa m1)
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);% Controller
 
-s=tf('s'); % TF's
-G_T=mT*s^2+(cT+c1)*s+k1;
-G_1=m1*s^2+(c1+c2)*s+k1+k2;
-G_2=m2*s^2+c2*s+k2;
-G_T1=c1*s+k1;
-G_21=c2*s+k2;
-G_svq = k_svk_q/(1+tau_sv*s);
-G_csv=G_c*G_svq;
-G_x2_x1= G_21/G_2;
-G_x1_xT = G_T1*G_2/(G_1*G_2-G_21^2);
-G_xT_Fp = (G_1*G_2-G_21^2)/(G_T*G_1*G_2-G_T*G_21^2-G_2*G_T1^2);
-G_Fp_xref = G_csv/( k_pl/A + A*s/k_h +G_xT_Fp*(G_csv + A*s));
-G_xT_xref = G_Fp_xref * G_xT_Fp;
-G_x1_xref = G_x1_xT*G_xT_xref;
-G_x2_xT = G_x2_x1 * G_x1_xT;
-G_Fp_isv = A*G_svq/( k_pl+A^2*s/k_h+A^2*s*G_xT_Fp );
+% s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
+[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-AA = [-1/tau_sv, 0              , 0      , 0          , 0     , 0              , 0         , 0     ;
-          k_h/A , -k_h*k_pl/(A^2), 0      , 0          , 0     , -k_h           , 0         , 0     ;
-              0 ,              0 , 0      , 0          , 0     , 1              , 0         , 0     ;
-              0 ,              0 , 0      , 0          , 0     , 0              , 1         , 0     ;
-              0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
-              0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
-              0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
-              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2];        
-BB = [k_svk_q/tau_sv ; zeros(7,1)];
-CC = [zeros(1,2), 1 , zeros(1,5)];  % measuring xT
-DD = 0;
 sys = ss(AA,BB,CC,DD)
 sys.InputName = {'i_sv'};   % plant input: control signal
 sys.OutputName = {'xT'};  % plant output

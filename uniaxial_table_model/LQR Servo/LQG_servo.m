@@ -3,6 +3,8 @@ clc;
 close all;
 
 %%
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
+
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
 mass=2e3;
@@ -92,7 +94,6 @@ trksys.OutputName = {'i_sv'};
 clsys = connect(sys, trksys, {'x_ref'}, {'xT'}); %% --- Close the Loop ---
 
 %% --- Simulation --
-addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 dados = load('elcentro.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
@@ -137,7 +138,7 @@ color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; % Define colors for lines 1/
 %% Finding Response Spectre of Ground
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 5e2;
+n_points = 5%e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 [picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref, f_vector , 1);
 
@@ -239,20 +240,27 @@ mse = mean((picos_x_table_LQG-picos_x_ground).^2);
 plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting
-folderName = sprintf('Sim_Res_LQG/Q=%.1f,m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',Q(9,9),mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images
+folderName = sprintf('Sim_Res_LQG/Q=%.1e,m_i=%.1f,f_1=%.1f, f_2=%.1f,zeta1=%.2f,zeta2=%.2f',Q(9,9),mass*1e-3,f1,f2,zeta1,zeta2); % Folder path where you want to save the images
 if ~exist(folderName, 'dir')% Check if the folder already exists
     % Create the folder if it doesn't exist
     mkdir(folderName);
 end
 
-saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'));
-saveas(fig2,fullfile(folderName,'Input_to_Servo.png'));
-saveas(fig3,fullfile(folderName,'Platen_Displacement.png'));
-saveas(fig4,fullfile(folderName,'Platen_Acceleration.png'));
-saveas(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'));
-saveas(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'));
-saveas(fig7,fullfile(folderName,'Force_to_Platen.png'));
-saveas(fig8,fullfile(folderName,'Response_Spectra.png'));
+drawnow expose
+
+pause(10)
+
+tightfig(fig2); tightfig(fig3); tightfig(fig4); tightfig(fig5); tightfig(fig6); tightfig(fig7); tightfig(fig8); 
+
+
+exportgraphics(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig2,fullfile(folderName,'Input_to_Servo.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig3,fullfile(folderName,'Platen_Displacement.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig4,fullfile(folderName,'Platen_Acceleration.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig7,fullfile(folderName,'Force_to_Platen.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig8,fullfile(folderName,'Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
  
 saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.fig'));
 saveas(fig2,fullfile(folderName,'Input_to_Servo.fig'));

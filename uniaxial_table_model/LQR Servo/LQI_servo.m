@@ -78,7 +78,7 @@ integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
 integrator.InputName = {'e'};    % error: e = r - y
 integrator.OutputName = {'xi'};  % integrated error
 
-Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
+Q = 1e9*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(nu);
 K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
 K  = K_lqi(1:nx);      % state feedback gains
@@ -129,7 +129,8 @@ fig4 = figure(4); ax4 = axes(fig4); hold(ax4, 'on'); grid on; title('Platen Acce
 fig5 = figure(5); ax5 = axes(fig5); hold(ax5, 'on');grid on;title(' Platen Displacement Tracking Error '); legend();xlabel('Time (s)'); ylabel('Error (mm)');
 fig6 = figure(6); ax6 = axes(fig6); hold(ax6, 'on');grid on;title(' Platen Acceleration Tracking Error '); legend();xlabel('Time (s)'); ylabel('Error (m/s^2)');
 fig7 = figure(7); ax7 = axes(fig7); hold(ax7, 'on');grid on;title('Force to Platen'); legend();xlabel('Time (s)'); ylabel('Force (kN)');
-fig8 = figure(8);set(fig8, 'WindowState', 'maximized');subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+set(fig8, 'WindowState', 'maximized');
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; % Define colors for lines 1/3 and 2/4
 
 %% Finding Response Spectre of Ground
@@ -243,16 +244,17 @@ if ~exist(folderName, 'dir')% Check if the folder already exists
     mkdir(folderName);
 end
 
-tightfit(fig1); tightfit(fig2); tightfit(fig3); tightfit(fig4); tightfit(fig5); tightfit(fig6); tightfit(fig7); tightfit(fig8);
+pause(10)
+tightfig(fig2); tightfig(fig3); tightfig(fig4); tightfig(fig5); tightfig(fig6); tightfig(fig7); tightfig(fig8); 
 
-exportgraphics(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig2,fullfile(folderName,'Input_to_Servo.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig3,fullfile(folderName,'Platen_Displacement.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig4,fullfile(folderName,'Platen_Acceleration.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig7,fullfile(folderName,'Force_to_Platen.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
-exportgraphics(fig8,fullfile(folderName,'Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'none','ContentType', 'image','Bounds', 'tight');
+exportgraphics(fig1,fullfile(folderName,'Bode_of_G_xT_xref.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig2,fullfile(folderName,'Input_to_Servo.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig3,fullfile(folderName,'Platen_Displacement.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig4,fullfile(folderName,'Platen_Acceleration.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig5,fullfile(folderName,'Platen_Displacement_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig6,fullfile(folderName,'Platen_Acceleration_Tracking_Error.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig7,fullfile(folderName,'Force_to_Platen.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig8,fullfile(folderName,'Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
 
 saveas(fig1,fullfile(folderName,'Bode_of_G_xT_xref.fig'));
 saveas(fig2,fullfile(folderName,'Input_to_Servo.fig'));

@@ -27,20 +27,24 @@ G_c = tf(k_p,1);
 ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
 
 %%  Load seismic signal and scale down if necessary
-dados = load('elcentro.txt');
+% dados = load('elcentro.txt');
+% t_vector = dados(:,1);
+% t_step = t_vector(2);
+% ddx_ref = dados(:,2);
+% ddx = [t_vector dados(:,2)];
+
+dados = load('LAquilaReducedScale_tgt.txt');%load('elcentro.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
-ddx = [t_vector dados(:,2)];
 
-% Limits
-lim_displacement = 100; % mm
+%%
+lim_displacement = 100; % mm % Limits
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
-% Scaling down if necessary
-% displacements in milimeters
-x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');
+
+x_ref = lsim(1e3/s^2,  ddx_ref , t_vector ,'foh');% Scaling down if necessary % displacements in milimeters
 max_xref = max(x_ref);
 scale=1;
 while max_xref > lim_displacement

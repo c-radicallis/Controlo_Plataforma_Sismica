@@ -48,7 +48,12 @@ controller.OutputName = {'i_sv'};
 clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
 
 %% --- Simulation --
-dados = load('elcentro.txt');
+% dados = load('elcentro.txt');
+% t_vector = dados(:,1);
+% t_step = t_vector(2);
+% ddx_ref = dados(:,2);
+
+dados = load('LAquilaReducedScale_34_DRV.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
@@ -175,7 +180,7 @@ axes(ax6); hold on;% Activate the existing axes
 plot(t_vector(1:end-2),erro,"DisplayName","LQG")
 
 axes(ax2); hold on;
-i_sv = lsim(clsys ,   [x_ref , x_T_LQG]  ,t_vector,'foh');
+i_sv = lsim(clsys ,   x_ref - x_T_LQG  ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","LQG")
 
 axes(ax7); hold on;

@@ -25,7 +25,7 @@ G_c = tf(k_p,1);% Controller
 % dados = load('elcentro.txt');
 % t_vector = dados(:,1);
 % t_step = t_vector(2);
-% ddx_ref = dados(:,2);
+% ddx_tgt = dados(:,2);
 
 dados = load('LTF_to_TXT\LAquilaReducedScale_34_DRV.txt');
 t_vector = dados(:,1);
@@ -50,22 +50,7 @@ lim_displacement = 0.1; % m % Limits
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
-s=tf('s') ;
-x_ref = x_tgt; %lsim(1/s^2,  ddx_ref , t_vector ,'foh');
-max_xref = max(x_ref);
-scale=1;
-while max_xref > lim_displacement % Scaling down if necessary
-    scale = 0.95*scale;
-    ddx_ref = 0.95*ddx_ref;
-    x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
-    max_xref = max(x_ref);
-end
-v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
-max_vref = max(v_ref);
-
 %% Plots
-% clear; load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat'); x_T_LQG = y_out;
-
 close all;
 fig1 = figure(1); ax1 = axes(fig1); hold(ax1, 'on'); opts1=bodeoptions('cstprefs'); opts1.FreqUnits = 'Hz'; opts1.XLim={[1 50]}; % opts1.YLim={[-40 1]}; % opts1.MagVisible='off';
 fig2 = figure(2); ax2 = axes(fig2); hold(ax2, 'on'); grid on; hold on; title('Input to Servo');  legend(); xlabel('Time (s)');  ylabel('Voltage (V)');
@@ -82,7 +67,7 @@ f_i=0.1; %freq inicial
 f_n=30;  %freq final
 n_points = 5%e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref, f_vector , 1);
+[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_tgt, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
 plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground');% - Normal
@@ -97,15 +82,15 @@ bodeplot(G_xT_xref);
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref_tuned,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
-x_T_tuned = lsim(G_xT_xref_tuned/s^2 ,  ddx_ref ,t_vector,'foh');
-ddx_T_tuned = lsim(G_xT_xref_tuned, ddx_ref ,t_vector,'foh');
+x_T_tuned = lsim(G_xT_xref_tuned/s^2 ,  ddx_tgt ,t_vector,'foh');
+ddx_T_tuned = lsim(G_xT_xref_tuned, ddx_tgt ,t_vector,'foh');
 
 axes(ax1); hold on;
 bodeplot(G_xT_xref_tuned);
 
 axes(ax3); % Activate the existing axes
-plot(t_vector,x_ref,"DisplayName","Reference")
-erro = x_T_tuned-x_ref;
+plot(t_vector,x_tgt,"DisplayName","Reference")
+erro = x_T_tuned-x_tgt;
 mse = mean(erro.^2);
 plot(t_vector,x_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
@@ -113,8 +98,8 @@ axes(ax5); % Activate the existing axes
 plot(t_vector,erro,"DisplayName","Tuned")
 
 axes(ax4); % Activate the existing 
-plot(t_vector,ddx_ref,"DisplayName","Reference")
-erro = ddx_T_tuned-ddx_ref;
+plot(t_vector,ddx_tgt,"DisplayName","Reference")
+erro = ddx_T_tuned-ddx_tgt;
 mse = mean(erro.^2);
 plot(t_vector,ddx_T_tuned,"DisplayName","Tuned MSE="+string(mse))
 
@@ -122,7 +107,7 @@ axes(ax6); hold on;
 plot(t_vector,erro,"DisplayName","Tuned")
 
 axes(ax2); hold on;
-i_sv_tuned = lsim(G_c ,  x_ref-x_T_tuned  ,t_vector,'foh');
+i_sv_tuned = lsim(G_c ,  x_tgt-x_T_tuned  ,t_vector,'foh');
 plot(t_vector,i_sv_tuned,"DisplayName","Tuned")
 
 axes(ax7); hold on;
@@ -149,7 +134,7 @@ plant_aug = ss(AA, BB,[eye(nx);CC],DD);
 plant_aug.InputName = {'i_sv'};   % plant input: control signal
 plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
 
-sumblk1 = sumblk('e = x_ref - y_xT'); % Compute the error signal: e = r - y
+sumblk1 = sumblk('e = x_tgt - y_xT'); % Compute the error signal: e = r - y
 
 integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
 integrator.InputName = {'e'};    % error: e = r - y
@@ -164,9 +149,9 @@ controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
 controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
 controller.OutputName = {'i_sv'};
 
-clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
+clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_tgt', 'y_xT')
 
-[x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
+[x_T_LQG, t_out, x] = lsim(clsys, x_tgt, t_vector,'foh'); % Simulate the closed-loop response using lsim:
 diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
 ddx_T_LQG=diff(diff_x_T_LQG)./diff(t_out(1:end-1));
 %% Ploting LQG results
@@ -177,7 +162,7 @@ title('Bode of G\_xT\_xref');
 grid on;
 
 axes(ax3);% Third plot % Activate the existing axes
-erro = x_T_LQG-x_ref;
+erro = x_T_LQG-x_tgt;
 mse = mean(erro.^2);
 plot(t_vector,x_T_LQG,"DisplayName","MSE="+string(mse))
 
@@ -185,7 +170,7 @@ axes(ax5); hold on;% 5th plot % Activate the existing axes
 plot(t_vector,erro,"DisplayName","LQG")
 
 axes(ax4); hold on; % Activate the existing axes
-erro = ddx_T_LQG-ddx_ref(1:end-2);
+erro = ddx_T_LQG-ddx_tgt(1:end-2);
 mse = mean(erro.^2);
 plot(t_vector(1:end-2),ddx_T_LQG,"DisplayName","MSE="+string(mse))
 
@@ -193,7 +178,7 @@ axes(ax6); hold on;% Activate the existing axes
 plot(t_vector(1:end-2),erro,"DisplayName","LQG")
 
 axes(ax2); hold on;
-i_sv = lsim(clsys ,   x_ref - x_T_LQG  ,t_vector,'foh');
+i_sv = lsim(clsys ,   x_tgt - x_T_LQG  ,t_vector,'foh');
 plot(t_vector,i_sv,"DisplayName","LQG")
 
 axes(ax7); hold on;

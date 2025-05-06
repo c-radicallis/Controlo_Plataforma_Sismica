@@ -46,10 +46,6 @@ dados = scaleFactor*load('LTF_to_TXT\LAquilaReducedScale_tgt.txt');
 x_tgt = dados(:,2);
 ddx_tgt = dados(:,3);
 
-lim_displacement = 0.1; % m % Limits
-lim_velocity = 0.4; % m/s
-lim_force = 200e3; % N
-
 %% Plots
 close all;
 fig1 = figure(1); ax1 = axes(fig1); hold(ax1, 'on'); opts1=bodeoptions('cstprefs'); opts1.FreqUnits = 'Hz'; opts1.XLim={[1 50]}; % opts1.YLim={[-40 1]}; % opts1.MagVisible='off';

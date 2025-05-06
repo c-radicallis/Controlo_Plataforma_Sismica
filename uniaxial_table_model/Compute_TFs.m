@@ -1,4 +1,57 @@
 function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT,G_Fp_isv ,c1,c2,k1,k2 , AA , BB , CC , DD ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2)
+% Compute_TFs  Frequency-domain and state-space Transfer Functions for a
+%               coupled 2-DOF system with a hydraulic servo-valve.
+%
+% SYNTAX:
+%   [s, G_T, G_1, G_2, G_T1, G_21, G_svq, G_csv, ...
+%    G_x2_x1, G_x1_xT, G_xT_Fp, G_Fp_xref, G_xT_xref, ...
+%    G_x1_xref, G_x2_xT, G_Fp_isv, c1, c2, k1, k2, AA, BB, CC, DD] = ...
+%    Compute_TFs(G_c, mT, cT, m1, m2, f1, zeta1, f2, zeta2)
+%
+% INPUTS:
+%   G_c    — controller transfer function (TF) from valve to current (–)
+%   mT     — platen mass [kg]
+%   cT     — total damping (actuator + platen) [N·s/m]
+%   m1     — mass of first DOF [kg]
+%   m2     — mass of second DOF [kg]
+%   f1     — natural frequency of mode-1 [Hz]
+%   zeta1  — damping ratio of mode-1 (–)
+%   f2     — natural frequency of mode-2 [Hz]
+%   zeta2  — damping ratio of mode-2 (–)
+%
+% OUTPUTS:
+%   s          — Laplace operator (for defining TFs)
+%   G_T        — TF of the platen (mT*s^2 + (cT+c1)*s + k1)
+%   G_1        — TF of the coupled 1st mass (m1*s^2 + (c1+c2)*s + k1+k2)
+%   G_2        — TF of the coupled 2nd mass (m2*s^2 + c2*s + k2)
+%   G_T1       — coupling TF between platen and mass-1 (c1*s + k1)
+%   G_21       — coupling TF between mass-1 and mass-2 (c2*s + k2)
+%   G_svq      — servo-valve TF (k_svk_q/(1 + τ_sv·s))
+%   G_csv      — combined controller+servo-valve TF (G_c·G_svq)
+%   G_x2_x1    — displacement TF: x2/x1
+%   G_x1_xT    — displacement TF: x1/xT
+%   G_xT_Fp    — transfer from piston flow Fp to platen xT
+%   G_Fp_xref  — flow-to-reference TF including leakage & bulk modulus
+%   G_xT_xref  — closed-loop TF: xT to reference
+%   G_x1_xref  — closed-loop TF: x1 to reference
+%   G_x2_xT    — closed-loop TF: x2 to xT
+%   G_Fp_isv   — TF: isv (servo-valve current) to piston flow Fp
+%   c1, c2     — damping coefficients for the two modes [N·s/m]
+%   k1, k2     — stiffness coefficients for the two modes [N/m]
+%   AA, BB, CC, DD
+%              — state-space matrices of the original plant model
+%
+% EXAMPLE:
+%   % Define parameters
+%   Gc    = tf(1, [0.01 1]);
+%   [s,GT,~,~,~,~,~,~,~,~,~,~,~,~,~,~,c1,c2,k1,k2,AA,BB,CC,DD] = ...
+%     Compute_TFs(Gc, 1975.1, 5780, 500, 300, 5, 0.02, 15, 0.03);
+%
+%   % Plot the closed-loop TF from reference to platen xT
+%   T = feedback(G_Fp_xref*G_xT_Fp, 1);
+%   bode(T);
+%
+% See also TF, SS, vpasolve, tf, ss.
 
 %coupled 2DOF system
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s

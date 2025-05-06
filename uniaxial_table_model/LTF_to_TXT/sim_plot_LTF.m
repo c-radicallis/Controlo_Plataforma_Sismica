@@ -19,33 +19,7 @@ k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm)
 G_c = tf(k_p,1);% Controller
 
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
-[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
-
-sys = ss(AA,BB,CC,DD);
-nx = size(AA,1);    % Number of states
-nu = size(BB,2);    % Number of control inputs (should be 1)
-ny = size(CC,1);    % Number of outputs
-
-plant_aug = ss(AA, BB,[eye(nx);CC],DD);
-plant_aug.InputName = {'i_sv'};   % plant input: control signal
-plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
-
-sumblk1 = sumblk('e = x_ref - y_xT'); % Compute the error signal: e = r - y
-
-integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
-integrator.InputName = {'e'};    % error: e = r - y
-integrator.OutputName = {'xi'};  % integrated error
-
-Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
-R = 1e-9*eye(nu);
-K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
-K  = K_lqi(1:nx);      % state feedback gains
-Ki = K_lqi(end);        % integrator gain
-controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
-controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
-controller.OutputName = {'i_sv'};
-
-clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
+[~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 %% --- Simulation --
 % dados = load('elcentro.txt');
@@ -68,12 +42,9 @@ if isempty(rowIndex)
 else
     scaleFactor = data.ScaleFactor(rowIndex)
 end
-
 dados = scaleFactor*load('LTF_to_TXT\LAquilaReducedScale_tgt.txt');
 x_tgt = dados(:,2);
 ddx_tgt = dados(:,3);
-
-%%
 
 lim_displacement = 0.1; % m % Limits
 lim_velocity = 0.4; % m/s
@@ -91,11 +62,6 @@ while max_xref > lim_displacement % Scaling down if necessary
 end
 v_ref =  lsim(1/s,  ddx_ref , t_vector ,'foh');
 max_vref = max(v_ref);
-
-[x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
-diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
-ddx_T_LQG=diff(diff_x_T_LQG)./diff(t_out(1:end-1));
-
 
 %% Plots
 % clear; load('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\LQR Servo\LQR_servo_1.mat'); x_T_LQG = y_out;
@@ -173,7 +139,37 @@ subplot(122);hold on;
 mse = mean((picos_x_table_tuned-picos_x_ground).^2);
 plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 
-%% LQG results
+%% Optimal control
+sys = ss(AA,BB,CC,DD);
+nx = size(AA,1);    % Number of states
+nu = size(BB,2);    % Number of control inputs (should be 1)
+ny = size(CC,1);    % Number of outputs
+
+plant_aug = ss(AA, BB,[eye(nx);CC],DD);
+plant_aug.InputName = {'i_sv'};   % plant input: control signal
+plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
+
+sumblk1 = sumblk('e = x_ref - y_xT'); % Compute the error signal: e = r - y
+
+integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
+integrator.InputName = {'e'};    % error: e = r - y
+integrator.OutputName = {'xi'};  % integrated error
+
+Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
+R = 1e-9*eye(nu);
+K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
+K  = K_lqi(1:nx);      % state feedback gains
+Ki = K_lqi(end);        % integrator gain
+controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
+controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
+controller.OutputName = {'i_sv'};
+
+clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
+
+[x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
+diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
+ddx_T_LQG=diff(diff_x_T_LQG)./diff(t_out(1:end-1));
+%% Ploting LQG results
 axes(ax1);
 bodeplot(clsys,opts1);
 legend( 'Default' , 'PIDF'  ,'LQG');
@@ -192,7 +188,7 @@ axes(ax4); hold on; % Activate the existing axes
 erro = ddx_T_LQG-ddx_ref(1:end-2);
 mse = mean(erro.^2);
 plot(t_vector(1:end-2),ddx_T_LQG,"DisplayName","MSE="+string(mse))
-%%
+
 axes(ax6); hold on;% Activate the existing axes
 plot(t_vector(1:end-2),erro,"DisplayName","LQG")
 

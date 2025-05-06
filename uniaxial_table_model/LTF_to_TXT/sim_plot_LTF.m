@@ -53,17 +53,34 @@ clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_ref', 'y_xT')
 % t_step = t_vector(2);
 % ddx_ref = dados(:,2);
 
-dados = load('LAquilaReducedScale_34_DRV.txt');
+dados = load('LTF_to_TXT\LAquilaReducedScale_34_DRV.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
-ddx_ref = dados(:,2);
+x_drv = dados(:,2);
+
+filename = 'uniaxial_table_model/LTF_to_TXT/TestSequence.xlsx'; % Define the Excel file and sheet
+sheet = 1;  % or use sheet name, e.g., 'Sheet1'
+data = readtable(filename, 'Sheet', sheet);% Read the Excel file into a table
+targetDRV = 'LAquilaReducedScale_34.DRV';  % Define the target DRV value to search for
+rowIndex = find(strcmp(data.DRV, targetDRV), 1);% Find the row index where DRV matches the target
+if isempty(rowIndex)
+    disp('DRV value not found.');
+else
+    scaleFactor = data.ScaleFactor(rowIndex)
+end
+
+dados = scaleFactor*load('LTF_to_TXT\LAquilaReducedScale_tgt.txt');
+x_tgt = dados(:,2);
+ddx_tgt = dados(:,3);
+
+%%
 
 lim_displacement = 0.1; % m % Limits
 lim_velocity = 0.4; % m/s
 lim_force = 200e3; % N
 
 s=tf('s') ;
-x_ref = lsim(1/s^2,  ddx_ref , t_vector ,'foh');
+x_ref = x_tgt; %lsim(1/s^2,  ddx_ref , t_vector ,'foh');
 max_xref = max(x_ref);
 scale=1;
 while max_xref > lim_displacement % Scaling down if necessary

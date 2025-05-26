@@ -1,3 +1,5 @@
+% This program compares bode plots of xT/x_ref obtainned from different controllers and tunes, as well as the generated drivers from Adapt.exe
+
 clear;clc;close all;
 
 %% Transfer Functions

@@ -27,12 +27,22 @@ G_c = tf(k_p,1);% Controller
 % t_step = t_vector(2);
 % ddx_tgt = dados(:,2);
 
-dados = load('LTF_to_TXT\LAquilaReducedScale_34_DRV.txt');
-t_vector = dados(:,1);
-t_step = t_vector(2);
-x_drv = dados(:,2);
+opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');
+opts.DataLines = [2 Inf];  % tell it that the first line is header:
+dados = readmatrix('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', opts);
 
-filename = 'uniaxial_table_model/LTF_to_TXT/TestSequence.xlsx'; % Define the Excel file and sheet
+t_vector = dados(:,1);
+x_drv    = dados(:,2);
+
+
+t_vector = dados(:,1);
+x_drv    = dados(:,2);
+
+t_vector = dados(2:end,1);
+t_step = t_vector(1);
+x_drv = dados(2:end,2);
+
+filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
 sheet = 1;  % or use sheet name, e.g., 'Sheet1'
 data = readtable(filename, 'Sheet', sheet);% Read the Excel file into a table
 targetDRV = 'LAquilaReducedScale_34.DRV';  % Define the target DRV value to search for
@@ -42,7 +52,10 @@ if isempty(rowIndex)
 else
     scaleFactor = data.ScaleFactor(rowIndex)
 end
-dados = scaleFactor*load('LTF_to_TXT\LAquilaReducedScale_tgt.txt');
+opts = detectImportOptions('LTF_to_TXT\LAquilaReducedScale_tgt.txt', 'FileType','text');
+opts.DataLines = [2 Inf];  % tell it that the first line is header:
+dados = readmatrix('LTF_to_TXT\LAquilaReducedScale_tgt.txt', opts);
+dados = scaleFactor*dados;
 x_tgt = dados(:,2);
 ddx_tgt = dados(:,3);
 

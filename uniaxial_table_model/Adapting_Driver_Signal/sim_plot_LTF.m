@@ -22,25 +22,14 @@ G_c = tf(k_p,1);% Controller
 [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 %% --- Simulation --
-% dados = load('elcentro.txt');
-% t_vector = dados(:,1);
-% t_step = t_vector(2);
-% ddx_tgt = dados(:,2);
 
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\
 opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');
 opts.DataLines = [2 Inf];  % tell it that the first line is header:
 dados = readmatrix('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', opts);
-
 t_vector = dados(:,1);
+t_step = t_vector(2);
 x_drv    = dados(:,2);
-
-
-t_vector = dados(:,1);
-x_drv    = dados(:,2);
-
-t_vector = dados(2:end,1);
-t_step = t_vector(1);
-x_drv = dados(2:end,2);
 
 filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
 sheet = 1;  % or use sheet name, e.g., 'Sheet1'
@@ -59,6 +48,11 @@ dados = scaleFactor*dados;
 x_tgt = dados(:,2);
 ddx_tgt = dados(:,3);
 
+d%%
+plot(t_vector,x_tgt);hold on;
+double_int_x_tgt = cumtrapz(cumtrapz(x_tgt,t_vector),t_vector);
+plot(t_vector,double_int_x_tgt)
+
 %% Plots
 close all;
 fig1 = figure(1); ax1 = axes(fig1); hold(ax1, 'on'); opts1=bodeoptions('cstprefs'); opts1.FreqUnits = 'Hz'; opts1.XLim={[1 50]}; % opts1.YLim={[-40 1]}; % opts1.MagVisible='off';
@@ -74,15 +68,15 @@ color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; % Define colors for lines 1/
 %% Finding Response Spectre of Ground
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
-n_points = 5%e2;
+n_points = 5e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_tgt, f_vector , 1);
+[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( t_vector , ddx_tgt, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground');% - Normal
+plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Ground ');%- Normal
+plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 
 %% Use PID tuner app to generate a PID controller for the system
 axes(ax1);
@@ -127,10 +121,10 @@ plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
 [picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_tuned, f_vector , 1 );
 
 figure(fig8);subplot(121);hold on;
-mse = mean((picos_ddx_table_tuned-picos_ddx_ground).^2);
+mse = mean((picos_ddx_table_tuned-picos_ddx_tgt).^2);
 plot(f_vector, picos_ddx_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 subplot(122);hold on;
-mse = mean((picos_x_table_tuned-picos_x_ground).^2);
+mse = mean((picos_x_table_tuned-picos_x_tgt).^2);
 plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 
 %% Optimal control
@@ -198,11 +192,11 @@ plot(t_vector,F_p_isv*1e-3,"DisplayName","LQG")
 [picos_ddx_table_LQG , picos_x_table_LQG ] = ResponseSpectrum( t_vector , ddx_T_LQG, f_vector , 1 );
 
 figure(fig8); subplot(121); hold on;
-mse = mean((picos_ddx_table_LQG-picos_ddx_ground).^2);
+mse = mean((picos_ddx_table_LQG-picos_ddx_tgt).^2);
 plot(f_vector, picos_ddx_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName', sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 subplot(122);hold on;
-mse = mean((picos_x_table_LQG-picos_x_ground).^2);
+mse = mean((picos_x_table_LQG-picos_x_tgt).^2);
 plot(f_vector, picos_x_table_LQG(:, 1),'-', 'LineWidth' , 2,  'DisplayName',  sprintf('LQG Platform - MSE= %.2e', mse(1)));
 
 %% Save all figures after plotting

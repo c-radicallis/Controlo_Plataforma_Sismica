@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./LNEC_Adapta_Driver/Python _personal-packages3"
+    ]
+}

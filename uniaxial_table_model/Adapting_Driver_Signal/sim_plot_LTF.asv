@@ -28,11 +28,15 @@ addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma
 loadLNEC('LAquilaReducedScale.tgt.txt')
 loadLNEC('LAquilaReducedScale_34.DRV.txt')
 
+plot(time_vector , tgtDispT)
+hold on
+plot(time_vector , DRVDispT )
+
 %%
 
 filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
 sheet = 1;  % or use sheet name, e.g., 'Sheet1'
-data = readtable(filename, 'Sheet', sheet);% Read the Excel file into a table
+%data = readtable(filename, 'Sheet', sheet);% Read the Excel file into a table
 targetDRV = 'LAquilaReducedScale_34.DRV';  % Define the target DRV value to search for
 rowIndex = find(strcmp(data.DRV, targetDRV), 1);% Find the row index where DRV matches the target
 if isempty(rowIndex)
@@ -41,9 +45,6 @@ else
     scaleFactor = data.ScaleFactor(rowIndex)
 end
 
-plot(time_vector , scaleFactor*tgtDispT)
-hold on
-plot(time_vector , DRVDispT )
 
 %%
 opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');

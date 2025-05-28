@@ -26,9 +26,8 @@ G_c = tf(k_p,1);% Controller
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\LTF_to_TXT\
 
 loadLNEC('LAquilaReducedScale.tgt.txt')
-loadLNEC('LAquilaReducedScale_34.DRV.txt')
 
-%%
+loadLNEC('LAquilaReducedScale_34.DRV.txt')
 
 filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
 sheet = 1;  % or use sheet name, e.g., 'Sheet1'

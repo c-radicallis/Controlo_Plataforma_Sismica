@@ -25,7 +25,7 @@ G_c = tf(k_p,1);% Controller
 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\
 opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');
-opts.DataLines = [2 Inf];  % tell it that the first line is header:
+opts.DataLines = [1st_data_line Inf];  % tell it that the first line is header:
 dados = readmatrix('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', opts);
 t_vector = dados(:,1);
 t_step = t_vector(2);

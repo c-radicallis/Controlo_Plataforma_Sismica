@@ -2,13 +2,13 @@ LNEC Test File eXtractor
 
 File: LAquilaReducedScale_34.DRV
 
-Created in: 2025-05-28 13:24:09.038926
+Created in: 2025-05-28 15:17:21.812441
 
 Number of channels: 3
 
 Name:	DispT	DispL	DispV
 Type:	Displacement	Displacement	Displacement
-Unit:	mm	mm	mm
+Unit:	m	m	m
 No. of Samples:	8982	8982	8982
 Time step [s]:	0.005	0.005	0.005
 Trigger date:	1970-01-01	1970-01-01	1970-01-01

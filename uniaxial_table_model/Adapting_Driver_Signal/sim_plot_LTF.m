@@ -26,7 +26,7 @@ G_c = tf(k_p,1);% Controller
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\LTF_to_TXT\
 
 loadLNEC('LAquilaReducedScale.tgt.txt')
-
+ 
 loadLNEC('LAquilaReducedScale_34.DRV.txt')
 
 filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
@@ -40,13 +40,12 @@ else
     scaleFactor = data.ScaleFactor(rowIndex)
 end
 
-plot(time_vector , scaleFactor*tgtDispT)
+plot(time_vector , scaleFactor*tgtDispT,'LineWidth' , 2,'DisplayName', 'Target')
 hold on
-plot(time_vector , DRVDispT )
+plot(time_vector , DRVDispT, 'LineWidth' , 2,'DisplayName', 'Driver')
+legend()
 
-%%
-
-% old code
+%% % old code
 
 opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');
 opts.DataLines = [2 Inf];  % tell it that the first line is header:

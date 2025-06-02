@@ -1,66 +1,71 @@
 function loadLNEC(filename)
-% LOADLNEC  Load an LNEC .tgt or .drv text file into MATLAB workspace,
-% prefixing each variable with the file’s suffix (e.g. 'tgtDispT').
-%
-%   loadLNEC('LAquilaReducedScale.tgt.txt')
-%   ⇒ creates variables tgtDispT, tgtDispL, ..., tgtt
+% load_tgt.m
+% Script to read an LNEC .tgt file, discard null columns, and load
+% non-null data as workspace vectors prefixed with the file base name.
 
-  [~, name, ext] = fileparts(filename);
-  if ~strcmpi(ext, '.txt')
-    error('Expected a .txt file. Got "%s"', ext);
-  end
+% Specify filename
+filename = 'LAquilaReducedScale.tgt';
+[~, base, ~] = fileparts(filename);
 
-  % extract suffix after last '.' in the name
-  dotIdx = find(name=='.', 1, 'last');
-  if isempty(dotIdx)
-    prefix = matlab.lang.makeValidName(name);
-  else
-    prefix = matlab.lang.makeValidName(name(dotIdx+1:end));
-  end
+fid = fopen(filename, 'r');
+if fid < 0
+    error('Cannot open file: %s', filename);
+end
 
-  %--- Open file
-  fid = fopen(filename,'r');
-  if fid<0, error('Cannot open %s', filename); end
-
-  %--- Read header
-  while true
+% Read header lines until 'Data:' marker
+headerLines = {};
+while true
     tline = fgetl(fid);
-    if ~ischar(tline), error('Unexpected EOF in header.'); end
-    if startsWith(tline,'Name:')
-      names = strsplit(strtrim(tline(6:end)), '\t');
-    elseif startsWith(tline,'No. of Samples:')
-      numsamps = sscanf(tline, 'No. of Samples:%f');
-    elseif startsWith(tline,'Time step [s]:')
-      dt = sscanf(tline, 'Time step [s]:%f');
-    elseif strcmp(tline,'Data:')
-      % skip the repeated header line
-      fgetl(fid);
-      break
+    if ~ischar(tline)
+        error('Unexpected end of file before Data section');
     end
-  end
+    headerLines{end+1} = strtrim(tline);
+    if strcmpi(strtrim(tline), 'Data:')
+        break;
+    end
+end
 
-  %--- Read the data
-  ncol = numel(names);
-  data = fscanf(fid, repmat('%f',1,ncol), [ncol Inf])';
-  fclose(fid);
+% Next line: column names	names separated by tabs
+colNames = strsplit(strtrim(fgetl(fid)), '\t');
+numCols = numel(colNames);
 
-  %--- Discard all‑zero columns
-  nz = any(data~=0,1);
-  data = data(:,nz);
-  names = names(nz);
+% Parse 'No. of Samples:' and 'Time step [s]:' from headerLines
+% Find line indices
+nSamplesLine = find(startsWith(headerLines, 'No. of Samples:'), 1);
+dtLine       = find(startsWith(headerLines, 'Time step [s]:'), 1);
 
-  %--- Assign to workspace with prefix
-  for i = 1:numel(names)
-    var = matlab.lang.makeValidName(names{i});
-    fullname = [prefix var];
-    assignin('base', fullname, data(:,i));
-  end
+% Extract numeric lists
+samplesList = sscanf(headerLines{nSamplesLine}, 'No. of Samples:\s*%f', 1);
+dtValue     = sscanf(headerLines{dtLine},       'Time step [s]:\s*%f', 1);
 
-  %--- Time vector
-  t = (0:numsamps-1)' * dt;
-  assignin('base','time_vector', t);
+% Read data matrix: numCols columns, unknown rows
+fmt = repmat('%f', 1, numCols);
+dataArray = textscan(fid, fmt, 'Delimiter', '\t');
+fclose(fid);
 
-  fprintf('Loaded %d channels into workspace with prefix "%s"; created %s (time vector).\n', ...
-          numel(names), prefix, [prefix 't']);
+% Convert cell to matrix: rows x cols
+dataMat = cell2mat(dataArray);
+
+% Identify and discard null (all-zero) columns
+nullCols = all(dataMat == 0, 1);
+keepCols = find(~nullCols);
+
+% Create time vector
+N = samplesList;
+timeVec = (0:N-1) * dtValue;
+
+% Assign non-null columns to base workspace with names "<base><colName>"
+for ii = keepCols
+    varname = matlab.lang.makeValidName([base colNames{ii}]);
+    assignin('base', varname, dataMat(:, ii));
+end
+
+% Assign time vector as <base>Time
+timeVar = matlab.lang.makeValidName([base 'Time']);
+assignin('base', timeVar, timeVec);
+
+fprintf('Loaded %d columns into workspace, created variables prefixed ''%s'' and time vector ''%s''.\n', ...
+        numel(keepCols), base, timeVar);
+
 end
 

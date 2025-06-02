@@ -45,14 +45,15 @@ hold on
 plot(time_vector , DRVDispT )
 
 %%
+
+% old code
+
 opts = detectImportOptions('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', 'FileType','text');
 opts.DataLines = [2 Inf];  % tell it that the first line is header:
 dados = readmatrix('LTF_to_TXT/LAquilaReducedScale_34_DRV.txt', opts);
 t_vector = dados(:,1);
 t_step = t_vector(2);
 x_drv    = dados(:,2);
-
-
 
 opts = detectImportOptions('LTF_to_TXT\LAquilaReducedScale_tgt.txt', 'FileType','text');
 opts.DataLines = [2 Inf];  % tell it that the first line is header:
@@ -61,7 +62,6 @@ dados = scaleFactor*dados;
 x_tgt = dados(:,2);
 ddx_tgt = dados(:,3);
 
-%%
 plot(t_vector,x_tgt);hold on;
 double_int_x_tgt = cumtrapz(cumtrapz(x_tgt,t_vector),t_vector);
 plot(t_vector,double_int_x_tgt)

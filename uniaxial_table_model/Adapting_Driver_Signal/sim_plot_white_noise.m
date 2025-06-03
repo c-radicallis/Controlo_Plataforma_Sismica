@@ -24,7 +24,9 @@ G_c = tf(k_p,1);% Controller
 %% % --- Simulation --
 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\LTF_to_TXT\
-loadLNEC('pink_noise_40Hz_T3mm.drv.txt')
+
+filename = 'pink_noise_40Hz_T3mm.drv.txt';
+loadLNEC(filename)
 
 t_vector = drv_time_vector_pink_noise_40Hz_T3mm;
 t_step = t_vector(2);
@@ -34,6 +36,9 @@ ddx_drv = secondDerivativeTime(x_drv,t_step);
 x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'foh');
 ddx_acq = secondDerivativeTime(x_acq,t_step);
 
+% plot(t_vector , x_drv)
+% hold on
+% plot(t_vector,x_acq)
 
-
-
+filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
+writeTXT(t_vector , x_acq , ddx_acq , filename_acq)

@@ -5,12 +5,14 @@ clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\LTF_to_TXT\
 
 loadLNEC('LAquilaReducedScale.tgt.txt')
+ 
 loadLNEC('LAquilaReducedScale_34.DRV.txt')
-targetDRV = 'LAquilaReducedScale_34.DRV';  % Define the target DRV value to search for
+loadLNEC('pink_noise_40Hz_T3mm.drv.txt')
 
 filename = 'TestSequence.xlsx'; % Define the Excel file and sheet
 sheet = 1;  % or use sheet name, e.g., 'Sheet1'
 data = readtable(filename, 'Sheet', sheet);% Read the Excel file into a table
+targetDRV = 'LAquilaReducedScale_34.DRV';  % Define the target DRV value to search for
 rowIndex = find(strcmp(data.DRV, targetDRV), 1);% Find the row index where DRV matches the target
 if isempty(rowIndex)
     disp('DRV value not found.');
@@ -21,6 +23,7 @@ end
 hold on; grid on;legend()
 % plot(tgt_time_vector_LAquilaReducedScale , scaleFactor*tgtDispT_LAquilaReducedScale,'LineWidth' , 2,'DisplayName', 'Target')
 % plot(DRV_time_vector_LAquilaReducedScale_34 , DRVDispT_LAquilaReducedScale_34, 'LineWidth' , 2,'DisplayName', 'Driver')
+
 
 
 %%
@@ -44,9 +47,7 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
 [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-%%
 
-loadLNEC('pink_noise_40Hz_T3mm.drv.txt')
 
 %% % old code
 

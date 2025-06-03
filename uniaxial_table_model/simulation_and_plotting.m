@@ -290,25 +290,25 @@ mse = mean((picos_x_table_tuned-picos_x_ground).^2);
 plot(f_vector, picos_x_table_tuned(:, 1),'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName',  sprintf('Tuned Platform - MSE= %.2e', mse(1)));
 
 
-%% State Space model
-
-MV = struct(Min=-5,Max=5);
-p = 20;
-m = 3;
-mpcobj = mpc( ss_isv_xT ,t_step ,p,m,[],MV);
-
-[YY,~,UU,~,~,~,status] = sim(mpcobj,10, x_ref);
-
-figure(10);
-subplot(211)    % plant output
-plot([YY,x_ref(1:10)]);
-grid
-title("Tracking control");
-
-subplot(223)    % first plant input
-stairs(UU(:,1));
-grid
-title("MV(1) finite set ")
+% %% State Space model
+% 
+% MV = struct(Min=-5,Max=5);
+% p = 20;
+% m = 3;
+% mpcobj = mpc( ss_isv_xT ,t_step ,p,m,[],MV);
+% 
+% [YY,~,UU,~,~,~,status] = sim(mpcobj,10, x_ref);
+% 
+% figure(10);
+% subplot(211)    % plant output
+% plot([YY,x_ref(1:10)]);
+% grid
+% title("Tracking control");
+% 
+% subplot(223)    % first plant input
+% stairs(UU(:,1));
+% grid
+% title("MV(1) finite set ")
 
 %% Save all figures after plotting
 % Folder path where you want to save the images

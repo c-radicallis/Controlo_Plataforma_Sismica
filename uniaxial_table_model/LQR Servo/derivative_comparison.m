@@ -1,3 +1,5 @@
+close all;
+
 [x_T_LQG, t_out, x] = lsim(clsys, x_ref, t_vector,'foh'); % Simulate the closed-loop response using lsim:
 diff_x_T_LQG=diff(x_T_LQG)./diff(t_out);
 diff_x_T_LQG=diff([diff_x_T_LQG;0])./diff(t_out);
@@ -19,6 +21,7 @@ title('Closed-Loop Response with LQG Tracking Controller')
 
 figure(3)
 hold on
+legend()
 plot(t_vector,ddx_ref,'-.')
 plot(t_out, ddx_T_LQG,'.')
 plot(t_out, [diff_x_T_LQG;0],'.')

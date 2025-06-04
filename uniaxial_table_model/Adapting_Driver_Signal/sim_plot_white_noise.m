@@ -22,7 +22,7 @@ G_c = tf(k_p,1);% Controller
 [~,~,~,~,~ ,~ ,~,~,~,~,~,~,G_xT_xref,~,~ , ~ ,~,~,~,~ , ~ , ~ , ~ , ~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 %% 
-addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\Data_Files_LTF_and_TXT\
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 filename ='pink_noise_40Hz_T3mm.drv.txt'; 
 loadTXT(filename)
 
@@ -42,6 +42,9 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
 writeTXT(t_vector , x_acq , ddx_acq , filename_acq)
+%%
+filename ='pink_noise_40Hz_T3mm.acq.txt.acq.txt'; 
+loadTXT(filename)
 
 %%
 % 

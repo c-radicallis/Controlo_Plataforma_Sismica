@@ -42,9 +42,6 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
 writeTXT(t_vector , x_acq , ddx_acq , filename_acq)
-%%
-filename ='pink_noise_40Hz_T3mm.acq.txt.acq.txt'; 
-loadTXT(filename)
 
 %%
 % 

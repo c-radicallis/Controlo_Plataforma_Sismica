@@ -2,17 +2,17 @@ LNEC Test File eXtractor
 
 File: pink_noise_40Hz_T3mm_acq.txt.acq
 
-Created in: 2025-06-04 16:31:30.896526
+Created in: 2025-06-04 17:09:20.330409
 
-Number of channels: 7
+Number of channels: 6
 
 Name:	PosT	PosL	PosV	accT	accL	accV
 Type:	Displacement	Displacement	Displacement	Acceleration	Acceleration	Acceleration
 Unit:	m	m	m	m/s^2	m/s^2	m/s^2
 No. of Samples:	32768	32768	32768	32768	32768	32768
-Time step [s]:	0.005	0.005	0.005	0.005	0.005	0.005	0.005
-Trigger date:	1970-01-01	1970-01-01	1970-01-01	1970-01-01	1970-01-01	1970-01-01	1970-01-01
-Trigger time:	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000
+Time step [s]:	0.005	0.005	0.005	0.005	0.005	0.005
+Trigger date:	1970-01-01	1970-01-01	1970-01-01	1970-01-01	1970-01-01	1970-01-01
+Trigger time:	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000	00:00:00.000000
 Duration [s]:	163.835	163.835	163.835	163.835	163.835	163.835
 Data:
 PosT	PosL	PosV	accT	accL	accV

@@ -1,4 +1,4 @@
-function loadLNEC(filename)
+function loadTXT(filename)
 % LOADLNEC  Load an LNEC .tgt or .drv text file into MATLAB workspace,
 % printing the names of loaded variables, formatted as suffix+channel+'_baseName'.
 %

@@ -23,7 +23,7 @@ G_c = tf(k_p,1);% Controller
 
 %% 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
-filename ='pink_noise_40Hz_T3mm.drv.txt'; 
+filename = 'pink_noise_40Hz_T3mm.drv.txt'; 
 loadTXT(filename)
 
 %%   % --- Simulation --
@@ -34,19 +34,21 @@ ddx_drv = secondDerivativeTime(x_drv,t_step);
 
 x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'foh');
 ddx_acq = secondDerivativeTime(x_acq,t_step);
+%%
 
- % hold on; grid on; legend()
- % plot(t_vector , x_drv)
- % plot(t_vector,x_acq)
+ hold on; grid on; legend()
+ plot(t_vector , x_drv)
+ plot(t_vector,x_acq)
 
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
-writeTXT(t_vector , x_acq , ddx_acq , filename_acq)
+ writeTXT(t_vector , x_acq , ddx_acq , filename_acq)
 
-%%
-% 
-% addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
-% filename ='LAquilaReducedScale_0.DRV.txt';
-% loadTXT(filename)
+% Run .txt to .LTF conversion
+% Run .LTF to .txt conversion
 
+%% Load the file converted-deconverted file and compare to the original
 
+filename = 'pink_noise_40Hz_T3mm_acq.txt.acq.txt' ;
+loadTXT(filename)
+ plot(acq_time_vector_pink_noise_40Hz_T3mm_acq_txt , acqPosT_pink_noise_40Hz_T3mm_acq_txt,'.--')

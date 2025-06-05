@@ -36,8 +36,8 @@ function writeTXT(timeVec, dispVec, accVec, filename)
     fprintf(fid, 'time    PosT    PosL    PosV    accT    accL    accV\n');
 
     % Write data rows in fixed-point (no scientific notation)
-    % Using %.15f prints 15 digits after the decimal point.
-    fmt = '%.15f    %.15f    %.15f    %.15f    %.15f    %.15f    %.15f\n';
+    % Using %.5f prints 5 digits after the decimal point.
+    fmt = '%.3f    %.18f    %.18f    %.18f    %.18f    %.18f    %.18f\n';
     for i = 1:nT
         fprintf(fid, fmt, ...
             dataMat(i,1), ... % time

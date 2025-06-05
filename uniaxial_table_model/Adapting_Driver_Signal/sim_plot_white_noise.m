@@ -35,9 +35,9 @@ ddx_drv = secondDerivativeTime(x_drv,t_step);
 x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'foh');
 ddx_acq = secondDerivativeTime(x_acq,t_step);
 
- hold on; grid on; legend()
- plot(t_vector , x_drv)
- plot(t_vector,x_acq)
+ % hold on; grid on; legend()
+ % plot(t_vector , x_drv)
+ % plot(t_vector,x_acq)
 
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');

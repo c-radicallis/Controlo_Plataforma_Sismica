@@ -42,13 +42,14 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
 
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
- writeTXT(t_vector , x_acq , ddx_acq , filename_acq)
+save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project'
+ writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
 
 % Run .txt to .LTF conversion
 % Run .LTF to .txt conversion
 
 %% Load the file converted-deconverted file and compare to the original
 
-filename = 'pink_noise_40Hz_T3mm_acq.txt.acq.txt' ;
-loadTXT(filename)
- plot(acq_time_vector_pink_noise_40Hz_T3mm_acq_txt , acqPosT_pink_noise_40Hz_T3mm_acq_txt,'.--')
+% filename = 'pink_noise_40Hz_T3mm_acq.txt.acq.txt' ;
+% loadTXT(filename)
+%  plot(acq_time_vector_pink_noise_40Hz_T3mm_acq_txt , acqDispT_pink_noise_40Hz_T3mm_acq_txt,'.--')

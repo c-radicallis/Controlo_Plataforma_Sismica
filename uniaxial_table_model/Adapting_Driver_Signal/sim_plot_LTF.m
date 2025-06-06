@@ -85,7 +85,7 @@ f_i=0.1; %freq inicial
 f_n=30;  %freq final
 n_points = 5e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( t_vector , ddx_tgt, f_vector , 1);
+[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( t_vector , x_tgt , ddx_tgt, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
 plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
@@ -98,9 +98,11 @@ axes(ax1);
 bodeplot(G_xT_xref);
 
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
-G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
+cutoff_frequency = 20; % Hz
+G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',cutoff_frequency*2*pi,tuner_opts)
 [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref_tuned,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
-x_T_tuned = lsim(G_xT_xref_tuned/s^2 ,  ddx_tgt ,t_vector,'foh');
+
+x_T_tuned = lsim(G_xT_xref_tuned ,  x_tgt ,t_vector,'foh');
 ddx_T_tuned = lsim(G_xT_xref_tuned, ddx_tgt ,t_vector,'foh');
 
 axes(ax1); hold on;

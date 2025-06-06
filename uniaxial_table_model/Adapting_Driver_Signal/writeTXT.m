@@ -1,15 +1,16 @@
-function writeTXT(timeVec, dispVec, accVec, filename)
-% writeData writes time, displacement, and acceleration data to a text file
-%   timeVec  - n-by-1 vector of time values (double)
-%   dispVec  - n-by-1 vector of displacement values (double) (PosT)
-%   accVec   - n-by-1 vector of acceleration values (double) (accT)
-%   filename - string specifying output text file name (e.g., 'output.txt')
+function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
+% writeTXT writes time, displacement, and acceleration data to a text file
+%   timeVec    - n×1 vector of time values (double)
+%   dispVec    - n×1 vector of displacement values (double) (PosT)
+%   accVec     - n×1 vector of acceleration values (double) (accT)
+%   folderPath - string specifying the folder in which to save the file
+%   filename   - string specifying output text file name (e.g., 'output.txt')
 %
 % The output file will have columns:
 % time    PosT    PosL    PosV    accT    accL    accV
 % where PosL, PosV, accL, accV are filled with zeros.
 
-    % Ensure inputs are column vectors of same length
+    % Ensure inputs are column vectors of the same length
     nT = numel(timeVec);
     nD = numel(dispVec);
     nA = numel(accVec);
@@ -20,6 +21,17 @@ function writeTXT(timeVec, dispVec, accVec, filename)
     dispVec = dispVec(:);
     accVec  = accVec(:);
 
+    % If the folder does not exist, attempt to create it
+    if ~exist(folderPath, 'dir')
+        mkdirStatus = mkdir(folderPath);
+        if ~mkdirStatus
+            error('Could not create directory: %s', folderPath);
+        end
+    end
+
+    % Build the full filename (folder + filename)
+    fullFileName = fullfile(folderPath, filename);
+
     % Create zero columns for PosL, PosV, accL, accV
     zeroCol = zeros(nT,1);
 
@@ -27,9 +39,9 @@ function writeTXT(timeVec, dispVec, accVec, filename)
     dataMat = [timeVec, dispVec, zeroCol, zeroCol, accVec, zeroCol, zeroCol];
 
     % Open file for writing
-    fid = fopen(filename, 'w');
+    fid = fopen(fullFileName, 'w');
     if fid == -1
-        error('Could not open file %s for writing', filename);
+        error('Could not open file %s for writing', fullFileName);
     end
 
     % Write header line

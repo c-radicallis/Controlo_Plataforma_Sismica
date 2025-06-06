@@ -218,4 +218,3 @@ function loadTXT(filename)
       error('Unsupported file suffix "%s". Expecting tgt or drv (before .txt).', suffix);
   end
 end
-end

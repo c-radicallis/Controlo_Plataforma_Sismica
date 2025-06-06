@@ -3,7 +3,20 @@ clear;clc;close all;
 %% Load target
  addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 loadTXT('LAquilaReducedScale.tgt.txt')
-loadTXT('pink_noise_40Hz_T3mm_0.drv.txt')
+
+%% Finding Target Response Spectre
+f_i=0.1; %freq inicial
+f_n=30;  %freq final
+n_points = 5e2;
+f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
+[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( time_vector , x_tgt , ddx_tgt, f_vector , 1);
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
+
 
 %%
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'

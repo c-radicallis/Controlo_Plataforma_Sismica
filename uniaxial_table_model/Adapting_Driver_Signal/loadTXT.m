@@ -18,9 +18,11 @@ function loadTXT(filename)
 %   Data:
 %     <tab‑separated numeric rows>
 %
-% For a “.tgt” file, the data columns should contain six columns:
+% Columns whose data values are all zero will be ignored.
+%
+% For a “.tgt” file, the data columns should contain up to six columns:
 %   DispT, DispL, DispV, AccT, AccL, AccV.
-% After loading, this creates:
+% After loading (ignoring any all‑zero columns), this creates:
 %   time_vector   = (0:(N‑1))' * dt
 %   x_tgt_T       = data(:, column where Type=='Displacement' & Name contains 'T')
 %   x_tgt_L       = data(:, column where Type=='Displacement' & Name contains 'L')
@@ -29,15 +31,15 @@ function loadTXT(filename)
 %   ddx_tgt_L     = data(:, column where Type=='Acceleration' & Name contains 'L')
 %   ddx_tgt_V     = data(:, column where Type=='Acceleration' & Name contains 'V')
 %
-% For a “.drv” file, the data columns should contain three columns:
+% For a “.drv” file, the data columns should contain up to three columns:
 %   DispT, DispL, DispV.
-% After loading, this creates:
+% After loading (ignoring any all‑zero columns), this creates:
 %   x_drv_T_i     = data(:, column where Type=='Displacement' & Name contains 'T')
 %   x_drv_L_i     = data(:, column where Type=='Displacement' & Name contains 'L')
 %   x_drv_V_i     = data(:, column where Type=='Displacement' & Name contains 'V')
-% where “i” is the numeric index parsed from the filename (e.g., “…_34.DRV.txt”).
+% where “i” is the numeric index parsed from the filename (e.g., “..._34.DRV.txt”).
 %
-% If any expected column is missing, an error is raised.
+% If any expected non‑zero column is missing, an error is raised.
 
   %--------------------------%
   % 1. Parse filename parts  %
@@ -122,6 +124,19 @@ function loadTXT(filename)
   end
 
   %--------------------------------------------%
+  % 4b. Discard columns that are entirely zero  %
+  %--------------------------------------------%
+  if ~isempty(data)
+    nzColsMask = any(data ~= 0, 1);
+    data       = data(:, nzColsMask);
+    colNames   = colNames(nzColsMask);
+    typeNames  = typeNames(nzColsMask);
+  else
+    % If data is empty (unlikely), nothing to load
+    error('No data read from file.');
+  end
+
+  %--------------------------------------------%
   % 5. Decide behavior based on file suffix    %
   %--------------------------------------------%
   switch suffix
@@ -133,7 +148,7 @@ function loadTXT(filename)
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
       accIdxs  = find(strcmpi(typeNames, 'Acceleration'));
       if numel(dispIdxs) < 3 || numel(accIdxs) < 3
-        error('Expected at least 3 displacement and 3 acceleration columns in .tgt file.');
+        error('Expected at least 3 nonzero displacement and 3 nonzero acceleration columns in .tgt file.');
       end
 
       % Within displacements, find T, L, V
@@ -147,7 +162,7 @@ function loadTXT(filename)
 
       if isempty(idxDispT) || isempty(idxDispL) || isempty(idxDispV) || ...
          isempty(idxAccT)  || isempty(idxAccL)  || isempty(idxAccV)
-        error(['Could not find all required T/L/V columns within displacement ', ...
+        error(['Could not find all required nonzero T/L/V columns within displacement ', ...
                'or acceleration types in .tgt header.']);
       end
 
@@ -156,9 +171,9 @@ function loadTXT(filename)
       assignin('base', 'time_vector', time_vector);
 
       % Assign displacements
-      assignin('base', 'x_tgt_T', data(:, idxDispT));
-      assignin('base', 'x_tgt_L', data(:, idxDispL));
-      assignin('base', 'x_tgt_V', data(:, idxDispV));
+      assignin('base', 'x_tgt_T',   data(:, idxDispT));
+      assignin('base', 'x_tgt_L',   data(:, idxDispL));
+      assignin('base', 'x_tgt_V',   data(:, idxDispV));
       % Assign accelerations
       assignin('base', 'ddx_tgt_T', data(:, idxAccT));
       assignin('base', 'ddx_tgt_L', data(:, idxAccL));
@@ -188,14 +203,14 @@ function loadTXT(filename)
       % Find displacement indices
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
       if numel(dispIdxs) < 3
-        error('Expected at least 3 displacement columns in .drv file.');
+        error('Expected at least 3 nonzero displacement columns in .drv file.');
       end
       % Within displacements, find T, L, V
       idxT = dispIdxs(find(contains(colNames(dispIdxs), 'T', 'IgnoreCase', true), 1));
       idxL = dispIdxs(find(contains(colNames(dispIdxs), 'L', 'IgnoreCase', true), 1));
       idxV = dispIdxs(find(contains(colNames(dispIdxs), 'V', 'IgnoreCase', true), 1));
       if isempty(idxT) || isempty(idxL) || isempty(idxV)
-        error('Could not find T, L, or V among displacement columns in .drv.');
+        error('Could not find all required nonzero T/L/V columns among displacement in .drv.');
       end
 
       % Build variable names
@@ -218,3 +233,4 @@ function loadTXT(filename)
       error('Unsupported file suffix "%s". Expecting tgt or drv (before .txt).', suffix);
   end
 end
+

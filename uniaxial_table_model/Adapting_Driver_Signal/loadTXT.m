@@ -4,37 +4,37 @@ function loadTXT(filename)
 %
 % Usage:
 %   loadTXT('LAquilaReducedScale.tgt.txt')
-%     → creates variables: time_vector, x_tgt_T, x_tgt_L, x_tgt_V
+%     → creates variables: time_vector, x_tgt_T, x_tgt_L, x_tgt_V,
+%                         ddx_tgt_T, ddx_tgt_L, ddx_tgt_V
 %
 %   loadTXT('LAquilaReducedScale_34.DRV.txt')
-%     → creates variables: x_drv_T_34, x_drv_L_34, x_drv_V_34,
-%                          ddx_drv_T_34, ddx_drv_L_34, ddx_drv_V_34
+%     → creates variables: x_drv_T_34, x_drv_L_34, x_drv_V_34
 %
 % The function expects a header block containing at least:
-%   Name: <tab‐separated column names>
-%   Type: <tab‐separated types ('Displacement' or 'Acceleration')>
-%   No. of Samples: <integer>  (only the first value is used)
+%   Name: <tab‑separated column names>
+%   Type: <tab‑separated types ('Displacement' or 'Acceleration')>
+%   No. of Samples: <integer>  (only the first value is used)
 %   Time step [s]: <float>     (only the first value is used)
 %   Data:
-%     <tab‐separated numeric rows>
+%     <tab‑separated numeric rows>
 %
 % For a “.tgt” file, the data columns should contain six columns:
 %   DispT, DispL, DispV, AccT, AccL, AccV.
 % After loading, this creates:
-%   time_vector   = (0:(N–1))' * dt
+%   time_vector   = (0:(N‑1))' * dt
 %   x_tgt_T       = data(:, column where Type=='Displacement' & Name contains 'T')
 %   x_tgt_L       = data(:, column where Type=='Displacement' & Name contains 'L')
 %   x_tgt_V       = data(:, column where Type=='Displacement' & Name contains 'V')
+%   ddx_tgt_T     = data(:, column where Type=='Acceleration' & Name contains 'T')
+%   ddx_tgt_L     = data(:, column where Type=='Acceleration' & Name contains 'L')
+%   ddx_tgt_V     = data(:, column where Type=='Acceleration' & Name contains 'V')
 %
-% For a “.drv” file, the data columns should contain six columns:
-%   DispT, DispL, DispV, AccT, AccL, AccV.
+% For a “.drv” file, the data columns should contain three columns:
+%   DispT, DispL, DispV.
 % After loading, this creates:
 %   x_drv_T_i     = data(:, column where Type=='Displacement' & Name contains 'T')
 %   x_drv_L_i     = data(:, column where Type=='Displacement' & Name contains 'L')
 %   x_drv_V_i     = data(:, column where Type=='Displacement' & Name contains 'V')
-%   ddx_drv_T_i   = data(:, column where Type=='Acceleration' & Name contains 'T')
-%   ddx_drv_L_i   = data(:, column where Type=='Acceleration' & Name contains 'L')
-%   ddx_drv_V_i   = data(:, column where Type=='Acceleration' & Name contains 'V')
 % where “i” is the numeric index parsed from the filename (e.g., “…_34.DRV.txt”).
 %
 % If any expected column is missing, an error is raised.
@@ -68,9 +68,9 @@ function loadTXT(filename)
   %----------------------%
   % 3. Read header lines %
   %----------------------%
-  numsamps = [];
-  dt       = [];
-  colNames = {};
+  numsamps  = [];
+  dt        = [];
+  colNames  = {};
   typeNames = {};
   while true
     tline = fgetl(fid);
@@ -90,15 +90,15 @@ function loadTXT(filename)
       if isempty(numsampsArr)
         error('Could not parse "No. of Samples" from header.');
       end
-      numsamps = numsampsArr(1);
+      numsamps = numsampsArr(1);  % take the first number
     elseif startsWith(tline, 'Time step [s]:', 'IgnoreCase', true)
       dtArr = sscanf(tline, 'Time step [s]:%f');
       if isempty(dtArr)
         error('Could not parse "Time step [s]" from header.');
       end
-      dt = dtArr(1);
+      dt = dtArr(1);  % take the first value
     elseif strcmpi(strtrim(tline), 'Data:')
-      fgetl(fid);  % skip repeated column header row
+      fgetl(fid);  % skip the repeated column header row
       break;
     end
   end
@@ -126,53 +126,16 @@ function loadTXT(filename)
   %--------------------------------------------%
   switch suffix
     case 'tgt'
-      %--------------------------%
-      % 5a. .tgt  -> load displacements only  %
-      %--------------------------%
-      % Find all indices where type is "Displacement"
-      dispIdxs = find(strcmpi(typeNames, 'Displacement'));
-      if numel(dispIdxs) < 3
-        error('Expected at least 3 displacement columns in .tgt file.');
-      end
-      % Within those, pick T, L, V by checking column name
-      idxT = dispIdxs(find(contains(colNames(dispIdxs), 'T', 'IgnoreCase', true), 1));
-      idxL = dispIdxs(find(contains(colNames(dispIdxs), 'L', 'IgnoreCase', true), 1));
-      idxV = dispIdxs(find(contains(colNames(dispIdxs), 'V', 'IgnoreCase', true), 1));
-      if isempty(idxT) || isempty(idxL) || isempty(idxV)
-        error('Could not find T, L, or V among displacement columns in .tgt.');
-      end
-
-      % Build and assign time vector
-      time_vector = (0:(numsamps-1))' * dt;
-      assignin('base', 'time_vector', time_vector);
-      assignin('base', 'x_tgt_T', data(:, idxT));
-      assignin('base', 'x_tgt_L', data(:, idxL));
-      assignin('base', 'x_tgt_V', data(:, idxV));
-
-      fprintf('Loaded variables into base workspace:\n');
-      fprintf('  time_vector\n');
-      fprintf('  x_tgt_T\n');
-      fprintf('  x_tgt_L\n');
-      fprintf('  x_tgt_V\n');
-      return
-
-    case 'drv'
-      %----------------------------------------%
-      % 5b. .drv -> load displacement & acceleration  %
-      %----------------------------------------%
-      % Extract numeric index 'i' from baseName ("..._<i>")
-      tokens = regexp(baseName, '_(\d+)$', 'tokens');
-      if isempty(tokens)
-        error('Could not parse numeric index from baseName "%s".', baseName);
-      end
-      iStr = tokens{1}{1};
-
+      %-----------------------------------------%
+      % .tgt: contains both Displacement & Acceleration
+      %-----------------------------------------%
       % Find displacement and acceleration indices
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
       accIdxs  = find(strcmpi(typeNames, 'Acceleration'));
       if numel(dispIdxs) < 3 || numel(accIdxs) < 3
-        error('Expected at least 3 displacement and 3 acceleration columns in .drv file.');
+        error('Expected at least 3 displacement and 3 acceleration columns in .tgt file.');
       end
+
       % Within displacements, find T, L, V
       idxDispT = dispIdxs(find(contains(colNames(dispIdxs), 'T', 'IgnoreCase', true), 1));
       idxDispL = dispIdxs(find(contains(colNames(dispIdxs), 'L', 'IgnoreCase', true), 1));
@@ -184,36 +147,75 @@ function loadTXT(filename)
 
       if isempty(idxDispT) || isempty(idxDispL) || isempty(idxDispV) || ...
          isempty(idxAccT)  || isempty(idxAccL)  || isempty(idxAccV)
-        error(['Could not find all required T/L/V columns within displacement ',
-               'or acceleration types in .drv header.']);
+        error(['Could not find all required T/L/V columns within displacement ', ...
+               'or acceleration types in .tgt header.']);
+      end
+
+      % Build time vector
+      time_vector = (0:(numsamps-1))' * dt;
+      assignin('base', 'time_vector', time_vector);
+
+      % Assign displacements
+      assignin('base', 'x_tgt_T', data(:, idxDispT));
+      assignin('base', 'x_tgt_L', data(:, idxDispL));
+      assignin('base', 'x_tgt_V', data(:, idxDispV));
+      % Assign accelerations
+      assignin('base', 'ddx_tgt_T', data(:, idxAccT));
+      assignin('base', 'ddx_tgt_L', data(:, idxAccL));
+      assignin('base', 'ddx_tgt_V', data(:, idxAccV));
+
+      fprintf('Loaded variables into base workspace:\n');
+      fprintf('  time_vector\n');
+      fprintf('  x_tgt_T\n');
+      fprintf('  x_tgt_L\n');
+      fprintf('  x_tgt_V\n');
+      fprintf('  ddx_tgt_T\n');
+      fprintf('  ddx_tgt_L\n');
+      fprintf('  ddx_tgt_V\n');
+      return
+
+    case 'drv'
+      %-----------------------------------------%
+      % .drv: contains only Displacement columns
+      %-----------------------------------------%
+      % Extract numeric index 'i' from baseName ("..._<i>")
+      tokens = regexp(baseName, '_(\d+)$', 'tokens');
+      if isempty(tokens)
+        error('Could not parse numeric index from baseName "%s".', baseName);
+      end
+      iStr = tokens{1}{1};
+
+      % Find displacement indices
+      dispIdxs = find(strcmpi(typeNames, 'Displacement'));
+      if numel(dispIdxs) < 3
+        error('Expected at least 3 displacement columns in .drv file.');
+      end
+      % Within displacements, find T, L, V
+      idxT = dispIdxs(find(contains(colNames(dispIdxs), 'T', 'IgnoreCase', true), 1));
+      idxL = dispIdxs(find(contains(colNames(dispIdxs), 'L', 'IgnoreCase', true), 1));
+      idxV = dispIdxs(find(contains(colNames(dispIdxs), 'V', 'IgnoreCase', true), 1));
+      if isempty(idxT) || isempty(idxL) || isempty(idxV)
+        error('Could not find T, L, or V among displacement columns in .drv.');
       end
 
       % Build variable names
-      var_x_T   = sprintf('x_drv_T_%s',   iStr);
-      var_x_L   = sprintf('x_drv_L_%s',   iStr);
-      var_x_V   = sprintf('x_drv_V_%s',   iStr);
-      var_ddx_T = sprintf('ddx_drv_T_%s', iStr);
-      var_ddx_L = sprintf('ddx_drv_L_%s', iStr);
-      var_ddx_V = sprintf('ddx_drv_V_%s', iStr);
+      var_x_T = sprintf('x_drv_T_%s', iStr);
+      var_x_L = sprintf('x_drv_L_%s', iStr);
+      var_x_V = sprintf('x_drv_V_%s', iStr);
 
       % Assign into base workspace
-      assignin('base', var_x_T,   data(:, idxDispT));
-      assignin('base', var_x_L,   data(:, idxDispL));
-      assignin('base', var_x_V,   data(:, idxDispV));
-      assignin('base', var_ddx_T, data(:, idxAccT));
-      assignin('base', var_ddx_L, data(:, idxAccL));
-      assignin('base', var_ddx_V, data(:, idxAccV));
+      assignin('base', var_x_T, data(:, idxT));
+      assignin('base', var_x_L, data(:, idxL));
+      assignin('base', var_x_V, data(:, idxV));
 
       fprintf('Loaded variables into base workspace:\n');
       fprintf('  %s\n', var_x_T);
       fprintf('  %s\n', var_x_L);
       fprintf('  %s\n', var_x_V);
-      fprintf('  %s\n', var_ddx_T);
-      fprintf('  %s\n', var_ddx_L);
-      fprintf('  %s\n', var_ddx_V);
       return
 
     otherwise
       error('Unsupported file suffix "%s". Expecting tgt or drv (before .txt).', suffix);
   end
+end
 end

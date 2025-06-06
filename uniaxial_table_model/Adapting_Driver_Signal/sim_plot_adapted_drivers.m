@@ -3,8 +3,7 @@ clear;clc;close all;
 %% Load target
  addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 loadTXT('LAquilaReducedScale.tgt.txt')
-x_tgt = dados(:,2);
-ddx_tgt = dados(:,3);
+
 
 %%
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'

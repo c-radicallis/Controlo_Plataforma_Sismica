@@ -131,6 +131,7 @@ function loadTXT(filename)
       %---------------------------%
       time_vector = (0:(numsamps-1))' * dt;
       assignin('base', 'time_vector', time_vector);
+      fprintf('Loaded: time_vector');
 
       % Find indices of remaining columns
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));

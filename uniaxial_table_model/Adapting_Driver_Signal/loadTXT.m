@@ -8,7 +8,7 @@ function loadTXT(filename)
 %                         ddx_tgt_T, ddx_tgt_L, ddx_tgt_V
 %
 %   loadTXT('LAquilaReducedScale_34.DRV.txt')
-%     → creates variables: x_drv_T_34, x_drv_L_34, x_drv_V_34
+%     → creates variables: time_drv_34, x_drv_T_34, x_drv_L_34, x_drv_V_34
 %
 % The function expects a header block containing at least:
 %   Name: <tab‑separated column names>
@@ -35,6 +35,7 @@ function loadTXT(filename)
 % For a “.drv” file, the data columns should contain up to three columns:
 %   DispT, DispL, DispV.
 % After loading (ignoring zero columns), this creates:
+%   time_drv_i   = (0:(N‑1))' * dt
 %   x_drv_T_i     = data(:, column where Type=='Displacement' & Name contains 'T')
 %   x_drv_L_i     = data(:, column where Type=='Displacement' & Name contains 'L')
 %   x_drv_V_i     = data(:, column where Type=='Displacement' & Name contains 'V')
@@ -81,10 +82,10 @@ function loadTXT(filename)
     end
     if startsWith(tline, 'Name:', 'IgnoreCase', true)
       rawNames = strtrim(tline(6:end));
-      colNames = strsplit(rawNames, '	');
+      colNames = strsplit(rawNames, '\t');
     elseif startsWith(tline, 'Type:', 'IgnoreCase', true)
       rawTypes = strtrim(tline(6:end));
-      typeNames = strsplit(rawTypes, '	');
+      typeNames = strsplit(rawTypes, '\t');
     elseif startsWith(tline, 'No. of Samples:', 'IgnoreCase', true)
       numsampsArr = sscanf(tline, 'No. of Samples:%f');
       numsamps = numsampsArr(1);
@@ -131,7 +132,7 @@ function loadTXT(filename)
       %---------------------------%
       time_vector = (0:(numsamps-1))' * dt;
       assignin('base', 'time_vector', time_vector);
-      fprintf('Loaded: time_vector');
+      fprintf('Loaded: time_vector\n');
 
       % Find indices of remaining columns
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
@@ -175,7 +176,16 @@ function loadTXT(filename)
     case 'drv'
       % Extract numeric index 'i' from baseName
       tokens = regexp(baseName, '_(\d+)$', 'tokens');
+      if isempty(tokens)
+        error('Cannot parse index from filename "%s". Expected pattern _<number>.DRV.txt', baseName);
+      end
       iStr = tokens{1}{1};
+
+      % Build and assign time vector for drv
+      time_drv = (0:(numsamps-1))' * dt;
+      var_time = sprintf('time_drv_%s', iStr);
+      assignin('base', var_time, time_drv);
+      fprintf('Loaded: %s\n', var_time);
 
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
       idxT = findChannelIndex(colNames, dispIdxs, 'T');
@@ -214,4 +224,3 @@ function idx = findChannelIndex(colNames, idxList, letter)
     end
   end
 end
-

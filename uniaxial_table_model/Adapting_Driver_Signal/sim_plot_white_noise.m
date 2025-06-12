@@ -23,8 +23,7 @@ G_c = tf(k_p,1);% Controller
 
 %% 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
-filename = 'pink_noise_40Hz_T3mm.drv.txt'; 
-loadTXT(filename)
+loadTXT('pink_noise_40Hz_T3mm_0.drv.txt')
 
 %%   % --- Simulation --
 t_vector = drv_time_vector_pink_noise_40Hz_T3mm;

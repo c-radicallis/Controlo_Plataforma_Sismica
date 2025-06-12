@@ -76,10 +76,15 @@ filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
 save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project'
  writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
 
-% Run .txt to .LTF conversion
+%% Run .txt to .LTF conversion
 
-%% Load the file converted-deconverted file and compare to the original
-
-% filename = 'pink_noise_40Hz_T3mm_acq.txt.acq.txt' ;
-% loadTXT(filename)
-%  plot(acq_time_vector_pink_noise_40Hz_T3mm_acq_txt , acqDispT_pink_noise_40Hz_T3mm_acq_txt,'.--')
+full_filename_acq = fullfile(save_folder, filename_acq);
+try
+    py_output = py.TXT_to_LTF.txt_to_ltf(full_filename_acq, out_dir);
+    % py_output is a Python string; convert to MATLAB char:
+    output_path = char(py_output);
+    fprintf('Python function returned output path: %s\n', output_path);
+catch ME
+    disp('Error calling Python function:');
+    disp(ME.message);
+end

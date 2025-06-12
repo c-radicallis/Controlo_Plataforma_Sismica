@@ -1,4 +1,3 @@
-# ltf_utils.py
 from pathlib import Path
 import numpy as np
 from scipy.constants import g

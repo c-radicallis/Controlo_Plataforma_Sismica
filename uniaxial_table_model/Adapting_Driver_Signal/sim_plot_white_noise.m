@@ -1,5 +1,6 @@
-clear;clc;close all;
+%sim_plot_white_noise.m now takes a pink noise driver .drv, converts to .txt (using python), simulates the output, writes the output to .txt, and converts to .acq (using python)
 
+clear;clc;close all;
 
 %%
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
@@ -64,7 +65,7 @@ t_step = t_vector(2);
 x_drv    = x_drv_T_0;
 ddx_drv = secondDerivativeTime(x_drv,t_step);
 
-x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'foh');
+x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'zoh');
 ddx_acq = secondDerivativeTime(x_acq,t_step);
 
  hold on; grid on; legend()

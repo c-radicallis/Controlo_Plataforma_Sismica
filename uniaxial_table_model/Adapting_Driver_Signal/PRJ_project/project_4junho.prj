@@ -17,7 +17,7 @@
 </Path>
 <Path>
 <Name>Caracterization Response Signal</Name>
-<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\pink_noise_40Hz_T3mm_acq.txt.acq</Val>
+<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\pink_noise_40Hz_T3mm_0_acq.txt.acq</Val>
 </Path>
 </Cluster>
 <Cluster>
@@ -98,7 +98,7 @@
 <NumElts>4</NumElts>
 <DBL>
 <Name>Cutoff freq</Name>
-<Val>12.12500000000000</Val>
+<Val>0.12500000000000</Val>
 </DBL>
 <I32>
 <Name>Order</Name>
@@ -164,7 +164,7 @@
 <NumElts>2</NumElts>
 <DBL>
 <Name>Crossover Freq</Name>
-<Val>1.00000000000000</Val>
+<Val>13.00000000000000</Val>
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>

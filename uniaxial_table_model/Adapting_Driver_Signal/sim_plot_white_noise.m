@@ -1,5 +1,29 @@
 clear;clc;close all;
 
+%% 
+
+% Suppose your ltf_utils.py is in '/path/to/py-scripts'
+script_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';  % modify to your actual path
+
+if count(py.sys.path, script_folder) == 0
+    insert(py.sys.path, int32(0), script_folder);
+end
+
+% Paths as strings; MATLAB will convert to Python str automatically.
+in_file ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\LNEC_Adapta_Driver\LNEC_ERIES_RE-SAFE\CTL\SystemId\pink_noise_40Hz_T3mm.drv';
+out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
+
+try
+    py_output = py.LTF_to_TXT.ltf_to_txt(in_file, out_dir);
+    % py_output is a Python string; convert to MATLAB char:
+    output_path = char(py_output);
+    fprintf('Python function returned output path: %s\n', output_path);
+catch ME
+    disp('Error calling Python function:');
+    disp(ME.message);
+end
+
+
 %%
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 
@@ -21,19 +45,21 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
 [~,~,~,~,~ ,~ ,~,~,~,~,~,~,G_xT_xref,~,~ , ~ ,~,~,~,~ , ~ , ~ , ~ , ~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-%% 
-addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
-loadTXT('pink_noise_40Hz_T3mm_0.drv.txt')
+
+
+%%
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\'
+filename = 'pink_noise_40Hz_T3mm_0.drv.txt';
+loadTXT(filename)
 
 %%   % --- Simulation --
-t_vector = drv_time_vector_pink_noise_40Hz_T3mm;
+t_vector = time_drv_0;
 t_step = t_vector(2);
-x_drv    = drvPosA1T_pink_noise_40Hz_T3mm;
+x_drv    = x_drv_T_0;
 ddx_drv = secondDerivativeTime(x_drv,t_step);
 
 x_acq = lsim(G_xT_xref ,  x_drv ,t_vector,'foh');
 ddx_acq = secondDerivativeTime(x_acq,t_step);
-%%
 
  hold on; grid on; legend()
  plot(t_vector , x_drv)

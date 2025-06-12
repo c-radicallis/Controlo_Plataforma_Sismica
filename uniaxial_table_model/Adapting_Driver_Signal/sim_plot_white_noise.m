@@ -1,4 +1,4 @@
-%sim_plot_white_noise.m now takes a pink noise driver .drv, converts to .txt (using python), simulates the output, writes the output to .txt, and converts to .acq (using python)
+%sim_plot_white_noise.m now takes the pink noise driver .drv, converts to .txt (using python), simulates the output, writes the output to .txt, and converts to .acq (using python)
 
 clear;clc;close all;
 
@@ -26,9 +26,7 @@ G_c = tf(k_p,1);% Controller
 
 %% 
 
-% Suppose your ltf_utils.py is in '/path/to/py-scripts'
 script_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';  % modify to your actual path
-
 if count(py.sys.path, script_folder) == 0
     insert(py.sys.path, int32(0), script_folder);
 end
@@ -74,7 +72,7 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
 
 %%  --- Write .txt file from simulated "acquired" data 
 filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
-save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project'
+save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
  writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
 
 %% Run .txt to .LTF conversion

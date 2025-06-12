@@ -1,9 +1,37 @@
 clear;clc;close all;
 
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 %% Load target
- addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
-loadTXT('LAquilaReducedScale.tgt.txt')
-loadTXT('pink_noise_40Hz_T3mm_0.drv.txt')
+
+% Converting the .drv to .txt, and loading the txt
+script_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';  % modify to your actual path
+if count(py.sys.path, script_folder) == 0
+    insert(py.sys.path, int32(0), script_folder);
+end
+
+base_name = 'LAquilaReducedScale_0';   % or get from user input % 2. Define only the name (no folder); you can prompt the user or set it manually:
+ext = '.drv';                         % driver extension
+
+input_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project'; % 1. Define folder once
+in_file = fullfile(input_folder, [base_name, ext]); % 3. Create full path
+if ~isfile(in_file) % 4. (Optional) Check existence before proceeding
+    error('Input file does not exist: %s', in_file);
+end
+
+out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
+
+try
+    py_output = py.LTF_to_TXT.ltf_to_txt(in_file, out_dir);     % py_output is a Python string; convert to MATLAB char:
+    output_path = char(py_output);
+    fprintf('Python function returned output path: %s\n', output_path);
+catch ME
+    disp('Error calling Python function:');
+    disp(ME.message);
+end
+
+loadTXT('LAquilaReducedScale_0.drv.txt')
+
 
 %% Finding Target Response Spectre
 f_i=0.1; %freq inicial

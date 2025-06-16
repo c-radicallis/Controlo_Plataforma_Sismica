@@ -4,41 +4,22 @@ addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 %% Load target
 
-% Converting the .drv to .txt, and loading the txt
-script_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';  % modify to your actual path
-if count(py.sys.path, script_folder) == 0
-    insert(py.sys.path, int32(0), script_folder);
-end
+target = 'LAquilaReducedScale.tgt';   % or get from user input % 2. Define only the name (no folder); you can prompt the u
+LTF_to_TXT_then_load(target)
+t_step = time_vector(2);
 
-base_name = 'LAquilaReducedScale_0';   % or get from user input % 2. Define only the name (no folder); you can prompt the user or set it manually:
-ext = '.drv';                         % driver extension
+%% Create Figures
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
-input_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project'; % 1. Define folder once
-in_file = fullfile(input_folder, [base_name, ext]); % 3. Create full path
-if ~isfile(in_file) % 4. (Optional) Check existence before proceeding
-    error('Input file does not exist: %s', in_file);
-end
-
-out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
-
-try
-    py_output = py.LTF_to_TXT.ltf_to_txt(in_file, out_dir);     % py_output is a Python string; convert to MATLAB char:
-    output_path = char(py_output);
-    fprintf('Python function returned output path: %s\n', output_path);
-catch ME
-    disp('Error calling Python function:');
-    disp(ME.message);
-end
-
-loadTXT('LAquilaReducedScale_0.drv.txt')
-
-
-%% Finding Target Response Spectre
+%% Response Spectra settings
 f_i=0.1; %freq inicial
 f_n=30;  %freq final
 n_points = 5e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( time_vector , x_tgt , ddx_tgt, f_vector , 1);
+
+%% Finding Response Spectre  of Target
+[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( time_vector , x_tgt_T , ddx_tgt_T, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
 plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
@@ -47,8 +28,7 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 
 
-%%
-addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
+%% Loading standard tune
 
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
@@ -65,18 +45,77 @@ c1 = zeta1*2*m1*2*pi*f1; c2 = zeta2*2*m2*2*pi*f2; %N/m/s%coupled 2DOF system
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);% Controller
 
-% s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
-[~,~,~,~,~ ,~ ,~,~,~,~,~,~,G_xT_xref,~,~ , ~ ,~,~,~,~ , ~ , ~ , ~ , ~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+% s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
+[~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-%% Finding Response Spectre of Ground
-f_i=0.1; %freq inicial
-f_n=30;  %freq final
-n_points = 5e2;
-f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( t_vector , x_tgt , ddx_tgt, f_vector , 1);
+%% Simulation using updated driver 
+
+LTF_to_TXT_then_load('LAquilaReducedScale_0.DRV')
+x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
+ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
+
+[picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
+plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
+plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');%- Normal
+
+%% Finding Response Spectre of Table with tuned PID
+
+tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
+cutoff_frequency = 20; % Hz
+G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',cutoff_frequency*2*pi,tuner_opts)
+[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref_tuned,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+
+x_T_tuned = lsim(G_xT_xref_tuned ,  x_tgt_T , time_vector,'zoh');
+ddx_T_tuned = secondDerivativeTime(x_T_tuned , t_step);
+
+[picos_ddx_tuned , picos_x_tuned] = ResponseSpectrum( time_vector , x_T_tuned , ddx_T_tuned, f_vector , 1);
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_tuned,'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_tuned,'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
+
+%% Optimal control
+sys = ss(AA,BB,CC,DD);
+nx = size(AA,1);    % Number of states
+nu = size(BB,2);    % Number of control inputs (should be 1)
+ny = size(CC,1);    % Number of outputs
+
+plant_aug = ss(AA, BB,[eye(nx);CC],DD);
+plant_aug.InputName = {'i_sv'};   % plant input: control signal
+plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
+
+sumblk1 = sumblk('e = x_tgt - y_xT'); % Compute the error signal: e = r - y
+
+integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
+integrator.InputName = {'e'};    % error: e = r - y
+integrator.OutputName = {'xi'};  % integrated error
+
+Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
+R = 1e-9*eye(nu);
+K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
+K  = K_lqi(1:nx);      % state feedback gains
+Ki = K_lqi(end);        % integrator gain
+controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
+controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
+controller.OutputName = {'i_sv'};
+
+clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_tgt', 'y_xT')
+
+[x_T_LQG, t_out, x] = lsim(clsys, x_tgt_T, time_vector,'zoh'); % Simulate the closed-loop response using lsim:
+ddx_T_LQG = secondDerivativeTime(x_T_LQG,t_step);
+
+%% Finding Response Spectre of Table with Optimal Control
+[picos_ddx_LQG , picos_x_LQG] = ResponseSpectrum( time_vector , x_T_LQG , ddx_T_LQG, f_vector , 1);
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
+

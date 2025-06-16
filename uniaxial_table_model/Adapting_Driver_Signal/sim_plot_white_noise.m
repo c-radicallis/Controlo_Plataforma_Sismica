@@ -24,14 +24,11 @@ G_c = tf(k_p,1);% Controller
 
 
 %% 
-in_file ='pink_noise_40Hz_T3mm.drv';
-out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
 
+in_file ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\LNEC_Adapta_Driver\LNEC_ERIES_RE-SAFE\CTL\SystemId\pink_noise_40Hz_T3mm.drv';
+out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
 newName = 'pink_noise_40Hz_T3mm_0.drv';
-% % Renaming the .drv file such that it works loadTXT.m fuction which requires a number before the ".extension"
-% oldName = fullfile(out_dir ,in_file);
-% newNamepath = fullfile(out_dir , newName);
-% movefile(oldName, newNamepath) 
+ok = copyAndRenameFile(in_file, out_dir, newName);
 
 LTF_to_TXT_then_load(newName);
 
@@ -49,8 +46,6 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
  plot(t_vector , x_drv)
  plot(t_vector,x_acq)
 
-%%  --- Write .txt file from simulated "acquired" data 
-filename_acq = strrep(newName, '.drv.txt', '_acq.txt');
-save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
-writeTXT_then_LTF(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
+%%  --- Write .txt file from simulated "acquired" data, and also write .acq from the .txt
+writeTXT_then_LTF(t_vector , x_acq , ddx_acq , out_dir , strrep(newName, '.drv', '_acq.txt'))
 

@@ -1,3 +1,19 @@
+Frequency [Hz] - Plot 0	Magnitude - Plot 0	Frequency [Hz] - Plot 1	Magnitude - Plot 1	
+0	0.971095			
+3.174603	0.94034			
+6.349206	0.798383			
+9.52381	0.44046			
+12.698413	0.193131			
+15.873016	0.103225			
+19.047619	0.062798			
+22.222222	0.0426242			
+25.396825	0.0310207			
+28.571429	0.0233097			
+31.746032	0.017792			
+34.920635	0.0139072			
+38.095238	0.0111023			
+
+Identification settings copied from .prj file: 
 <?xml version='1.0' standalone='yes' ?>
 <LVData>
 <Version>18.0f2</Version>
@@ -55,7 +71,7 @@
 </U32>
 </Cluster>
 <I32>
-<Name>Nº Windows</Name>
+<Name>Nï¿½ Windows</Name>
 <Val>1024</Val>
 </I32>
 <EW>

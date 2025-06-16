@@ -1,10 +1,9 @@
 %sim_plot_white_noise.m now takes the pink noise driver .drv, converts to .txt (using python), simulates the output, writes the output to .txt, and converts to .acq (using python)
 
 clear;clc;close all;
-
-%%
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 
+%%
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
 mass=2e3;
@@ -25,37 +24,17 @@ G_c = tf(k_p,1);% Controller
 
 
 %% 
-
-script_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';  % modify to your actual path
-if count(py.sys.path, script_folder) == 0
-    insert(py.sys.path, int32(0), script_folder);
-end
-
-% Paths as strings; MATLAB will convert to Python str automatically.
-in_file ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\LNEC_Adapta_Driver\LNEC_ERIES_RE-SAFE\CTL\SystemId\pink_noise_40Hz_T3mm.drv';
+in_file ='pink_noise_40Hz_T3mm.drv';
 out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
 
-try
-    py_output = py.LTF_to_TXT.ltf_to_txt(in_file, out_dir);
-    % py_output is a Python string; convert to MATLAB char:
-    output_path = char(py_output);
-    fprintf('Python function returned output path: %s\n', output_path);
-catch ME
-    disp('Error calling Python function:');
-    disp(ME.message);
-end
+newName = 'pink_noise_40Hz_T3mm_0.drv';
+% % Renaming the .drv file such that it works loadTXT.m fuction which requires a number before the ".extension"
+% oldName = fullfile(out_dir ,in_file);
+% newNamepath = fullfile(out_dir , newName);
+% movefile(oldName, newNamepath) 
 
-%%
+LTF_to_TXT_then_load(newName);
 
-oldName = fullfile(out_dir , 'pink_noise_40Hz_T3mm.drv.txt');
-newName = fullfile(out_dir , 'pink_noise_40Hz_T3mm_0.drv.txt');
-movefile(oldName, newName)
-
-
-%%
-addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\'
-filename = 'pink_noise_40Hz_T3mm_0.drv.txt';
-loadTXT(filename)
 
 %%   % --- Simulation --
 t_vector = time_drv_0;
@@ -71,9 +50,9 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
  plot(t_vector,x_acq)
 
 %%  --- Write .txt file from simulated "acquired" data 
-filename_acq = strrep(filename, '.drv.txt', '_acq.txt');
+filename_acq = strrep(newName, '.drv.txt', '_acq.txt');
 save_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
- writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
+writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename_acq)
 
 %% Run .txt to .LTF conversion
 

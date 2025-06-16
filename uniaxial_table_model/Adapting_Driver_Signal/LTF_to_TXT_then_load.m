@@ -1,11 +1,11 @@
-function data = LTF_to_TXT_then_load(filename_with_ext, varargin)
-% CONVERT_SIGNAL_AND_LOAD Convert a .drv or .tgt file via Python and load its .txt.
+function LTF_to_TXT_then_load(filename_with_ext, varargin)
+% LTF_to_TXT_then_load Convert a .drv or .tgt file via Python and load its .txt.
 %
-%   data = convert_signal_and_load(filename_with_ext)
+%   LTF_to_TXT_then_load(filename_with_ext)
 %       Uses hard-coded Python module folder, module name, and function name.
 %       filename_with_ext must include extension, e.g. 'MyRun.drv' or 'MyRun.tgt'.
 %
-%   data = convert_signal_and_load(filename_with_ext, 'InputFolder', inpF, ...
+%   LTF_to_TXT_then_load(filename_with_ext, 'InputFolder', inpF, ...
 %                                  'OutputFolder', outF, 'Verbose', tf)
 %       Optionally specify:
 %         'InputFolder'  : folder where the .drv/.tgt resides (default: a hard-coded path)
@@ -26,7 +26,7 @@ function data = LTF_to_TXT_then_load(filename_with_ext, varargin)
 %     6. Calls loadTXT on that .txt and returns its result.
 %
 %   Example:
-%     data = convert_signal_and_load('LAquilaReducedScale_0.drv', ...
+%     LTF_to_TXT_then_load('LAquilaReducedScale_0.drv', ...
 %               'InputFolder', 'C:\path\to\PRJ_project', ...
 %               'OutputFolder', 'C:\path\to\PRJ_project', ...
 %               'Verbose', true);
@@ -162,9 +162,8 @@ function data = LTF_to_TXT_then_load(filename_with_ext, varargin)
         if verbose
             fprintf('Calling loadTXT on: %s\n', output_path);
         end
-        data = loadTXT(output_path);
+        loadTXT(output_path);
     catch ME
         fprintf('Error in loadTXT for file %s: %s\n', output_path, ME.message);
-        data = [];  % or rethrow if desired
     end
 end

@@ -43,20 +43,20 @@ def txt_to_ltf(file_path, out_dir):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Determine output filename, removing ".txt" if input name ends with ".ACQ.txt"
+    # Determine output filename
     file_path = Path(file_path)
-    orig_name = file_path.name  # e.g., 'something.ACQ.txt' or other
-    # Check case-insensitive:
-    if orig_name.lower().endswith('.acq.txt'):
-        # remove the trailing ".txt" only
-        base_name = orig_name[:-4]  # drop last 4 chars ('.txt')
-    else:
-        base_name = orig_name
-    # Now append ".acq"
-    filename = base_name + '.acq'
-    output_path = out_dir / filename
+    raw_name = file_path.name  # e.g. "LAquilaReducedScale_0.ACQ.txt" or "data.txt" etc.
 
-    # Write the .ltf file into the specified folder
+    # If it ends in ".ACQ.txt" (case-insensitive), strip only the ".txt"
+    if raw_name.lower().endswith('.acq.txt'):
+        new_name = raw_name[:-4]  # remove the last 4 characters ".txt"
+    else:
+        # otherwise append ".acq" as before
+        new_name = raw_name + ".acq"
+
+    output_path = out_dir / new_name
+
+    # Write the .ltf/.acq file into the specified folder
     ltfA.write(str(output_path))
 
-    return str(output_path)  # return path for confirmation
+    return str(output_path)

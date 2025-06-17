@@ -28,7 +28,7 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 
 
-%% Loading standard tune
+%% Loading Model with Standard Tune
 
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
 cT=5.78*1e3;   %Total damping, actuator + platen (ct=5.78 kN s/m1)
@@ -48,11 +48,18 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
 [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-%% Simulation using updated driver 
+%% Simulation using updated driver 0
 
-LTF_to_TXT_then_load('LAquilaReducedScale_0.DRV')
+folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
+
+drv_name = 'LAquilaReducedScale_0.DRV';
+
+LTF_to_TXT_then_load(drv_name)
+
 x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
 ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
+
+writeTXT_then_LTF(time_vector,x_acq_0,ddx_acq_0,folder,drv_name);
 
 [picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
 
@@ -61,6 +68,23 @@ plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayN
 
 subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');%- Normal
+
+%% Simulation using updated driver 1
+
+% LTF_to_TXT_then_load('LAquilaReducedScale_1.DRV')
+% 
+% %%
+% x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
+% ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
+% 
+% [picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
+% 
+% figure(fig8); subplot(121); grid on; legend(); hold on;
+% plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');% - Normal
+% 
+% subplot(122); grid on;legend();hold on;
+% plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');%- Normal
+
 
 %% Finding Response Spectre of Table with tuned PID
 

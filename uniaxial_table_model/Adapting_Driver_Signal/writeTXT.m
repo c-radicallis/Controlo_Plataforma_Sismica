@@ -4,11 +4,13 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
 %   dispVec    - n×1 vector of displacement values (double) (PosT)
 %   accVec     - n×1 vector of acceleration values (double) (accT)
 %   folderPath - string specifying the folder in which to save the file
-%   filename   - string specifying output text file name (e.g., 'output.txt')
+%   filename   - string specifying output text file name (e.g., 'output' or 'output.txt')
 %
 % The output file will have columns:
 % time    PosT    PosL    PosV    accT    accL    accV
 % where PosL, PosV, accL, accV are filled with zeros.
+%
+% If filename does not already end in “.txt” (case-insensitive), “.txt” is appended.
 
     % Ensure inputs are column vectors of the same length
     nT = numel(timeVec);
@@ -27,6 +29,11 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
         if ~mkdirStatus
             error('Could not create directory: %s', folderPath);
         end
+    end
+
+    % Ensure filename ends with '.txt' (case-insensitive)
+    if ~endsWith(filename, '.txt', 'IgnoreCase', true)
+        filename = [filename, '.txt'];
     end
 
     % Build the full filename (folder + filename)
@@ -48,7 +55,7 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     fprintf(fid, 'time    PosT    PosL    PosV    accT    accL    accV\n');
 
     % Write data rows in fixed-point (no scientific notation)
-    % Using %.5f prints 5 digits after the decimal point.
+    % Using %.3f for time and %.18f for others, adjust as needed
     fmt = '%.3f    %.18f    %.18f    %.18f    %.18f    %.18f    %.18f\n';
     for i = 1:nT
         fprintf(fid, fmt, ...

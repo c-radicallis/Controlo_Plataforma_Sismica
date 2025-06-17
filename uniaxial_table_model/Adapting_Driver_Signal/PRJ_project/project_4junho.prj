@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>1024</Val>
+<Val>612</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -83,7 +83,7 @@
 </Cluster>
 <U32>
 <Name>Window Type</Name>
-<Val>9</Val>
+<Val>1</Val>
 </U32>
 <DBL>
 <Name>Window Overlap</Name>
@@ -184,7 +184,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>20.00000000000000</Val>
+<Val>25.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>

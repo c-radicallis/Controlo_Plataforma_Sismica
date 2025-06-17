@@ -3,9 +3,9 @@ clc;
 close all;
 
 %% --- User parameters ---
-filename = 'identified_FRF.txt';  % change to your actual file name
+filename = 'id_FRF.txt';  % change to your actual file name
 headerLines = 1;        % skip first line (header)
-numDataRows = 13;       % lines 2–14 inclusive → 13 rows
+numDataRows = 22;       % lines 2–14 inclusive → 13 rows
 
 %% --- Step 1: Read your data (as before) ---
 % Using readmatrix (assumes delimiter is tab or whitespace)

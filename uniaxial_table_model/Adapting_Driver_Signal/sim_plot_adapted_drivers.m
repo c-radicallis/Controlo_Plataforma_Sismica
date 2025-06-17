@@ -3,7 +3,7 @@ clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 
-return_on = 0;
+return_on = 1;
 
 %% Load target
 folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
@@ -13,7 +13,7 @@ LTF_to_TXT_then_load(target)
 t_step = time_vector(2);
 
 %% Create Figures
-fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 30]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
 %% Response Spectra settings
@@ -66,10 +66,10 @@ ddx_T_tuned = secondDerivativeTime(x_T_tuned , t_step);
 [picos_ddx_tuned , picos_x_tuned] = ResponseSpectrum( time_vector , x_T_tuned , ddx_T_tuned, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
+plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
+plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
 
 %% Optimal control
 sys = ss(AA,BB,CC,DD);
@@ -105,14 +105,12 @@ ddx_T_LQG = secondDerivativeTime(x_T_LQG,t_step);
 [picos_ddx_LQG , picos_x_LQG] = ResponseSpectrum( time_vector , x_T_LQG , ddx_T_LQG, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_LQG,'--', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
+plot(f_vector, picos_ddx_LQG,'--', 'LineWidth' , 2 , 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_LQG,'--', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
+plot(f_vector, picos_x_LQG,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
 
-if return_on
-    return;
-end
+
 %% Simulation using updated driver 0
 
 drv_name = 'LAquilaReducedScale_0.DRV';
@@ -156,7 +154,7 @@ if return_on
     return;
 end   % execution stops here; lines below won’t run
 %% Simulation using updated driver 2
-
+    
 LTF_to_TXT_then_load('LAquilaReducedScale_2.DRV')
 
 x_acq_2 = lsim(G_xT_xref ,  x_drv_T_2 , time_vector,'zoh');
@@ -173,4 +171,5 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 2');%- Normal 'Color', color4,
 
 %%
-tightfig(fig8);
+set(fig8, 'WindowState', 'maximized');
+exportgraphics(fig8,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal','Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');

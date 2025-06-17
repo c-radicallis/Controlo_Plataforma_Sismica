@@ -1,158 +1,38 @@
-% Filename: plot_FRF_bode.m
-% Description:
-%   Reads lines 2–14 from 'identified_FRF.txt', extracts column 1 (frequency [Hz])
-%   and column 2 (magnitude, linear), then plots:
-%     - Bode plot (FRD with zero-phase)
-%     - Magnitude-only semilogx plot (20*log10(mag) vs freq)
-%
-% Usage:
-%   Place this file in your MATLAB path or current folder. Make sure
-%   'identified_FRF.txt' is in the current folder (or adjust filename).
-%   Then in MATLAB: >> plot_FRF_bode
-%
-% Note:
-%   - Adjust `filename`, number of data lines (currently 13 rows after header),
-%     or delimiter if your file uses different separators.
-%   - If your data file has more or fewer rows or a different structure, update
-%     the section marked “%% Adjust if needed” accordingly.
-
-
-%% 0. Clear and define filename
 clear;
 clc;
 close all;
 
-filename = 'identified_FRF.txt';  % <-- change if your file has a different name or path
+%% --- User parameters ---
+filename = 'identified_FRF.txt';  % change to your actual file name
+headerLines = 1;        % skip first line (header)
+numDataRows = 13;       % lines 2–14 inclusive → 13 rows
 
-%% 1. Open file and skip header
-fid = fopen(filename, 'r');
-if fid < 0
-    error('Cannot open file "%s". Make sure the file exists in the current folder or provide a correct path.', filename);
+%% --- Step 1: Read your data (as before) ---
+% Using readmatrix (assumes delimiter is tab or whitespace)
+dataAll = readmatrix(filename, 'FileType', 'text', 'Delimiter', '\t', 'NumHeaderLines', headerLines);
+
+% Keep rows where col1 is numeric:
+validRows = ~isnan(dataAll(:,1));
+data = dataAll(validRows, 1:2);
+
+% If more rows than needed, take only first numDataRows:
+if size(data,1) >= numDataRows
+    data = data(1:numDataRows, :);
+else
+    warning('Data has fewer than %d rows; using all %d rows.', numDataRows, size(data,1));
 end
 
-% Read and discard the first line (header)
-headerLine = fgetl(fid);
-if ~ischar(headerLine)
-    fclose(fid);
-    error('File "%s" appears empty or unreadable.', filename);
-end
+freq_data = data(:,1);    % in Hz
+mag_lin_data = data(:,2); % linear magnitude
 
-%% 2. Read the next 13 lines: two numeric columns, skip rest of each line
-%    Adjust the count 13 if you have a different number of data rows.
-numDataRows = 13;  % lines 2 through 14 inclusive
+% Convert to dB, guarding against non-positive values:
+mag_lin_data(mag_lin_data <= 0) = NaN;  % will plot as gaps or ignore
+mag_dB_data = 20*log10(mag_lin_data);
 
-% The format '%f%f%*[^\n]' reads:
-%   %f : first numeric field (frequency)
-%   %f : second numeric field (magnitude)
-%   %*[^\n] : skip the rest of the line until newline
-% By default textscan uses whitespace (spaces/tabs) as delimiters for %f.
-% If your file strictly uses tabs and you want to ensure that, you can add:
-%   'Delimiter','\t'
-% inside textscan. Usually '%f' handles whitespace-separated numbers fine.
-data = textscan(fid, '%f%f%*[^\n]', numDataRows);
-fclose(fid);
-
-% Extract vectors
-freq = data{1};       % frequency in Hz, expected size [numDataRows×1]
-magLinear = data{2};  % linear magnitude, same size
-
-%% 3. Validate read results
-if numel(freq) < numDataRows || numel(magLinear) < numDataRows
-    warning('Only %d rows read, expected %d. Check file formatting or adjust numDataRows.', numel(freq), numDataRows);
-end
-
-% Check for NaNs in parsed data
-nanIdx = isnan(freq) | isnan(magLinear);
-if any(nanIdx)
-    warning('Found NaN in parsed data at rows: %s. Inspect your file for missing or non-numeric entries.', mat2str(find(nanIdx)'));
-    % Display problematic rows
-    disp(table(find(nanIdx), freq(nanIdx), magLinear(nanIdx), ...
-         'VariableNames', {'RowIndex','freq','magLinear'}));
-    % You may choose to remove or interpolate NaNs here. For now, we stop if NaNs exist:
-    error('Cannot proceed with NaN entries. Please correct or remove invalid data lines.');
-end
-
-%% 4. Build FRD model assuming zero phase, then plot Bode
-% Convert frequency from Hz to angular frequency (rad/s)
-w = 2*pi * freq;
-
-% Build complex frequency response H(jw) with zero phase
-H = magLinear .* exp(1j * zeros(size(freq)));
-
-% Create FRD model
-sys = frd(H, w);
-
-% Plot Bode
-figure('Name','Bode Plot (zero-phase assumption)','NumberTitle','off');
-bode(sys);
-grid on; 
-title('Bode Plot (Magnitude from file, Phase assumed zero)');
-
-% %% 5. Plot magnitude-only semilogx (20*log10) vs frequency
-% figure('Name','Magnitude vs Frequency','NumberTitle','off');
-% semilogx(freq, 20*log10(magLinear), '-o', 'LineWidth', 1.5);
-% grid on;
-% xlabel('Frequency (Hz)');
-% ylabel('Magnitude (dB)');
-% title('Magnitude vs Frequency (Lines 2–14 of data file)');
-
-%% 6. End of script
-% You can save or export figures as needed.
-% If you obtain phase data later, you can replace the zero-phase assumption by:
-%   H = magLinear .* exp(1j * deg2rad(phaseDeg));
-% where phaseDeg is a numeric vector of same size.
-
-%% ================================================
-% Alternative approach using readtable (commented out)
-% If you prefer to use readtable and your file is tab-delimited with headers:
-% Uncomment and adjust variable names as needed.
-
-%{
-% 1) Detect import options
-opts = detectImportOptions(filename, 'FileType','text','Delimiter','\t');
-opts.VariableNamesLine = 1;   % header row
-opts.DataLines = [2, 14];     % lines 2 through 14 inclusive
-
-% 2) Inspect sanitized names
-disp('Sanitized variable names:');
-disp(opts.VariableNames);
-disp('Original headers (descriptions):');
-disp(opts.VariableDescriptions);
-
-% Suppose sanitized names are:
-%   col1 = opts.VariableNames{1};  % e.g. 'Frequency__Hz___Plot_0'
-%   col2 = opts.VariableNames{2};  % e.g. 'Magnitude___Plot_0'
-col1 = opts.VariableNames{1};
-col2 = opts.VariableNames{2};
-
-% 3) Force these two to double and select only them
-opts = setvartype(opts, {col1, col2}, 'double');
-opts.SelectedVariableNames = {col1, col2};
-
-% 4) Read table
-T = readtable(filename, opts);
-
-% 5) Extract numeric arrays
-freq_tbl = T.(col1);
-magLinear_tbl = T.(col2);
-
-% 6) Check for NaNs
-if any(isnan(freq_tbl)) || any(isnan(magLinear_tbl))
-    error('NaN entries detected in table import. Fix data or import options.');
-end
-
-% 7) Plot as above
-w_tbl = 2*pi * freq_tbl;
-H_tbl = magLinear_tbl .* exp(1j * zeros(size(freq_tbl)));
-sys_tbl = frd(H_tbl, w_tbl);
-figure; bode(sys_tbl); grid on; title('Bode via readtable');
-figure; semilogx(freq_tbl, 20*log10(magLinear_tbl), '-o'); grid on;
-xlabel('Frequency (Hz)'); ylabel('Magnitude (dB)');
-title('Magnitude vs Frequency via readtable');
-%}
-
-% End of alternative approach
-
+%% --- Step 2: Define your system ---
+% Example: a simple first-order low-pass with cutoff at 10 Hz:
+%   H(s) = 1/(1 + s/(2*pi*10))
+% Replace this with your own numerator/denominator or state-space.
 %% Loading Model with Standard Tune
 
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
@@ -171,105 +51,100 @@ k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm)
 G_c = tf(k_p,1);% Controller
 
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
-[~,~,~,~,~ ,~ ,~,~,~,~,~,~,G_xT_xref,~,~ , ~ ,~,~,~,~ ,~ , ~ , ~ , ~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+[~,~,~,~,~ ,~ ,~,~,~,~,~,~,sys,~,~ , ~ ,~,~,~,~ ,  ~ ,~,~,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+% Alternatively, if you have transfer function in Hz form:
+% sys = tf([gain], [1/(2*pi*f_c) 1]); etc.
+% Or define sys via ss(A,B,C,D) as needed.
 
-hold on;
-bode(G_xT_xref)
+%% --- Step 3: Choose frequency vector for system response ---
+% Cover at least the data range; you may extend a bit beyond for context.
+f_min = min(freq_data);
+f_max = max(freq_data);
+% Create a log-spaced vector of frequencies (in Hz) for a smooth curve:
+nPoints = 200;  % increase for smoother curve
+f_vec = logspace(log10(f_min*0.8), log10(f_max*1.2), nPoints);  % in Hz
+omega_vec = 2*pi * f_vec;  % convert to rad/s
 
-%%
+%% --- Step 4: Compute system frequency response ---
+% bode(sys, omega) returns magnitude and phase at specified rad/s frequencies.
+[mag_sys, phase_sys, wout] = bode(sys, omega_vec);
+% mag_sys has size 1×1×nPoints (for single-input single-output). Squeeze to vector:
+mag_sys = squeeze(mag_sys);    % linear magnitude
+phase_sys = squeeze(phase_sys);% in degrees
+% wout is rad/s, should match omega_vec.
 
-%% 0. Clear and define filename
-clear;
-clc;
-close all;
+% Convert to dB and to Hz:
+mag_sys_dB = 20*log10(mag_sys);
+freq_sys_Hz = wout / (2*pi);
 
-filename = 'identified_FRF.txt';  % <-- change if your file has a different name or path
-
-headerLines = 1;        % number of header lines to skip (your first line is the header)
-
-% --- Step 1: Read the data ---
-% Option A: using readmatrix (R2020b or later)
-% This will read numeric data; blank/missing entries become NaN.
-dataAll = readmatrix(filename, 'FileType', 'text', 'Delimiter', '\t', 'NumHeaderLines', headerLines);
-
-% dataAll may have more columns (e.g., 4 columns in header but only first two numeric). 
-% Extract the first two columns which correspond to Frequency [Hz] and Magnitude.
-% Remove rows that are entirely NaN or where first column is NaN:
-validRows = ~isnan(dataAll(:,1));  
-data = dataAll(validRows, 1:2);
-
-% Option B: using readtable + detectImportOptions (more control over variable names)
-% opts = detectImportOptions(filename, 'Delimiter', '\t');
-% opts.DataLines = [2 Inf];   % start reading from line 2 onward
-% % If the file has extra blank columns you don’t need, select only first two variables:
-% if numel(opts.VariableNames) >= 2
-%     opts.SelectedVariableNames = opts.VariableNames(1:2);
-% end
-% T = readtable(filename, opts);
-% data = T{:,1:2};  % numeric array: col1 = frequency, col2 = magnitude
-
-% Now data is an N×2 array. If you only want lines 2–14 specifically and file may contain more:
-% Suppose dataAll includes exactly lines 2..end; then:
-% nRows = size(data,1);
-% If nRows >= 13, keep only first 13 rows:
-if size(data,1) >= 13
-    data = data(1:13, :);
-end
-
-% --- Step 2: Separate frequency and magnitude ---
-freq = data(:,1);   % in Hz
-mag_lin = data(:,2);  % linear magnitude
-
-% --- (Optional) Inspect raw values ---
-% disp(table(freq, mag_lin));
-
-% --- Step 3: Convert magnitude to dB for Bode plot ---
-% Avoid log of zero or negative: ensure mag_lin > 0
-if any(mag_lin <= 0)
-    warning('Some magnitude values are <= 0; these cannot be converted to dB. They will be set to -Inf or NaN.');
-end
-mag_dB = 20*log10(mag_lin);
-
-% --- Step 4: Plotting ---
+%% --- Step 5: Plot magnitude overlay ---
 figure;
-semilogx(freq, mag_dB, 'o-', 'LineWidth', 1.5, 'MarkerSize', 6); 
+% Plot measured data:
+semilogx(freq_data, mag_dB_data, 'o', 'MarkerSize',6, 'LineWidth',1.2);
+hold on;
+% Plot system curve:
+semilogx(freq_sys_Hz, mag_sys_dB, '-', 'LineWidth',1.5);
 grid on;
 xlabel('Frequency (Hz)');
 ylabel('Magnitude (dB)');
-title('Bode‐style Magnitude Plot (data from lines 2–14)');
-% Optionally adjust axis limits:
-xlim([min(freq)*0.8, max(freq)*1.2]);  
-% ylim can be set if desired, e.g.: ylim([min(mag_dB)-5, max(mag_dB)+5]);
+title('Measured Data vs. System Bode Magnitude');
+legend('Identified in Adapt.exe','Model','Location','best');
+xlim([min(f_vec), max(f_vec)]);
+% Optionally adjust ylim or let MATLAB autoscale.
 
-% If you also want to plot the linear magnitude (on linear y-scale) versus log-x:
+%% --- (Optional) Step 6: Plot phase in a second subplot ---
+% If you care about phase comparison (but you have no measured phase to overlay),
+% you can still visualize system phase:
+% figure;
+% semilogx(freq_sys_Hz, phase_sys, '-', 'LineWidth',1.5);
+% grid on;
+% xlabel('Frequency (Hz)');
+% ylabel('Phase (degrees)');
+% title('System Bode Phase');
+% xlim([min(f_vec), max(f_vec)]);
+
+%% --- Alternative: Single figure with 2 subplots (magnitude + phase) ---
+%{
 figure;
-semilogx(freq, mag_lin, 's-', 'LineWidth', 1.5, 'MarkerSize', 6);
+subplot(2,1,1);
+semilogx(freq_data, mag_dB_data, 'o', 'MarkerSize',6, 'LineWidth',1.2);
+hold on;
+semilogx(freq_sys_Hz, mag_sys_dB, '-', 'LineWidth',1.5);
+grid on;
+ylabel('Magnitude (dB)');
+title('Measured vs System Bode');
+legend('Measured','System','Location','best');
+xlim([min(f_vec), max(f_vec)]);
+
+subplot(2,1,2);
+semilogx(freq_sys_Hz, phase_sys, '-', 'LineWidth',1.5);
 grid on;
 xlabel('Frequency (Hz)');
-ylabel('Magnitude (linear)');
-title('Magnitude vs Frequency (linear scale)');
+ylabel('Phase (deg)');
+title('System Phase');
+xlim([min(f_vec), max(f_vec)]);
+%}
 
-% --- Notes ---
-% 1. If your file uses spaces instead of tabs, change 'Delimiter','\t' accordingly, e.g. readmatrix will auto-detect spaces.
-% 2. If you only want lines 2 to 14 exactly, ensure that readmatrix/readtable correctly skips header and then you index rows 1:13 of the imported numeric block.
-% 3. If you prefer plain “plot” on a linear x-axis (not typical for Bode), replace semilogx with plot.
-% 4. If you have phase data in another column, you could similarly read it and plot with semilogx, but here only magnitude is shown.
-% 5. Ensure your file encoding and delimiters match: you can open it in a text editor to confirm tabs/spaces. You can also use “importdata” or “textscan” if you need finer control:
+%% --- Notes & Tips ---
+% 1. If your system is multi-input or multi-output, or you want a specific input-output pair,
+%    extract the appropriate SISO TF before using bode.
+% 2. If you prefer to use MATLAB’s bodeplot with `hold on`, note that bodeplot by default
+%    uses rad/s axis. Overlaying measured data on that plot is more cumbersome; 
+%    manual semilogx as above is clearer.
+% 3. If your measured data has phase as well, you could overlay measured phase points similarly:
+%    semilogx(freq_data, phase_data, 'x', ...).
+% 4. Ensure frequency units match: `bode` uses rad/s, so convert to Hz as shown.
+% 5. If you want to match plotting style, you can customize markers, line styles, colors, etc.
+% 6. If your data span is very wide, you may adjust f_vec beyond data range to see roll-off.
+% 7. If you want to plot linear-magnitude overlay: plot mag_lin_data vs freq_data with `semilogx`,
+%    and plot `mag_sys` vs `freq_sys_Hz` in linear scale (no dB). But Bode convention is dB.
+% 8. If your `sys` has time delays or other peculiarities, bode still handles them.
+% 9. If you prefer to directly call `bode` and capture the plot handle:
+%    h = bodeplot(sys);
+%    % then modify axes and overlay data manually by retrieving the axes handle:
+%    ax = findall(gcf,'Type','axes');
+%    hold(ax(1),'on'); semilogx(ax(1),freq_data, mag_dB_data, 'o');
+%    But manual computation as above is simpler.
 %
-%    % Example with textscan:
-%    fid = fopen(filename, 'r');
-%    fgetl(fid);  % skip header line
-%    C = textscan(fid, '%f%f%*s%*s', 'Delimiter', '\t'); 
-%      % '%f%f%*s%*s' reads two floats, ignores next two fields per row if present
-%    fclose(fid);
-%    freq = C{1};
-%    mag_lin = C{2};
-%    if length(freq) >= 13
-%        freq = freq(1:13);
-%        mag_lin = mag_lin(1:13);
-%    end
-%    mag_dB = 20*log10(mag_lin);
-%    figure; semilogx(freq, mag_dB, 'o-'); grid on;
-%
-% 6. Place the MATLAB script (or function) in the same folder as the data file or supply full path.
-% 7. If you run into NaNs, display dataAll in the workspace and check which columns contain numeric entries.
+% After you adapt `sys` to your actual transfer function, run the script: you will see your data
+% points and the system’s Bode curve overlaid, enabling comparison of measured vs. model.

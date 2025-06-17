@@ -2,7 +2,7 @@ LNEC Test File eXtractor
 
 File: LAquilaReducedScale.tgt
 
-Created in: 2025-06-17 12:07:05.910669
+Created in: 2025-06-17 12:59:44.938585
 
 Number of channels: 6
 

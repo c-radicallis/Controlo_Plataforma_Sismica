@@ -2,7 +2,11 @@ clear;clc;close all;
 
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
+
+return_on = 0;
+
 %% Load target
+folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
 
 target = 'LAquilaReducedScale.tgt';   % or get from user input % 2. Define only the name (no folder); you can prompt the u
 LTF_to_TXT_then_load(target)
@@ -48,33 +52,13 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
 [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-%% Simulation using updated driver 0
-
-folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
-
-drv_name = 'LAquilaReducedScale_0.DRV';
-
-LTF_to_TXT_then_load(drv_name)
-
-x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
-ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
-
-writeTXT_then_LTF(time_vector,x_acq_0,ddx_acq_0,folder, 'LAquilaReducedScale_0.ACQ');
-
-[picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver');%- Normal
 
 %% Finding Response Spectre of Table with tuned PID
 
 tuner_opts = pidtuneOptions('DesignFocus','reference-tracking');
 cutoff_frequency = 20; % Hz
 G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',cutoff_frequency*2*pi,tuner_opts)
-[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref_tuned,~,~ , G_Fp_isv  ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
+[s,~,~,~,~ ,~ ,~,~,~,~,~,~,G_xT_xref_tuned,~,~ , ~ ,~,~,~,~ ,~  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 x_T_tuned = lsim(G_xT_xref_tuned ,  x_tgt_T , time_vector,'zoh');
 ddx_T_tuned = secondDerivativeTime(x_T_tuned , t_step);
@@ -82,10 +66,10 @@ ddx_T_tuned = secondDerivativeTime(x_T_tuned , t_step);
 [picos_ddx_tuned , picos_x_tuned] = ResponseSpectrum( time_vector , x_T_tuned , ddx_T_tuned, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tuned,'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
+plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tuned,'-', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
+plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 1, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
 
 %% Optimal control
 sys = ss(AA,BB,CC,DD);
@@ -121,20 +105,37 @@ ddx_T_LQG = secondDerivativeTime(x_T_LQG,t_step);
 [picos_ddx_LQG , picos_x_LQG] = ResponseSpectrum( time_vector , x_T_LQG , ddx_T_LQG, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
+plot(f_vector, picos_ddx_LQG,'--', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
+plot(f_vector, picos_x_LQG,'--', 'LineWidth' , 1, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
 
-return;   % execution stops here; lines below won’t run
+if return_on
+    return;
+end
+%% Simulation using updated driver 0
+
+drv_name = 'LAquilaReducedScale_0.DRV';
+
+LTF_to_TXT_then_load(drv_name)
+
+x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
+ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
+
+writeTXT_then_LTF(time_vector,x_acq_0,ddx_acq_0,folder, 'LAquilaReducedScale_0.ACQ');
+
+[picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0');% - Normal
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0');%- Normal
+
+if return_on
+    return;
+end   % execution stops here; lines below wonnt run
 %% Simulation using updated driver 1
-
-% Loading Standard controlller again
-k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
-G_c = tf(k_p,1);% Controller
-
-% s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
-[~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
 LTF_to_TXT_then_load('LAquilaReducedScale_1.DRV')
 
@@ -146,12 +147,14 @@ ddx_acq_1 = secondDerivativeTime(x_acq_1 , t_step);
 writeTXT_then_LTF(time_vector,x_acq_1,ddx_acq_1,folder, 'LAquilaReducedScale_1.ACQ');
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver');% - Normal  'Color', color4,
+plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 1');% - Normal  'Color', color4,
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver');%- Normal 'Color', color4,
+plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 1');%- Normal 'Color', color4,
 
-return;   % execution stops here; lines below won’t run
+if return_on
+    return;
+end   % execution stops here; lines below won’t run
 %% Simulation using updated driver 2
 
 LTF_to_TXT_then_load('LAquilaReducedScale_2.DRV')
@@ -164,7 +167,10 @@ ddx_acq_2 = secondDerivativeTime(x_acq_2 , t_step);
 writeTXT_then_LTF(time_vector,x_acq_2,ddx_acq_2,folder, 'LAquilaReducedScale_2.ACQ');
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver');% - Normal  'Color', color4,
+plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 2');% - Normal  'Color', color4,
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver');%- Normal 'Color', color4,
+plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 2');%- Normal 'Color', color4,
+
+%%
+tightfig(fig8);

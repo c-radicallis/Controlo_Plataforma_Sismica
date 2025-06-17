@@ -1,5 +1,5 @@
 Frequency [Hz] - Plot 0	Magnitude - Plot 0	Frequency [Hz] - Plot 1	Magnitude - Plot 1	
-0	0.971095			
+0.5	0.971095			
 3.174603	0.94034			
 6.349206	0.798383			
 9.52381	0.44046			

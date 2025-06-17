@@ -117,7 +117,7 @@ clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_tgt', 'y_xT')
 [x_T_LQG, t_out, x] = lsim(clsys, x_tgt_T, time_vector,'zoh'); % Simulate the closed-loop response using lsim:
 ddx_T_LQG = secondDerivativeTime(x_T_LQG,t_step);
 
-% Finding Response Spectre of Table with Optimal Control
+%% Finding Response Spectre of Table with Optimal Control
 [picos_ddx_LQG , picos_x_LQG] = ResponseSpectrum( time_vector , x_T_LQG , ddx_T_LQG, f_vector , 1);
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
@@ -126,10 +126,10 @@ plot(f_vector, picos_ddx_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName
 subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_LQG,'-', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
 
-return;   % execution stops here; lines below won’t run
+
 %% Simulation using updated driver 1
 
-% Loading Standard controlller again
+% Loadi
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);% Controller
 
@@ -151,20 +151,19 @@ plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted dr
 subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver');%- Normal 'Color', color4,
 
-return;   % execution stops here; lines below won’t run
 %% Simulation using updated driver 2
 
-LTF_to_TXT_then_load('LAquilaReducedScale_2.DRV')
+LTF_to_TXT_then_load('LAquilaReducedScale_1.DRV')
 
-x_acq_2 = lsim(G_xT_xref ,  x_drv_T_2 , time_vector,'zoh');
-ddx_acq_2 = secondDerivativeTime(x_acq_2 , t_step);
+x_acq_1 = lsim(G_xT_xref ,  x_drv_T_1 , time_vector,'zoh');
+ddx_acq_1 = secondDerivativeTime(x_acq_1 , t_step);
 
-[picos_ddx_acq_2  , picos_x_acq_2 ] = ResponseSpectrum( time_vector , x_acq_2 , ddx_acq_2, f_vector , 1);
+[picos_ddx_acq_1  , picos_x_acq_1 ] = ResponseSpectrum( time_vector , x_acq_1 , ddx_acq_1, f_vector , 1);
 
-writeTXT_then_LTF(time_vector,x_acq_2,ddx_acq_2,folder, 'LAquilaReducedScale_2.ACQ');
+writeTXT_then_LTF(time_vector,x_acq_1,ddx_acq_1,folder, 'LAquilaReducedScale_1.ACQ');
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver');% - Normal  'Color', color4,
+plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver');% - Normal  'Color', color4,
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver');%- Normal 'Color', color4,
+plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver');%- Normal 'Color', color4,

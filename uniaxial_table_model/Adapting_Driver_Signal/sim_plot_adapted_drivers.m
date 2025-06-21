@@ -1,20 +1,14 @@
 clear;clc;close all;
-
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'\Adapting_Driver_Signal\PRJ_project\
 
-return_on = 1;
+return_on = 0; % Set to 1 for execution to stop before adapting drivers
 
 %% Load target
 folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
-
 target = 'LAquilaReducedScale.tgt';   % or get from user input % 2. Define only the name (no folder); you can prompt the u
 LTF_to_TXT_then_load(target)
 t_step = time_vector(2);
-
-%% Create Figures
-fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
-color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
 %% Response Spectra settings
 f_i=0.1; %freq inicial
@@ -24,13 +18,6 @@ f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
 
 %% Finding Response Spectre  of Target
 [picos_ddx_tgt , picos_x_tgt] = ResponseSpectrum( time_vector , x_tgt_T , ddx_tgt_T, f_vector , 1);
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tgt(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
-
 
 %% Loading Model with Standard Tune
 
@@ -62,14 +49,7 @@ G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',cutoff_frequency*2*pi,tuner_opts)
 
 x_T_tuned = lsim(G_xT_xref_tuned ,  x_tgt_T , time_vector,'zoh');
 ddx_T_tuned = secondDerivativeTime(x_T_tuned , t_step);
-
 [picos_ddx_tuned , picos_x_tuned] = ResponseSpectrum( time_vector , x_T_tuned , ddx_T_tuned, f_vector , 1);
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF');%- Normal
 
 %% Optimal control
 sys = ss(AA,BB,CC,DD);
@@ -80,9 +60,7 @@ ny = size(CC,1);    % Number of outputs
 plant_aug = ss(AA, BB,[eye(nx);CC],DD);
 plant_aug.InputName = {'i_sv'};   % plant input: control signal
 plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
-
 sumblk1 = sumblk('e = x_tgt - y_xT'); % Compute the error signal: e = r - y
-
 integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
 integrator.InputName = {'e'};    % error: e = r - y
 integrator.OutputName = {'xi'};  % integrated error
@@ -95,40 +73,19 @@ Ki = K_lqi(end);        % integrator gain
 controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
 controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
 controller.OutputName = {'i_sv'};
-
 clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_tgt', 'y_xT')
 
-[x_T_LQG, t_out, x] = lsim(clsys, x_tgt_T, time_vector,'zoh'); % Simulate the closed-loop response using lsim:
-ddx_T_LQG = secondDerivativeTime(x_T_LQG,t_step);
-
-% Finding Response Spectre of Table with Optimal Control
-[picos_ddx_LQG , picos_x_LQG] = ResponseSpectrum( time_vector , x_T_LQG , ddx_T_LQG, f_vector , 1);
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_LQG,'--', 'LineWidth' , 2 , 'Color', color3, 'DisplayName', 'Optimal Control');% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_LQG,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control');%- Normal
-
+[x_T_LQI, t_out, x] = lsim(clsys, x_tgt_T, time_vector,'zoh'); % Simulate the closed-loop response using lsim:
+ddx_T_LQI = secondDerivativeTime(x_T_LQI,t_step);
+[picos_ddx_LQI , picos_x_LQI] = ResponseSpectrum( time_vector , x_T_LQI , ddx_T_LQI, f_vector , 1);
 
 %% Simulation using updated driver 0
 
-drv_name = 'LAquilaReducedScale_0.DRV';
-
-LTF_to_TXT_then_load(drv_name)
-
+LTF_to_TXT_then_load('LAquilaReducedScale_0.DRV')
 x_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
 ddx_acq_0 = secondDerivativeTime(x_acq_0 , t_step);
-
 writeTXT_then_LTF(time_vector,x_acq_0,ddx_acq_0,folder, 'LAquilaReducedScale_0.ACQ');
-
 [picos_ddx_acq_0  , picos_x_acq_0 ] = ResponseSpectrum( time_vector , x_acq_0 , ddx_acq_0, f_vector , 1);
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0');% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0');%- Normal
 
 if return_on
     return;
@@ -136,19 +93,10 @@ end   % execution stops here; lines below wonnt run
 %% Simulation using updated driver 1
 
 LTF_to_TXT_then_load('LAquilaReducedScale_1.DRV')
-
 x_acq_1 = lsim(G_xT_xref ,  x_drv_T_1 , time_vector,'zoh');
 ddx_acq_1 = secondDerivativeTime(x_acq_1 , t_step);
-
 [picos_ddx_acq_1  , picos_x_acq_1 ] = ResponseSpectrum( time_vector , x_acq_1 , ddx_acq_1, f_vector , 1);
-
 writeTXT_then_LTF(time_vector,x_acq_1,ddx_acq_1,folder, 'LAquilaReducedScale_1.ACQ');
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 1');% - Normal  'Color', color4,
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 1');%- Normal 'Color', color4,
 
 if return_on
     return;
@@ -156,20 +104,59 @@ end   % execution stops here; lines below won’t run
 %% Simulation using updated driver 2
     
 LTF_to_TXT_then_load('LAquilaReducedScale_2.DRV')
-
 x_acq_2 = lsim(G_xT_xref ,  x_drv_T_2 , time_vector,'zoh');
 ddx_acq_2 = secondDerivativeTime(x_acq_2 , t_step);
-
 [picos_ddx_acq_2  , picos_x_acq_2 ] = ResponseSpectrum( time_vector , x_acq_2 , ddx_acq_2, f_vector , 1);
-
 writeTXT_then_LTF(time_vector,x_acq_2,ddx_acq_2,folder, 'LAquilaReducedScale_2.ACQ');
 
+%% Create Figures
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
+
+
+
+
 figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 2');% - Normal  'Color', color4,
+plot(f_vector, picos_ddx_tgt,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
 
 subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 2');%- Normal 'Color', color4,
+plot(f_vector, picos_x_tgt,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 
-%%
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF - MSE='+string( mean((picos_ddx_tgt-picos_ddx_tuned).^2 )));% - Normal
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF - MSE='+string( mean((picos_x_tgt-picos_x_tuned).^2 )));%- Normal
+
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_LQI,'--', 'LineWidth' , 2 , 'Color', color3, 'DisplayName', 'Optimal Control - MSE='+string( mean((picos_ddx_tgt-picos_ddx_LQI).^2 )));
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_LQI,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control - MSE='+string( mean((picos_x_tgt-picos_x_LQI).^2 )));
+
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_0).^2 )));
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver - MSE='+string( mean((picos_x_tgt-picos_x_acq_0).^2 )));
+
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 1 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_1).^2 )));
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 1 - MSE='+string( mean((picos_x_tgt-picos_x_acq_1).^2 )));
+
+
+figure(fig8); subplot(121); grid on; legend(); hold on;
+plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 2 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_2).^2 )));
+
+subplot(122); grid on;legend();hold on;
+plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 2 - MSE='+string( mean((picos_x_tgt-picos_x_acq_2).^2 )));
+
+
 set(fig8, 'WindowState', 'maximized');
 exportgraphics(fig8,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal','Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');

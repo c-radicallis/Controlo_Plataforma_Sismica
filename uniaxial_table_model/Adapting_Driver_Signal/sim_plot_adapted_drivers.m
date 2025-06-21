@@ -113,50 +113,21 @@ writeTXT_then_LTF(time_vector,x_acq_2,ddx_acq_2,folder, 'LAquilaReducedScale_2.A
 fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
-
-
-
 figure(fig8); subplot(121); grid on; legend(); hold on;
 plot(f_vector, picos_ddx_tgt,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal
+plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName',sprintf( 'Tuned PIDF -  MSE= %.2e', mean((picos_ddx_tgt-picos_ddx_tuned).^2 )));% - Normal
+plot(f_vector, picos_ddx_LQI,'--', 'LineWidth' , 2 , 'Color', color3, 'DisplayName',sprintf( 'Optimal Control - MSE= %.2e', mean((picos_ddx_tgt-picos_ddx_LQI).^2 )));
+plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver 0 - MSE= %.2e', mean((picos_ddx_tgt-picos_ddx_acq_0).^2 )));
+plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName',sprintf( 'Adapted driver 1 -  MSE= %.2e', mean((picos_ddx_tgt-picos_ddx_acq_1).^2 )));
+plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName',sprintf( 'Adapted driver 2 -  MSE= %.2e', mean((picos_ddx_tgt-picos_ddx_acq_2).^2 )));
 
 subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_tgt,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
-
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF - MSE='+string( mean((picos_ddx_tgt-picos_ddx_tuned).^2 )));% - Normal
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName', 'Tuned PIDF - MSE='+string( mean((picos_x_tgt-picos_x_tuned).^2 )));%- Normal
-
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_LQI,'--', 'LineWidth' , 2 , 'Color', color3, 'DisplayName', 'Optimal Control - MSE='+string( mean((picos_ddx_tgt-picos_ddx_LQI).^2 )));
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_LQI,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName', 'Optimal Control - MSE='+string( mean((picos_x_tgt-picos_x_LQI).^2 )));
-
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_0 ,'-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver 0 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_0).^2 )));
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName', 'Adapted driver - MSE='+string( mean((picos_x_tgt-picos_x_acq_0).^2 )));
-
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_1 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 1 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_1).^2 )));
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 1 - MSE='+string( mean((picos_x_tgt-picos_x_acq_1).^2 )));
-
-
-figure(fig8); subplot(121); grid on; legend(); hold on;
-plot(f_vector, picos_ddx_acq_2 ,'-', 'LineWidth' , 2, 'DisplayName', 'Adapted driver 2 - MSE='+string( mean((picos_ddx_tgt-picos_ddx_acq_2).^2 )));
-
-subplot(122); grid on;legend();hold on;
-plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName', 'Adapted driver 2 - MSE='+string( mean((picos_x_tgt-picos_x_acq_2).^2 )));
-
+plot(f_vector, picos_x_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName',sprintf( 'Tuned PIDF - MSE= %.2e', mean((picos_x_tgt-picos_x_tuned).^2 )));%- Normal
+plot(f_vector, picos_x_LQI,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName',sprintf( 'Optimal Control - MSE= %.2e', mean((picos_x_tgt-picos_x_LQI).^2 )));
+plot(f_vector, picos_x_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver - MSE= %.2e', mean((picos_x_tgt-picos_x_acq_0).^2 )));
+plot(f_vector, picos_x_acq_1, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 1 - MSE= %.2e', mean((picos_x_tgt-picos_x_acq_1).^2 )));
+plot(f_vector, picos_x_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 2 - MSE= %.2e', mean((picos_x_tgt-picos_x_acq_2).^2 )));
 
 set(fig8, 'WindowState', 'maximized');
 exportgraphics(fig8,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal','Response_Spectra.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');

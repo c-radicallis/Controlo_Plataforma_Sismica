@@ -15,6 +15,9 @@ from LNECSPA import LTFdb
 import pandas as pd
 
 def txt_to_ltf(file_path, out_dir):
+    """
+    This function writes a .acq file from .txt file
+    """
     df = pd.read_csv(file_path, delim_whitespace=True)
     time = df['time']
     PosT = df['PosT']
@@ -57,6 +60,77 @@ def txt_to_ltf(file_path, out_dir):
     output_path = out_dir / new_name
 
     # Write the .ltf/.acq file into the specified folder
+    ltfA.write(str(output_path))
+
+    return str(output_path)
+
+
+
+import pandas as pd
+from pathlib import Path
+
+def txt_to_drv(file_path, out_dir):
+    """
+    Reads a whitespace-delimited text file without headers, where:
+      - column 0 is time
+      - column 1 is PosT
+      - column 2 is PosL
+    Creates PosV as zeros, then writes a .drv via LTFdb.
+    """
+    # Read file without headers, assign column names
+    df = pd.read_csv(
+        file_path,
+        delim_whitespace=True,
+        header=None,
+        names=['time', 'PosT', 'PosL'],
+    )
+
+    # Create PosV column of zeros, same length as the data
+    df['PosV'] = 0
+
+    # Extract series
+    time = df['time']
+    PosT = df['PosT']
+    PosL = df['PosL']
+    PosV = df['PosV']
+
+    # Number of channels/columns to write (time is not written directly; you keep 3 data columns)
+    number_columns = 3
+
+    # Initialize LTFdb instance
+    ltfA = LTFdb()
+
+    # Update with the three channels:
+    # Note: the original used dt=np.repeat(ltfA.dt * time[1], ...)
+    #       You may want to double-check that logic: time[1] is the second time value.
+    #       If instead you need the sample interval, you could compute dt from time.diff(),
+    #       but here we keep the original pattern.
+    ltfA.update(
+        t0=np.repeat(ltfA.t0, number_columns),
+        dt=np.repeat(ltfA.dt * time.iloc[1], number_columns),
+        dataformat=np.repeat(ltfA.dataformat, number_columns),
+        IDstring=ltfA.IDstring * number_columns,
+        scalefactor=np.repeat(ltfA.scalefactor, number_columns),
+        offset=np.repeat(ltfA.offset, number_columns),
+        data=[PosT * 1e3, PosL * 1e3, PosV * 1e3],
+        names=['DispT', 'DispL', 'DispV'],
+        units=['mm', 'mm', 'mm'],
+        types=['Displacement', 'Displacement', 'Displacement'],
+        info=ltfA.info * number_columns
+    )
+
+    # Ensure output directory exists
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Determine output filename: strip last 4 chars of original name (assumed ".txt"), append ".acq"
+    file_path = Path(file_path)
+    raw_name = file_path.name
+    new_name = raw_name[:-4]+ ".DRV"  # remove the last 4 characters ".txt"
+
+    output_path = out_dir / new_name
+
+    # Write out the file
     ltfA.write(str(output_path))
 
     return str(output_path)

@@ -13,61 +13,120 @@ from scipy.constants import g
 from LNECSPA import LTFdb
 
 import pandas as pd
+from scipy.integrate import cumulative_trapezoid
 
 def txt_to_ltf(file_path, out_dir):
     """
-    This function writes a .acq file from .txt file
+    This function writes a .acq ot .tgt file from .txt file
+
+    Reads a whitespace-delimited text file without headers, where:
+      - column 0 is time
+      - column 1 is PosT
+      - column 2 is PosL
+    Creates PosV as zeros, then writes a .drv via LTFdb.
     """
     df = pd.read_csv(file_path, delim_whitespace=True)
-    time = df['time']
-    PosT = df['PosT']
-    PosL = df['PosL']
-    PosV = df['PosV']
-    accT = df['accT']
-    accL = df['accL']
-    accV = df['accV']
     number_columns = len(df.columns) - 1
-    ltfA = LTFdb()
 
-    ltfA.update(t0=np.repeat(ltfA.t0, number_columns),
-                dt=np.repeat(ltfA.dt * time[1], number_columns),
-                dataformat=np.repeat(ltfA.dataformat, number_columns),
-                IDstring=ltfA.IDstring * number_columns,
-                scalefactor=np.repeat(ltfA.scalefactor, number_columns),
-                offset=np.repeat(ltfA.offset, number_columns),
-                data=[PosT * 1e3, PosL * 1e3, PosV * 1e3, accT / g, accL / g, accV / g],
-                names=['DispT', 'DispL', 'DispV', 'AccT', 'AccL', 'AccV'],
-                units=['mm', 'mm', 'mm', 'g', 'g', 'g'],
-                types=['Displacement', 'Displacement', 'Displacement',
-                       'Acceleration', 'Acceleration', 'Acceleration'],
-                info=ltfA.info * 6)
+    if number_columns == 6: # this is the case for which we'll want to write a .acq
+        time = df['time']
+        PosT = df['PosT']
+        PosL = df['PosL']
+        PosV = df['PosV']
+        accT = df['accT']
+        accL = df['accL']
+        accV = df['accV']
+        ltfA = LTFdb()
 
-    # Make sure output directory exists
-    out_dir = Path(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
+        ltfA.update(t0=np.repeat(ltfA.t0, number_columns),
+                    dt=np.repeat(ltfA.dt * time[1], number_columns),
+                    dataformat=np.repeat(ltfA.dataformat, number_columns),
+                    IDstring=ltfA.IDstring * number_columns,
+                    scalefactor=np.repeat(ltfA.scalefactor, number_columns),
+                    offset=np.repeat(ltfA.offset, number_columns),
+                    data=[PosT * 1e3, PosL * 1e3, PosV * 1e3, accT / g, accL / g, accV / g],
+                    names=['DispT', 'DispL', 'DispV', 'AccT', 'AccL', 'AccV'],
+                    units=['mm', 'mm', 'mm', 'g', 'g', 'g'],
+                    types=['Displacement', 'Displacement', 'Displacement',
+                        'Acceleration', 'Acceleration', 'Acceleration'],
+                    info=ltfA.info * 6)
 
-    # Determine output filename
-    file_path = Path(file_path)
-    raw_name = file_path.name  # e.g. "LAquilaReducedScale_0.ACQ.txt" or "data.txt" etc.
+        # Make sure output directory exists
+        out_dir = Path(out_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
 
-    # If it ends in ".ACQ.txt" (case-insensitive), strip only the ".txt"
-    if raw_name.lower().endswith('.acq.txt'):
-        new_name = raw_name[:-4]  # remove the last 4 characters ".txt"
+        # Determine output filename
+        file_path = Path(file_path)
+        raw_name = file_path.name  # e.g. "LAquilaReducedScale_0.ACQ.txt" or "data.txt" etc.
+
+        # If it ends in ".ACQ.txt" (case-insensitive), strip only the ".txt"
+        if raw_name.lower().endswith('.acq.txt'):
+            new_name = raw_name[:-4]  # remove the last 4 characters ".txt"
+        else:
+            # otherwise append ".acq" as before
+            new_name = raw_name + ".acq"
+
+        output_path = out_dir / new_name
+
+        # Write the .ltf/.acq file into the specified folder
+        ltfA.write(str(output_path))
+
     else:
-        # otherwise append ".acq" as before
-        new_name = raw_name + ".acq"
+        df = pd.read_csv(
+        file_path,
+        delim_whitespace=True,
+        header=None,
+        names=['time', 'accT', 'accL'])
 
-    output_path = out_dir / new_name
+        # Create PosV column of zeros, same length as the data
+        time = df['time']
+        accT = df['accT']
+        accL = df['accL']
 
-    # Write the .ltf/.acq file into the specified folder
-    ltfA.write(str(output_path))
+        df['PosV'] = 0
+        df['accV'] = 0
+
+        velT = cumulative_trapezoid(accT, time, initial=0.0)
+        PosT = cumulative_trapezoid(velT, time, initial=0.0)
+
+        velL = cumulative_trapezoid(accL, time, initial=0.0)
+        PosL = cumulative_trapezoid(velL, time, initial=0.0)
+
+        number_columns = 6
+
+        # Initialize LTFdb instance
+        ltfA = LTFdb()
+        ltfA.update(t0=np.repeat(ltfA.t0, number_columns),
+                    dt=np.repeat(ltfA.dt * time[1], number_columns),
+                    dataformat=np.repeat(ltfA.dataformat, number_columns),
+                    IDstring=ltfA.IDstring * number_columns,
+                    scalefactor=np.repeat(ltfA.scalefactor, number_columns),
+                    offset=np.repeat(ltfA.offset, number_columns),
+                    data=[PosT * 1e3, PosL * 1e3, PosV * 1e3, accT / g, accL / g, accV / g],
+                    names=['DispT', 'DispL', 'DispV', 'AccT', 'AccL', 'AccV'],
+                    units=['mm', 'mm', 'mm', 'g', 'g', 'g'],
+                    types=['Displacement', 'Displacement', 'Displacement',
+                        'Acceleration', 'Acceleration', 'Acceleration'],
+                    info=ltfA.info * 6)
+
+        # Ensure output directory exists
+        out_dir = Path(out_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        file_path = Path(file_path)
+        raw_name = file_path.name
+        new_name = raw_name[:-4]+ ".tgt"  # remove the last 4 characters ".txt"
+
+        output_path = out_dir / new_name
+
+        # Write out the file
+        ltfA.write(str(output_path))
+
 
     return str(output_path)
 
 
 
-import pandas as pd
-from pathlib import Path
 
 def txt_to_drv(file_path, out_dir):
     """

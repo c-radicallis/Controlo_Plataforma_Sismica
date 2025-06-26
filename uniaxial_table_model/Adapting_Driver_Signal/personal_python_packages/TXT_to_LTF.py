@@ -85,6 +85,8 @@ def txt_to_ltf(file_path, out_dir):
 
         df['PosV'] = 0
         df['accV'] = 0
+        PosV = df['PosV']
+        accV = df['accV']
 
         velT = cumulative_trapezoid(accT, time, initial=0.0)
         PosT = cumulative_trapezoid(velT, time, initial=0.0)
@@ -193,3 +195,23 @@ def txt_to_drv(file_path, out_dir):
     ltfA.write(str(output_path))
 
     return str(output_path)
+
+
+## Example / Test
+""" 
+txt_to_ltf(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\erzikan.txt' , r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
+
+
+file_path = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\erzikan.tgt')
+
+tgtA = LTFdb()
+tgtA.read(file_path)
+
+# Ensure output directory exists
+out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
+filename = file_path.name + ".txt"
+output_path = out_dir / filename
+
+# Write the .ltf database to TXT using the updated _data
+tgtA.write_txt(str(output_path)) 
+"""

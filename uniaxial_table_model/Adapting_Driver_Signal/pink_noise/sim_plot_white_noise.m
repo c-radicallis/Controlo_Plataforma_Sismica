@@ -25,12 +25,12 @@ G_c = tf(k_p,1);% Controller
 
 %% 
 
-in_file ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\LNEC_Adapta_Driver\LNEC_ERIES_RE-SAFE\CTL\SystemId\pink_noise_40Hz_T3mm.drv';
-out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
-newName = 'pink_noise_40Hz_T3mm_0.drv';
-ok = copyAndRenameFile(in_file, out_dir, newName);
+pink_folder ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise';
+% out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\';
+driver = 'pink_noise_40Hz_T3mm_0.drv';
+% ok = copyAndRenameFile(in_file, out_dir, newName);
 
-LTF_to_TXT_then_load(newName);
+LTF_to_TXT_then_load( driver , 'InputFolder', pink_folder , 'OutputFolder', pink_folder);
 
 
 %%   % --- Simulation --

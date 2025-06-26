@@ -1,6 +1,6 @@
-function writeTXT_then_LTF(t_vector , x_acq , ddx_acq , save_folder , filename)
+function writeTXT_then_LTF(t_vector , x , ddx , save_folder , filename)
 
-    writeTXT(t_vector , x_acq , ddx_acq , save_folder , filename)
+    writeTXT(t_vector , x , ddx , save_folder , filename)
 
     full_filename_acq = fullfile(save_folder, filename+".txt");
     try

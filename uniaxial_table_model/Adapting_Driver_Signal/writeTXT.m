@@ -10,18 +10,7 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
 % time    PosT    PosL    PosV    accT    accL    accV
 % where PosL, PosV, accL, accV are filled with zeros.
 %
-% If filename does not already end in “.txt” (case-insensitive), “.txt” is appended.
-
-    % Ensure inputs are column vectors of the same length
-    nT = numel(timeVec);
-    nD = numel(dispVec);
-    nA = numel(accVec);
-    if nT ~= nD || nT ~= nA
-        error('timeVec, dispVec, and accVec must have the same length');
-    end
-    timeVec = timeVec(:);
-    dispVec = dispVec(:);
-    accVec  = accVec(:);
+% If filename does not already end in “.txt” (case-insensitive), “.txt” is appended.    
 
     % If the folder does not exist, attempt to create it
     if ~exist(folderPath, 'dir')
@@ -43,7 +32,12 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     zeroCol = zeros(nT,1);
 
     % Combine into one matrix: [time, PosT, PosL, PosV, accT, accL, accV]
-    dataMat = [timeVec, dispVec, zeroCol, zeroCol, accVec, zeroCol, zeroCol];
+    dim = size(dispVec)
+    if dim(2)==2
+        dataMat = [timeVec, dispVec(:,1) , dispVec(:,2) , zeroCol, accVec(:,1), accVec(:,2), zeroCol];
+    else
+        dataMat = [timeVec, dispVec , zeroCol , zeroCol, accVec , zeroCol , zeroCol];
+    end
 
     % Open file for writing
     fid = fopen(fullFileName, 'w');

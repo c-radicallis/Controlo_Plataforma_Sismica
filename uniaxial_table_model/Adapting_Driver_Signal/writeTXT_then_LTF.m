@@ -1,11 +1,12 @@
-function writeTXT_then_LTF(t_vector , x , ddx , save_folder , filename)
+function writeTXT_then_LTF(t_vector , x , ddx , folder , filename)
+%  "Folder" is the directory from which the file is read and writen
 
-    writeTXT(t_vector , x , ddx , save_folder , filename)
+    writeTXT(t_vector , x , ddx , folder , filename)
 
-    full_filename_acq = fullfile(save_folder, filename+".txt");
+    full_filename = fullfile(folder, filename);
     
     try
-        py_output = py.TXT_to_LTF.txt_to_ltf(full_filename_acq,save_folder);
+        py_output = py.TXT_to_LTF.txt_to_ltf(full_filename,folder);
         % py_output is a Python string; convert to MATLAB char:
         output_path = char(py_output);
         fprintf('Python function returned output path: %s\n', output_path);

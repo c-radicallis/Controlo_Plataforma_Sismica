@@ -26,7 +26,7 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     end
 
     % Build the full filename (folder + filename)
-    fullFileName = fullfile(folderPath, filename);
+    fullPath = fullfile(folderPath, filename);
 
     % Combine into one matrix: [time, PosT, PosL, PosV, accT, accL, accV]
     dim = size(dispVec);
@@ -41,9 +41,9 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     end
 
     % Open file for writing
-    fid = fopen(fullFileName, 'w');
+    fid = fopen(fullPath, 'w');
     if fid == -1
-        error('Could not open file %s for writing', fullFileName);
+        error('Could not open file %s for writing', fullPath);
     end
 
     % Write header line

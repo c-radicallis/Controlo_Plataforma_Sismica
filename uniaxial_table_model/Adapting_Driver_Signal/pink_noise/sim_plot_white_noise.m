@@ -2,6 +2,7 @@
 
 clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
+addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\'
 
 %%
 mT=1.9751*1e3; %Platen mass (mp=1.9751 t)
@@ -25,12 +26,12 @@ G_c = tf(k_p,1);% Controller
 
 %% 
 
-pink_folder ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise';
+pink_folder ='C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\';
 % out_dir = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\';
-driver = 'pink_noise_40Hz_T3mm_0.drv';
+file = 'pink_noise_40Hz_T3mm_0.drv';
 % ok = copyAndRenameFile(in_file, out_dir, newName);
 
-LTF_to_TXT_then_load( driver , 'InputFolder', pink_folder , 'OutputFolder', pink_folder);
+LTF_to_TXT_then_load( file , 'InputFolder', pink_folder , 'OutputFolder', pink_folder);
 
 
 %%   % --- Simulation --
@@ -47,5 +48,5 @@ ddx_acq = secondDerivativeTime(x_acq,t_step);
  plot(t_vector,x_acq)
 
 %%  --- Write .txt file from simulated "acquired" data, and also write .acq from the .txt
-writeTXT_then_LTF(t_vector , x_acq , ddx_acq , out_dir , strrep(newName, '.drv', '_acq.txt'))
+writeTXT_then_LTF(t_vector , [x_acq,x_acq] , [ddx_acq,ddx_acq] , pink_folder , strrep(file, '.drv', '_acq.txt'))
 

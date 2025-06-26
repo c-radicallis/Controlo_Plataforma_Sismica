@@ -28,11 +28,12 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     % Build the full filename (folder + filename)
     fullFileName = fullfile(folderPath, filename);
 
-    % Create zero columns for PosL, PosV, accL, accV
-    zeroCol = zeros(nT,1);
-
     % Combine into one matrix: [time, PosT, PosL, PosV, accT, accL, accV]
-    dim = size(dispVec)
+    dim = size(dispVec);
+    dim1= dim(1);
+    % Create zero columns 
+    zeroCol = zeros(dim1,1);
+
     if dim(2)==2
         dataMat = [timeVec, dispVec(:,1) , dispVec(:,2) , zeroCol, accVec(:,1), accVec(:,2), zeroCol];
     else
@@ -51,7 +52,7 @@ function writeTXT(timeVec, dispVec, accVec, folderPath, filename)
     % Write data rows in fixed-point (no scientific notation)
     % Using %.3f for time and %.18f for others, adjust as needed
     fmt = '%.3f    %.18f    %.18f    %.18f    %.18f    %.18f    %.18f\n';
-    for i = 1:nT
+    for i = 1:dim1
         fprintf(fid, fmt, ...
             dataMat(i,1), ... % time
             dataMat(i,2), ... % PosT

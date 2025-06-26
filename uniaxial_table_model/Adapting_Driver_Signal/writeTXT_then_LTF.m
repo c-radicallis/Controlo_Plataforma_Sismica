@@ -3,6 +3,7 @@ function writeTXT_then_LTF(t_vector , x , ddx , save_folder , filename)
     writeTXT(t_vector , x , ddx , save_folder , filename)
 
     full_filename_acq = fullfile(save_folder, filename+".txt");
+    
     try
         py_output = py.TXT_to_LTF.txt_to_ltf(full_filename_acq,save_folder);
         % py_output is a Python string; convert to MATLAB char:

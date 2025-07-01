@@ -4,7 +4,7 @@ function writeTXT_then_LTF(t_vector , x , ddx , folder , filename)
     writeTXT(t_vector , x , ddx , folder , filename)
 
     full_filename = fullfile(folder, filename);
-    
+
     try
         py_output = py.TXT_to_LTF.txt_to_ltf(full_filename,folder);
         % py_output is a Python string; convert to MATLAB char:

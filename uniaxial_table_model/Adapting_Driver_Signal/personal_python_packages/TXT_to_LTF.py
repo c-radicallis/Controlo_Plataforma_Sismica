@@ -131,19 +131,11 @@ def txt_to_ltf(file_path, out_dir):
 
 
 def txt_to_drv(file_path, out_dir):
-    """
-    Reads a whitespace-delimited text file without headers, where:
-      - column 0 is time
-      - column 1 is PosT
-      - column 2 is PosL
-    Creates PosV as zeros, then writes a .drv via LTFdb.
-    """
     # Read file without headers, assign column names
     df = pd.read_csv(
         file_path,
         delim_whitespace=True,
-        header=None,
-        names=['time', 'PosT', 'PosL'],
+        header=0,
     )
 
     # Create PosV column of zeros, same length as the data
@@ -168,7 +160,7 @@ def txt_to_drv(file_path, out_dir):
     #       but here we keep the original pattern.
     ltfA.update(
         t0=np.repeat(ltfA.t0, number_columns),
-        dt=np.repeat(ltfA.dt * time.iloc[1], number_columns),
+        dt=np.repeat(ltfA.dt * time[1], number_columns),
         dataformat=np.repeat(ltfA.dataformat, number_columns),
         IDstring=ltfA.IDstring * number_columns,
         scalefactor=np.repeat(ltfA.scalefactor, number_columns),
@@ -184,34 +176,50 @@ def txt_to_drv(file_path, out_dir):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Determine output filename: strip last 4 chars of original name (assumed ".txt"), append ".acq"
+    # assume file_path is a string or Path to your input file
     file_path = Path(file_path)
-    raw_name = file_path.name
-    new_name = raw_name[:-4]+ ".DRV"  # remove the last 4 characters ".txt"
+    raw_name = file_path.name.lower()
 
+    # figure out the base name (without extension)
+    if raw_name.endswith('.drv.txt'):
+        base = file_path.stem[:-4]    # .stem removes .txt, so strip ".drv" off that
+    elif raw_name.endswith('.txt'):
+        base = file_path.stem         # just .stem to drop the .txt
+    else:
+        # no recognized extension—fall back to the full name without suffix
+        base = file_path.stem
+
+    # build the new name
+    new_name = base + '.DRV'
+
+    # assemble the output path
     output_path = out_dir / new_name
 
-    # Write out the file
+    # write it out
     ltfA.write(str(output_path))
 
     return str(output_path)
 
 
 ## Example / Test
-""" 
-txt_to_ltf(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\erzikan.txt' , r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
+
+# txt_to_(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\erzikan.txt' , r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
 
 
-file_path = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\erzikan.tgt')
+# file_path = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\erzikan.tgt')
 
-tgtA = LTFdb()
-tgtA.read(file_path)
+# tgtA = LTFdb()
+# tgtA.read(file_path)
 
-# Ensure output directory exists
-out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
-filename = file_path.name + ".txt"
-output_path = out_dir / filename
+# # Ensure output directory exists
+# out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
+# filename = file_path.name + ".txt"
+# output_path = out_dir / filename
 
-# Write the .ltf database to TXT using the updated _data
-tgtA.write_txt(str(output_path)) 
-"""
+# # Write the .ltf database to TXT using the updated _data
+# tgtA.write_txt(str(output_path)) 
+
+
+out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise')
+filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
+txt_to_drv( filepath, out_dir)

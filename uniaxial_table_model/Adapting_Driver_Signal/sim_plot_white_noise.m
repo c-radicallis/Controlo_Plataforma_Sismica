@@ -33,7 +33,6 @@ file = 'pink_noise_40Hz_T3mm_0.drv';
 
 LTF_to_TXT_then_load( file , 'InputFolder', pink_folder , 'OutputFolder', pink_folder);
 
-
 %%   % --- Simulation --
 t_vector = time_drv_0;
 t_step = t_vector(2);

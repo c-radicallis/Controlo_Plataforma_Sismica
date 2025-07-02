@@ -6,18 +6,18 @@
 <NumElts>3</NumElts>
 <Path>
 <Name>Project Filename</Name>
-<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\project_4junho.prj</Val>
+<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project_1\project_4junho.prj</Val>
 </Path>
 <Cluster>
 <Name>FRF Files</Name>
 <NumElts>2</NumElts>
 <Path>
 <Name>Caracterization Stimulus Signal</Name>
-<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\pink_noise_40Hz_T3mm_0.drv</Val>
+<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project_1\pink_noise_40Hz_T3mm_0.drv</Val>
 </Path>
 <Path>
 <Name>Caracterization Response Signal</Name>
-<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\pink_noise_40Hz_T3mm_0_acq.txt.acq</Val>
+<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project_1\pink_noise_40Hz_T3mm_0_acq.txt.acq</Val>
 </Path>
 </Cluster>
 <Cluster>
@@ -25,7 +25,7 @@
 <NumElts>1</NumElts>
 <Path>
 <Name>Target File</Name>
-<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\LAquilaReducedScale.tgt</Val>
+<Val>C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project_1\LAquilaReducedScale.tgt</Val>
 </Path>
 </Cluster>
 </Cluster>
@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>612</Val>
+<Val>1024</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -168,7 +168,7 @@
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>
-<Val>1</Val>
+<Val>0</Val>
 </Boolean>
 </Cluster>
 </Cluster>
@@ -212,7 +212,7 @@
 </DBL>
 <Boolean>
 <Name>Enable</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 <Cluster>

@@ -2,7 +2,7 @@ clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Erzikan\'
 
-return_on = 1; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
+return_on = 0; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
 
 %% Load target
 folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Erzikan';
@@ -57,28 +57,7 @@ ddx_L_tuned = secondDerivativeTime(x_L_tuned , t_step);
 [picos_ddx_L_tuned , picos_x_L_tuned] = ResponseSpectrum( time_vector , x_L_tuned , ddx_L_tuned, f_vector , 1);
 
 %% Optimal control
-sys = ss(AA,BB,CC,DD);
-nx = size(AA,1);    % Number of states
-nu = size(BB,2);    % Number of control inputs (should be 1)
-ny = size(CC,1);    % Number of outputs
-
-plant_aug = ss(AA, BB,[eye(nx);CC],DD);
-plant_aug.InputName = {'i_sv'};   % plant input: control signal
-plant_aug.OutputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'y_xT'};  % plant output
-sumblk1 = sumblk('e = x_tgt - y_xT'); % Compute the error signal: e = r - y
-integrator = tf(1,[1 0]); % The integrator integrates the tracking error.
-integrator.InputName = {'e'};    % error: e = r - y
-integrator.OutputName = {'xi'};  % integrated error
-
-Q = 1e3*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
-R = 1e-9*eye(nu);
-K_lqi = lqi(sys, Q, R)% Design the LQI controller for the original system
-K  = K_lqi(1:nx);      % state feedback gains
-Ki = K_lqi(end);        % integrator gain
-controller = ss([], [], [], -[K, Ki]); %   u = -[K  Ki] * [x; xi]
-controller.InputName = {'Qsv' , 'Fp' , 'xT' , 'x1' , 'x2','dxT' , 'dx1' , 'dx2' , 'xi'};
-controller.OutputName = {'i_sv'};
-clsys = connect(plant_aug,  controller , integrator, sumblk1, 'x_tgt', 'y_xT')
+clsys = compute_Optimal_Controller( AA , BB , CC , DD);
 
 [x_T_LQI,~, ~] = lsim(clsys, x_tgt_T, time_vector,'zoh'); % Simulate the closed-loop response using lsim:
 ddx_T_LQI = secondDerivativeTime(x_T_LQI,t_step);
@@ -136,7 +115,7 @@ if return_on
 end   % execution stops here; lines below wonnt run
 
 %% Create Figures - Transversal
-fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra (Normal)');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra');xlim([0.1 5]);
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
 figure(fig8); subplot(121); grid on; legend(); hold on;

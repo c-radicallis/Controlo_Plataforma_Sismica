@@ -2,7 +2,7 @@ LNEC Test File eXtractor
 
 File: erzikan.tgt
 
-Created in: 2025-07-01 15:01:56.549149
+Created in: 2025-07-02 14:34:36.259054
 
 Number of channels: 6
 

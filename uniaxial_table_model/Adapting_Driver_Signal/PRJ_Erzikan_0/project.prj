@@ -184,7 +184,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>10.00000000000000</Val>
+<Val>25.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>
@@ -204,7 +204,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>10.00000000000000</Val>
+<Val>25.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>

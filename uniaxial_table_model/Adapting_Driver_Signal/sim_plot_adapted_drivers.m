@@ -10,6 +10,12 @@ target = 'erzikan.tgt';   % or get from user input % 2. Define only the name (no
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
 
+scale = 0.3;
+x_tgt_T   = scale*x_tgt_T   
+x_tgt_L   = scale*x_tgt_L   
+ddx_tgt_T = scale*ddx_tgt_T 
+ddx_tgt_L = scale*ddx_tgt_L 
+
 %% Response Spectra settings
 f_i=0.1; %freq inicial
 f_n=30;  %freq final

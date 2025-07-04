@@ -75,8 +75,6 @@ ddx_L_LQI = secondDerivativeTime(x_L_LQI,t_step);
 
 %% Lauch Adapt.exe
 
-system('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\Adapt.exe.lnk');
-
 if return_on
     return;
 end   % execution stops here; lines below wonnt run

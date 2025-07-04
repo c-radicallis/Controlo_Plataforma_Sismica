@@ -71,7 +71,7 @@ def txt_to_ltf(file_path, out_dir):
         # Write the .ltf/.acq file into the specified folder
         ltfA.write(str(output_path))
 
-    else:
+    else: #this is the case for when we want to write .tgt from the text files with fault normal and parallel acceleration from Fernando
         df = pd.read_csv(
         file_path,
         delim_whitespace=True,
@@ -203,28 +203,19 @@ def txt_to_drv(file_path, out_dir):
 
 ## Example / Test
 
-#txt_to_ltf(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\erzikan.txt' , r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
-
-
-# file_path = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project\erzikan.tgt')
-
-# tgtA = LTFdb()
-# tgtA.read(file_path)
-
-# # Ensure output directory exists
-# out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
-# filename = file_path.name + ".txt"
-# output_path = out_dir / filename
-
-# # Write the .ltf database to TXT using the updated _data
-# tgtA.write_txt(str(output_path)) 
-
-
 # out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise_test')
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
 # txt_to_drv( filepath, out_dir)
 
-
+# Pink Noise
 # out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise')
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
+# txt_to_ltf(filepath, out_dir)
+
+# Erzikan
+#txt_to_ltf(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\erzikan.txt' , r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project')
+
+# Jiji
+# out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji')
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji\jiji.txt'
 # txt_to_ltf(filepath, out_dir)

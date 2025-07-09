@@ -28,6 +28,10 @@ s = tf('s');
 int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 plot(time_vector , int_int_ddx_tgt_T)
 
+figure;hold on; grid; legend;
+plot(time_vector , ddx_tgt_T)
+dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+plot(time_vector , dd_x_tgt_T)
 
 
 
@@ -105,11 +109,10 @@ name = target(1 : end-4); %#ok<UNRCH>
 LTF_to_TXT_then_load( [ name, '_0.DRV' ] ,'InputFolder',folder)
 x_T_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
 ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);
-% writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
-x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');
-ddx_L_acq_0 = secondDerivativeTime(x_L_acq_0 , t_step);
-writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]);
-
+% x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');
+% ddx_L_acq_0 = secondDerivativeTime(x_L_acq_0 , t_step);
+% writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]);
+writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
 
 fprintf("\n \n Go to Adapt.exe and generate driver 1 (Click 'Process' button)\n \n")
 if return_on
@@ -135,11 +138,10 @@ end   % execution stops here; lines below wonnt run
 LTF_to_TXT_then_load( [ name, '_2.DRV' ] ,'InputFolder',folder)
 x_T_acq_2 = lsim(G_xT_xref ,  x_drv_T_2 , time_vector,'zoh');
 ddx_T_acq_2 = secondDerivativeTime(x_T_acq_2 , t_step);
-% writeTXT_then_LTF(time_vector,x_T_acq_2,ddx_T_acq_2,folder,[ name, '_2.ACQ.txt' ]);
-x_L_acq_2 = lsim(G_xT_xref ,  x_drv_L_2 , time_vector,'zoh');
-ddx_L_acq_2 = secondDerivativeTime(x_L_acq_2 , t_step);
-writeTXT_then_LTF(time_vector,[x_T_acq_2,x_L_acq_2],[ddx_T_acq_2,ddx_L_acq_2],folder, [ name, '_2.ACQ.txt' ]); 
-
+% x_L_acq_2 = lsim(G_xT_xref ,  x_drv_L_2 , time_vector,'zoh');
+% ddx_L_acq_2 = secondDerivativeTime(x_L_acq_2 , t_step);
+% writeTXT_then_LTF(time_vector,[x_T_acq_2,x_L_acq_2],[ddx_T_acq_2,ddx_L_acq_2],folder, [ name, '_2.ACQ.txt' ]); 
+writeTXT_then_LTF(time_vector,x_T_acq_2,ddx_T_acq_2,folder,[ name, '_2.ACQ.txt' ]);
 
 
 %% Create Figures - Transversal
@@ -180,10 +182,11 @@ set(fig8, 'WindowState', 'maximized');
 exportgraphics(fig8,fullfile(timeDir,'Response_Spectra_N.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
 
 
-% Create Figures - Longitudinal
-[picos_ddx_L_acq_0  , picos_x_L_acq_0 ] = ResponseSpectrum( time_vector , x_L_acq_0 , ddx_L_acq_0, f_vector , 1);
-[picos_ddx_L_acq_1  , picos_x_L_acq_1 ] = ResponseSpectrum( time_vector , x_L_acq_1 , ddx_L_acq_1, f_vector , 1);
-[picos_ddx_L_acq_2  , picos_x_L_acq_2 ] = ResponseSpectrum( time_vector , x_L_acq_2 , ddx_L_acq_2, f_vector , 1);
+%% Create Figures - Longitudinal
+
+% [picos_ddx_L_acq_0  , picos_x_L_acq_0 ] = ResponseSpectrum( time_vector , x_L_acq_0 , ddx_L_acq_0, f_vector , 1);
+% [picos_ddx_L_acq_1  , picos_x_L_acq_1 ] = ResponseSpectrum( time_vector , x_L_acq_1 , ddx_L_acq_1, f_vector , 1);
+% [picos_ddx_L_acq_2  , picos_x_L_acq_2 ] = ResponseSpectrum( time_vector , x_L_acq_2 , ddx_L_acq_2, f_vector , 1);
 
 fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);ylim([0 ceil(max(picos_ddx_L_tuned(1:385,1))) ])
 subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Parallel');xlim([0.1 5]);

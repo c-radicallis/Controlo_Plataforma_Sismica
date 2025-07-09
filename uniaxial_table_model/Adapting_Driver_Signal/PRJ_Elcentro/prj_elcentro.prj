@@ -184,7 +184,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>25.00000000000000</Val>
+<Val>16.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>
@@ -204,7 +204,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>25.00000000000000</Val>
+<Val>6.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>
@@ -238,6 +238,6 @@
 </Array>
 <DBL>
 <Name>Target Multiplier</Name>
-<Val>0.75000000000000</Val>
+<Val>0.45000000000000</Val>
 </DBL>
 </LVData>

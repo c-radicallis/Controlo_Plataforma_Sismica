@@ -1,33 +1,35 @@
 clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 
-return_on = 0; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
+return_on = 1; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
 
 %% Load target
-folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Elcentro\';
-target = 'elcentro.tgt'; 
+folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Kobe\';
+target = 'Kobe.tgt'; 
 addpath(folder);
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
 
-lim_displacement = 0.1; % mm % Limits
-scale = 1;
-max_x_tgt_T= max(x_tgt_T);
-max_x_tgt_L= max(x_tgt_L);
+% lim_displacement = 0.1; % mm % Limits
+% scale = 1;
+% max_x_tgt_T= max(x_tgt_T);
+% max_x_tgt_L= max(x_tgt_L);
+% 
+% while (max_x_tgt_T> lim_displacement || max_x_tgt_L> lim_displacement)
+%     scale = scale - 0.05
+%     x_tgt_T   = scale*x_tgt_T;
+%     x_tgt_L   = scale*x_tgt_L;
+% end
+% scale
 
-while (max_x_tgt_T> lim_displacement || max_x_tgt_L> lim_displacement)
-    scale = scale - 0.05
-    x_tgt_T   = scale*x_tgt_T;
-    x_tgt_L   = scale*x_tgt_L;
-    max_x_tgt_T = max( x_tgt_T )
-    max_x_tgt_L = max( x_tgt_L )
-end
-scale
-
+scale = 0.45;
 x_tgt_T   = scale*x_tgt_T;
 x_tgt_L   = scale*x_tgt_L;
 ddx_tgt_T = scale*ddx_tgt_T;
 ddx_tgt_L = scale*ddx_tgt_L;
+
+max_x_tgt_T = max( x_tgt_T )
+max_x_tgt_L = max( x_tgt_L )
 
 % figure;hold on; grid; legend;
 % plot(time_vector , x_tgt_T)
@@ -111,7 +113,7 @@ cmd = sprintf('start "" "%s"', fullfile('C:','Users','afons',...
 system(cmd);
 fprintf("Launched Adapt.exe, continuing script...\n \n ");
 
-fprintf(" Go to Adapt.exe and generate driver 0 (Click 'Adapt Init' button) \n \n ")
+fprintf("\n \n Go to Adapt.exe and generate driver 0 (Click 'Adapt Init' button) \n \n ")
 
 if return_on
     return;
@@ -120,55 +122,62 @@ end   % execution stops here; lines below wonnt run
 %% Simulation using updated driver 0
 name = target(1 : end-4);
 LTF_to_TXT_then_load( [ name, '_0.DRV' ] ,'InputFolder',folder)
-
 x_T_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
 ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);
 x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');
 ddx_L_acq_0 = secondDerivativeTime(x_L_acq_0 , t_step);
-
 writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]);% writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
-[picos_ddx_T_acq_0  , picos_x_T_acq_0 ] = ResponseSpectrum( time_vector , x_T_acq_0 , ddx_T_acq_0, f_vector , 1);
-[picos_ddx_L_acq_0  , picos_x_L_acq_0 ] = ResponseSpectrum( time_vector , x_L_acq_0 , ddx_L_acq_0, f_vector , 1);
 
-fprintf(" Go to Adapt.exe and generate driver 1 (Click 'Process' button) ")
-    
+fprintf("\n \n Go to Adapt.exe and generate driver 1 (Click 'Process' button)\n \n")
 if return_on
     return;
 end   % execution stops here; lines below wonnt run
+
 %% Simulation using updated driver 1
 LTF_to_TXT_then_load( [ name, '_1.DRV' ] ,'InputFolder',folder)
-
 x_T_acq_1 = lsim(G_xT_xref ,  x_drv_T_1 , time_vector,'zoh');
 ddx_T_acq_1 = secondDerivativeTime(x_T_acq_1 , t_step);
 x_L_acq_1 = lsim(G_xT_xref ,  x_drv_L_1 , time_vector,'zoh');
 ddx_L_acq_1 = secondDerivativeTime(x_L_acq_1 , t_step);
-
 writeTXT_then_LTF(time_vector,[x_T_acq_1,x_L_acq_1],[ddx_T_acq_1,ddx_L_acq_1],folder, [ name, '_1.ACQ.txt' ]); %writeTXT_then_LTF(time_vector,x_T_acq_1,ddx_T_acq_1,folder,[ name, '_1.ACQ.txt' ]);
-[picos_ddx_T_acq_1  , picos_x_T_acq_1 ] = ResponseSpectrum( time_vector , x_T_acq_1 , ddx_T_acq_1, f_vector , 1);
-[picos_ddx_L_acq_1  , picos_x_L_acq_1 ] = ResponseSpectrum( time_vector , x_L_acq_1 , ddx_L_acq_1, f_vector , 1);
 
+fprintf("\n \n Go to Adapt.exe and generate driver 2 (Click 'Next Iteration' and then 'Process' button) \n \n")
 if return_on
     return;
 end   % execution stops here; lines below wonnt run
-%% Simulation using updated driver 1
-LTF_to_TXT_then_load( [ name, '_2.DRV' ] ,'InputFolder',folder)
 
+%% Simulation using updated driver 2
+LTF_to_TXT_then_load( [ name, '_2.DRV' ] ,'InputFolder',folder)
 x_T_acq_2 = lsim(G_xT_xref ,  x_drv_T_2 , time_vector,'zoh');
 ddx_T_acq_2 = secondDerivativeTime(x_T_acq_2 , t_step);
 x_L_acq_2 = lsim(G_xT_xref ,  x_drv_L_2 , time_vector,'zoh');
 ddx_L_acq_2 = secondDerivativeTime(x_L_acq_2 , t_step);
-
 writeTXT_then_LTF(time_vector,[x_T_acq_2,x_L_acq_2],[ddx_T_acq_2,ddx_L_acq_2],folder, [ name, '_2.ACQ.txt' ]); %writeTXT_then_LTF(time_vector,x_T_acq_2,ddx_T_acq_2,folder,[ name, '_2.ACQ.txt' ]);
-
-[picos_ddx_T_acq_2  , picos_x_T_acq_2 ] = ResponseSpectrum( time_vector , x_T_acq_2 , ddx_T_acq_2, f_vector , 1);
-[picos_ddx_L_acq_2  , picos_x_L_acq_2 ] = ResponseSpectrum( time_vector , x_L_acq_2 , ddx_L_acq_2, f_vector , 1);
 
 % if return_on
 %     return;
 % end   % execution stops here; lines below wonnt run
 
+%% Computing Response spectra
+[picos_ddx_T_acq_0  , picos_x_T_acq_0 ] = ResponseSpectrum( time_vector , x_T_acq_0 , ddx_T_acq_0, f_vector , 1);
+[picos_ddx_L_acq_0  , picos_x_L_acq_0 ] = ResponseSpectrum( time_vector , x_L_acq_0 , ddx_L_acq_0, f_vector , 1);
+[picos_ddx_T_acq_1  , picos_x_T_acq_1 ] = ResponseSpectrum( time_vector , x_T_acq_1 , ddx_T_acq_1, f_vector , 1);
+[picos_ddx_L_acq_1  , picos_x_L_acq_1 ] = ResponseSpectrum( time_vector , x_L_acq_1 , ddx_L_acq_1, f_vector , 1);
+[picos_ddx_T_acq_2  , picos_x_T_acq_2 ] = ResponseSpectrum( time_vector , x_T_acq_2 , ddx_T_acq_2, f_vector , 1);
+[picos_ddx_L_acq_2  , picos_x_L_acq_2 ] = ResponseSpectrum( time_vector , x_L_acq_2 , ddx_L_acq_2, f_vector , 1);
+
 %% Create Figures - Transversal
-fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Normal');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Normal');xlim([0.1 5]);
+close all;
+
+baseFolder = folder;   % Base folder where you want to create the timestamped subfolder
+ts = datestr(now, 'yyyymmdd_HHMMSS');  % Create a timestamp string, e.g. '20250709_153045'
+timeDir = fullfile(baseFolder, ts);  % Build the full path to the new folder
+if ~exist(timeDir, 'dir')% Create it if it doesn't already exist
+    mkdir(timeDir)
+end
+
+fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Normal');xlim([1 20]);ylim([0 ceil(max(picos_ddx_T_tuned(1:385,1))) ])
+subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Normal');xlim([0.1 5]);
 color1 = 'blue';color2 = 'red' ;color3 = '#EDB120'; color4 = 'black';% Define colors for lines 1/3 and 2/4
 
 figure(fig8); subplot(121); grid on; legend(); hold on;
@@ -188,11 +197,11 @@ plot(f_vector, picos_x_T_acq_1, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'A
 plot(f_vector, picos_x_T_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 2 - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_2).^2 )));
 
 set(fig8, 'WindowState', 'maximized');
-exportgraphics(fig8,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal','Response_Spectra_N.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig8,fullfile(timeDir,'Response_Spectra_N.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
 
 
-%% Create Figures - Longitudinal
-fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);ylim([0 5])
+% Create Figures - Longitudinal
+fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);ylim([0 ceil(max(picos_ddx_L_tuned(1:385,1))) ])
 subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Parallel');xlim([0.1 5]);
 
 figure(fig9); subplot(121); grid on; legend(); hold on;
@@ -212,4 +221,4 @@ plot(f_vector, picos_x_L_acq_1, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'A
 plot(f_vector, picos_x_L_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 2 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_2).^2 )));
 
 set(fig9, 'WindowState', 'maximized');
-exportgraphics(fig9,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal','Response_Spectra_P.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
+exportgraphics(fig9,fullfile(timeDir,'Response_Spectra_P.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');

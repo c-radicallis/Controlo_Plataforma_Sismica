@@ -104,15 +104,9 @@ ddx_L_LQI = secondDerivativeTime(x_L_LQI,t_step);
 %% Lauch Adapt.exe
 
 % note the empty quotes "" are the window title placeholder
-cmd = sprintf('start "" "%s"', fullfile('C:','Users','afons',...
-               'OneDrive - Universidade de Lisboa',...
-               'Controlo de Plataforma Sismica',...
-               'uniaxial_table_model',...
-               'Adapting_Driver_Signal',...
-               'Adapt.exe.lnk'));
+cmd = sprintf('start "" "%s"', fullfile('C:','Users','afons','OneDrive - Universidade de Lisboa','Controlo de Plataforma Sismica','uniaxial_table_model','Adapting_Driver_Signal','Adapt.exe.lnk'));
 system(cmd);
 fprintf("Launched Adapt.exe, continuing script...\n \n ");
-
 fprintf("\n \n Go to Adapt.exe and generate driver 0 (Click 'Adapt Init' button) \n \n ")
 
 if return_on
@@ -120,7 +114,7 @@ if return_on
 end   % execution stops here; lines below wonnt run
 
 %% Simulation using updated driver 0
-name = target(1 : end-4);
+name = target(1 : end-4); %#ok<UNRCH>
 LTF_to_TXT_then_load( [ name, '_0.DRV' ] ,'InputFolder',folder)
 x_T_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
 ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);

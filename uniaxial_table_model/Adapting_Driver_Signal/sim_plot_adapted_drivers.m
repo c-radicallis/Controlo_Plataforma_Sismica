@@ -1,20 +1,46 @@
 clear;clc;close all;
 addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model'
 
-return_on = 1; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
+return_on = 0; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
 
 %% Load target
-folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji\';
-target = 'jiji.tgt'; 
+folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Elcentro\';
+target = 'elcentro.tgt'; 
 addpath(folder);
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
 
-% scale = 1;
-% x_tgt_T   = scale*x_tgt_T;
-% x_tgt_L   = scale*x_tgt_L;
-% ddx_tgt_T = scale*ddx_tgt_T;
-% ddx_tgt_L = scale*ddx_tgt_L;
+lim_displacement = 0.1; % mm % Limits
+scale = 1;
+max_x_tgt_T= max(x_tgt_T);
+max_x_tgt_L= max(x_tgt_L);
+
+while (max_x_tgt_T> lim_displacement || max_x_tgt_L> lim_displacement)
+    scale = scale - 0.05
+    x_tgt_T   = scale*x_tgt_T;
+    x_tgt_L   = scale*x_tgt_L;
+    max_x_tgt_T = max( x_tgt_T )
+    max_x_tgt_L = max( x_tgt_L )
+end
+scale
+
+x_tgt_T   = scale*x_tgt_T;
+x_tgt_L   = scale*x_tgt_L;
+ddx_tgt_T = scale*ddx_tgt_T;
+ddx_tgt_L = scale*ddx_tgt_L;
+
+% figure;hold on; grid; legend;
+% plot(time_vector , x_tgt_T)
+% s = tf('s');
+% int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
+% plot(time_vector , int_int_ddx_tgt_T)
+% 
+% figure;hold on; grid; legend;
+% plot(time_vector , ddx_tgt_T)
+% dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+% plot(time_vector , dd_x_tgt_T)
+
+
 
 %% Response Spectra settings
 f_i=0.1; %freq inicial
@@ -75,7 +101,17 @@ ddx_L_LQI = secondDerivativeTime(x_L_LQI,t_step);
 
 %% Lauch Adapt.exe
 
-system('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\Adapt.exe.lnk');
+% note the empty quotes "" are the window title placeholder
+cmd = sprintf('start "" "%s"', fullfile('C:','Users','afons',...
+               'OneDrive - Universidade de Lisboa',...
+               'Controlo de Plataforma Sismica',...
+               'uniaxial_table_model',...
+               'Adapting_Driver_Signal',...
+               'Adapt.exe.lnk'));
+system(cmd);
+fprintf("Launched Adapt.exe, continuing script...\n \n ");
+
+fprintf(" Go to Adapt.exe and generate driver 0 (Click 'Adapt Init' button) \n \n ")
 
 if return_on
     return;
@@ -90,10 +126,12 @@ ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);
 x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');
 ddx_L_acq_0 = secondDerivativeTime(x_L_acq_0 , t_step);
 
-writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]');% writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
+writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]);% writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
 [picos_ddx_T_acq_0  , picos_x_T_acq_0 ] = ResponseSpectrum( time_vector , x_T_acq_0 , ddx_T_acq_0, f_vector , 1);
 [picos_ddx_L_acq_0  , picos_x_L_acq_0 ] = ResponseSpectrum( time_vector , x_L_acq_0 , ddx_L_acq_0, f_vector , 1);
 
+fprintf(" Go to Adapt.exe and generate driver 1 (Click 'Process' button) ")
+    
 if return_on
     return;
 end   % execution stops here; lines below wonnt run
@@ -125,9 +163,9 @@ writeTXT_then_LTF(time_vector,[x_T_acq_2,x_L_acq_2],[ddx_T_acq_2,ddx_L_acq_2],fo
 [picos_ddx_T_acq_2  , picos_x_T_acq_2 ] = ResponseSpectrum( time_vector , x_T_acq_2 , ddx_T_acq_2, f_vector , 1);
 [picos_ddx_L_acq_2  , picos_x_L_acq_2 ] = ResponseSpectrum( time_vector , x_L_acq_2 , ddx_L_acq_2, f_vector , 1);
 
-if return_on
-    return;
-end   % execution stops here; lines below wonnt run
+% if return_on
+%     return;
+% end   % execution stops here; lines below wonnt run
 
 %% Create Figures - Transversal
 fig8 = figure(8);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Normal');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Normal');xlim([0.1 5]);
@@ -154,7 +192,8 @@ exportgraphics(fig8,fullfile('C:\Users\afons\OneDrive - Universidade de Lisboa\C
 
 
 %% Create Figures - Longitudinal
-fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Parallel');xlim([0.1 5]);
+fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);ylim([0 5])
+subplot(122);grid on;xlabel('Frequency (Hz)');ylabel('Displacement (m)');title('Displacement Response Spectra - Fault Parallel');xlim([0.1 5]);
 
 figure(fig9); subplot(121); grid on; legend(); hold on;
 plot(f_vector, picos_ddx_tgt_L,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target');% - Normal

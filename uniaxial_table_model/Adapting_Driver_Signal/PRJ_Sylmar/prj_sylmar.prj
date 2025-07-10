@@ -192,7 +192,7 @@
 </DBL>
 <Boolean>
 <Name>Enable</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 <Cluster>
@@ -212,7 +212,7 @@
 </DBL>
 <Boolean>
 <Name>Enable</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 <Cluster>

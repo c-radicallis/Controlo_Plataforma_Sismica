@@ -22,14 +22,16 @@ end
 max_abs_x_tgt_T = max( abs(x_tgt_T ))
 max_abs_x_tgt_L = max( abs(x_tgt_L ))
 
-figure;hold on; grid; legend;
-plot(time_vector , x_tgt_T)
-s = tf('s');
-int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
-plot(time_vector , int_int_ddx_tgt_T)
-
-
-
+% figure;hold on; grid; legend;
+% plot(time_vector , x_tgt_T)
+% s = tf('s');
+% int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
+% plot(time_vector , int_int_ddx_tgt_T)
+% 
+% figure;hold on; grid; legend;
+% plot(time_vector , ddx_tgt_T)
+% dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+% plot(time_vector , dd_x_tgt_T   )
 
 %% Response Spectra settings
 f_i=0.1; %freq inicial

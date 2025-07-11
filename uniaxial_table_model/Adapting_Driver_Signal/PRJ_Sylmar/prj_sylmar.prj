@@ -238,6 +238,6 @@
 </Array>
 <DBL>
 <Name>Target Multiplier</Name>
-<Val>1.00000000000000</Val>
+<Val>0.15000000000000</Val>
 </DBL>
 </LVData>

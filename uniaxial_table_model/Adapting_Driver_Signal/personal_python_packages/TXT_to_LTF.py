@@ -71,7 +71,8 @@ def txt_to_ltf(file_path, out_dir):
         # Write the .ltf/.acq file into the specified folder
         ltfA.write(str(output_path))
 
-    else: #this is the case for when we want to write .tgt from the text files with fault normal and parallel acceleration from Fernando
+    else: #this is the case for when we want to write .tgt from the text files with fault normal and parallel acceleration from Fernando. 
+            #This also corrects displacement drift by computing the slope m = (xF - xi) / (tF - ti), and subtrating the drift at every time instant disp_drift(t) = m*t
         df = pd.read_csv(
         file_path,
         delim_whitespace=True,
@@ -90,6 +91,8 @@ def txt_to_ltf(file_path, out_dir):
 
         velT = cumulative_trapezoid(accT, time, initial=0.0)
         PosT = cumulative_trapezoid(velT, time, initial=0.0)
+        m_T = (PosT[-1] - PosT[0])/time[-1]
+        PosT = PosT - m_T*time
 
         velL = cumulative_trapezoid(accL, time, initial=0.0)
         PosL = cumulative_trapezoid(velL, time, initial=0.0)
@@ -233,10 +236,10 @@ def txt_to_drv(file_path, out_dir):
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\kobe.txt'
 # txt_to_ltf(filepath, out_dir)
 
-# # Newhall
-# out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Newhall'
-# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\newhall.txt'
-# txt_to_ltf(filepath, out_dir)
+# Newhall
+out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Newhall_corrected'
+filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\newhall.txt'
+txt_to_ltf(filepath, out_dir)
 
 # # Rinaldi
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Rinaldi'

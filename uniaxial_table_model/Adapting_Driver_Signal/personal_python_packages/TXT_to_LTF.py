@@ -96,6 +96,8 @@ def txt_to_ltf(file_path, out_dir):
 
         velL = cumulative_trapezoid(accL, time, initial=0.0)
         PosL = cumulative_trapezoid(velL, time, initial=0.0)
+        m_L = (PosL[-1] - PosL[0])/time.values[-1]
+        PosL = PosL - m_L*time
 
         number_columns = 6
 
@@ -215,7 +217,7 @@ def txt_to_drv(file_path, out_dir):
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
 # txt_to_ltf(filepath, out_dir)
 
-# El Centro
+# # El Centro
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_ElCentro'
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\elcentro.txt'
 # txt_to_ltf(filepath, out_dir)
@@ -236,10 +238,10 @@ def txt_to_drv(file_path, out_dir):
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\kobe.txt'
 # txt_to_ltf(filepath, out_dir)
 
-# Newhall
-out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Newhall_corrected'
-filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\newhall.txt'
-txt_to_ltf(filepath, out_dir)
+# # Newhall
+# out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Newhall_corrected'
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\newhall.txt'
+# txt_to_ltf(filepath, out_dir)
 
 # # Rinaldi
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Rinaldi'

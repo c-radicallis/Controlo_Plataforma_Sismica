@@ -11,7 +11,7 @@ addpath(folder);
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
 
-scale = 0.15 ;
+scale = 0.3 ;
 if scale ~= 1
     x_tgt_T   = scale*x_tgt_T;
     x_tgt_L   = scale*x_tgt_L;
@@ -22,8 +22,9 @@ end
 max_abs_x_tgt_T = max( abs(x_tgt_T ))
 max_abs_x_tgt_L = max( abs(x_tgt_L ))
 
-figure;hold on; grid; legend;
-plot(time_vector , x_tgt_T)
+% figure;hold on; grid; legend;
+% plot(time_vector , x_tgt_T)
+% plot(time_vector , x_tgt_L)
 % s = tf('s');
 % int_int__scaled_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 % plot(time_vector , int_int__scaled_ddx_tgt_T)
@@ -34,10 +35,14 @@ plot(time_vector , x_tgt_T)
 % int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 % plot(time_vector , int_int_ddx_tgt_T)
 % 
-figure;hold on; grid; legend;
-plot(time_vector , ddx_tgt_T , '*-')
-dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
-plot(time_vector , dd_x_tgt_T , '*-'  )
+% figure;hold on; grid; legend;
+% plot(time_vector , ddx_tgt_T , '*-')
+% dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+% plot(time_vector , dd_x_tgt_T , '*-'  )
+% % % dd_x_tgt_T_3= secondDerivativeTime3(x_tgt_T,t_step);
+% % % plot(time_vector , dd_x_tgt_T_3 , '*-'  )
+% % dd_x_tgt_T_7= secondDerivativeTime7(x_tgt_T,t_step);
+% % plot(time_vector , dd_x_tgt_T_7 , '*-'  )
 
 %% Loading Model with Standard Tune
 

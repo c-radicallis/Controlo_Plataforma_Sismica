@@ -91,7 +91,7 @@ def txt_to_ltf(file_path, out_dir):
 
         velT = cumulative_trapezoid(accT, time, initial=0.0)
         PosT = cumulative_trapezoid(velT, time, initial=0.0)
-        m_T = (PosT[-1] - PosT[0])/time[-1]
+        m_T = (PosT[-1] - PosT[0])/time.values[-1]
         PosT = PosT - m_T*time
 
         velL = cumulative_trapezoid(accL, time, initial=0.0)

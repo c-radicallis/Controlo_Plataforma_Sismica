@@ -5,8 +5,8 @@ launch_Adapt =0; % Set to 1 to lauch Adapt.exe
 return_on = 1; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
 
 % Load target
-folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Sylmar\';
-target = 'sylmar.tgt'; 
+folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Newhall_corrected\';
+target = 'newhall.tgt'; 
 addpath(folder);
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
@@ -22,22 +22,22 @@ end
 max_abs_x_tgt_T = max( abs(x_tgt_T ))
 max_abs_x_tgt_L = max( abs(x_tgt_L ))
 
-% figure;hold on; grid; legend;
-% plot(time_vector , x_tgt_T)
+figure;hold on; grid; legend;
+plot(time_vector , x_tgt_T)
 % s = tf('s');
 % int_int__scaled_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 % plot(time_vector , int_int__scaled_ddx_tgt_T)
 %
 % figure;hold on; grid; legend;
-% plot(time_vector , x_tgt_T)
+% plot(time_vector , ddx_tgt_T)
 % s = tf('s');
 % int_int_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 % plot(time_vector , int_int_ddx_tgt_T)
 % 
-% figure;hold on; grid; legend;
-% plot(time_vector , ddx_tgt_T)
-% dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
-% plot(time_vector , dd_x_tgt_T   )
+figure;hold on; grid; legend;
+plot(time_vector , ddx_tgt_T , '*-')
+dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+plot(time_vector , dd_x_tgt_T , '*-'  )
 
 %% Loading Model with Standard Tune
 

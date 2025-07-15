@@ -25,7 +25,7 @@ max_abs_x_tgt_L = max( abs(x_tgt_L ))
 % figure;hold on; grid; legend;
 % plot(time_vector , x_tgt_T)
 % plot(time_vector , x_tgt_L)
-% s = tf('s');
+% % s = tf('s');
 % int_int__scaled_ddx_tgt_T = lsim(1/s^2 , ddx_tgt_T , time_vector , 'zoh');
 % plot(time_vector , int_int__scaled_ddx_tgt_T)
 %
@@ -91,7 +91,6 @@ if launch_Adapt
     fprintf("Launched Adapt.exe, continuing script...\n \n ");
 end
 fprintf("\n \n Go to Adapt.exe and generate driver 0 (Click 'Adapt Init' button) \n \n ")
-
 if return_on
     return;
 end   % execution stops here; lines below wonnt run
@@ -105,8 +104,6 @@ ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);
 x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');
 ddx_L_acq_0 = secondDerivativeTime(x_L_acq_0 , t_step);
 writeTXT_then_LTF(time_vector,[x_T_acq_0,x_L_acq_0],[ddx_T_acq_0,ddx_L_acq_0],folder,[ name, '_0.ACQ.txt' ]);
-
-
 fprintf("\n \n Go to Adapt.exe and generate driver 1 (Click 'Process' button)\n \n")
 if return_on
     return;
@@ -120,8 +117,6 @@ ddx_T_acq_1 = secondDerivativeTime(x_T_acq_1 , t_step);
 x_L_acq_1 = lsim(G_xT_xref ,  x_drv_L_1 , time_vector,'zoh');
 ddx_L_acq_1 = secondDerivativeTime(x_L_acq_1 , t_step);
 writeTXT_then_LTF(time_vector,[x_T_acq_1,x_L_acq_1],[ddx_T_acq_1,ddx_L_acq_1],folder, [ name, '_1.ACQ.txt' ]); 
-
-
 fprintf("\n \n Go to Adapt.exe and generate driver 2 (Click 'Next Iteration' and then 'Process' button) \n \n")
 if return_on
     return;
@@ -135,8 +130,6 @@ ddx_T_acq_2 = secondDerivativeTime(x_T_acq_2 , t_step);
 x_L_acq_2 = lsim(G_xT_xref ,  x_drv_L_2 , time_vector,'zoh');
 ddx_L_acq_2 = secondDerivativeTime(x_L_acq_2 , t_step);
 writeTXT_then_LTF(time_vector,[x_T_acq_2,x_L_acq_2],[ddx_T_acq_2,ddx_L_acq_2],folder, [ name, '_2.ACQ.txt' ]); 
-
-
 
 %% Create Figures - Transversal
 close all;
@@ -190,12 +183,9 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_tgt_T,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 plot(f_vector, picos_x_T_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName',sprintf( 'Tuned PIDF - MSE= %.2e',     mean((picos_x_tgt_T-picos_x_T_tuned).^2 )));%- Normal
 plot(f_vector, picos_x_T_LQI,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName',sprintf( 'Optimal Control - MSE= %.2e',  mean((picos_x_tgt_T-picos_x_T_LQI).^2 )));
-plot(f_vector, picos_x_T_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_0).^2 )));
+plot(f_vector, picos_x_T_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver 0 - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_0).^2 )));
 plot(f_vector, picos_x_T_acq_1, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 1 - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_1).^2 )));
 plot(f_vector, picos_x_T_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 2 - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_2).^2 )));
-
-set(fig8, 'WindowState', 'maximized');
-exportgraphics(fig8,fullfile(timeDir,'Response_Spectra_N.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
 
 % Create Figures - Longitudinal
 fig9 = figure(9);subplot(121); grid on;xlabel('Frequency (Hz)');ylabel('Acceleration (m/s^2)');title('Acceleration Response Spectra - Fault Parallel');xlim([1 20]);ylim([0 ceil(max(picos_ddx_L_tuned(1:385,1))) ])
@@ -213,9 +203,36 @@ subplot(122); grid on;legend();hold on;
 plot(f_vector, picos_x_tgt_L,'-', 'LineWidth' , 2, 'Color', color1, 'DisplayName', 'Target ');%- Normal
 plot(f_vector, picos_x_L_tuned,'--', 'LineWidth' , 2, 'Color', color2, 'DisplayName',sprintf( 'Tuned PIDF - MSE= %.2e',     mean((picos_x_tgt_L-picos_x_L_tuned).^2 )));%- Normal
 plot(f_vector, picos_x_L_LQI,'--', 'LineWidth' , 2, 'Color', color3, 'DisplayName',sprintf( 'Optimal Control - MSE= %.2e',  mean((picos_x_tgt_L-picos_x_L_LQI).^2 )));
-plot(f_vector, picos_x_L_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_0).^2 )));
+plot(f_vector, picos_x_L_acq_0, '-', 'LineWidth' , 2, 'Color', color4, 'DisplayName',sprintf( 'Adapted driver 0 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_0).^2 )));
 plot(f_vector, picos_x_L_acq_1, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 1 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_1).^2 )));
 plot(f_vector, picos_x_L_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 2 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_2).^2 )));
+
+%% Simulation using updated driver 3
+% LTF_to_TXT_then_load( [ name, '_3.DRV' ] ,'InputFolder',folder)
+% x_T_acq_3 = lsim(G_xT_xref ,  x_drv_T_3 , time_vector,'zoh');
+% ddx_T_acq_3 = secondDerivativeTime(x_T_acq_3 , t_step);
+% % writeTXT_then_LTF(time_vector,x_T_acq_3,ddx_T_acq_3,folder,[ name, '_3.ACQ.txt' ]);
+% x_L_acq_3 = lsim(G_xT_xref ,  x_drv_L_3 , time_vector,'zoh');
+% ddx_L_acq_3 = secondDerivativeTime(x_L_acq_3 , t_step);
+% writeTXT_then_LTF(time_vector,[x_T_acq_3,x_L_acq_3],[ddx_T_acq_3,ddx_L_acq_3],folder, [ name, '_3.ACQ.txt' ]); 
+% 
+% [picos_ddx_T_acq_3  , picos_x_T_acq_3 ] = ResponseSpectrum( time_vector , x_T_acq_3 , ddx_T_acq_3, f_vector , 1);
+% % Create Figures - Trnaversal
+% figure(fig8); subplot(121);
+% plot(f_vector, picos_ddx_T_acq_3 ,'-', 'LineWidth' , 2, 'DisplayName',sprintf( 'Adapted driver 3 -  MSE= %.2e', mean((picos_ddx_tgt_T-picos_ddx_T_acq_3).^2 )));
+% subplot(122);
+% plot(f_vector, picos_x_T_acq_3, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 3 - MSE= %.2e', mean((picos_x_tgt_T-picos_x_T_acq_3).^2 )));
+% 
+% [picos_ddx_L_acq_3  , picos_x_L_acq_3 ] = ResponseSpectrum( time_vector , x_L_acq_3 , ddx_L_acq_3, f_vector , 1);
+% % Create Figures - Longitudinal
+% figure(fig9); subplot(121);
+% plot(f_vector, picos_ddx_L_acq_3 ,'-', 'LineWidth' , 2, 'DisplayName',sprintf( 'Adapted driver 3 -  MSE= %.2e', mean((picos_ddx_tgt_L-picos_ddx_L_acq_3).^2 )));
+% subplot(122);
+% plot(f_vector, picos_x_L_acq_3, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 3 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_3).^2 )));
+
+%%
+set(fig8, 'WindowState', 'maximized');
+exportgraphics(fig8,fullfile(timeDir,'Response_Spectra_N.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');
 
 set(fig9, 'WindowState', 'maximized');
 exportgraphics(fig9,fullfile(timeDir,'Response_Spectra_P.png'),'Resolution', 300,'BackgroundColor', 'white','ContentType', 'image');

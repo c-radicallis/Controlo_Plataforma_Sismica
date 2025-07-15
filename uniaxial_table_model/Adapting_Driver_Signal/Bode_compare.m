@@ -3,31 +3,27 @@ clc;
 close all;
 
 %% --- User parameters ---
-filename = 'id_FRF.txt';  % change to your actual file name
-headerLines = 1;        % skip first line (header)
-numDataRows = 22;       % lines 2–14 inclusive → 13 rows
+filename     = 'id_FRF_20hanning_onlyDisp.txt';   % your file name
+headerLines  = 1;                         % skip only the first line
 
-%% --- Step 1: Read your data (as before) ---
-% Using readmatrix (assumes delimiter is tab or whitespace)
-dataAll = readmatrix(filename, 'FileType', 'text', 'Delimiter', '\t', 'NumHeaderLines', headerLines);
+% --- Read all data after the first line ---
+% readmatrix will consume everything except the first line
+raw = readmatrix(filename, ...
+                 'FileType',       'text', ...
+                 'Delimiter',      '\t', ...
+                 'NumHeaderLines', headerLines);
 
-% Keep rows where col1 is numeric:
-validRows = ~isnan(dataAll(:,1));
-data = dataAll(validRows, 1:2);
+% keep only rows where the first column is numeric (not NaN)
+valid = ~isnan(raw(:,1));
+data  = raw(valid, 1:2);
 
-% If more rows than needed, take only first numDataRows:
-if size(data,1) >= numDataRows
-    data = data(1:numDataRows, :);
-else
-    warning('Data has fewer than %d rows; using all %d rows.', numDataRows, size(data,1));
-end
+% --- Split into frequency & magnitude arrays ---
+freq_data    = data(:,1);     % Hz
+mag_lin_data = data(:,2);     % linear magnitude
 
-freq_data = data(:,1);    % in Hz
-mag_lin_data = data(:,2); % linear magnitude
-
-% Convert to dB, guarding against non-positive values:
-mag_lin_data(mag_lin_data <= 0) = NaN;  % will plot as gaps or ignore
-mag_dB_data = 20*log10(mag_lin_data);
+% --- Convert to dB (ignore non-positive entries) ---
+mag_lin_data(mag_lin_data <= 0) = NaN;      % mark zeros/negatives as NaN
+mag_dB_data   = 20*log10(mag_lin_data);    % 20·log₁₀ of linear mags
 
 %% --- Step 2: Define your system ---
 % Example: a simple first-order low-pass with cutoff at 10 Hz:

@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>1024</Val>
+<Val>20</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -168,7 +168,7 @@
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>
-<Val>1</Val>
+<Val>0</Val>
 </Boolean>
 </Cluster>
 </Cluster>

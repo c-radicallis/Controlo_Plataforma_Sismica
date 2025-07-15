@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>1024</Val>
+<Val>500</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -164,11 +164,11 @@
 <NumElts>2</NumElts>
 <DBL>
 <Name>Crossover Freq</Name>
-<Val>2.00000000000000</Val>
+<Val>1.00000000000000</Val>
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>
-<Val>1</Val>
+<Val>0</Val>
 </Boolean>
 </Cluster>
 </Cluster>
@@ -184,7 +184,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>10.00000000000000</Val>
+<Val>25.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>
@@ -204,7 +204,7 @@
 </DBL>
 <DBL>
 <Name>Max. Freq. Compensation</Name>
-<Val>10.00000000000000</Val>
+<Val>25.00000000000000</Val>
 </DBL>
 <DBL>
 <Name>Correction Factor</Name>

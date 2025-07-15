@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>1024</Val>
+<Val>20</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -74,7 +74,7 @@
 </Boolean>
 <Boolean>
 <Name>unwrap phase (F)</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 <Boolean>
 <Name>convert to degree (F)</Name>
@@ -168,7 +168,7 @@
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>
-<Val>1</Val>
+<Val>0</Val>
 </Boolean>
 </Cluster>
 </Cluster>
@@ -192,7 +192,7 @@
 </DBL>
 <Boolean>
 <Name>Enable</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 <Cluster>
@@ -212,7 +212,7 @@
 </DBL>
 <Boolean>
 <Name>Enable</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 <Cluster>
@@ -238,6 +238,6 @@
 </Array>
 <DBL>
 <Name>Target Multiplier</Name>
-<Val>1.00000000000000</Val>
+<Val>1.00000000000000E-2</Val>
 </DBL>
 </LVData>

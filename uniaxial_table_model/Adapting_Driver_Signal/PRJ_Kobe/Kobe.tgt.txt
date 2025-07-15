@@ -1,8 +1,8 @@
 LNEC Test File eXtractor
 
-File: kobe.tgt
+File: Kobe.tgt
 
-Created in: 2025-07-15 12:27:11.841944
+Created in: 2025-07-15 16:31:41.600482
 
 Number of channels: 6
 

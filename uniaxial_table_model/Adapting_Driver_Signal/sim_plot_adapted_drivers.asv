@@ -111,7 +111,7 @@ end   % execution stops here; lines below wonnt run
 %% Simulation using updated driver 0
 name = target(1 : end-4); %#ok<UNRCH>
 LTF_to_TXT_then_load( [ name, '_0.DRV' ] ,'InputFolder',folder)
-x_T_acq_0 = lsim(G_xT_xref ,  x_drv_T_0 , time_vector,'zoh');
+x_T_acq_0 = lsim(G_xT_xref ,  x_drv_ T_0 , time_vector,'zoh');
 ddx_T_acq_0 = secondDerivativeTime(x_T_acq_0 , t_step);
 % writeTXT_then_LTF(time_vector,x_T_acq_0,ddx_T_acq_0,folder,[ name, '_0.ACQ.txt' ]);
 x_L_acq_0 = lsim(G_xT_xref ,  x_drv_L_0 , time_vector,'zoh');

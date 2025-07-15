@@ -83,7 +83,7 @@
 </Cluster>
 <U32>
 <Name>Window Type</Name>
-<Val>9</Val>
+<Val>1</Val>
 </U32>
 <DBL>
 <Name>Window Overlap</Name>

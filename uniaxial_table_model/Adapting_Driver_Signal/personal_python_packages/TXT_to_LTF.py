@@ -15,6 +15,9 @@ from LNECSPA import LTFdb
 import pandas as pd
 from scipy.integrate import cumulative_trapezoid
 
+import matplotlib.pyplot as plt
+
+
 def txt_to_ltf(file_path, out_dir):
     """
     This function writes a .acq ot .tgt file from .txt file
@@ -129,6 +132,54 @@ def txt_to_ltf(file_path, out_dir):
         # Write out the file
         ltfA.write(str(output_path))
 
+    
+
+        # assume `time` is a 1‑D numpy array (or pandas Index) of monotonically increasing times,
+        # and `PosT` is your detrended position array of the same length.
+
+        # 1) compute velocity as dPos/dt
+        d_PosT = np.gradient(PosT, time)
+
+        # 2) compute acceleration as dVel/dt
+        dd_PosT = np.gradient(d_PosT, time)
+
+        # 3) plot position, velocity, and acceleration
+        fig, axs = plt.subplots(3, 1, sharex=True, figsize=(8, 6))
+        axs[0].plot(time, PosT*1e3, label='∫∫accel-m*t * 1e3', marker='.')
+        axs[0].set_ylabel('Position')
+        axs[0].grid(True)
+
+        axs[1].plot(time, d_PosT, label='d_∫∫accell-m*t', marker='.')
+        axs[1].plot(time, velT, label='∫accel', marker='.')
+        axs[1].set_ylabel('Velocity')
+        axs[1].legend(loc='best')
+        axs[1].grid(True)
+
+        axs[2].plot(time, dd_PosT, label='dd_∫∫accell-m*t', marker='.')
+        axs[2].plot(time, accT, label='original Acceleration', marker='.')
+        axs[2].set_ylabel('Acceleration')
+        axs[2].set_xlabel('Time')
+        axs[2].grid(True)
+
+        tgtA = LTFdb()
+        tgtA.read(str(output_path))
+        arr = np.array(tgtA._data, dtype=float)
+        axs[0].plot(time, arr[0], label='x_tgt_T', marker='.')
+        #axs[1].plot(time, d_PosT, label='d_∫∫accell-m*t', marker='.')
+        axs[2].plot(time, arr[3]*g, label='ddx_tgt_T', marker='.', linestyle='--')
+
+        axs[0].legend(loc='best')
+        axs[0].set_xlim(0, 0.05)       # x-axis limits
+        axs[0].set_ylim(-0.02, 0.005)   # y-axis limits
+        axs[1].set_xlim(0, 0.05)       # x-axis limits
+        axs[1].set_ylim(-0.001, 0.001)   # y-axis limits
+        axs[2].legend(loc='best')
+        axs[2].set_xlim(0, 0.05)       # x-axis limits
+        axs[2].set_ylim(-0.08, 0.08)   # y-axis limits
+
+        plt.tight_layout()
+        plt.show()
+
 
     return str(output_path)
 
@@ -217,10 +268,10 @@ def txt_to_drv(file_path, out_dir):
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
 # txt_to_ltf(filepath, out_dir)
 
-# # El Centro
-# out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_ElCentro'
-# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\elcentro.txt'
-# txt_to_ltf(filepath, out_dir)
+# El Centro
+out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_ElCentro'
+filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\elcentro.txt'
+txt_to_ltf(filepath, out_dir)
 
 # # Erzikan
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Erzikan'

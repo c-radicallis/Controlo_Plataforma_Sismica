@@ -11,7 +11,7 @@ addpath(folder);
 LTF_to_TXT_then_load(target,'InputFolder', folder)
 t_step = time_vector(2);
 
-scale = 1;
+scale = 0.4;
 if scale ~= 1
     x_tgt_T   = scale*x_tgt_T;
     x_tgt_L   = scale*x_tgt_L;
@@ -44,13 +44,13 @@ max_abs_x_tgt_L = max( abs(x_tgt_L ))
 % % dd_x_tgt_T_7= secondDerivativeTime7(x_tgt_T,t_step);
 % % plot(time_vector , dd_x_tgt_T_7 , '*-'  )
 
-figure;hold on; grid; legend;
-plot(time_vector , ddx_tgt_T , '*-')
-dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
-plot(time_vector , dd_x_tgt_T , '*-'  )
-% plot(time_vector , x_tgt_T,'.-')
-xlim([0 t_step*11])
-% 
+% figure;hold on; grid; legend;
+% plot(time_vector , ddx_tgt_T , '*-')
+% dd_x_tgt_T= secondDerivativeTime(x_tgt_T,t_step);
+% plot(time_vector , dd_x_tgt_T , '*-'  )
+% % plot(time_vector , x_tgt_T,'.-')
+% xlim([0 t_step*11])
+
 % sum = x_tgt_T(7) - 2* x_tgt_T(8)+ x_tgt_T(9)  
 % ddx_Tstep7 = sum/t_step^2
 % 
@@ -242,6 +242,9 @@ plot(f_vector, picos_x_L_acq_2, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'A
 % plot(f_vector, picos_ddx_L_acq_3 ,'-', 'LineWidth' , 2, 'DisplayName',sprintf( 'Adapted driver 3 -  MSE= %.2e', mean((picos_ddx_tgt_L-picos_ddx_L_acq_3).^2 )));
 % subplot(122);
 % plot(f_vector, picos_x_L_acq_3, '-', 'LineWidth' , 2,  'DisplayName',sprintf( 'Adapted driver 3 - MSE= %.2e', mean((picos_x_tgt_L-picos_x_L_acq_3).^2 )));
+
+%% Simulation using .acq from simulating directly in Adapt.exe
+LTF_to_TXT_then_load( [ name, '_2.ACQ' ] , 'InputFolder', folder , 'OutputFolder', folder);
 
 %%
 set(fig8, 'WindowState', 'maximized');

@@ -1,8 +1,8 @@
 LNEC Test File eXtractor
 
-File: Elcentro_0.DRV
+File: elcentro_0.DRV
 
-Created in: 2025-07-15 11:37:14.931804
+Created in: 2025-07-16 16:38:46.177211
 
 Number of channels: 3
 

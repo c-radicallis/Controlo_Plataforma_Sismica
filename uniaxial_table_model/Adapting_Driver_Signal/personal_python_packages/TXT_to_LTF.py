@@ -84,8 +84,8 @@ def txt_to_ltf(file_path, out_dir):
 
         # Create PosV column of zeros, same length as the data
         time = df['time']
-        accT = df['accT']
-        accL = df['accL']
+        accT = df['accT']#0.4*
+        accL = df['accL']#0.4*
 
         df['PosV'] = 0
         df['accV'] = 0
@@ -133,12 +133,12 @@ def txt_to_ltf(file_path, out_dir):
         ltfA.write(str(output_path))
     
 
-        # # assume `time` is a 1‑D numpy array (or pandas Index) of monotonically increasing times,
-        # # and `PosT` is your detrended position array of the same length.
-        # # 1) compute velocity as dPos/dt
-        # d_PosT = np.gradient(PosT, time)
-        # # 2) compute acceleration as dVel/dt
-        # dd_PosT = np.gradient(d_PosT, time)
+        # # # assume `time` is a 1‑D numpy array (or pandas Index) of monotonically increasing times,
+        # # # and `PosT` is your detrended position array of the same length.
+        # # # 1) compute velocity as dPos/dt
+        # # d_PosT = np.gradient(PosT, time)
+        # # # 2) compute acceleration as dVel/dt
+        # # dd_PosT = np.gradient(d_PosT, time)
 
         # def second_derivative_time(y, dt):
         #     """
@@ -183,7 +183,7 @@ def txt_to_ltf(file_path, out_dir):
         # # 3) plot position, velocity, and acceleration
         # fig, axs = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
         # axs[0].plot(time, PosT*1e3, label='∫∫original accel-m*t * 1e3', marker='.')
-        # axs[0].set_ylabel('Position')
+        # axs[0].set_ylabel('Position (mm)')
         # axs[0].grid(True)
 
         # # #axs[1].plot(time, d_PosT, label='2nd order central diff of ∫∫accell-m*t', marker='.')
@@ -194,7 +194,7 @@ def txt_to_ltf(file_path, out_dir):
 
         # axs[1].plot(time, dd_PosT, label='2nd order central diff of ∫∫original accel-m*t * 1e3', marker='.')
         # axs[1].plot(time, accT, label='Original Acceleration', marker='.')
-        # axs[1].set_ylabel('Acceleration')
+        # axs[1].set_ylabel('Acceleration (m/s^2)')
         # axs[1].set_xlabel('Time')
         # axs[1].grid(True)
 
@@ -202,20 +202,29 @@ def txt_to_ltf(file_path, out_dir):
         # tgtA.read(str(output_path))
         # arr = np.array(tgtA._data, dtype=float)
         
+
+
         # axs[0].plot(time, arr[0], label='x_tgt_T (discretized signal in the .tgt file)', marker='.')
+        # x_tgt = arr[0]
+        # ddx_tgt = arr[3]*g
         # #axs[1].plot(time, d_PosT, label='d_∫∫accell-m*t', marker='.')
         # axs[1].plot(time, arr[3]*g, label='ddx_tgt_T (discretized original signal in the .tgt file)', marker='.', linestyle='--')
         # d2_x_tgt = second_derivative_time(arr[0]*1e-3, 0.005)
         # axs[1].plot(time, d2_x_tgt, label='2nd order central diff from x_tgt_T', marker='.')
 
+        # print('Média accel original= ',np.mean(accT))
+        # print('Média ddx_tgt= ',np.mean(ddx_tgt))
+        # print('Média d2_x_tgt= ',np.mean(d2_x_tgt))
+
         # axs[0].legend(loc='best')
-        # axs[0].set_xlim(0, 0.05)       # x-axis limits
-        # axs[0].set_ylim(-0.02, 0.005)   # y-axis limits
+        # axs[1].legend(loc='best')   
+
+        # # axs[0].set_xlim(0, 0.05)       # x-axis limits
+        # # axs[0].set_ylim(-0.02, 0.01)   # y-axis limits
+        # # # axs[1].set_xlim(0, 0.05)       # x-axis limits
+        # # # axs[1].set_ylim(-0.001, 0.001)   # y-axis limits
         # # axs[1].set_xlim(0, 0.05)       # x-axis limits
-        # # axs[1].set_ylim(-0.001, 0.001)   # y-axis limits
-        # axs[1].legend(loc='best')
-        # axs[1].set_xlim(0, 0.05)       # x-axis limits
-        # axs[1].set_ylim(-0.15, 0.3)   # y-axis limits
+        # # axs[1].set_ylim(-0.15, 0.3)   # y-axis limits
 
         # plt.title('The errors resulting from the discretization of the Position when writing it to the .tgt file (see plot above), further propagate when computing the 2nd derivative of that signal (see red line in plot below)')
         # plt.tight_layout()
@@ -309,10 +318,10 @@ def txt_to_drv(file_path, out_dir):
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise\pink_noise_40Hz_T3mm_0.drv.txt'
 # txt_to_ltf(filepath, out_dir)
 
-# El Centro
-out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_ElCentro'
-filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\elcentro.txt'
-txt_to_ltf(filepath, out_dir)
+# # El Centro
+# out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_ElCentro_scaled'
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\elcentro.txt'
+# txt_to_ltf(filepath, out_dir)
 
 # # Erzikan
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Erzikan'
@@ -320,10 +329,10 @@ txt_to_ltf(filepath, out_dir)
 # txt_to_ltf(filepath, out_dir)
 
 
-#  # Jiji
-# out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji')
-# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji\jiji.txt'
-# txt_to_ltf(filepath, out_dir)
+ # Jiji
+out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji_corrected')
+filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\jiji.txt'
+txt_to_ltf(filepath, out_dir)
 
 # # Kobe
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Kobe'

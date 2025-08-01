@@ -115,11 +115,15 @@ function loadTXT(filename)
   end
 
   %--------------------------------------------%
-  % 4b. Discard columns that are entirely zero  %
+  % 4b. Discard columns that are entirely zero or contain any NaNs %
   %--------------------------------------------%
-  nzColsMask = any(data ~= 0, 1);
-  data       = data(:, nzColsMask);
-  colNames   = colNames(nzColsMask);
+  nzMask   = any(data ~= 0, 1);       % keep columns not all zero
+  nanMask  = ~any(isnan(data), 1);   % keep columns with no NaNs
+  keepMask = nzMask & nanMask;       % only columns both non-zero and NaN-free
+
+  data      = data(:, keepMask);
+  colNames  = colNames(keepMask);
+  typeNames = typeNames(keepMask);
 
   %--------------------------------------------%
   % 5. Decide behavior based on file suffix    %

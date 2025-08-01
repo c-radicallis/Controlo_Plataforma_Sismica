@@ -51,7 +51,6 @@ def ltf_to_txt(file_path, out_dir):
     # Convert acceleration channels
     if file_path.suffix.lower() != ".drv":
         for ch_idx in acc_inds:
-            print("ch_idx=", ch_idx)
             arr = np.array(tgtA._data[ch_idx], dtype=float)
             original_unit = (tgtA.units[ch_idx] or '').strip().lower()
             if original_unit in ['g', 'G' ]:

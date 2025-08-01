@@ -1,14 +1,14 @@
 function LTF_to_TXT_then_load(filename_with_ext, varargin)
-% LTF_to_TXT_then_load Convert a .drv or .tgt file via Python and load its .txt.
+% LTF_to_TXT_then_load Convert a .drv, .tgt or .acq file via Python and load its .txt.
 %
 %   LTF_to_TXT_then_load(filename_with_ext)
 %       Uses hard-coded Python module folder, module name, and function name.
-%       filename_with_ext must include extension, e.g. 'MyRun.drv' or 'MyRun.tgt'.
+%       filename_with_ext must include extension, e.g. 'MyRun.drv', 'MyRun.tgt' or 'MyRun.acq'.
 %
 %   LTF_to_TXT_then_load(filename_with_ext, 'InputFolder', inpF, ...
 %                                  'OutputFolder', outF, 'Verbose', tf)
 %       Optionally specify:
-%         'InputFolder'  : folder where the .drv/.tgt resides (default: a hard-coded path)
+%         'InputFolder'  : folder where the .drv/.tgt/.acq resides (default: a hard-coded path)
 %         'OutputFolder' : folder where Python writes the .txt (default = InputFolder)
 %         'Verbose'      : true/false for printing status messages (default: true)
 %
@@ -18,43 +18,35 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
 %     FunctionName = 'ltf_to_txt';
 %
 %   The function:
-%     1. Parses filename_with_ext, checks extension is .drv or .tgt.
+%     1. Parses filename_with_ext, checks extension is .drv, .tgt, or .acq.
 %     2. Builds full input path using InputFolder.
 %     3. Ensures the Python module folder is on py.sys.path.
 %     4. Imports the hard-coded module and calls the hard-coded function.
 %     5. Expects the Python function to return full path to the generated .txt.
 %     6. Calls loadTXT on that .txt and returns its result.
-%
-%   Example:
-%     LTF_to_TXT_then_load('LAquilaReducedScale_0.drv', ...
-%               'InputFolder', 'C:\path\to\PRJ_project', ...
-%               'OutputFolder', 'C:\path\to\PRJ_project', ...
-%               'Verbose', true);
 
     %-------- Hard-coded Python settings --------
-    % Adjust these to your environment once:
     PythonModuleFolder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\personal_python_packages';
-    ModuleName = 'LTF_to_TXT';
-    FunctionName = 'ltf_to_txt';
+    ModuleName         = 'LTF_to_TXT';
+    FunctionName       = 'ltf_to_txt';
     %--------------------------------------------
 
     %--- Parse inputs ---
     p = inputParser;
     p.KeepUnmatched = false;
     p.addRequired('filename_with_ext', @(x) ischar(x) || isstring(x));
-    p.addParameter('InputFolder', '', @(x) ischar(x) || isstring(x));
+    p.addParameter('InputFolder',  '', @(x) ischar(x) || isstring(x));
     p.addParameter('OutputFolder', '', @(x) ischar(x) || isstring(x));
-    p.addParameter('Verbose', true, @(x) islogical(x) || isnumeric(x));
+    p.addParameter('Verbose',      true, @(x) islogical(x) || isnumeric(x));
     p.parse(filename_with_ext, varargin{:});
 
     filename_with_ext = char(p.Results.filename_with_ext);
-    input_folder = char(p.Results.InputFolder);
-    output_folder = char(p.Results.OutputFolder);
-    verbose = logical(p.Results.Verbose);
+    input_folder     = char(p.Results.InputFolder);
+    output_folder    = char(p.Results.OutputFolder);
+    verbose          = logical(p.Results.Verbose);
 
     %--- Set default folders if not provided ---
     if isempty(input_folder)
-        % DEFAULT input folder: adjust as needed
         input_folder = 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_project';
         if verbose
             fprintf('Using default InputFolder: %s\n', input_folder);
@@ -73,8 +65,10 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
     if verbose
         fprintf('Parsed filename: base="%s", extension="%s"\n', base_name, ext);
     end
-    if ~ismember(ext, {'.drv', '.tgt'})
-        error('Unsupported extension "%s". Must be ".drv" or ".tgt".', ext);
+
+    %--- Accept .drv, .tgt, or .acq ---
+    if ~ismember(ext, {'.drv', '.tgt', '.acq'})
+        error('Unsupported extension "%s". Must be ".drv", ".tgt", or ".acq".', ext);
     end
 
     %--- Construct full input path and check existence ---
@@ -88,17 +82,7 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
 
     %--- Ensure Python module folder is on py.sys.path ---
     try
-        already = false;
-        for i = 1:length(py.sys.path)
-            try
-                if strcmp(char(py.sys.path{i}), PythonModuleFolder)
-                    already = true;
-                    break;
-                end
-            catch
-                % ignore conversion issues
-            end
-        end
+        already = any(cellfun(@(p) strcmp(char(p), PythonModuleFolder), cell(py.sys.path)));
         if ~already
             insert(py.sys.path, int32(0), PythonModuleFolder);
             if verbose
@@ -125,12 +109,13 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
         error('Cannot proceed without the Python module.');
     end
 
-    %--- Call the Python conversion function (same for .drv and .tgt) ---
+    %--- Call the Python conversion function ---
     try
         py_output = pyModule.(FunctionName)(in_file, output_folder);
         if verbose
             fprintf('Called Python %s.%s on %s\n', ModuleName, FunctionName, in_file);
         end
+
         if isempty(py_output) || isequal(py_output, py.None)
             warning('Python function returned None or empty. Check if conversion succeeded in folder: %s', output_folder);
             output_path = '';
@@ -154,7 +139,6 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
     end
     if ~isfile(output_path)
         warning('Python reported output path but file not found: %s', output_path);
-        % Depending on your preference, you could error here.
     end
 
     %--- Call loadTXT on the converted .txt file ---

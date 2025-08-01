@@ -120,13 +120,13 @@ function loadTXT(filename)
   nzColsMask = any(data ~= 0, 1);
   data       = data(:, nzColsMask);
   colNames   = colNames(nzColsMask);
-  typeNames  = typeNames(nzColsMask);
 
   %--------------------------------------------%
   % 5. Decide behavior based on file suffix    %
   %--------------------------------------------%
   switch suffix
     case 'tgt'
+      typeNames  = typeNames(nzColsMask);
       %---------------------------%
       % Build time vector first  %
       %---------------------------%
@@ -187,7 +187,13 @@ function loadTXT(filename)
       assignin('base', var_time, time_drv);
       fprintf('Loaded: %s\n', var_time);
 
+      % If no 'Displacement' types found, assume all columns are displacement
       dispIdxs = find(strcmpi(typeNames, 'Displacement'));
+      if isempty(dispIdxs)
+        dispIdxs = 1:numel(typeNames);
+      end
+
+      % Now pick T, L, V channels as before
       idxT = findChannelIndex(colNames, dispIdxs, 'T');
       idxL = findChannelIndex(colNames, dispIdxs, 'L');
       idxV = findChannelIndex(colNames, dispIdxs, 'V');
@@ -207,10 +213,6 @@ function loadTXT(filename)
         assignin('base', var_x_V, data(:, idxV));
         fprintf('Loaded: %s\n', var_x_V);
       end
-      return
-
-    otherwise
-      error('Unsupported file suffix "%s". Expecting tgt or drv (before .txt).', suffix);
   end
 end
 

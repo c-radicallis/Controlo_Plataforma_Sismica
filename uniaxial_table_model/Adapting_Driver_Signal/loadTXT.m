@@ -64,6 +64,20 @@ function loadTXT(filename)
     error('Header missing required fields.');
   end
 
+
+  % If 'Type' line empty or mismatch columns, fill default types
+  if numel(typeNames) ~= numel(colNames)
+    switch suffix
+      case {'tgt','acq'}
+        typeNames = [repmat({'Displacement'},1,3), repmat({'Acceleration'},1,3)];
+      case 'drv'
+        typeNames = repmat({'Displacement'},1,numel(colNames));
+      otherwise
+        typeNames = repmat({'Displacement'},1,numel(colNames));
+    end
+  end
+
+
   %------------------------------------%
   % 4. Read numeric data into matrix    %
   %------------------------------------%
@@ -81,17 +95,13 @@ function loadTXT(filename)
   validCols = any(data ~= 0, 1) & ~any(isnan(data), 1);
   data      = data(:, validCols);
   colNames  = colNames(validCols);
-  if ~isempty(typeNames)
-    typeNames = typeNames(validCols);
-  end
+  typeNames = typeNames(validCols);
 
   %--------------------------------------------%
   % 5. Decide behavior based on file suffix    %
   %--------------------------------------------%
   switch suffix
     case 'tgt'
-      % ensure types trimmed
-      typeNames  = typeNames;
       time_vector = (0:(numsamps-1))' * dt;
       assignin('base', 'time_vector', time_vector);
       fprintf('Loaded: time_vector\n');
@@ -130,13 +140,12 @@ function loadTXT(filename)
       idxL = findChannelIndex(colNames, dispIdxs, 'L');
       idxV = findChannelIndex(colNames, dispIdxs, 'V');
 
-      if ~isempty(idxT), assignin('base',sprintf('x_drv_T_%s',iStr),data(:,idxT)); end
-      if ~isempty(idxL), assignin('base',sprintf('x_drv_L_%s',iStr),data(:,idxL)); end
-      if ~isempty(idxV), assignin('base',sprintf('x_drv_V_%s',iStr),data(:,idxV)); end
+      if ~isempty(idxT), assignin('base',sprintf('x_drv_T_%s',iStr),data(:,idxT));fprintf('Loaded: x_drv_T_%s\n',iStr); end
+      if ~isempty(idxL), assignin('base',sprintf('x_drv_L_%s',iStr),data(:,idxL));fprintf('Loaded: x_drv_L_%s\n',iStr); end
+      if ~isempty(idxV), assignin('base',sprintf('x_drv_V_%s',iStr),data(:,idxV));fprintf('Loaded: x_drv_V_%s\n',iStr); end
       return
 
     case 'acq'
-      % Treat like .tgt but name variables with _acq suffix
       time_acq = (0:(numsamps-1))' * dt;
       assignin('base', 'time_acq', time_acq);
       fprintf('Loaded: time_acq\n');
@@ -165,6 +174,7 @@ function loadTXT(filename)
 end
 
 function idx = findChannelIndex(colNames, idxList, letter)
+  % findChannelIndex: among idxList, find the first column whose name contains 'letter'
   idx = [];
   for jj = idxList
     if contains(colNames{jj}, letter, 'IgnoreCase', true)

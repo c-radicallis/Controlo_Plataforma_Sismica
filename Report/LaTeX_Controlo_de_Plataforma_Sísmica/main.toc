@@ -9,7 +9,7 @@
 \contentsline {section}{\numberline {4}State of the Art}{9}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Simulation and Reality: The role of experimental testing in seismic engineering}{9}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}An Overview of Experimental Methods}{9}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Control Strategies and Innovations}{10}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.3}Seismic Table Control Strategies and Innovations}{10}{subsection.4.3}%
 \contentsline {section}{\numberline {5}Modelling Seismic Table Dynamics}{10}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Previous Works}{10}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}{11}{subsection.5.2}%

@@ -89,3 +89,15 @@
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+\\Q , where \\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+$"}
 {"rule":"COMMA_PARENTHESIS_WHITESPACE","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+\\Q , where \\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+\\Q \\E(?:Dummy|Ina|Jimmy-|Dummy-|Maniquí-|Maniquíes-)[0-9]+\\Q.\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAdvanced control methods, such as active disturbance rejection control (ADRC), adaptive model-based state estimators, and nonlinear signal-based control, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses .\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAdvanced control methods, such as active disturbance rejection control (ADRC), adaptive model-based state estimators, and nonlinear signal-based control, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QSeismic behaviour of tunnels: From experiments to analysis\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QExperimental investigation of seismic behaviour of low dissipative CFS strap-braced stud walls\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QLaboratory experiments on fault behavior towards better understanding of injection-induced seismicity in geoenergy systems\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QTécnico\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QUniversidade de Aveiro\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QUniversity of Illinois at Urbana-Champaign\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QNSEL Report Series\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QAnálise do Comportamento Dinâmico de uma Plataforma Sísmica e de um Pórtico em Betão Armado e a sua Evolução com o Dano Acumulado\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QISEL\\E$"}
+{"rule":"BACHELOR_ABBR","sentence":"^\\QMSc Thesis\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QControlo de Plataforma Sismica\\E$"}

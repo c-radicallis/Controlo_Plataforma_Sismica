@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.17)  18 SEP 2025 11:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.9.17)  19 SEP 2025 09:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -963,12 +963,12 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 [6]
-<Intro/schematic_st1d_Fernando.png, id=435, 1387.1825pt x 723.70375pt>
+<Intro/schematic_st1d_Fernando.png, id=434, 1387.1825pt x 723.70375pt>
 File: Intro/schematic_st1d_Fernando.png Graphic file (type png)
 <use Intro/schematic_st1d_Fernando.png>
 Package pdftex.def Info: Intro/schematic_st1d_Fernando.png  used on input line 183.
 (pdftex.def)             Requested size: 409.71692pt x 213.75578pt.
-<Intro/schematic_test_process.png, id=440, 388.45125pt x 477.785pt>
+<Intro/schematic_test_process.png, id=439, 388.45125pt x 477.785pt>
 File: Intro/schematic_test_process.png Graphic file (type png)
 <use Intro/schematic_test_process.png>
 Package pdftex.def Info: Intro/schematic_test_process.png  used on input line 196.
@@ -978,7 +978,7 @@ Package pdftex.def Info: Intro/schematic_test_process.png  used on input line 19
 [7
 
  <./Intro/schematic_st1d_Fernando.png> <./Intro/schematic_test_process.png>]
-<response_spectrum_schematic.png, id=450, 259.97125pt x 675.52374pt>
+<response_spectrum_schematic.png, id=449, 259.97125pt x 675.52374pt>
 File: response_spectrum_schematic.png Graphic file (type png)
 <use response_spectrum_schematic.png>
 Package pdftex.def Info: response_spectrum_schematic.png  used on input line 278.
@@ -990,7 +990,7 @@ Package pdftex.def Info: response_spectrum_schematic.png  used on input line 278
 [9
 
 ]
-<Modelling/Gidewon_block_diagram.png, id=535, 1407.2575pt x 358.33875pt>
+<Modelling/Gidewon_block_diagram.png, id=534, 1407.2575pt x 358.33875pt>
 File: Modelling/Gidewon_block_diagram.png Graphic file (type png)
 <use Modelling/Gidewon_block_diagram.png>
 Package pdftex.def Info: Modelling/Gidewon_block_diagram.png  used on input line 386.
@@ -998,7 +998,7 @@ Package pdftex.def Info: Modelling/Gidewon_block_diagram.png  used on input line
 
 
 [10]
-<Modelling/ST1D_block_diagram.png, id=556, 1792.6975pt x 452.69125pt>
+<Modelling/ST1D_block_diagram.png, id=555, 1792.6975pt x 452.69125pt>
 File: Modelling/ST1D_block_diagram.png Graphic file (type png)
 <use Modelling/ST1D_block_diagram.png>
 Package pdftex.def Info: Modelling/ST1D_block_diagram.png  used on input line 439.
@@ -1013,7 +1013,7 @@ Overfull \hbox (6.95566pt too wide) in paragraph at lines 592--610
 
 
 [12]
-<Sim_Res/Response_Spectra.png, id=598, 1445.4pt x 758.835pt>
+<Sim_Res/Response_Spectra.png, id=597, 1445.4pt x 758.835pt>
 File: Sim_Res/Response_Spectra.png Graphic file (type png)
 <use Sim_Res/Response_Spectra.png>
 Package pdftex.def Info: Sim_Res/Response_Spectra.png  used on input line 668.
@@ -1021,22 +1021,22 @@ Package pdftex.def Info: Sim_Res/Response_Spectra.png  used on input line 668.
 
 
 [13]
-<Sim_Res/Bode_of_G_xT_xref.png, id=613, 421.575pt x 316.0608pt>
+<Sim_Res/Bode_of_G_xT_xref.png, id=612, 421.575pt x 316.0608pt>
 File: Sim_Res/Bode_of_G_xT_xref.png Graphic file (type png)
 <use Sim_Res/Bode_of_G_xT_xref.png>
 Package pdftex.def Info: Sim_Res/Bode_of_G_xT_xref.png  used on input line 700.
 (pdftex.def)             Requested size: 223.07211pt x 167.24135pt.
-<Sim_Res/Input_to_Servo.png, id=614, 421.575pt x 316.0608pt>
+<Sim_Res/Input_to_Servo.png, id=613, 421.575pt x 316.0608pt>
 File: Sim_Res/Input_to_Servo.png Graphic file (type png)
 <use Sim_Res/Input_to_Servo.png>
 Package pdftex.def Info: Sim_Res/Input_to_Servo.png  used on input line 707.
 (pdftex.def)             Requested size: 223.07211pt x 167.24135pt.
-<Sim_Res/Platen_Acceleration.png, id=615, 421.575pt x 316.0608pt>
+<Sim_Res/Platen_Acceleration.png, id=614, 421.575pt x 316.0608pt>
 File: Sim_Res/Platen_Acceleration.png Graphic file (type png)
 <use Sim_Res/Platen_Acceleration.png>
 Package pdftex.def Info: Sim_Res/Platen_Acceleration.png  used on input line 717.
 (pdftex.def)             Requested size: 223.07211pt x 167.24135pt.
-<Sim_Res/Platen_Displacement.png, id=616, 421.575pt x 316.0608pt>
+<Sim_Res/Platen_Displacement.png, id=615, 421.575pt x 316.0608pt>
 File: Sim_Res/Platen_Displacement.png Graphic file (type png)
 <use Sim_Res/Platen_Displacement.png>
 Package pdftex.def Info: Sim_Res/Platen_Displacement.png  used on input line 724.
@@ -1044,27 +1044,27 @@ Package pdftex.def Info: Sim_Res/Platen_Displacement.png  used on input line 724
 
 
 [14 <./Sim_Res/Response_Spectra.png (PNG copy)> <./Sim_Res/Bode_of_G_xT_xref.png (PNG copy)> <./Sim_Res/Input_to_Servo.png (PNG copy)>]
-<Sim_Res/Platen_Acceleration_zoom.png, id=622, 421.575pt x 316.18124pt>
+<Sim_Res/Platen_Acceleration_zoom.png, id=621, 421.575pt x 316.18124pt>
 File: Sim_Res/Platen_Acceleration_zoom.png Graphic file (type png)
 <use Sim_Res/Platen_Acceleration_zoom.png>
 Package pdftex.def Info: Sim_Res/Platen_Acceleration_zoom.png  used on input line 733.
 (pdftex.def)             Requested size: 223.07211pt x 167.30508pt.
-<Sim_Res/Platen_Displacement_zoom.png, id=623, 421.575pt x 316.18124pt>
+<Sim_Res/Platen_Displacement_zoom.png, id=622, 421.575pt x 316.18124pt>
 File: Sim_Res/Platen_Displacement_zoom.png Graphic file (type png)
 <use Sim_Res/Platen_Displacement_zoom.png>
 Package pdftex.def Info: Sim_Res/Platen_Displacement_zoom.png  used on input line 740.
 (pdftex.def)             Requested size: 223.07211pt x 167.30508pt.
-<Sim_Res/Platen_Acceleration_Tracking_Error.png, id=624, 421.575pt x 316.0608pt>
+<Sim_Res/Platen_Acceleration_Tracking_Error.png, id=623, 421.575pt x 316.0608pt>
 File: Sim_Res/Platen_Acceleration_Tracking_Error.png Graphic file (type png)
 <use Sim_Res/Platen_Acceleration_Tracking_Error.png>
 Package pdftex.def Info: Sim_Res/Platen_Acceleration_Tracking_Error.png  used on input line 749.
 (pdftex.def)             Requested size: 223.07211pt x 167.24135pt.
-<Sim_Res/Platen_Displacement_Tracking_Error.png, id=625, 421.575pt x 316.0608pt>
+<Sim_Res/Platen_Displacement_Tracking_Error.png, id=624, 421.575pt x 316.0608pt>
 File: Sim_Res/Platen_Displacement_Tracking_Error.png Graphic file (type png)
 <use Sim_Res/Platen_Displacement_Tracking_Error.png>
 Package pdftex.def Info: Sim_Res/Platen_Displacement_Tracking_Error.png  used on input line 756.
 (pdftex.def)             Requested size: 223.07211pt x 167.24135pt.
-<MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png, id=628, 1183.42125pt x 676.02562pt>
+<MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png, id=627, 1183.42125pt x 676.02562pt>
 File: MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png Graphic file (type png)
 <use MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png>
 Package pdftex.def Info: MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png  used on input line 770.
@@ -1072,12 +1072,12 @@ Package pdftex.def Info: MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cu
 
 
 [15 <./Sim_Res/Platen_Acceleration.png (PNG copy)> <./Sim_Res/Platen_Displacement.png (PNG copy)> <./Sim_Res/Platen_Acceleration_zoom.png (PNG copy)> <./Sim_Res/Platen_Displacement_zoom.png (PNG copy)> <./Sim_Res/Platen_Acceleration_Tracking_Error.png (PNG copy)> <./Sim_Res/Platen_Displacement_Tracking_Error.png (PNG copy)>]
-<MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png, id=633, 1172.12906pt x 676.77844pt>
+<MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png, id=632, 1172.12906pt x 676.77844pt>
 File: MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png Graphic file (type png)
 <use MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png>
 Package pdftex.def Info: MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png  used on input line 777.
 (pdftex.def)             Requested size: 455.24411pt x 262.84789pt.
-<MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png, id=634, 1167.61218pt x 678.28406pt>
+<MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png, id=633, 1167.61218pt x 678.28406pt>
 File: MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png Graphic file (type png)
 <use MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png>
 Package pdftex.def Info: MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png  used on input line 784.
@@ -1085,17 +1085,17 @@ Package pdftex.def Info: MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png  used on 
 
 
 [16 <./MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png> <./MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png>]
-<MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png, id=643, 1445.4pt x 758.835pt>
+<MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png, id=642, 1445.4pt x 758.835pt>
 File: MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png Graphic file (type png)
 <use MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png>
 Package pdftex.def Info: MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png  used on input line 793.
 (pdftex.def)             Requested size: 455.24411pt x 238.99956pt.
-<MSE_Zeta/Surf_Zeta_LowFreq_TopView.png, id=644, 421.575pt x 316.18124pt>
+<MSE_Zeta/Surf_Zeta_LowFreq_TopView.png, id=643, 421.575pt x 316.18124pt>
 File: MSE_Zeta/Surf_Zeta_LowFreq_TopView.png Graphic file (type png)
 <use MSE_Zeta/Surf_Zeta_LowFreq_TopView.png>
 Package pdftex.def Info: MSE_Zeta/Surf_Zeta_LowFreq_TopView.png  used on input line 802.
 (pdftex.def)             Requested size: 204.85846pt x 153.64684pt.
-<PID_MSE/stiffness_solutions.png, id=645, 421.575pt x 316.18124pt>
+<PID_MSE/stiffness_solutions.png, id=644, 421.575pt x 316.18124pt>
 File: PID_MSE/stiffness_solutions.png Graphic file (type png)
 <use PID_MSE/stiffness_solutions.png>
 Package pdftex.def Info: PID_MSE/stiffness_solutions.png  used on input line 809.
@@ -1103,27 +1103,27 @@ Package pdftex.def Info: PID_MSE/stiffness_solutions.png  used on input line 809
 
 
 [17 <./MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png> <./MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png (PNG copy)>]
-<MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png, id=656, 421.575pt x 316.18124pt>
+<MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png, id=655, 421.575pt x 316.18124pt>
 File: MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png Graphic file (type png)
 <use MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png>
 Package pdftex.def Info: MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png  used on input line 818.
 (pdftex.def)             Requested size: 204.85846pt x 153.64684pt.
-<MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png, id=657, 421.575pt x 316.18124pt>
+<MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png, id=656, 421.575pt x 316.18124pt>
 File: MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png Graphic file (type png)
 <use MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png>
 Package pdftex.def Info: MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png  used on input line 825.
 (pdftex.def)             Requested size: 204.85846pt x 153.64684pt.
-<PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png, id=658, 1445.4pt x 758.835pt>
+<PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png, id=657, 1445.4pt x 758.835pt>
 File: PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png Graphic file (type png)
 <use PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png>
 Package pdftex.def Info: PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png  used on input line 834.
 (pdftex.def)             Requested size: 455.24411pt x 238.99956pt.
-<PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png, id=659, 522.45187pt x 467.49657pt>
+<PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png, id=658, 522.45187pt x 467.49657pt>
 File: PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png Graphic file (type png)
 <use PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png>
 Package pdftex.def Info: PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png  used on input line 843.
 (pdftex.def)             Requested size: 200.30852pt x 179.24129pt.
-<MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png, id=660, 421.575pt x 316.18124pt>
+<MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png, id=659, 421.575pt x 316.18124pt>
 File: MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png Graphic file (type png)
 <use MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png>
 Package pdftex.def Info: MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png  used on input line 850.
@@ -1133,17 +1133,17 @@ Package pdftex.def Info: MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_to
 [18 <./MSE_Zeta/Surf_Zeta_LowFreq_TopView.png (PNG copy)> <./PID_MSE/stiffness_solutions.png (PNG copy)> <./MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png (PNG copy)> <./MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png (PNG copy)> <./PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png (PNG copy)>]
 
 [19 <./PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png (PNG copy)> <./MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png (PNG copy)>]
-<LQI/LQI_loop.png, id=676, 566.115pt x 182.6825pt>
+<LQI/LQI_loop.png, id=675, 566.115pt x 182.6825pt>
 File: LQI/LQI_loop.png Graphic file (type png)
 <use LQI/LQI_loop.png>
 Package pdftex.def Info: LQI/LQI_loop.png  used on input line 945.
 (pdftex.def)             Requested size: 223.07211pt x 71.98456pt.
-<LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png, id=677, 421.575pt x 316.18124pt>
+<LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png, id=676, 421.575pt x 316.18124pt>
 File: LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png Graphic file (type png)
 <use LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png  used on input line 962.
 (pdftex.def)             Requested size: 223.07211pt x 167.30508pt.
-<LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png, id=678, 421.575pt x 316.18124pt>
+<LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png, id=677, 421.575pt x 316.18124pt>
 File: LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png  used on input line 969.
@@ -1153,17 +1153,17 @@ Package pdftex.def Info: LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png  used on input li
 [20
 
  <./LQI/LQI_loop.png>]
-<LQI/Sim_Res_Qe9_tight/Response_Spectra.png, id=687, 1161.138pt x 664.4022pt>
+<LQI/Sim_Res_Qe9_tight/Response_Spectra.png, id=686, 1161.138pt x 664.4022pt>
 File: LQI/Sim_Res_Qe9_tight/Response_Spectra.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Response_Spectra.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Response_Spectra.png  used on input line 979.
 (pdftex.def)             Requested size: 455.24411pt x 260.48444pt.
-<LQI/Sim_Res_Qe9_tight/Input_to_Servo.png, id=688, 370.2633pt x 303.534pt>
+<LQI/Sim_Res_Qe9_tight/Input_to_Servo.png, id=687, 370.2633pt x 303.534pt>
 File: LQI/Sim_Res_Qe9_tight/Input_to_Servo.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Input_to_Servo.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Input_to_Servo.png  used on input line 988.
 (pdftex.def)             Requested size: 223.07211pt x 182.8721pt.
-<LQI/Sim_Res_Qe9_tight/Force_to_Platen.png, id=689, 367.3725pt x 303.2931pt>
+<LQI/Sim_Res_Qe9_tight/Force_to_Platen.png, id=688, 367.3725pt x 303.2931pt>
 File: LQI/Sim_Res_Qe9_tight/Force_to_Platen.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Force_to_Platen.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Force_to_Platen.png  used on input line 995.
@@ -1171,32 +1171,32 @@ Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Force_to_Platen.png  used on inpu
 
 
 [21 <./LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png (PNG copy)> <./LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Response_Spectra.png (PNG copy)>]
-<LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png, id=694, 373.6359pt x 303.2931pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png, id=693, 373.6359pt x 303.2931pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png  used on input line 1004.
 (pdftex.def)             Requested size: 223.07211pt x 181.07945pt.
-<LQI/Sim_Res_Qe9_tight/Platen_Displacement.png, id=695, 375.804pt x 303.2931pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Displacement.png, id=694, 375.804pt x 303.2931pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Displacement.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Displacement.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Displacement.png  used on input line 1011.
 (pdftex.def)             Requested size: 223.07211pt x 180.03355pt.
-<LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png, id=696, 421.575pt x 316.18124pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png, id=695, 421.575pt x 316.18124pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png  used on input line 1020.
 (pdftex.def)             Requested size: 223.07211pt x 167.30508pt.
-<LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png, id=697, 421.575pt x 316.18124pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png, id=696, 421.575pt x 316.18124pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png  used on input line 1027.
 (pdftex.def)             Requested size: 223.07211pt x 167.30508pt.
-<LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png, id=698, 373.6359pt x 303.2931pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png, id=697, 373.6359pt x 303.2931pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png  used on input line 1036.
 (pdftex.def)             Requested size: 223.07211pt x 181.07945pt.
-<LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png, id=699, 370.2633pt x 304.9794pt>
+<LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png, id=698, 370.2633pt x 304.9794pt>
 File: LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png Graphic file (type png)
 <use LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png>
 Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png  used on input line 1043.
@@ -1204,22 +1204,22 @@ Package pdftex.def Info: LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Erro
 
 
 [22 <./LQI/Sim_Res_Qe9_tight/Input_to_Servo.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Force_to_Platen.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Platen_Displacement.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png (PNG copy)>]
-<LQG/LQG_loop.png, id=706, 513.92pt x 198.7425pt>
+<LQG/LQG_loop.png, id=705, 513.92pt x 198.7425pt>
 File: LQG/LQG_loop.png Graphic file (type png)
 <use LQG/LQG_loop.png>
 Package pdftex.def Info: LQG/LQG_loop.png  used on input line 1060.
 (pdftex.def)             Requested size: 223.07211pt x 86.26729pt.
-<LQG/Sim_Res_Qe9_tight/Response_Spectra.png, id=707, 1161.138pt x 664.4022pt>
+<LQG/Sim_Res_Qe9_tight/Response_Spectra.png, id=706, 1161.138pt x 664.4022pt>
 File: LQG/Sim_Res_Qe9_tight/Response_Spectra.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Response_Spectra.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Response_Spectra.png  used on input line 1068.
 (pdftex.def)             Requested size: 455.24411pt x 260.48444pt.
-<LQG/Sim_Res_Qe9_tight/Input_to_Servo.png, id=708, 370.2633pt x 303.534pt>
+<LQG/Sim_Res_Qe9_tight/Input_to_Servo.png, id=707, 370.2633pt x 303.534pt>
 File: LQG/Sim_Res_Qe9_tight/Input_to_Servo.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Input_to_Servo.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Input_to_Servo.png  used on input line 1077.
 (pdftex.def)             Requested size: 223.07211pt x 182.8721pt.
-<LQG/Sim_Res_Qe9_tight/Force_to_Platen.png, id=709, 367.3725pt x 303.2931pt>
+<LQG/Sim_Res_Qe9_tight/Force_to_Platen.png, id=708, 367.3725pt x 303.2931pt>
 File: LQG/Sim_Res_Qe9_tight/Force_to_Platen.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Force_to_Platen.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Force_to_Platen.png  used on input line 1084.
@@ -1227,22 +1227,22 @@ Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Force_to_Platen.png  used on inpu
 
 
 [23 <./LQI/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png (PNG copy)> <./LQI/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png (PNG copy)> <./LQG/LQG_loop.png> <./LQG/Sim_Res_Qe9_tight/Response_Spectra.png (PNG copy)>]
-<LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png, id=715, 373.6359pt x 303.2931pt>
+<LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png, id=714, 373.6359pt x 303.2931pt>
 File: LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png  used on input line 1093.
 (pdftex.def)             Requested size: 223.07211pt x 181.07945pt.
-<LQG/Sim_Res_Qe9_tight/Platen_Displacement.png, id=716, 375.804pt x 303.2931pt>
+<LQG/Sim_Res_Qe9_tight/Platen_Displacement.png, id=715, 375.804pt x 303.2931pt>
 File: LQG/Sim_Res_Qe9_tight/Platen_Displacement.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Platen_Displacement.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Platen_Displacement.png  used on input line 1100.
 (pdftex.def)             Requested size: 223.07211pt x 180.03355pt.
-<LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png, id=717, 373.6359pt x 303.2931pt>
+<LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png, id=716, 373.6359pt x 303.2931pt>
 File: LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png  used on input line 1125.
 (pdftex.def)             Requested size: 223.07211pt x 181.07945pt.
-<LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png, id=718, 370.2633pt x 304.9794pt>
+<LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png, id=717, 370.2633pt x 304.9794pt>
 File: LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png Graphic file (type png)
 <use LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png>
 Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png  used on input line 1132.
@@ -1250,17 +1250,17 @@ Package pdftex.def Info: LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Erro
 
 
 [24 <./LQG/Sim_Res_Qe9_tight/Input_to_Servo.png (PNG copy)> <./LQG/Sim_Res_Qe9_tight/Force_to_Platen.png (PNG copy)> <./LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png (PNG copy)> <./LQG/Sim_Res_Qe9_tight/Platen_Displacement.png (PNG copy)> <./LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png (PNG copy)> <./LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png (PNG copy)>]
-<Adapt/driver_signal_generation_loop.png, id=724, 745.78625pt x 563.10374pt>
+<Adapt/driver_signal_generation_loop.png, id=723, 745.78625pt x 563.10374pt>
 File: Adapt/driver_signal_generation_loop.png Graphic file (type png)
 <use Adapt/driver_signal_generation_loop.png>
 Package pdftex.def Info: Adapt/driver_signal_generation_loop.png  used on input line 1150.
 (pdftex.def)             Requested size: 182.09486pt x 137.48476pt.
-<Adapt/Adapt_Project_Parameters.png, id=726, 1237.62375pt x 588.1975pt>
+<Adapt/Adapt_Project_Parameters.png, id=725, 1237.62375pt x 588.1975pt>
 File: Adapt/Adapt_Project_Parameters.png Graphic file (type png)
 <use Adapt/Adapt_Project_Parameters.png>
 Package pdftex.def Info: Adapt/Adapt_Project_Parameters.png  used on input line 1168.
 (pdftex.def)             Requested size: 455.24411pt x 216.36417pt.
-<Adapt/Adapt_FRF_Parameters.png, id=727, 1063.975pt x 699.61375pt>
+<Adapt/Adapt_FRF_Parameters.png, id=726, 1063.975pt x 699.61375pt>
 File: Adapt/Adapt_FRF_Parameters.png Graphic file (type png)
 <use Adapt/Adapt_FRF_Parameters.png>
 Package pdftex.def Info: Adapt/Adapt_FRF_Parameters.png  used on input line 1175.
@@ -1268,12 +1268,12 @@ Package pdftex.def Info: Adapt/Adapt_FRF_Parameters.png  used on input line 1175
 
 
 [25 <./Adapt/driver_signal_generation_loop.png> <./Adapt/Adapt_Project_Parameters.png>]
-<Adapt/Adapt_INV_Panel.png, id=735, 1189.44376pt x 776.9025pt>
+<Adapt/Adapt_INV_Panel.png, id=734, 1189.44376pt x 776.9025pt>
 File: Adapt/Adapt_INV_Panel.png Graphic file (type png)
 <use Adapt/Adapt_INV_Panel.png>
 Package pdftex.def Info: Adapt/Adapt_INV_Panel.png  used on input line 1182.
 (pdftex.def)             Requested size: 432.48051pt x 282.4705pt.
-<Adapt/bode_compare.png, id=737, 421.575pt x 316.18124pt>
+<Adapt/bode_compare.png, id=736, 421.575pt x 316.18124pt>
 File: Adapt/bode_compare.png Graphic file (type png)
 <use Adapt/bode_compare.png>
 Package pdftex.def Info: Adapt/bode_compare.png  used on input line 1203.
@@ -1281,7 +1281,7 @@ Package pdftex.def Info: Adapt/bode_compare.png  used on input line 1203.
 
 
 [26 <./Adapt/Adapt_FRF_Parameters.png> <./Adapt/Adapt_INV_Panel.png>]
-<Adapt/Response_Spectra.png, id=747, 1160.8971pt x 664.1613pt>
+<Adapt/Response_Spectra.png, id=746, 1160.8971pt x 664.1613pt>
 File: Adapt/Response_Spectra.png Graphic file (type png)
 <use Adapt/Response_Spectra.png>
 Package pdftex.def Info: Adapt/Response_Spectra.png  used on input line 1220.
@@ -1289,17 +1289,17 @@ Package pdftex.def Info: Adapt/Response_Spectra.png  used on input line 1220.
 
 
 [27 <./Adapt/bode_compare.png (PNG copy)>]
-<Adapt/bode_compare_better_id.png, id=760, 421.575pt x 294.34969pt>
+<Adapt/bode_compare_better_id.png, id=759, 421.575pt x 294.34969pt>
 File: Adapt/bode_compare_better_id.png Graphic file (type png)
 <use Adapt/bode_compare_better_id.png>
 Package pdftex.def Info: Adapt/bode_compare_better_id.png  used on input line 1233.
 (pdftex.def)             Requested size: 223.07211pt x 155.75307pt.
-<Adapt/FRFvsModelTF.png, id=761, 475.02469pt x 360.59718pt>
+<Adapt/FRFvsModelTF.png, id=760, 475.02469pt x 360.59718pt>
 File: Adapt/FRFvsModelTF.png Graphic file (type png)
 <use Adapt/FRFvsModelTF.png>
 Package pdftex.def Info: Adapt/FRFvsModelTF.png  used on input line 1239.
 (pdftex.def)             Requested size: 218.51521pt x 165.87671pt.
-<Adapt/Response_Spectra_better_id.png, id=762, 1160.8971pt x 664.1613pt>
+<Adapt/Response_Spectra_better_id.png, id=761, 1160.8971pt x 664.1613pt>
 File: Adapt/Response_Spectra_better_id.png Graphic file (type png)
 <use Adapt/Response_Spectra_better_id.png>
 Package pdftex.def Info: Adapt/Response_Spectra_better_id.png  used on input line 1248.
@@ -1307,17 +1307,17 @@ Package pdftex.def Info: Adapt/Response_Spectra_better_id.png  used on input lin
 
 
 [28 <./Adapt/Response_Spectra.png (PNG copy)> <./Adapt/bode_compare_better_id.png> <./Adapt/FRFvsModelTF.png (PNG copy)>]
-<Adapt/excel_accel_resp_spectrum.png, id=770, 813.804pt x 317.55pt>
+<Adapt/excel_accel_resp_spectrum.png, id=769, 813.804pt x 317.55pt>
 File: Adapt/excel_accel_resp_spectrum.png Graphic file (type png)
 <use Adapt/excel_accel_resp_spectrum.png>
 Package pdftex.def Info: Adapt/excel_accel_resp_spectrum.png  used on input line 1256.
 (pdftex.def)             Requested size: 364.19667pt x 142.11122pt.
-<Adapt/excel_disp_resp_spectrum.png, id=775, 814.023pt x 342.078pt>
+<Adapt/excel_disp_resp_spectrum.png, id=774, 814.023pt x 342.078pt>
 File: Adapt/excel_disp_resp_spectrum.png Graphic file (type png)
 <use Adapt/excel_disp_resp_spectrum.png>
 Package pdftex.def Info: Adapt/excel_disp_resp_spectrum.png  used on input line 1263.
 (pdftex.def)             Requested size: 364.19667pt x 153.04633pt.
-<Adapt/Erzikan_Response_Spectra_N.png, id=780, 1160.8971pt x 664.1613pt>
+<Adapt/Erzikan_Response_Spectra_N.png, id=779, 1160.8971pt x 664.1613pt>
 File: Adapt/Erzikan_Response_Spectra_N.png Graphic file (type png)
 <use Adapt/Erzikan_Response_Spectra_N.png>
 Package pdftex.def Info: Adapt/Erzikan_Response_Spectra_N.png  used on input line 1287.
@@ -1325,7 +1325,7 @@ Package pdftex.def Info: Adapt/Erzikan_Response_Spectra_N.png  used on input lin
 
 
 [29 <./Adapt/Response_Spectra_better_id.png (PNG copy)> <./Adapt/excel_accel_resp_spectrum.png> <./Adapt/excel_disp_resp_spectrum.png>]
-<Adapt/Erzikan_Response_Spectra_P.png, id=787, 1160.8971pt x 664.1613pt>
+<Adapt/Erzikan_Response_Spectra_P.png, id=786, 1160.8971pt x 664.1613pt>
 File: Adapt/Erzikan_Response_Spectra_P.png Graphic file (type png)
 <use Adapt/Erzikan_Response_Spectra_P.png>
 Package pdftex.def Info: Adapt/Erzikan_Response_Spectra_P.png  used on input line 1294.
@@ -1333,7 +1333,7 @@ Package pdftex.def Info: Adapt/Erzikan_Response_Spectra_P.png  used on input lin
 
 
 [30 <./Adapt/Erzikan_Response_Spectra_N.png (PNG copy)> <./Adapt/Erzikan_Response_Spectra_P.png (PNG copy)>]
-<measurement_and_control_chain_schematic.jpg, id=793, 577.40718pt x 301.8778pt>
+<measurement_and_control_chain_schematic.jpg, id=792, 577.40718pt x 301.8778pt>
 File: measurement_and_control_chain_schematic.jpg Graphic file (type jpg)
 <use measurement_and_control_chain_schematic.jpg>
 Package pdftex.def Info: measurement_and_control_chain_schematic.jpg  used on input line 1319.
@@ -1384,18 +1384,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 28B1C069AC3D66A5988C32D575DDC176;9366.
  ) 
 Here is how much of TeX's memory you used:
- 29839 strings out of 469719
- 562280 string characters out of 5480942
+ 29835 strings out of 469719
+ 562232 string characters out of 5480942
  1002906 words of memory out of 5000000
- 57524 multiletter control sequences out of 15000+600000
- 636425 words of font info for 77 fonts, out of 8000000 for 9000
+ 57521 multiletter control sequences out of 15000+600000
+ 635823 words of font info for 75 fonts, out of 8000000 for 9000
  38 hyphenation exceptions out of 8191
  94i,20n,93p,1062b,826s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb>
-Output written on main.pdf (34 pages, 9152338 bytes).
+<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb>
+Output written on main.pdf (34 pages, 9140641 bytes).
 PDF statistics:
- 952 PDF objects out of 1000 (max. 8388607)
- 768 compressed objects within 8 object streams
+ 947 PDF objects out of 1000 (max. 8388607)
+ 765 compressed objects within 8 object streams
  174 named destinations out of 1000 (max. 500000)
  650 words of extra memory for PDF output out of 10000 (max. 10000000)
 

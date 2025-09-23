@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1758191968.07813 "main.aux" "main.bbl" "main" 1758191974.09381 0
+["bibtex main"] 1758191968.07813 "main.aux" "main.bbl" "main" 1758271918.64757 0
   "./bibfile.bib" 1758182808 9387 a207e1660ed0a6396c2f12b604fa0b0e ""
   "c:/texlive/2025/texmf-dist/bibtex/bst/natbib/abbrvnat.bst" 1758130921 26532 66bed5cc59495faaa3f9ae9af9fa5e42 ""
-  "main.aux" 1758191972 35374 a5fdc43b2d129a479c4463919f5f144d "pdflatex"
+  "main.aux" 1758271913 35374 a5fdc43b2d129a479c4463919f5f144d "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1758191968.54863 "c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.tex" "main.pdf" "main" 1758191974.09455 0
+["pdflatex"] 1758271892.09225 "c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.tex" "main.pdf" "main" 1758271918.65311 0
   "Adapt/Adapt_FRF_Parameters.png" 1758182812 129769 6d69514287865b0a0bd3547af736057a ""
   "Adapt/Adapt_INV_Panel.png" 1758182812 87944 a396e1069c1b54efccc2e7410c9c50ff ""
   "Adapt/Adapt_Project_Parameters.png" 1758182812 91209 15db58f08fa6ba6d58a6c4fbc775cdfa ""
@@ -67,7 +67,7 @@
   "Sim_Res/Platen_Displacement_Tracking_Error.png" 1758182810 44629 9339ee382e12de28ea99c38fe774b7d9 ""
   "Sim_Res/Platen_Displacement_zoom.png" 1758182810 33259 db2edbc52e9f2c5263a1c1dfdad4557f ""
   "Sim_Res/Response_Spectra.png" 1758182810 158606 6551e534cdb40a5ac28979c1e63d37ce ""
-  "c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.tex" 1758191961 100164 71a73e5a22c89fe780491412d55d5438 ""
+  "c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.tex" 1758271884 100165 f822948b87bbcae00d25f7ec2803ead1 ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1758129323 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1758129942 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ectt1000.tfm" 1758129675 1536 06717a2b50de47d4087ac0e6cd759455 ""
@@ -83,7 +83,6 @@
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1758129309 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1758129309 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx9.tfm" 1758129309 1328 5442e22a7072966dbaf88ca900acf3f0 ""
-  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm" 1758129309 1300 63a6111ee6274895728663cf4b4e7e81 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1758129309 1512 f21f83efb36853c0b70002322c1ab3ad ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi9.tfm" 1758129309 1524 d89e2d087a9828407a196f428428ef4a ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1758129309 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
@@ -102,7 +101,6 @@
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1758128791 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1758128791 32080 340ef9bf63678554ee606688e7b5339d ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb" 1758128791 32298 c6d25bb16d1eac01ebdc6d7084126a1e ""
-  "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb" 1758128791 32001 6aeea3afe875097b1eb0da29acd61e28 ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb" 1758128791 37912 07513ec114ac737ab54cea0152f4424b ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb" 1758128791 37166 8ab3487cbe3ab49ebce74c29ea2418db ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1758128791 36281 c355509802a035cadc5f15869451dcee ""
@@ -297,13 +295,13 @@
   "c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1758132529 5482064 dcad218ccbc25e27d0581aee7cf262d6 ""
   "c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1758132758 2255121 859cabf93c420fad62020396b0c1db76 ""
   "c:/texlive/2025/texmf.cnf" 1758132508 713 e69b156964470283e0530f5060668171 ""
-  "main.aux" 1758191972 35374 a5fdc43b2d129a479c4463919f5f144d "pdflatex"
+  "main.aux" 1758271913 35374 a5fdc43b2d129a479c4463919f5f144d "pdflatex"
   "main.bbl" 1758191968 6979 fac36095726864208c30298f981c4318 "bibtex main"
-  "main.lof" 1758191972 12040 8344db519d45fed2c6adce06d8e20765 "pdflatex"
-  "main.lot" 1758191972 612 1e7906dbdc55f4e678e771ff87aa285e "pdflatex"
-  "main.out" 1758191972 9366 28b1c069ac3d66a5988c32d575ddc176 "pdflatex"
-  "main.tex" 1758191961 100164 71a73e5a22c89fe780491412d55d5438 ""
-  "main.toc" 1758191972 4022 083461814c80f11c20d346bfdb56deb2 "pdflatex"
+  "main.lof" 1758271914 12040 8344db519d45fed2c6adce06d8e20765 "pdflatex"
+  "main.lot" 1758271914 612 1e7906dbdc55f4e678e771ff87aa285e "pdflatex"
+  "main.out" 1758271913 9366 28b1c069ac3d66a5988c32d575ddc176 "pdflatex"
+  "main.tex" 1758271884 100165 f822948b87bbcae00d25f7ec2803ead1 ""
+  "main.toc" 1758271914 4022 083461814c80f11c20d346bfdb56deb2 "pdflatex"
   "measurement_and_control_chain_schematic.jpg" 1758182808 74265 bdbda63c238f01a68f17ff7d9e029c69 ""
   "response_spectrum_schematic.png" 1758182808 105267 d9a93d8e09f68849e76835bc574858ed ""
   (generated)

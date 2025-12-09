@@ -47,7 +47,7 @@
 <Name>weighting mode</Name>
 <Choice>Linear</Choice>
 <Choice>Exponential</Choice>
-<Val>0</Val>
+<Val>1</Val>
 </EW>
 <U32>
 <Name>number of averages</Name>
@@ -56,7 +56,7 @@
 </Cluster>
 <I32>
 <Name>Nº Windows</Name>
-<Val>500</Val>
+<Val>512</Val>
 </I32>
 <EW>
 <Name>FRF Mode</Name>
@@ -164,11 +164,11 @@
 <NumElts>2</NumElts>
 <DBL>
 <Name>Crossover Freq</Name>
-<Val>1.00000000000000</Val>
+<Val>2.00000000000000</Val>
 </DBL>
 <Boolean>
 <Name>ON/OFF</Name>
-<Val>0</Val>
+<Val>1</Val>
 </Boolean>
 </Cluster>
 </Cluster>

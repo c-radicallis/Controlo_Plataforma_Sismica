@@ -1,0 +1,13 @@
+{
+  // Tell LTEX+ to check (and therefore suggest) English only:
+  "ltex.language": "en-GB",
+
+  // If you don't want LTEX+ to add its own completion suggestions at all:
+  // "ltex.completionEnabled": false
+
+  // Optional: if you use the popular Code Spell Checker (cSpell) extension,
+  // make sure it only uses English in this workspace:
+  "cSpell.language": "en",
+  // if you want to completely disable cSpell in this workspace:
+  // "cSpell.enabled": false
+}

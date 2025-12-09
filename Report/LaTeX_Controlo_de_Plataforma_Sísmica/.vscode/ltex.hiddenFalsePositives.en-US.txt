@@ -101,3 +101,5 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QISEL\\E$"}
 {"rule":"BACHELOR_ABBR","sentence":"^\\QMSc Thesis\\E$"}
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QControlo de Plataforma Sismica\\E$"}
+{"rule":"ECONOMICAL_ECONOMIC","sentence":"^\\QMany processes in non-technical areas as for example biological and economical systems operate only under closed-loop conditions and it is not even possible to remove the feedback loop.\\E$"}
+{"rule":"ECONOMICAL_ECONOMIC","sentence":"^\\QMany processes in non-technical areas as for example biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop.\\E$"}

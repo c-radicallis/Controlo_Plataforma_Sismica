@@ -57,6 +57,8 @@
 
 \usepackage{arydshln}
 
+\usepackage[english]{babel}
+
 %% ----------  Packages above --------
 
 % Define a general page style with both header and footer
@@ -315,7 +317,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 
 
 %\clearpage
-\section{State of the Art} %\section{Revisão do Estado da Arte}\label{sec:sota}
+\section{Literature Review} %\section{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
 \subsection{Simulation and Reality: The role of experimental testing in seismic engineering}
@@ -366,6 +368,22 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
     \item     Superior Performance over Conventional Methods: Comparative studies demonstrate that adaptive control strategies outperform traditional fixed-parameter controllers (such as PID or three-variable controllers) in both time and frequency domains, providing better acceleration tracking and robustness to specimen uncertainties %4561314.
     \item     Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
+
+\subsection{Identification in Closed-Loop Systems}
+
+Many systems operate under feedback control. This can be due to required safety of operation or to unstable behaviour of the plant. As a consequence experiments can only be performed under presence of a stabilizing controller. Many processes in non-technical areas as for example biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop. Suppose that the plant under consideration is operating under control of a given controller, and that the objective of the identification is to design a better performing controller for the plant. Then the plant dynamics that exhibit themselves under presence of the old controller, might be much more relevant for designing an improved controller, than the open loop dynamics.
+It is very important to know if and how the open loop system can be identified when it must operate under feedback control during the experiment. It will be shown that the feedback can cause difficulties but also that in some specific situations these difficulties may be circumvented.
+
+\subsubsection{The problem with closed-loop identification}
+
+The problems
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
+    \caption{Closed-loop system}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    \label{fig_general_CL_sys}
+\end{figure}
 
 
 

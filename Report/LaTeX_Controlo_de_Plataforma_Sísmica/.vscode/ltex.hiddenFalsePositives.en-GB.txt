@@ -1,0 +1,2 @@
+{"rule":"NUMBERS_IN_WORDS","sentence":"^\\Q[a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm, headsep=5mm] geometry\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_GB","sentence":"^\\Q[a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm, headsep=5mm] geometry\\E$"}

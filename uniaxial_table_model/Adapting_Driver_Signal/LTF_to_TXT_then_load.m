@@ -66,10 +66,10 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
         fprintf('Parsed filename: base="%s", extension="%s"\n', base_name, ext);
     end
 
-    %--- Accept .drv, .tgt, or .acq ---
-    if ~ismember(ext, {'.drv', '.tgt', '.acq'})
-        error('Unsupported extension "%s". Must be ".drv", ".tgt", or ".acq".', ext);
-    end
+    % %--- Accept .drv, .tgt, or .acq ---
+    % if ~ismember(ext, {'.drv', '.tgt', '.acq'})
+    %     error('Unsupported extension "%s". Must be ".drv", ".tgt", or ".acq".', ext);
+    % end
 
     %--- Construct full input path and check existence ---
     in_file = fullfile(input_folder, filename_with_ext);

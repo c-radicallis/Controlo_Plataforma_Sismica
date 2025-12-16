@@ -17,6 +17,8 @@ def ltf_to_txt(file_path, out_dir):
     tgtA.read(file_path)
 
     disp_inds = [0 , 1 ,2]
+    if file_path.suffix == '.ltf':
+        disp_inds = [0]
     acc_inds  = [ 3, 4, 5]
 
     # # Determine channel indices by type or unit
@@ -49,7 +51,7 @@ def ltf_to_txt(file_path, out_dir):
         tgtA._data[ch_idx] = arr
 
     # Convert acceleration channels
-    if file_path.suffix.lower() != ".drv":
+    if file_path.suffix.lower() not in [".drv" , '.ltf']:
         for ch_idx in acc_inds:
             arr = np.array(tgtA._data[ch_idx], dtype=float)
             original_unit = (tgtA.units[ch_idx] or '').strip().lower()
@@ -71,7 +73,7 @@ def ltf_to_txt(file_path, out_dir):
 
     tgtA.write_txt(str(output_path))
     return str(output_path)  # return path for confirmation
-
-# file_path = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji\jiji_0.DRV'
-# folder = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Jiji'
+ 
+# file_path = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\sineSweep\ddx=1200\sineSweep_ddx=1200_f=1e-5to40.ltf'
+# folder = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\sineSweep\ddx=1200'
 # ltf_to_txt(file_path , folder)

@@ -1,36 +1,16 @@
 function loadTXT(filename)
-% loadTXT  Load an LNEC .tgt, .drv, .acq or .ltf text file into MATLAB workspace,
+% loadTXT  Load an LNEC .tgt, .drv or .acq text file into MATLAB workspace,
 %          creating appropriately named variables in the base workspace.
 %          Ignores columns of zeros or containing NaNs.
-%          For .ltf files (single-column) the data is assigned to x_drv_T_0.
 
   %--------------------------%
   % 1. Parse filename parts  %
   %--------------------------%
   [~, name, ext] = fileparts(filename);
-  if ~strcmpi(ext, '.txt') && ~strcmpi(ext, '.ltf')
-    error('Expected a .txt or .ltf file. Got "%s".', ext);
+  if ~strcmpi(ext, '.txt')
+    error('Expected a .txt file. Got "%s".', ext);
   end
 
-  % Early handle .ltf files (single numeric column, no header expected)
-  if strcmpi(ext, '.ltf')
-    fid = fopen(filename,'r');
-    if fid < 0
-      error('Cannot open "%s" for reading.', filename);
-    end
-    % Read all numbers into a column vector
-    data_col = fscanf(fid, '%f');
-    fclose(fid);
-    if isempty(data_col)
-      error('No numeric data found in "%s".', filename);
-    end
-    data_col = data_col(:); % ensure column
-    assignin('base', 'x_drv_T_0', data_col);
-    fprintf('Loaded: x_drv_T_0 (from .ltf)\n');
-    return;
-  end
-
-  % For .txt continue with original parsing
   dotIdx = find(name == '.', 1, 'last');
   if isempty(dotIdx)
     baseName = name;
@@ -121,6 +101,26 @@ function loadTXT(filename)
   % 5. Decide behavior based on file suffix    %
   %--------------------------------------------%
   switch suffix
+    case 'ltf'
+      %--------------------------------------------%
+      % Special case: LTF file (1-column driver T) %
+      %--------------------------------------------%
+    
+      if size(data,2) ~= 1
+        error('LTF file must contain exactly one data column.');
+      end
+    
+      % Time vector (if dt was found)
+      if ~isempty(dt)
+        time_drv_0 = (0:(numsamps-1))' * dt;
+        assignin('base','time_drv_0',time_drv_0);
+        fprintf('Loaded: time_drv_0\n');
+      end
+    
+      % Force variable name
+      assignin('base','x_drv_T_0', data(:,1));
+      fprintf('Loaded: x_drv_T_0\n');
+      return      
     case 'tgt'
       time_vector = (0:(numsamps-1))' * dt;
       assignin('base', 'time_vector', time_vector);
@@ -189,7 +189,7 @@ function loadTXT(filename)
       return
 
     otherwise
-      error('Unsupported suffix "%s". Expect tgt, drv, or acq.', suffix)
+      error('Unsupported suffix "%s". Expect tgt, drv, or acq.', suffix);
   end
 end
 

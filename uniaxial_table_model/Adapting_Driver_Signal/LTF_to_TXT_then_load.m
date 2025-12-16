@@ -148,6 +148,6 @@ function LTF_to_TXT_then_load(filename_with_ext, varargin)
         end
         loadTXT(output_path);
     catch ME
-        fprintf('Error in loadTXT for file %s: %s\n', output_path, ME.message);
+        fprintf('Error in loadTXT for file %s:\n  \t %s\n', output_path, ME.message);
     end
 end

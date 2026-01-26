@@ -148,17 +148,19 @@ Supervisors: \\
 
 \section{Resumo}
 
-texto aqui
+Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espectros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
-\textbf{Palavras Chave:} words, words
+\textbf{Palavras Chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
 
 %%%%%%%
 \clearpage
 \section{Abstract}
 
-text here
+Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
+This paper analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller; a tuned PIDF controller (proportional, integral, and filtered derivative) ; and an optimal controller. 
+The results indicate that both the tuned PIDF and the optimal controllers offer superior performance in terms of response spectra compared to the iterative method, whereas the optimal controller performed the best. The performance of the controllers depends on a reliable dynamic model identification of the uniaxial shaking table, and the sensitivity of each method to the quality of the identification requires further investigation.
 
-\textbf{Keywords:} words, words
+\textbf{Keywords:} : Earthquake Engineering, Control Systems, System Identification, Closed-loop Identification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage

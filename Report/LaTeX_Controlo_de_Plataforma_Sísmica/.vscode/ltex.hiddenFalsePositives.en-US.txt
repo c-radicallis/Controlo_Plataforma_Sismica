@@ -103,3 +103,4 @@
 {"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QControlo de Plataforma Sismica\\E$"}
 {"rule":"ECONOMICAL_ECONOMIC","sentence":"^\\QMany processes in non-technical areas as for example biological and economical systems operate only under closed-loop conditions and it is not even possible to remove the feedback loop.\\E$"}
 {"rule":"ECONOMICAL_ECONOMIC","sentence":"^\\QMany processes in non-technical areas as for example biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop.\\E$"}
+{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\QThis paper analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system.\\E$"}

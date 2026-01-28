@@ -85,7 +85,7 @@
 
 { \rule{\linewidth}{0.5mm} }
 
-{\Huge\bfseries Development of Control Strategies for Seismic Reproduction on Seismic Platform \par}
+{\Huge\bfseries Development of Control Strategies for Earthquake Reproduction on Shaking Platform \par}
 \vspace{0.2cm}
 {\huge\bfseries \par}
 \vspace{0.5cm}
@@ -148,10 +148,13 @@ Supervisors: \\
 
 \section{Resumo}
 
+\begin{otherlanguage}{portuguese}
 Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espectros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
-\textbf{Palavras Chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
+\vspace{10mm}
 
+\textbf{Palavras Chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
+\end{otherlanguage}
 %%%%%%%
 \clearpage
 \section{Abstract}
@@ -159,6 +162,8 @@ Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simu
 Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
 This paper analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller; a tuned PIDF controller (proportional, integral, and filtered derivative) ; and an optimal controller. 
 The results indicate that both the tuned PIDF and the optimal controllers offer superior performance in terms of response spectra compared to the iterative method, whereas the optimal controller performed the best. The performance of the controllers depends on a reliable dynamic model identification of the uniaxial shaking table, and the sensitivity of each method to the quality of the identification requires further investigation.
+
+\vspace{10mm}
 
 \textbf{Keywords:} : Earthquake Engineering, Control Systems, System Identification, Closed-loop Identification
 
@@ -322,7 +327,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 \section{Literature Review} %\section{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
-\subsection{Simulation and Reality: The role of experimental testing in seismic engineering}
+\subsection{The role of experimental testing in seismic engineering} %Simulation and Reality: 
 % IS SEISMIC EXPERIMENTAL TESTING OF STRCUTURES STILL NECESSARY, DESPITE THE EVOLUTION OF COMPUTACIONAL SIMULATIONS?
 % https://consensus.app/search/is-seismic-experimental-testing-of-strcutures-stil/L-Ya5EyiQSqxujE68BaTQw/?utm_source=share&utm_medium=clipboard
 While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
@@ -338,19 +343,12 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 \begin{itemize}
     \item \textbf{Shaking Table Tests:} Shaking tables simulate real earthquake ground motions on structural or soil models, allowing direct observation of dynamic response and failure mechanisms. They are considered the gold standard for dynamic testing of buildings, bridges, tunnels, and other infrastructure. 
     They are used for both full-scale and scaled models, including innovative in-situ testing with mobile shaking tables \citep{williams2001,Bousias2017Experimental,Abovyan2024Method,Tsinidis2020Seismic,DeFelice2016Methods,El-Emam2018Experimental}. 
-
     \item \textbf{Pseudo-Dynamic Testing} and \textbf{Hybrid Simulation:} In pseudo-dynamic testing, loads are applied over a greatly expanded time scale with the dynamic behaviour of the structure accounted for computationally. In hybrid simulation, just like pseudo-dynamic testing, a combination of physical testing and numerical modelling is used, but the experimental part of the process is performed at the correct rate so that the test specimen can respond dynamically. These methods are widely used for complex or large structures where full dynamic testing is impractical \citep{williams2001,Bousias2017Experimental}.
-
     \item \textbf{Static and Cyclic Loading Tests:} These tests apply static or cyclic loads to materials, structural elements, or systems to study their properties under earthquake-like conditions \citep{williams2001,Bousias2017Experimental,Fiorino2016Experimental}.
-
     \item \textbf{Centrifuge Modelling:} Centrifuge tests use scaled soil-structure models spun at high speeds to replicate gravitational stresses, enabling realistic simulation of soil-structure interaction during earthquakes, especially for underground structures such as tunnels. This method is mostly focused on testing soil properties, not structures \citep{williams2001,Tsinidis2020Seismic}.
-
     \item \textbf{Surface Based Seismic Methods:} Used for site characterization, through passive-source (microtremor) and active-source techniques, to determine ground shear-wave velocity profiles \citep{Luke2008Characterizing}.
-    
     \item \textbf{Laboratory Fault Slip Experiments:} Used to study fault mechanics and induced seismicity, employing shear-flow, triaxial, and injection-driven tests \citep{Ji2022Laboratory,Dong2022Investigations}.
-    
     \item \textbf{Vibration Machines:} Employed for simulating seismic impacts on buildings and models, offering a cost-effective alternative for certain applications \citep{Abovyan2024Method}.
-
     \item \textbf{Explosive Charges:} Arrays of explosive charges used to simulate earthquake ground motions at large scale (very uncommon method) \citep{williams2001}.
 \end{itemize}
 
@@ -367,8 +365,8 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 \begin{itemize}
     \item Enhanced Tracking and Stability: Adaptive control methods, such as adaptive-model-based state estimators, model reference adaptive control, and adaptive sliding mode control, have been shown to improve both the stability and tracking accuracy of shaking tables, especially under varying test conditions and nonlinear system behaviors %1456891415+2 MORE.
     \item Compensation for Uncertainties: Adaptive controllers can dynamically adjust to compensate for amplitude and phase deviations, system nonlinearities, and parameter uncertainties, leading to more precise seismic waveform reproduction and better handling of control-structure interaction effects %161418.
-    \item     Superior Performance over Conventional Methods: Comparative studies demonstrate that adaptive control strategies outperform traditional fixed-parameter controllers (such as PID or three-variable controllers) in both time and frequency domains, providing better acceleration tracking and robustness to specimen uncertainties %4561314.
-    \item     Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
+    \item Superior Performance over Conventional Methods: Comparative studies demonstrate that adaptive control strategies outperform traditional fixed-parameter controllers (such as PID or three-variable controllers) in both time and frequency domains, providing better acceleration tracking and robustness to specimen uncertainties %4561314.
+    \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
 
 \subsection{Identification in Closed-Loop Systems}

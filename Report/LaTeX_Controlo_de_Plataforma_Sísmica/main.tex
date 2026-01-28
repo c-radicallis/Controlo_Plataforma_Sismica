@@ -28,14 +28,15 @@
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{xurl}
-\usepackage{hyperref}
 \usepackage{amssymb}
+\usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
     citecolor=black,      
     urlcolor=cyan
     }
+    
 \usepackage{graphicx}
 
 \usepackage{xcolor}
@@ -149,11 +150,11 @@ Supervisors: \\
 \section{Resumo}
 
 \begin{otherlanguage}{portuguese}
-Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espectros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
+Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espetros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
 \vspace{10mm}
 
-\textbf{Palavras Chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
+\textbf{Palavras-chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
 \end{otherlanguage}
 %%%%%%%
 \clearpage
@@ -616,7 +617,7 @@ From the system of equations \ref{eq_2dof_system}, the following transfer functi
 \end{align}
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.42\textwidth}
 \begin{align}
     G_T(s) &= m_T\cdot s^2 + (c_T + c_1)\cdot s + k_1 \\
     G_1(s) &= m_1\cdot s^2 + (c_1 + c_2)\cdot s + k_1 + k_2 \\

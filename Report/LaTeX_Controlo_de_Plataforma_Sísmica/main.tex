@@ -1421,7 +1421,89 @@ Everything was reassembled together, and new data was collected for another syst
 \subsection{Experimental Results}
 
 
+\begin{otherlanguage}{portuguese}
 
+\section{emails}
+
+\subsection{6 Outubro}
+
+A alteração da programação da FPGA para computar o sinal de controlo com um PIDF inicialmente não resultou por exceder por muito a utilização de DSP48s possível na FPGA. De seguida experimentei maneiras mais otimizadas de programar o cálculo do sinal de drive, e, optando por blocos que recorrerem a look-up tables em alternativa a DSP48 (juntamente com outras funções de labView otimizadas para correr em FPGA) consegui reduzir significativamente o uso dos recursos, mas, mesmo optando pelas definições de compilação mais eficientes, a programação da FPGA continuou a exceder (se bem que  apenas por ~10\%) o uso de DSP48, mas, agora também, de memória para look-up tables. 
+Depois, de maneira a reduzir mais o uso de recursos computacionais do programa, e tendo observado que existiam muitas funções no projeto de LabView que eram artefactos do desenvolvimento, debug , testes, e diferentes iterações do mesmo (o projeto contém 100 subpastas e 1250 ficheiros!?), comecei a remover estes ficheiros, tendo algum sucesso, conseguindo chegar mais perto daquilo que é o núcleo do projeto, mas outros resultaram em problemas adicionais, uma vez que, apesar de não serem chamados no funcionamento do programa, as ligações a certos blocos têm de existir na mesma.
+
+Uma outra alteração necessária para a implementação do PIDF passava pela modificação do ficheiro .ctl (ficheiro que define a forma de uma variável, neste caso)  onde são guardados os parâmetros do controlador. Uma alteração ao .ctl deveria resultar numa atualização da type definition nos restantes VI onde é chamado (é esse o propósito de definir uma variável num .ctl, afinal), mas também isto deu problemas, sendo que o LabVIEW parava de responder e depois tinha de forçar o encerramento pelo gestor de tarefas, e até ao momento não voltei a abordar este problema, nem tenho em vista uma solução.
+
+Entretanto, para não ter de lidar com os problemas introduzidos acima e com vista a experimentar implementar o cálculo do sinal de drive ainda de uma outra maneira, parti dum backup do projeto e compilei a programação para a FPGA, a aplicação Real-Time que corre no PXI, e o executável que corre no PC,  e tudo estava aparentemente okay, mas ao correr o executável não consegui ler dados de aceleração e posição, nem controlar a mesa. Aqui não consigo perceber qual é o problema e espero que o Milton consiga ajudar (o Milton é o engenheiro da Bridgepoint que desenvolveu grande parte do programa). Apesar disto, é possível usar o executável antigo e testar alterações apenas ao nível da FPGA. 
+
+
+Resumidamente: Ainda não existem resultados experimentais. 
+
+
+\subsection{23 Outubro}
+
+Atualmente o sistema de controlo com o PIDF já deverá estar operacional, tendo resolvido os problemas pendentes com a ajuda do Milton ontem á noite.
+
+
+Inicialmente, com a assistência do Milton, reformulou-se mais uma vez a forma como a ação de controlo era computada na FPGA.
+Inicialmente isto não funcionou por exceder as capacidades do hardware, mas mudando umas operações, e modificando o tipo de recursos utilizados nas mesmas, juntamente com a redefinição dos formatos numéricos de algumas variáveis de maneira a evitar conversões de formato, reduzir o número de bits ocupado, e otimizando a "range" ou precisão consoante aquilo que é necessidade de cada variável, já consegui compilar a programação para a FPGA. 
+Todos os parâmetros do controlador foram definidos como valores numéricos de ponto fixo, com 8 bits, sem sinal, e a precisão ajustada ao range necessário.
+
+Depois, de maneira a ser possivel alterar os parâmetros do controlador através da interface, foram realizadas alterações ao nível da FPGA, do Host da FPGA, e da interface. Isto foi realizado com sucesso, apesar de ter demorado uma vez que existia um erro com a atualização das variáveis globais que só foi possível resolver com o suporte do Milton. 
+
+Depois resolvi outros pequenos problemas e o programa ficou a correr, mas existia um erro com um ficheiro de configurações que é utilizado na inicialização do programa. De maneira a resolver isto foi criado um programa em LabView que produz o ficheiro de configurações com o formato quase certo,  sendo necessário posteriormente recorrer a um editor de texto para alterar algumas linhas, e também inserir as configurações desejadas (alternativamente é possível fazê-lo através da interface, mas não é tão prático se a quantidade de alterações for elevada). 
+O programa para gerar o ficheiro de configurações será necessário caso no futuro se altere o range e precisão dos parâmetros do controlador.
+
+O programa também foi alterado de maneira a ser é possível adquirir e guardar o sinal da servo-valvula após cada ensaio. Isto permitirá fazer diretamente a identificação do anel aberto.
+
+\subsection{5 Novembro}
+
+O trabalho desenvolvido desde a última reunião passou pela inicialmente pela resolução de alguns problemas do programa de controlo, primeiramente ao nível da inicialização, durante a qual a ação de controlo estava a saturar e a mesa a bater no fim de curso.  Isto foi resolvido alterando alguns parâmetros de inicialização a nível do Host, da FPGA, e da interface.  
+
+Depois tirei dados com diferentes parâmetros no controlador  com vista a identificação do sistema e validação do funcionamento do PIDF, no entanto estes ficheiros  não continham o sinal de controlo,  então procedi à alteração do programa ao nível da interface para que o sinal de controlo fosse escrito numa coluna adicional dos ficheiros ".acq" .  Tirei dados novamente e realizei a identificação do anel aberto (usando o deslocamento medido, e o sinal de controlo) e do anel fechado (usando o deslocamento medido e referência).
+
+Aqui surgiram alguns problemas, sendo o primeiro o facto de, durante a aquisição de dados, o anel de controlo estar a usar um sinal de deslocamento diferente daquele que vem no ficheiro ".acq" . Isto foi resolvido alterando a configuração do sinal usado no anel de controlo, no entanto ainda não foi possível obter novos dados devido a uma avaria desconhecida que surgiu esta semana (não consegui resolver, e falei com o Milton mas ele também não conseguiu identificar o problema pela minha descrição, nem guiar-me para uma potencial solução).
+
+Quanto á identificação em anel aberto, os dados estão dentro do espectável, uma vez que o sinal de controlo está na magnitude de \±32000 bits, e os deslocamentos na ordem  de \±1mm, sendo $-80db=20*log(1/10^3)$.   No entanto os modelos identificados com a função n4sid, como foi feito anteriormente, aparentam pesar muito a resposta em alta frequência e ficam desajustados nas baixas, portanto a identificação realizada com um ruido rosa de 40hz é capaz de ser inadequada, e terei de recorrer a outro método.
+
+Verificou-se os mesmos problemas na identificação do anel fechado, e também alguma disparidade entre aquilo seria a função de transferência esperada para o nael fechado, obtida através dos modelos identificados em anel aberto e dos parâmetros do controlador, que são conhecidos (mas isto, novamente, pode ser resultados dos modelos identificados para o anel aberto, que sabemos estarem desajustados nas baixas frequências).
+
+
+\subsection{20 Novembro}
+Entretanto descobri que os modelos não paramétricos (obtidos através de analise espectral Blackman-Tukey) que  tinha apresentado na reunião anterior não estavam a utilizar uma janela larga o suficiente para captar a resposta a baixas frequências. Na figura abaixo dá para observar a resposta em frequência obtida para modelos não paramétricos com diferentes resoluções, sendo, os extremos, o vermelho tinha uma resolução de 0.5Hz, e o verde com resolução de 20Hz:
+
+Daqui em diante defini a largura da janela de maneira a obter uma resolução de 0.1Hz.
+
+Sabendo o controlador(C) utilizado,  e tendo o modelo não paramétrico do anel fechado (F), calculei a resposta em frequência do anel aberto (G):
+
+Obtendo os pontos a verde (que diferia bastante do modelo não paramétrico do anel aberto (pontos pretos/vermelhos)):
+
+Experimentei também o inverso, calcular a resposta do anel fechado a partir do modelo não paramétrico do anel aberto e do controlador conhecido, obtendo os pontos a verde:
+
+
+\subsection{11 Dezembro}
+Após efetuar a conversão necessária da ação de controlo, de acordo com a programação do software a partir do Inteiro de 16 bits, implementei o "two stage method"  como vem descrito nas lecture notes do Paul Van den Hof, com dados simulados e com dados reais do shaker. Com os dados simulados usei a função wgn para gerar ruido branco para as entradas r1(t) , r2(t) , e(t) (eram gerados novos sinais cada vez que corria), defini as funções de transferência como no exemplo 10.7.5 e obtive os resultados esperados (imagens abaixo).
+Neste processo surgiram duas questões que não consegui entender:
+- Porque motivo só foi possível obter um bom ajuste à função de sensibilidade S0  utilizando um modelo FIR?
+- Porque motivo a identificação só funcionava para alguns sinais de entrada? 
+
+Quanto aos dados experimentais, utilizei novamente um modelo FIR para estimar a função de sensibilidade (figuras à esquerda), simulei a ação de controlo (figuras ao centro), e obtive as funções de transferência (figuras à direita), em que, a tracejado estão as f.t. do anel aberto obtidas pelo  two stage method ( _est na legenda), e pelo método direto, e indireto. A linha continua estão as f.t. do anel fechado, estimada diretamente (G_CL), e calculadas com conhecimento do controlador e das f.t. estimadas do anel aberto.
+As figuras da linha cima correspondem a uma experiência realizada com o controlador com um ganho proporcional de 7, e na linha de baixo, com ganho de 15 (resulta na saturação da ação de controlo frequentemente durante o ensaio).  Ainda não verifiquei a qualidade das diferentes identificações, não comparei as f.t. do anel aberto obtidas dos diferentes conjuntos de dados. O plano para amanhã/próxima semana passa por essas tarefas, e tirar dados na mini-mesa utilizando PIDF sintonizados para se comparar o desempenho.
+
+\subsection{21 Janeiro}
+Sobre o trabalho, já resolvi dois problemas que estavam a dar identificações inconsistentes.
+
+O primeiro tinha origem num bug do programa de controlo, que  permitia iniciar o ensaio sem que houvesse memória disponível para os dados adquiridos. Eu falei com engenheiro Paulo Candeias sobre isto, ele já tinha conhecimento do bug e explicou-me como evitar o problema. De qualquer maneira, eu já tinha visto havia ficheiros da aquisição (.acq) que vinham com menos dados que o drive (.drv), e olhando para a correlação pareceu-me que os pontos em falta estavam no final. Agora que fiz ensaios com um drv de sine sweep observei que afinal os pontos em falta pertencem ao início da aquisição, mas quando vi a correlação não foi possível detectar isto porque só estava a ver até 25 atrasos, quando os pontos em falta eram 100 ou mais. Sabendo isto, adaptei o meu código para deslocar os dados no tempo de maneira que agora já consegui fazer a identificação para conjuntos de dados em que o ficheiro .acq tem pontos em falta.
+
+O segundo problema prendia-se com o facto de, para o exemplo do two-stage method nos apontamentos do Paul Van den Hof, nem sempre conseguir uma boa identificação, e a solução passava apenas por definir a forma da função de transferência como tendo um termo sem atraso no numerador $(b0 + b1*z^-1 + b2*z^-2, em vez de b1*z^-1 + b2*z^-2)$. A partir daqui consegui sempre obter uma boa identificação, mesmo quando o ruído adicionado á medição era da mesma magnitude que o ruído que usei para excitação do sistema.
+
+Depois, para tirar proveito da possibilidade do método two-stage ter um controlador não linear, e devido ao facto de haver saturação da ação de controlo em alguns ensaios, implementei a identificação para usar um modelo Hammerstein-Wiener(um sistema linear seguido de um bloco não linear) para o controlador em que defini a saturação da saída igual á imposta pelo software de controlo. Isto resultou em identificações melhores para os dados em que havia saturação da ação de controlo.
+
+Depois para os modelos identificados para a minimesa pelo método direto, indireto, e two-stage, fiz a análise da correlação cruzada e autocorrelação mas os resultados não foram satisfatórios. Isto era expectável para o método direto e indireto, mas o two-stage method deveria dar resultados distintamente melhores, como no caso do exemplo da sebenta que referi anteriormente, que funcionava até para ruído de magnitude igual á excitação do sistema.
+
+Depois decidi avançar com os modelos obtidos pelo método two-stage para sintonizar os controladores (Aqui surgiu um problema com o controlo ótimo, que, por vezes era instável, ou então tinha uma frequência de corte muito baixa). Defini o algoritmo do PIDF para três frequências de corte diferentes. Fiz ensaios para os três, e fiz também o processo interativo de geração de drivers. A percepção que tive foi que os resultados variaram bastante em função do sismo em teste, no entanto ainda não olhei para os espectros de resposta obtidos. Também há aqui uma limitação na análise dos resultados, uma vez que, de momento, não tenho um acelerómetro na mesa, apenas um LVDT, mas isso vai ser arranjado brevemente.
+No geral, acho os resultados do PIDF sintonizado bastante promissores, mesmo não tendo um desempenho bom o suficiente para substituir inteiramente o método interativo.
+
+
+\end{otherlanguage}
 
 \clearpage
 % BIBLIOGRAFIA

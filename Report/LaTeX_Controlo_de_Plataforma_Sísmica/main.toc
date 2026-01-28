@@ -1,0 +1,54 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Resumo}{2}{section.1}%
+\babel@toc {portuguese}{}\relax 
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {2}Abstract}{3}{section.2}%
+\contentsline {section}{List of Tables}{4}{section*.4}%
+\contentsline {section}{List of Figures}{4}{section*.5}%
+\contentsline {section}{\numberline {3}Introduction}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The Experimental Setup at LNEC}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Response Spectrum}{6}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Objectives}{7}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Literature Review}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The role of experimental testing in seismic engineering}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}An Overview of Experimental Methods}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Seismic Table Control Strategies and Innovations}{8}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Identification in Closed-Loop Systems}{8}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}The problem with closed-loop identification}{9}{subsubsection.4.4.1}%
+\contentsline {section}{\numberline {5}Modelling Seismic Table Dynamics}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Previous Works}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}{10}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Evaluating Controller Performance in Simulation Environment}{11}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Tuned PIDF}{11}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Performance Sensitivity to Test Structure Parameters}{13}{subsubsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.2}Optimal Control}{18}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1} State Space Model }{18}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Controllability \& Observability}{18}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}LQR Servo Controller}{18}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}LQG Servo Controller}{21}{subsubsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.3}Conclusions on Simulation Results}{22}{subsection.6.3}%
+\contentsline {section}{\numberline {7}LNEC's seismic platform driver signal adaptation process}{23}{section.7}%
+\contentsline {subsection}{\numberline {7.1}The functioning of the driver adaptation software}{23}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Simulating the driver adaptation process}{25}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}System Identification}{25}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Generating the target files (.tgt)}{25}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}Generating the adapted driver}{25}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}Performance Analysis}{26}{subsubsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.3} Conclusions: PIDF vs Optimal Control vs Driver Iteration }{29}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Experimental Validation of Control Strategies}{29}{section.8}%
+\contentsline {subsection}{\numberline {8.1} Measurement and Control Chain }{29}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1} Calibration of Displacement Sensor }{29}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2} Calibration of Acceleration Sensor }{29}{subsubsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.2} System Identification }{30}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Checking the shaker and table for mechanical issues}{30}{subsubsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.3} Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}{31}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Experimental Results}{31}{subsection.8.4}%
+\babel@toc {portuguese}{}\relax 
+\contentsline {section}{\numberline {9}emails}{31}{section.9}%
+\contentsline {subsection}{\numberline {9.1}6 Outubro}{31}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}23 Outubro}{31}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}5 Novembro}{32}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}20 Novembro}{32}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}11 Dezembro}{32}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}21 Janeiro}{33}{subsection.9.6}%
+\babel@toc {english}{}\relax 

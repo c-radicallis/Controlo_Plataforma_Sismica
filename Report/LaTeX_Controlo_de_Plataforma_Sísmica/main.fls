@@ -1,7 +1,0 @@
-PWD c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica
-INPUT c:/texlive/2025/texmf.cnf
-INPUT c:/texlive/2025/texmf-dist/web2c/texmf.cnf
-INPUT c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT c:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.tex
-OUTPUT main.log
-INPUT c:/texlive/2025/texmf-dist/tex/latex/extsizes/extarticle.cls

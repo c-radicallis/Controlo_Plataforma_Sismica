@@ -399,6 +399,9 @@ For the examples presented in this section we'll consider the system in figure \
 
 
 
+The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails.In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
+
+
 
 \section{Modelling Seismic Table Dynamics}\label{Modelling Seismic Table Dynamics}
 %\section{Modelação Matemática}
@@ -1367,6 +1370,34 @@ ver excel no computador da mesa sismica
 
 In order to identify a model of the shaker+mini table system, white noise signals of different amplitudes were used as input. Two controller settings were also used, one using just proportional control with P=1, and another with proportional and integral control, with P=10 and I=1.
 
+\begin{itemize}
+    \item \textbf{Simplicity:} Applies typical open-loop identification methods through a reformulation of the problem.
+    
+    \item \textbf{Flexibility:} The controller may be nonlinear and unknown.
+    
+    \item \textbf{Consistency:} Good identification of the plant is independent of the noise modeling.
+    
+    \item \textbf{Robustness:} Consistent identification of $S_0$ is not a requirement for good plant identification; a high variance of the $S_0$ model is acceptable.
+\end{itemize}
+
+In order to tune the controller to the system parameters, it is necessary to identify the controlled system. For this purpose, an identification experiment was carried out using pink noise with frequency content up to 40\,Hz, and a controller with proportional gain. To address the particularities of closed-loop identification, the ``two-stage method'' was adopted.
+
+\begin{enumerate}
+    \item \textbf{Identification of the sensitivity function $S_0$:}
+    \begin{itemize}
+        \item A linear FIR model with 100 parameters was fitted (the number of parameters was chosen arbitrarily for this stage).
+        \item A Hammerstein--Wiener model was then defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a refined model.
+    \end{itemize}
+    
+    \item \textbf{Reconstruction of the control action isolated from noise effects ($\hat{u}_r$).}
+    
+    \item \textbf{Identification of $G_0$:}
+    \begin{itemize}
+        \item Non-parametric identification indicated a 4th-order model.
+        \item A model with 4 poles and 3 zeros was fitted using the reconstructed control action and the measured output.
+    \end{itemize}
+\end{enumerate}
+
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
         \centering
@@ -1382,6 +1413,8 @@ In order to identify a model of the shaker+mini table system, white noise signal
     \label{fig_square_nonlinearity}
 \end{minipage}
 \end{figure}
+
+
 
     
 

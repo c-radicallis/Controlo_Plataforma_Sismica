@@ -372,20 +372,30 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 
 \subsection{Identification in Closed-Loop Systems}
 
-Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. 
-
-There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. It will be shown that the feedback can cause difficulties but also that in some specific situations these difficulties may be circumvented \citep{VanDenHof2020} .
-
-\subsubsection{The problem with closed-loop identification}
-
-The problems which may arise in closed loop Identification will be shown with 2 simple examples: one estimating a nonparametric model applying spectral analysis, and another estimating a parametric model in the form of a first order ARX.
-
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.4\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
+\begin{minipage}{0.55\textwidth}
+Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+       \centering
+    \includegraphics[width=\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
     \caption{Closed-loop system}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{fig_general_CL_sys}
+    \label{fig_general_CL_sys} 
+\end{minipage}
 \end{figure}
+
+For the examples presented in this section we'll consider the system in figure \ref{fig_general_CL_sys}, where:
+\begin{itemize}
+    \item $r_{1}(t) = 0 $ 
+    \item $r_{2}$ is a Gaussian white noise data sequence of 1024 points generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $e$ is a Gaussian white noise data sequence of 1024 points generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $C$ is the system controller, which will vary between examples
+    \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
+    \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
+\end{itemize}
+
+\subsubsection{Nonparametric Modelling}
 
 
 

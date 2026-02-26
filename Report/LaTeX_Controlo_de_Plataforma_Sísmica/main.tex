@@ -1,6 +1,3 @@
-% !TEX program = pdflatex
-%!TEX root = main.tex
-
 \documentclass[9pt]{extarticle}
 
 \usepackage{natbib}
@@ -370,17 +367,19 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
     \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
 
+\newpage
 \subsection{Identification in Closed-Loop Systems}
 
+Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. 
 \begin{figure}[H]
 \begin{minipage}{0.55\textwidth}
-Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
+Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
 \end{minipage}
 \hfill
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.42\textwidth}
        \centering
     \includegraphics[width=\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
-    \caption{Closed-loop system}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    \caption{Closed-loop system \citep{VanDenHof2020}}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
     \label{fig_general_CL_sys} 
 \end{minipage}
 \end{figure}
@@ -388,19 +387,51 @@ Many systems operate under feedback control due to required safety of operation 
 For the examples presented in this section we'll consider the system in figure \ref{fig_general_CL_sys}, where:
 \begin{itemize}
     \item $r_{1}(t) = 0 $ 
-    \item $r_{2}$ is a Gaussian white noise data sequence of 1024 points generated with MATLAB's \emph{wgn} function, with power set to 1
-    \item $e$ is a Gaussian white noise data sequence of 1024 points generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $r_{2}(t)$ is a Gaussian white noise data sequence generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $e(t)$ is a Gaussian white noise data sequence generated with MATLAB's \emph{wgn} function, with power set to 1
     \item $C$ is the system controller, which will vary between examples
     \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
     \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
 \end{itemize}
 
+
 \subsubsection{Nonparametric Modelling}
 
+In this example, data was generated with a second-order transfer function, in this case 32,768 points.
 
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{two_stage/example/noise005.png}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ before and after tuning}
+    \label{fig_two_stage/example/noise005}    
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{two_stage/example/noise08.png}
+    \caption{Input to servo before and after tuning}
+    \label{fig_two_stage/example/noise08}
+\end{minipage}
+\end{figure}
 
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails.In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{two_stage/example/K5_noise01.png}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ before and after tuning}
+    \label{fig_two_stage/example/K5_noise01}    
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{two_stage/example/K5_noise1.png}
+    \caption{Input to servo before and after tuning}
+    \label{fig_two_stage/example/K5_noise1}
+\end{minipage}
+\end{figure}
 
 
 \section{Modelling Seismic Table Dynamics}\label{Modelling Seismic Table Dynamics}
@@ -1366,7 +1397,7 @@ ver excel no computador da mesa sismica
     \item Set scaling in the conditioner and the software such that the output is 1G
 \end{enumerate}
 
-\subsection{ System Identification }
+\subsection{Identification of Eletrodynamic Shaker}
 
 In order to identify a model of the shaker+mini table system, white noise signals of different amplitudes were used as input. Two controller settings were also used, one using just proportional control with P=1, and another with proportional and integral control, with P=10 and I=1.
 
@@ -1381,6 +1412,16 @@ In order to identify a model of the shaker+mini table system, white noise signal
 \end{itemize}
 
 In order to tune the controller to the system parameters, it is necessary to identify the controlled system. For this purpose, an identification experiment was carried out using pink noise with frequency content up to 40\,Hz, and a controller with proportional gain. To address the particularities of closed-loop identification, the ``two-stage method'' was adopted.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{two_stage/equivalent_system.jpg}
+    \caption{Funções de trânsferencia obtidas para cada input, com controlo P=10 I=1}
+    \label{fig_wo_stage/equivalent_system}
+\end{figure}
+
+\subsubsection{Applying Two-Stage Identification Method}
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}
@@ -1463,6 +1504,11 @@ Everything was reassembled together, and new data was collected for another syst
 \subsection{ Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}
 
 \subsection{Experimental Results}
+
+Once the system was identified, the PIDF parameter tuning algorithm was run, defining three different bandwidths for the closed-loop response: 10Hz, 15Hz, and 20Hz. The three sets of parameters were then tested against the iterative drive signal correction process.For this seismic signal, it was found that all tuned controllers performed better than the 5th driver of the iterative process.
+
+For this other seismic signal, it was found that all tuned controllers performed better than the third driver in the iterative process. However, the fifth driver already performed better. 
+In these two tests, acceleration data were not measured, so the displacement data were extrapolated to determine the acceleration response spectrum.
 
 
 \begin{otherlanguage}{portuguese}

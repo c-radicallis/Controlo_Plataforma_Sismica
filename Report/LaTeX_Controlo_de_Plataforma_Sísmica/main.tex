@@ -195,18 +195,17 @@ The current seismic platform testing process at Laboratório Nacional de Engenha
 During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.
 
 
-
 \begin{figure}[H]
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Intro/schematic_test_process.png}
-    \caption{Work flow diagram of the seismic testing process at LNEC}
+    \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
+    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is susoected to result from poor Identification. }
     \label{schematic_test_process}
 \end{minipage}
 \hfill
-\begin{minipage}{0.55\textwidth} \setlength{\parindent}{4pt}
+\begin{minipage}{0.49\textwidth} \setlength{\parindent}{4pt}
 
-\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band white noise signal.%, always with the same amplitude, to determine the system's transfer function.
+\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal.%, always with the same amplitude, to determine the system's transfer function.
 This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.
 
 \hspace*{\parindent} At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform. However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
@@ -692,6 +691,8 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 \end{equation}
 
 \section{Evaluating Controller Performance in Simulation Environment}\label{Evaluating Controller Performance in Simulation Environment}
+
+
 
 \subsection{Tuned PIDF}
 

@@ -2,8 +2,17 @@ LNEC_Adapta_Driver/
 LNEC_Adapta_Driver.rar
 minimesa_data/
 Report/LNEC_Test&MeasurementDay25112025.pptx
-Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.bbl
-Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.synctex.gz
 Report/Apresentação_3Dezembro2025.pptx
 Report/apresentação\ Novembro\ 25/
 Report/apresentação\ Junho\ 2025/
+
+# LaTeX build files
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.bbl
+Report/LaTeX_Controlo_de_Plataforma_Sísmica/main.synctex.gz

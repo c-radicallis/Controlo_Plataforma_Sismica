@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closed-Loop Spectral Density Derivations — S_uu & S_yu</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e0a;
+    --panel: #111610;
+    --panel2: #0d1209;
+    --border: #1e2e18;
+    --a1: #a8ff6b;   /* y — output */
+    --a2: #ffb347;   /* u — control */
+    --a3: #5de4ff;   /* r1 — reference */
+    --a4: #ff6b8a;   /* v — disturbance */
+    --a5: #c8aaff;   /* S0 */
+    --a6: #ffd166;   /* G0 */
+    --a7: #7ec8e3;   /* C */
+    --text: #ccdfc8;
+    --muted: #4a6645;
+    --dim: #253020;
+    --cancel: #3a4535;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 36px 28px 52px;
+    background-image:
+      radial-gradient(ellipse 60% 30% at 50% -5%, rgba(168,255,107,0.05) 0%, transparent 65%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(30,46,24,0.25) 39px, rgba(30,46,24,0.25) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(30,46,24,0.25) 39px, rgba(30,46,24,0.25) 40px);
+  }
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  header { text-align: center; margin-bottom: 38px; }
+  header::before {
+    content: ''; display: block; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--a1), var(--a2), var(--a1), transparent);
+    margin-bottom: 20px;
+    animation: glow 3.5s ease-in-out infinite;
+  }
+  @keyframes glow { 0%,100%{opacity:.45} 50%{opacity:1} }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.85rem;
+    color: #e8f5e8; letter-spacing: -0.02em; line-height: 1.1;
+  }
+  header .subtitle {
+    margin-top: 9px; color: var(--muted);
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  /* system equations box */
+  .sys-box {
+    margin: 20px auto 0;
+    display: inline-block;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 28px;
+    text-align: left;
+  }
+  .sys-box .lbl {
+    font-size: 9.5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+  .sys-eq {
+    font-size: 13.5px; font-style: italic;
+    line-height: 2.1; color: #fff;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin: 28px 0 30px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 18px;
+    align-items: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+  .swatch { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+  .legend-sep { width: 1px; height: 22px; background: var(--dim); margin: 0 4px; }
+
+  /* ── BLOCK DIAGRAM ── */
+  .block-diagram {
+    margin-bottom: 28px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bd-header {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(0,0,0,0.2);
+  }
+  .bd-body { padding: 20px 24px; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+  .bd-node {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 3px;
+    padding: 7px 14px;
+    text-align: center; font-style: italic;
+    min-width: 80px;
+  }
+  .bd-node .lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .bd-node .val { font-size: 14px; color: #fff; margin-top: 2px; }
+  .bd-sum {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; color: #fff;
+    flex-shrink: 0;
+  }
+  .arr { color: var(--muted); font-size: 13px; padding: 0 2px; }
+  .arr-lbl { font-size: 10px; font-style: italic; }
+
+  /* ── DERIVATION BLOCKS ── */
+  .deriv {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .deriv-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 18px;
+    background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 10.5px; font-weight: 700;
+    padding: 2px 8px; border-radius: 2px;
+    letter-spacing: 0.05em; flex-shrink: 0;
+  }
+  .deriv-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 0.9rem; color: #e8f5e8;
+  }
+  .deriv-tag {
+    margin-left: auto; font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--muted);
+    border: 1px solid var(--dim); border-radius: 2px; padding: 2px 6px;
+    flex-shrink: 0;
+  }
+  .deriv-body { padding: 16px 22px; }
+
+  /* equation lines */
+  .eq-line {
+    display: flex; align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(30,46,24,0.5);
+    line-height: 1.75;
+    gap: 12px;
+  }
+  .eq-line:last-child { border-bottom: none; }
+  .eq-label {
+    min-width: 220px; flex-shrink: 0;
+    font-size: 10.5px; color: var(--muted);
+    padding-right: 12px; font-style: italic;
+    line-height: 1.5;
+  }
+  .eq-expr {
+    flex: 1;
+    font-size: 13.5px; color: #fff;
+    font-style: italic; line-height: 1.8;
+  }
+  .eq-reason {
+    min-width: 200px; flex-shrink: 0;
+    font-size: 10px; color: var(--muted);
+    font-style: normal;
+    text-align: right;
+    padding-left: 16px;
+  }
+
+  /* cancellation strikethrough */
+  .cancel {
+    text-decoration: line-through;
+    color: var(--cancel);
+    font-size: 11.5px;
+  }
+
+  /* result box */
+  .result-box {
+    margin-top: 14px;
+    border-radius: 4px;
+    padding: 13px 18px;
+    display: flex; align-items: flex-start; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .result-box.green  { background: rgba(168,255,107,0.04); border: 1px solid rgba(168,255,107,0.25); }
+  .result-box.orange { background: rgba(255,179,71,0.04);  border: 1px solid rgba(255,179,71,0.25);  }
+  .result-box.purple { background: rgba(200,170,255,0.04); border: 1px solid rgba(200,170,255,0.25); }
+
+  .result-lbl { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+  .result-eq  { font-size: 15px; font-style: italic; line-height: 1.8; }
+  .result-box.green  .result-eq { color: var(--a1); }
+  .result-box.orange .result-eq { color: var(--a2); }
+  .result-box.purple .result-eq { color: var(--a5); }
+
+  .note {
+    margin-top: 10px;
+    font-size: 11px; color: var(--muted);
+    padding-left: 12px;
+    border-left: 2px solid var(--dim);
+    line-height: 1.6;
+  }
+
+  /* colors */
+  .cy  { color: var(--a1); }   /* y */
+  .cu  { color: var(--a2); }   /* u */
+  .cr  { color: var(--a3); }   /* r1 */
+  .cv  { color: var(--a4); }   /* v */
+  .cs  { color: var(--a5); }   /* S0 */
+  .cg  { color: var(--a6); }   /* G0 */
+  .cc  { color: var(--a7); }   /* C */
+  .cw  { color: #fff; }
+
+  sub, sup { font-size: 0.7em; }
+
+  /* section title */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.1rem; color: #e8f5e8;
+    margin: 34px 0 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--dim), transparent);
+  }
+
+  /* summary table */
+  .sum-table { width: 100%; border-collapse: collapse; }
+  .sum-table thead tr { background: rgba(0,0,0,0.3); }
+  .sum-table th {
+    padding: 10px 18px; text-align: left;
+    font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .sum-table td {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(30,46,24,0.5);
+    font-style: italic; line-height: 1.7; vertical-align: top;
+  }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .sum-table td:first-child { font-size: 14px; min-width: 120px; }
+  .sum-table td:nth-child(2) { font-size: 13px; color: #fff; }
+  .sum-table td:last-child { font-size: 11px; color: var(--muted); font-style: normal; }
+
+  .check-badge {
+    display: inline-block;
+    font-size: 9px; font-style: normal;
+    background: rgba(168,255,107,0.12); color: var(--a1);
+    border: 1px solid rgba(168,255,107,0.25);
+    border-radius: 2px; padding: 1px 6px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-left: 8px; vertical-align: middle;
+  }
+
+  footer {
+    text-align: center; color: var(--muted); font-size: 10px;
+    margin-top: 40px; letter-spacing: 0.08em; line-height: 1.8;
+  }
+  footer::before {
+    content: ''; display: block; height: 1px;
+    background: linear-gradient(90deg,transparent,var(--border),transparent);
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <h1>Closed-Loop Spectral Densities</h1>
+  <div class="subtitle">Full derivation of S<sub>uu</sub>(f) and S<sub>yu</sub>(f)</div>
+  <div class="sys-box">
+    <div class="lbl">System equations</div>
+    <div class="sys-eq">
+      <span class="cy">y</span> = <span class="cs">S<sub>0</sub></span>[ <span class="cg">G<sub>0</sub></span>·<span class="cr">r<sub>1</sub></span> + <span class="cv">v</span> ]<br>
+      <span class="cu">u</span> = <span class="cs">S<sub>0</sub></span>[ <span class="cr">r<sub>1</sub></span> − <span class="cc">C</span>·<span class="cv">v</span> ]<br>
+      <span class="cy">y</span> = <span class="cg">G<sub>0</sub></span>·<span class="cu">u</span> + <span class="cv">v</span> &nbsp;,&nbsp; <span class="cu">u</span> = <span class="cr">r<sub>1</sub></span> − <span class="cc">C</span>·<span class="cy">y</span> &nbsp;,&nbsp; <span class="cs">S<sub>0</sub></span> = 1/(1+<span class="cg">G<sub>0</sub></span><span class="cc">C</span>)
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════ LEGEND ═══════════════════ -->
+<div class="legend">
+  <div class="legend-item"><div class="swatch" style="background:var(--a1)"></div><span class="cy">y</span> — plant output</div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a2)"></div><span class="cu">u</span> — control action</div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a3)"></div><span class="cr">r<sub>1</sub></span> — reference (WSS)</div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a4)"></div><span class="cv">v</span> — disturbance (WSS)</div>
+  <div class="legend-sep"></div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a5)"></div><span class="cs">S<sub>0</sub></span> — sensitivity function</div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a6)"></div><span class="cg">G<sub>0</sub></span> — plant transfer function</div>
+  <div class="legend-item"><div class="swatch" style="background:var(--a7)"></div><span class="cc">C</span> — controller</div>
+  <div class="legend-sep"></div>
+  <div class="legend-item" style="color:var(--muted)">r<sub>1</sub> ⊥ v (uncorrelated, jointly WSS)</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PART 1 — S_uu
+════════════════════════════════════════════════════════════ -->
+<div class="section-title">Part 1 — Deriving S<sub>uu</sub>(f)</div>
+
+<!-- Step 1.1 — Decompose u -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a2);color:#111">1.1</div>
+    <div class="deriv-title">Decompose u(t) into independent contributions</div>
+    <div class="deriv-tag">time domain</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">Given:</div>
+      <div class="eq-expr"><span class="cu">u</span>(t) = <span class="cs">S<sub>0</sub></span>(q)·<span class="cr">r<sub>1</sub></span>(t) − <span class="cs">S<sub>0</sub></span>(q)·<span class="cc">C</span>(q)·<span class="cv">v</span>(t)</div>
+      <div class="eq-reason">from system equations</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Identify two terms:</div>
+      <div class="eq-expr"><span class="cu">u</span> = <span class="cw">u<sub>r</sub></span> + <span class="cw">u<sub>v</sub></span></div>
+      <div class="eq-reason">superposition</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Reference component:</div>
+      <div class="eq-expr"><span class="cw">u<sub>r</sub></span> = <span class="cs">S<sub>0</sub></span>·<span class="cr">r<sub>1</sub></span> &nbsp;—&nbsp; transfer function from <span class="cr">r<sub>1</sub></span> to <span class="cu">u</span> is <span class="cs">S<sub>0</sub></span></div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Disturbance component:</div>
+      <div class="eq-expr"><span class="cw">u<sub>v</sub></span> = −<span class="cs">S<sub>0</sub></span><span class="cc">C</span>·<span class="cv">v</span> &nbsp;—&nbsp; transfer function from <span class="cv">v</span> to <span class="cu">u</span> is −<span class="cs">S<sub>0</sub></span><span class="cc">C</span></div>
+      <div class="eq-reason"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 1.2 — Autocorrelation R_uu -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a2);color:#111">1.2</div>
+    <div class="deriv-title">Autocorrelation R<sub>uu</sub>(τ)</div>
+    <div class="deriv-tag">time domain</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">Definition:</div>
+      <div class="eq-expr">R<sub><span class="cu">uu</span></sub>(τ) = E[ <span class="cu">u</span>(t)·<span class="cu">u</span>(t+τ) ]</div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Substitute u = u<sub>r</sub> + u<sub>v</sub>:</div>
+      <div class="eq-expr">= E[ (<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span> − <span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>)(t) · (<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span> − <span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>)(t+τ) ]</div>
+      <div class="eq-reason">expand</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Expand the product:</div>
+      <div class="eq-expr">= E[<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span>·<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span>] − E[<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span>·<span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>] − E[<span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>·<span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span>] + E[<span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>·<span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span>]</div>
+      <div class="eq-reason">4 cross terms</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label"><span class="cr">r<sub>1</sub></span> ⊥ <span class="cv">v</span> → cross-terms = 0:</div>
+      <div class="eq-expr">= R<sub><span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span></sub>(τ) &nbsp;+&nbsp; <span class="cancel">E[r<sub>1</sub>·v]</span> &nbsp;+&nbsp; <span class="cancel">E[v·r<sub>1</sub>]</span> &nbsp;+&nbsp; R<sub><span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span></sub>(τ)</div>
+      <div class="eq-reason">= 0 by assumption</div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 1.3 — PSD S_uu -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a2);color:#111">1.3</div>
+    <div class="deriv-title">Apply Wiener–Khinchin → S<sub>uu</sub>(f)</div>
+    <div class="deriv-tag">freq domain</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">Take Fourier transform:</div>
+      <div class="eq-expr">S<sub><span class="cu">uu</span></sub>(f) = ℱ{ R<sub><span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span></sub>(τ) } + ℱ{ R<sub><span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span></sub>(τ) }</div>
+      <div class="eq-reason">linearity of ℱ</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">LTI rule S<sub>yy</sub> = |H|²·S<sub>xx</sub>:</div>
+      <div class="eq-expr">ℱ{ R<sub><span class="cs">S<sub>0</sub></span><span class="cr">r<sub>1</sub></span></sub> } = <span class="cs">|S<sub>0</sub>|²</span> · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub>(f)</div>
+      <div class="eq-reason">H = S<sub>0</sub></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">LTI rule for −S<sub>0</sub>C·v:</div>
+      <div class="eq-expr">ℱ{ R<sub><span class="cs">S<sub>0</sub></span><span class="cc">C</span><span class="cv">v</span></sub> } = <span class="cs">|S<sub>0</sub>|²</span><span class="cc">|C|²</span> · S<sub><span class="cv">vv</span></sub>(f)</div>
+      <div class="eq-reason">|−S<sub>0</sub>C|² = |S<sub>0</sub>|²|C|²</div>
+    </div>
+  </div>
+  <div style="padding:0 22px 18px">
+    <div class="result-box orange">
+      <div>
+        <div class="result-lbl">★ Result — S<sub>uu</sub>(f)</div>
+        <div class="result-eq">
+          S<sub><span class="cu">uu</span></sub> = <span class="cs">|S<sub>0</sub>|²</span> · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> &nbsp;+&nbsp; <span class="cs">|S<sub>0</sub>|²</span><span class="cc">|C|²</span> · S<sub><span class="cv">vv</span></sub>
+        </div>
+      </div>
+    </div>
+    <div class="result-box orange" style="margin-top:8px">
+      <div>
+        <div class="result-lbl">Factored form</div>
+        <div class="result-eq">S<sub><span class="cu">uu</span></sub> = <span class="cs">|S<sub>0</sub>|²</span> · [ S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> &nbsp;+&nbsp; <span class="cc">|C|²</span> · S<sub><span class="cv">vv</span></sub> ]</div>
+      </div>
+    </div>
+    <p class="note">Real-valued and non-negative. The control signal variance is the sum of: reference shaped by |S<sub>0</sub>|², and disturbance shaped by |S<sub>0</sub>C|² (the complementary sensitivity weighting on noise).</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PART 2 — S_yu
+════════════════════════════════════════════════════════════ -->
+<div class="section-title">Part 2 — Deriving S<sub>yu</sub>(f)</div>
+
+<!-- Step 2.1 — Strategy: general cross-spectrum formula -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a5);color:#111">2.1</div>
+    <div class="deriv-title">Strategy — General Cross-Spectrum for Linear Combinations</div>
+    <div class="deriv-tag">setup</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">Express both signals:</div>
+      <div class="eq-expr"><span class="cy">y</span> = <span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span>·<span class="cr">r<sub>1</sub></span> &nbsp;+&nbsp; <span class="cs">S<sub>0</sub></span>·<span class="cv">v</span></div>
+      <div class="eq-reason">given</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label"></div>
+      <div class="eq-expr"><span class="cu">u</span> = <span class="cs">S<sub>0</sub></span>·<span class="cr">r<sub>1</sub></span> &nbsp;−&nbsp; <span class="cs">S<sub>0</sub></span><span class="cc">C</span>·<span class="cv">v</span></div>
+      <div class="eq-reason">given</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Cross-spectrum rule (r<sub>1</sub> ⊥ v):</div>
+      <div class="eq-expr">S<sub><span class="cy">y</span><span class="cu">u</span></sub>(f) = H<sub>yr</sub>(f) · H<sub>ur</sub>*(f) · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub>(f) &nbsp;+&nbsp; H<sub>yv</sub>(f) · H<sub>uv</sub>*(f) · S<sub><span class="cv">vv</span></sub>(f)</div>
+      <div class="eq-reason">general formula for uncorrelated inputs</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Identify transfer functions:</div>
+      <div class="eq-expr">H<sub>yr</sub> = <span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span> &nbsp;,&nbsp; H<sub>yv</sub> = <span class="cs">S<sub>0</sub></span> &nbsp;,&nbsp; H<sub>ur</sub> = <span class="cs">S<sub>0</sub></span> &nbsp;,&nbsp; H<sub>uv</sub> = −<span class="cs">S<sub>0</sub></span><span class="cc">C</span></div>
+      <div class="eq-reason"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Step 2.2 — Compute each term -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a5);color:#111">2.2</div>
+    <div class="deriv-title">Compute each cross-spectrum term</div>
+    <div class="deriv-tag">freq domain</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">Term from <span class="cr">r<sub>1</sub></span>:</div>
+      <div class="eq-expr">H<sub>yr</sub> · H<sub>ur</sub>* · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> = (<span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span>) · (<span class="cs">S<sub>0</sub></span>)* · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub></div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label"></div>
+      <div class="eq-expr">= <span class="cs">|S<sub>0</sub>|²</span> · <span class="cg">G<sub>0</sub></span> · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub></div>
+      <div class="eq-reason">|S<sub>0</sub>|² = S<sub>0</sub>·S<sub>0</sub>*</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Term from <span class="cv">v</span>:</div>
+      <div class="eq-expr">H<sub>yv</sub> · H<sub>uv</sub>* · S<sub><span class="cv">vv</span></sub> = (<span class="cs">S<sub>0</sub></span>) · (−<span class="cs">S<sub>0</sub></span><span class="cc">C</span>)* · S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label"></div>
+      <div class="eq-expr">= − <span class="cs">|S<sub>0</sub>|²</span> · <span class="cc">C*</span> · S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason">S<sub>0</sub>·(−S<sub>0</sub>C)* = −|S<sub>0</sub>|²C*</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Sum:</div>
+      <div class="eq-expr">S<sub><span class="cy">y</span><span class="cu">u</span></sub>(f) = <span class="cs">|S<sub>0</sub>|²</span><span class="cg">G<sub>0</sub></span> · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> &nbsp;−&nbsp; <span class="cs">|S<sub>0</sub>|²</span><span class="cc">C*</span> · S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason"></div>
+    </div>
+  </div>
+  <div style="padding:0 22px 18px">
+    <div class="result-box green">
+      <div>
+        <div class="result-lbl">★ Result — S<sub>yu</sub>(f)</div>
+        <div class="result-eq">S<sub><span class="cy">y</span><span class="cu">u</span></sub> = <span class="cs">|S<sub>0</sub>|²</span> · [ <span class="cg">G<sub>0</sub></span> · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> &nbsp;−&nbsp; <span class="cc">C*</span> · S<sub><span class="cv">vv</span></sub> ]</div>
+      </div>
+    </div>
+    <p class="note">Complex-valued in general. The two terms have opposite signs: the reference drives positive correlation between y and u (both increase together through G<sub>0</sub>), while the disturbance creates a negative correlation (C* acts to suppress v, so u opposes the effect of v on y).</p>
+  </div>
+</div>
+
+<!-- Step 2.3 — Consistency check via y = G0*u + v -->
+<div class="deriv">
+  <div class="deriv-header">
+    <div class="step-num" style="background:var(--a1);color:#111">2.3</div>
+    <div class="deriv-title">Consistency check via  y = G<sub>0</sub>·u + v</div>
+    <div class="deriv-tag">verification</div>
+  </div>
+  <div class="deriv-body">
+    <div class="eq-line">
+      <div class="eq-label">From y = G<sub>0</sub>·u + v:</div>
+      <div class="eq-expr">S<sub><span class="cy">y</span><span class="cu">u</span></sub>(f) = <span class="cg">G<sub>0</sub></span> · S<sub><span class="cu">uu</span></sub>(f) &nbsp;+&nbsp; S<sub><span class="cv">v</span><span class="cu">u</span></span>(f)</div>
+      <div class="eq-reason">cross-spectrum of linear combination</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Compute S<sub>vu</sub>(f) first:</div>
+      <div class="eq-expr">S<sub><span class="cv">v</span><span class="cu">u</span></sub>(f) = H<sub>vr</sub> · H<sub>ur</sub>* · S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> + H<sub>vv</sub> · H<sub>uv</sub>* · S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason">H<sub>vr</sub> = 0, H<sub>vv</sub> = 1</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label"></div>
+      <div class="eq-expr">= <span class="cancel">0·S<sub>0</sub>*·S<sub>r<sub>1</sub>r<sub>1</sub></sub></span> &nbsp;+&nbsp; 1 · (−<span class="cs">S<sub>0</sub></span><span class="cc">C</span>)* · S<sub><span class="cv">vv</span></sub> = −<span class="cs">S<sub>0</sub>*</span><span class="cc">C*</span> · S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason">r<sub>1</sub> → v path doesn't exist</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Substitute S<sub>uu</sub> and S<sub>vu</sub>:</div>
+      <div class="eq-expr"><span class="cg">G<sub>0</sub></span>·S<sub>uu</sub> + S<sub>vu</sub> = <span class="cg">G<sub>0</sub></span>[<span class="cs">|S<sub>0</sub>|²</span>S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> + <span class="cs">|S<sub>0</sub>|²</span><span class="cc">|C|²</span>S<sub><span class="cv">vv</span></sub>] − <span class="cs">S<sub>0</sub>*</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Group noise terms:</div>
+      <div class="eq-expr">noise part = <span class="cs">|S<sub>0</sub>|²</span><span class="cg">G<sub>0</sub></span><span class="cc">|C|²</span>S<sub><span class="cv">vv</span></sub> − <span class="cs">S<sub>0</sub>*</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub> = <span class="cs">S<sub>0</sub>*</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub> · (<span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span><span class="cc">C</span> − 1)</div>
+      <div class="eq-reason">factor out S<sub>0</sub>*C*</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Use S<sub>0</sub>G<sub>0</sub>C − 1 = −S<sub>0</sub>:</div>
+      <div class="eq-expr"><span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span><span class="cc">C</span> = <span class="cg">G<sub>0</sub></span><span class="cc">C</span>/(1+<span class="cg">G<sub>0</sub></span><span class="cc">C</span>) &nbsp;→&nbsp; <span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span><span class="cc">C</span> − 1 = −1/(1+<span class="cg">G<sub>0</sub></span><span class="cc">C</span>) = −<span class="cs">S<sub>0</sub></span></div>
+      <div class="eq-reason">identity from S<sub>0</sub> definition</div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Therefore noise part =</div>
+      <div class="eq-expr"><span class="cs">S<sub>0</sub>*</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub>·(−<span class="cs">S<sub>0</sub></span>) = −<span class="cs">|S<sub>0</sub>|²</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub></div>
+      <div class="eq-reason"></div>
+    </div>
+    <div class="eq-line">
+      <div class="eq-label">Final assembly:</div>
+      <div class="eq-expr"><span class="cs">|S<sub>0</sub>|²</span><span class="cg">G<sub>0</sub></span>S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> − <span class="cs">|S<sub>0</sub>|²</span><span class="cc">C*</span>S<sub><span class="cv">vv</span></sub> &nbsp;✓</div>
+      <div class="eq-reason">matches Step 2.2 ✓</div>
+    </div>
+  </div>
+  <div style="padding:0 22px 18px">
+    <div class="result-box purple">
+      <div>
+        <div class="result-lbl">Identity used in verification</div>
+        <div class="result-eq"><span class="cs">S<sub>0</sub></span><span class="cg">G<sub>0</sub></span><span class="cc">C</span> − 1 = −<span class="cs">S<sub>0</sub></span>&nbsp;<span class="check-badge">key identity</span></div>
+      </div>
+    </div>
+    <p class="note">This follows directly from S<sub>0</sub> = 1/(1+G<sub>0</sub>C): multiplying gives S<sub>0</sub>G<sub>0</sub>C = G<sub>0</sub>C·S<sub>0</sub>, and subtracting 1 = (1+G<sub>0</sub>C)·S<sub>0</sub> yields −S<sub>0</sub>.</p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ SUMMARY ═══════════════════ -->
+<div class="section-title">Summary</div>
+<div class="deriv">
+  <div class="deriv-body" style="padding:0">
+    <table class="sum-table">
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th>Result</th>
+          <th>Properties</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="cu">S<sub>uu</sub>(f)</td>
+          <td><span class="cs">|S<sub>0</sub>|²</span>·S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> + <span class="cs">|S<sub>0</sub>|²</span><span class="cc">|C|²</span>·S<sub><span class="cv">vv</span></sub></td>
+          <td>Real, ≥ 0. Factored: |S<sub>0</sub>|²·[S<sub>r<sub>1</sub>r<sub>1</sub></sub> + |C|²·S<sub>vv</sub>]</td>
+        </tr>
+        <tr>
+          <td class="cy">S<sub>yu</sub>(f)</td>
+          <td><span class="cs">|S<sub>0</sub>|²</span><span class="cg">G<sub>0</sub></span>·S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> − <span class="cs">|S<sub>0</sub>|²</span><span class="cc">C*</span>·S<sub><span class="cv">vv</span></sub></td>
+          <td>Complex in general. Verified via y = G<sub>0</sub>u + v.</td>
+        </tr>
+        <tr>
+          <td style="color:var(--muted)">S<sub>uy</sub>(f)</td>
+          <td><span class="cs">|S<sub>0</sub>|²</span><span class="cg">G<sub>0</sub>*</span>·S<sub><span class="cr">r<sub>1</sub>r<sub>1</sub></span></sub> − <span class="cs">|S<sub>0</sub>|²</span><span class="cc">C</span>·S<sub><span class="cv">vv</span></sub></td>
+          <td>S<sub>uy</sub> = S<sub>yu</sub>* (Hermitian conjugate)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- .page -->
+
+<footer>
+  S<sub>0</sub> = 1/(1+G<sub>0</sub>C) &nbsp;·&nbsp; r<sub>1</sub> ⊥ v (jointly WSS) &nbsp;·&nbsp;
+  Key identity: S<sub>0</sub>G<sub>0</sub>C − 1 = −S<sub>0</sub> &nbsp;·&nbsp;
+  S<sub>uu</sub> real &amp; ≥ 0 &nbsp;·&nbsp; S<sub>yu</sub> generally complex
+</footer>
+
+</body>
+</html>

@@ -6,7 +6,8 @@
 
 \usepackage[nottoc]{tocbibind}
 
-\usepackage[a4paper, left=25mm, right=25mm,  top=25mm, bottom=25mm, headsep=5mm] {geometry} 
+\usepackage[a4paper, left=25mm, right=25mm,  top=25mm, bottom=25mm , includefoot] {geometry} % 
+%\setlength{\footskip}{10pt}
 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -77,18 +78,14 @@
 % Define a general page style with both header and footer
 \fancypagestyle{otherpages}{
 \fancyhf{} % clear all header and footer fields
-\renewcommand{\headrulewidth}{0pt} % remove header rule
-\fancyfoot[C]{} % Clear the center footer field
+\renewcommand{\headrulewidth}{0pt}
 \fancyfoot[R]{Page \thepage \space of \pageref*{LastPage}}}
 \pagestyle{otherpages}% Apply the general page style to all pages by default
 
 
 \begin{document}
-
 \begin{titlepage} % CAPA
-
 \centering
-
 
 \begin{figure}
  \centering
@@ -132,7 +129,7 @@ Supervisors: \\
 
 \vspace{.7cm}
 
-\vfill {\large October 2024\par} %Data
+\vfill {\large 2025\par} %Data
 
 \end{titlepage}
 \setcounter{page}{2}
@@ -220,7 +217,7 @@ During the seismic test, the structure is subjected to a series of tests with di
 \hfill
 \begin{minipage}{0.49\textwidth} \setlength{\parindent}{4pt}
 
-\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal.%, always with the same amplitude, to determine the system's transfer function.
+\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade).%, always with the same amplitude, to determine the system's transfer function.
 This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.
 
 \hspace*{\parindent} At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform. However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
@@ -370,13 +367,18 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 \newpage
 \subsection{Identification in Closed-Loop Systems}
 
-Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. 
+\vspace{-2mm}
 \begin{figure}[H]
+
+Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. 
+\vspace{1mm}
+
 \begin{minipage}{0.55\textwidth}
 Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
 \end{minipage}
 \hfill
 \begin{minipage}{0.42\textwidth}
+
        \centering
     \includegraphics[width=\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
     \caption{Closed-loop system \citep{VanDenHof2020}}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
@@ -384,22 +386,46 @@ Biological and economical systems operate only under closed-loop conditions, and
 \end{minipage}
 \end{figure}
 
+
 For the examples presented in this section we'll consider the system in figure \ref{fig_general_CL_sys}, where:
 \begin{itemize}
-    \item $r_{1}(t) = 0 $ 
-    \item $r_{2}(t)$ is a Gaussian white noise data sequence generated with MATLAB's \emph{wgn} function, with power set to 1
-    \item $e(t)$ is a Gaussian white noise data sequence generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
     \item $C$ is the system controller, which will vary between examples
     \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
     \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
 \end{itemize}
 
 
-\subsubsection{Nonparametric Modelling}
+\subsubsection{Nonparametric Modelling}\label{Nonparametric Modelling}
 
-In this example:
+\subsubsection{Parametric Modelling}\label{Parametric Modelling}
+
+\subsubsection{Two-Stage Method}\label{Two-Stage Method}
+
+\begin{enumerate}
+    \item \textbf{Identification of the sensitivity function $S_0$:}
+    \begin{itemize}
+        \item A linear FIR model with 100 parameters was fitted (the number of parameters was chosen arbitrarily for this stage).
+        \item A Hammerstein--Wiener model was then defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a refined model.
+    \end{itemize}
+    
+    \item \textbf{Reconstruction of the control action isolated from noise effects ($\hat{u}_r$).}
+    
+    \item \textbf{Identification of $G_0$:}
+    \begin{itemize}
+        \item Non-parametric identification indicated a 4th-order model.
+        \item A model with 4 poles and 3 zeros was fitted using the reconstructed control action and the measured output.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Example: Comparing Closed-Loop Identification Methods}
+
+The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling}, \ref{Parametric Modelling}, and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
+
+For this section, consider the following:
 \begin{itemize}
     \item A data sequence containing 32768 points was used
+    \item  $r_1(t) = 0$, as this mimicks the setup at LNEC, where the tracking error( $e_y = r_2 - y$) is what is input to the controller
     \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$
     \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
@@ -1445,14 +1471,16 @@ In order to identify a model of the shaker+mini table system, white noise signal
 In order to tune the controller to the system parameters, it is necessary to identify the controlled system. For this purpose, an identification experiment was carried out using pink noise with frequency content up to 40\,Hz, and a controller with proportional gain. To address the particularities of closed-loop identification, the ``two-stage method'' was adopted.
 
 
+
+
+\subsubsection{Applying Two-Stage Identification Method}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{two_stage/equivalent_system.jpg}
     \caption{Funções de trânsferencia obtidas para cada input, com controlo P=10 I=1}
     \label{fig_wo_stage/equivalent_system}
 \end{figure}
-
-\subsubsection{Applying Two-Stage Identification Method}
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}

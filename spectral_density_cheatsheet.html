@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spectral Density — LTI Systems Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --panel: #0d1520;
+    --border: #1a2e45;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6b;
+    --accent4: #c97bff;
+    --text: #c8ddf0;
+    --muted: #4a6a85;
+    --header-bg: #0a1825;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    padding: 32px 24px;
+    background-image:
+      radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0,212,255,0.07) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(26,46,69,0.3) 39px, rgba(26,46,69,0.3) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(26,46,69,0.3) 39px, rgba(26,46,69,0.3) 40px);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  header::before {
+    content: '';
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent), transparent);
+    margin-bottom: 20px;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  header p {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    gap: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--accent); }
+
+  .card-header {
+    background: var(--header-bg);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #fff;
+  }
+
+  .card-body { padding: 0; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr:not(:last-child) td { border-bottom: 1px solid rgba(26,46,69,0.7); }
+
+  td {
+    padding: 9px 16px;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  td:first-child {
+    width: 38%;
+    color: var(--muted);
+    font-size: 11px;
+    padding-right: 8px;
+    border-right: 1px solid rgba(26,46,69,0.7);
+  }
+
+  td:last-child {
+    width: 62%;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  .formula {
+    font-style: italic;
+    font-size: 13px;
+    color: #fff;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .note {
+    font-size: 10.5px;
+    color: var(--muted);
+    font-style: normal;
+    display: block;
+  }
+
+  .c1 { color: var(--accent); }
+  .c2 { color: var(--accent2); }
+  .c3 { color: var(--accent3); }
+  .c4 { color: var(--accent4); }
+
+  .tag.blue  { background: rgba(0,212,255,0.12); color: var(--accent); }
+  .tag.orange{ background: rgba(255,107,53,0.12); color: var(--accent2); }
+  .tag.green { background: rgba(127,255,107,0.12); color: var(--accent3); }
+  .tag.purple{ background: rgba(201,123,255,0.12); color: var(--accent4); }
+
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot.blue  { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .dot.orange{ background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+  .dot.green { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+  .dot.purple{ background: var(--accent4); box-shadow: 0 0 6px var(--accent4); }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .lti-diagram {
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    font-size: 12px;
+  }
+
+  .box-sig {
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 3px;
+    text-align: center;
+    min-width: 110px;
+  }
+
+  .box-sig .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .box-sig .val { font-size: 13px; color: #fff; margin-top: 2px; }
+
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 6px;
+    min-width: 90px;
+  }
+  .arrow-line {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border), var(--accent));
+    position: relative;
+  }
+  .arrow-line::after {
+    content: '▶';
+    position: absolute;
+    right: -6px;
+    top: -7px;
+    color: var(--accent);
+    font-size: 10px;
+  }
+  .arrow-label { font-size: 11px; color: var(--accent); margin-bottom: 4px; font-style: italic; }
+  .arrow-sub { font-size: 9.5px; color: var(--muted); margin-top: 4px; }
+
+  .sys-box {
+    border: 1px solid var(--accent);
+    background: rgba(0,212,255,0.05);
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .sys-box .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .sys-box .val { font-size: 14px; color: var(--accent); margin-top: 2px; font-style: italic; }
+
+  footer {
+    text-align: center;
+    margin-top: 32px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  footer::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Spectral Density <span>&</span> LTI Systems</h1>
+  <p>Power Spectral Density · Cross-Spectral Density · Key Properties</p>
+</header>
+
+<div class="grid">
+
+  <!-- LTI System Diagram -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="dot blue"></div>
+      <span class="card-title">LTI System Model</span>
+      <span class="tag blue">overview</span>
+    </div>
+    <div class="lti-diagram">
+      <div class="box-sig">
+        <div class="label">Input</div>
+        <div class="val c1">x(t)</div>
+        <div class="label" style="margin-top:6px">PSD: <span class="c1">S<sub>xx</sub>(f)</span></div>
+      </div>
+      <div class="arrow">
+        <div class="arrow-label">h(t) / H(f)</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-sub">impulse resp. / transfer fn.</div>
+      </div>
+      <div class="sys-box">
+        <div class="label">LTI System</div>
+        <div class="val">H(f)</div>
+      </div>
+      <div class="arrow">
+        <div class="arrow-label">convolution</div>
+        <div class="arrow-line"></div>
+        <div class="arrow-sub">y = h ∗ x</div>
+      </div>
+      <div class="box-sig">
+        <div class="label">Output</div>
+        <div class="val c2">y(t)</div>
+        <div class="label" style="margin-top:6px">PSD: <span class="c2">S<sub>yy</sub>(f)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Definitions -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot blue"></div>
+      <span class="card-title">Definitions</span>
+      <span class="tag blue">core</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Auto-correlation (WSS)</td>
+          <td><span class="formula c1">R<sub>xx</sub>(τ) = E[x(t) x(t+τ)]</span><span class="note">Expectation of product shifted by τ</span></td>
+        </tr>
+        <tr>
+          <td>Power Spectral Density</td>
+          <td><span class="formula c1">S<sub>xx</sub>(f) = ℱ{R<sub>xx</sub>(τ)}</span><span class="note">Fourier transform of autocorrelation (Wiener–Khinchin)</span></td>
+        </tr>
+        <tr>
+          <td>Cross-correlation</td>
+          <td><span class="formula c4">R<sub>xy</sub>(τ) = E[x(t) y(t+τ)]</span></td>
+        </tr>
+        <tr>
+          <td>Cross-spectral density</td>
+          <td><span class="formula c4">S<sub>xy</sub>(f) = ℱ{R<sub>xy</sub>(τ)}</span></td>
+        </tr>
+        <tr>
+          <td>Total average power</td>
+          <td><span class="formula c3">P<sub>x</sub> = R<sub>xx</sub>(0) = ∫S<sub>xx</sub>(f) df</span><span class="note">Integrate PSD over all frequencies</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Input-Output PSD Relations -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot orange"></div>
+      <span class="card-title">Input–Output PSD Relations</span>
+      <span class="tag orange">key results</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Output PSD</td>
+          <td><span class="formula c2">S<sub>yy</sub>(f) = |H(f)|² · S<sub>xx</sub>(f)</span><span class="note">|H(f)|² is the power transfer function</span></td>
+        </tr>
+        <tr>
+          <td>Cross-PSD (input→output)</td>
+          <td><span class="formula c4">S<sub>xy</sub>(f) = H(f) · S<sub>xx</sub>(f)</span><span class="note">Complex — retains phase of H(f)</span></td>
+        </tr>
+        <tr>
+          <td>Cross-PSD (output→input)</td>
+          <td><span class="formula c4">S<sub>yx</sub>(f) = H*(f) · S<sub>xx</sub>(f)</span><span class="note">H*(f) = complex conjugate of H(f)</span></td>
+        </tr>
+        <tr>
+          <td>Output autocorrelation</td>
+          <td><span class="formula c2">R<sub>yy</sub>(τ) = h(τ) ∗ h(-τ) ∗ R<sub>xx</sub>(τ)</span><span class="note">Convolution with mirrored impulse response</span></td>
+        </tr>
+        <tr>
+          <td>Output cross-correlation</td>
+          <td><span class="formula c4">R<sub>xy</sub>(τ) = h(τ) ∗ R<sub>xx</sub>(τ)</span><span class="note">Input–output cross-corr = h ∗ R<sub>xx</sub></span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Properties of PSD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot green"></div>
+      <span class="card-title">Properties of S<sub>xx</sub>(f)</span>
+      <span class="tag green">properties</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Non-negativity</td>
+          <td><span class="formula c3">S<sub>xx</sub>(f) ≥ 0  ∀ f</span><span class="note">PSD is always real and non-negative</span></td>
+        </tr>
+        <tr>
+          <td>Real-valued</td>
+          <td><span class="formula c3">S<sub>xx</sub>(f) ∈ ℝ</span><span class="note">Even though R<sub>xx</sub>(τ) may be complex for complex signals</span></td>
+        </tr>
+        <tr>
+          <td>Even symmetry (real signals)</td>
+          <td><span class="formula c3">S<sub>xx</sub>(-f) = S<sub>xx</sub>(f)</span><span class="note">Holds when x(t) is a real-valued signal</span></td>
+        </tr>
+        <tr>
+          <td>Conjugate symmetry (general)</td>
+          <td><span class="formula c3">S<sub>xx</sub>(-f) = S<sub>xx</sub>*(f)</span><span class="note">General case; reduces to even if x(t) ∈ ℝ</span></td>
+        </tr>
+        <tr>
+          <td>Parseval / power link</td>
+          <td><span class="formula c3">R<sub>xx</sub>(0) = ∫<sub>-∞</sub><sup>+∞</sup> S<sub>xx</sub>(f) df</span><span class="note">Total power = area under PSD curve</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Properties of Cross-PSD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot purple"></div>
+      <span class="card-title">Properties of S<sub>xy</sub>(f)</span>
+      <span class="tag purple">cross-spectral</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Conjugate symmetry</td>
+          <td><span class="formula c4">S<sub>xy</sub>(-f) = S<sub>xy</sub>*(f)</span><span class="note">For real jointly-WSS signals</span></td>
+        </tr>
+        <tr>
+          <td>Hermitian relation</td>
+          <td><span class="formula c4">S<sub>yx</sub>(f) = S<sub>xy</sub>*(f)</span><span class="note">Swapping order conjugates the CSD</span></td>
+        </tr>
+        <tr>
+          <td>Schwarz inequality</td>
+          <td><span class="formula c4">|S<sub>xy</sub>(f)|² ≤ S<sub>xx</sub>(f) · S<sub>yy</sub>(f)</span><span class="note">Upper-bounds cross-spectral magnitude</span></td>
+        </tr>
+        <tr>
+          <td>Generally complex</td>
+          <td><span class="formula c4">S<sub>xy</sub>(f) = |S<sub>xy</sub>(f)| e<sup>jφ(f)</sup></span><span class="note">Has both magnitude and phase (unlike PSD)</span></td>
+        </tr>
+        <tr>
+          <td>Coherence function</td>
+          <td><span class="formula c4">γ²<sub>xy</sub>(f) = |S<sub>xy</sub>(f)|² / [S<sub>xx</sub>(f)·S<sub>yy</sub>(f)]</span><span class="note">0 ≤ γ² ≤ 1; measures linear coupling</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Special Cases -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot orange"></div>
+      <span class="card-title">Special Cases &amp; Common Signals</span>
+      <span class="tag orange">examples</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>White noise input</td>
+          <td><span class="formula c1">S<sub>xx</sub>(f) = N₀/2  (flat)</span><span class="note">Uncorrelated — R<sub>xx</sub>(τ) = (N₀/2)δ(τ)</span></td>
+        </tr>
+        <tr>
+          <td>White noise → LTI output</td>
+          <td><span class="formula c2">S<sub>yy</sub>(f) = (N₀/2) |H(f)|²</span><span class="note">Output PSD shaped entirely by |H(f)|²</span></td>
+        </tr>
+        <tr>
+          <td>Ideal bandpass filter</td>
+          <td><span class="formula c2">P<sub>y</sub> = (N₀/2) · 2B</span><span class="note">B = one-sided bandwidth; power = N₀B</span></td>
+        </tr>
+        <tr>
+          <td>Sinusoid x(t)=A cos(2πf₀t+φ)</td>
+          <td><span class="formula c1">S<sub>xx</sub>(f) = (A²/4)[δ(f-f₀)+δ(f+f₀)]</span><span class="note">Power concentrated at ±f₀</span></td>
+        </tr>
+        <tr>
+          <td>Uncorrelated (x⊥y)</td>
+          <td><span class="formula c4">S<sub>xy</sub>(f) = 0  ∀ f</span><span class="note">Zero cross-spectrum ⟺ uncorrelated</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bandwidth & Power -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot green"></div>
+      <span class="card-title">Bandwidth &amp; Power Measures</span>
+      <span class="tag green">measures</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Band power</td>
+          <td><span class="formula c3">P<sub>[f₁,f₂]</sub> = ∫<sub>f₁</sub><sup>f₂</sup> S<sub>xx</sub>(f) df</span><span class="note">Power in a specific frequency band (one-sided)</span></td>
+        </tr>
+        <tr>
+          <td>Noise equivalent BW</td>
+          <td><span class="formula c3">B<sub>N</sub> = ∫|H(f)|² df / |H(f₀)|²<sub>max</sub></span><span class="note">Equivalent brick-wall bandwidth of H(f)</span></td>
+        </tr>
+        <tr>
+          <td>RMS bandwidth</td>
+          <td><span class="formula c3">B<sub>rms</sub> = √[ ∫f²S(f)df / ∫S(f)df ]</span><span class="note">Second moment of PSD (spectral spread)</span></td>
+        </tr>
+        <tr>
+          <td>SNR in bandwidth B</td>
+          <td><span class="formula c3">SNR = P<sub>signal</sub> / (N₀ · B)</span><span class="note">Signal power divided by noise power in B</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Wiener-Khinchin & FT pairs -->
+  <div class="card">
+    <div class="card-header">
+      <div class="dot blue"></div>
+      <span class="card-title">Wiener–Khinchin &amp; FT Pairs</span>
+      <span class="tag blue">theorem</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <td>Wiener–Khinchin</td>
+          <td><span class="formula c1">S<sub>xx</sub>(f) ⟺ R<sub>xx</sub>(τ)</span><span class="note">PSD and autocorrelation are a Fourier pair</span></td>
+        </tr>
+        <tr>
+          <td>Cross version</td>
+          <td><span class="formula c4">S<sub>xy</sub>(f) ⟺ R<sub>xy</sub>(τ)</span></td>
+        </tr>
+        <tr>
+          <td>H(f) from S-functions</td>
+          <td><span class="formula c2">H(f) = S<sub>xy</sub>(f) / S<sub>xx</sub>(f)</span><span class="note">System ID formula (x=input, y=output)</span></td>
+        </tr>
+        <tr>
+          <td>Convolution → multiply</td>
+          <td><span class="formula">y = h ∗ x  →  Y(f) = H(f)·X(f)</span><span class="note">Applies to PSD via |·|² of transfer function</span></td>
+        </tr>
+        <tr>
+          <td>Spectral factorization</td>
+          <td><span class="formula c1">S<sub>xx</sub>(f) = Φ(f)·Φ*(f)</span><span class="note">Any valid PSD factors into causal spectral factor</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  PSD = Power Spectral Density &nbsp;·&nbsp; WSS = Wide-Sense Stationary &nbsp;·&nbsp; LTI = Linear Time-Invariant
+</footer>
+
+</body>
+</html>

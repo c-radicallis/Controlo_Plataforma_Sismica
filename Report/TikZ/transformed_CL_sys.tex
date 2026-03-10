@@ -6,6 +6,12 @@
 \begin{document}
 \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
 
+% % grid for debug   %% this i what you get for hardcoding the coordinates which should've been relative
+% \draw[gray!40, step=0.5] (-1,-3) grid (12,3); 
+% \draw[gray,    step=1]   (-1,-3) grid (12,3);
+% \foreach \x in {-1,0,...,12} \node[below, gray, font=\tiny] at (\x,-3) {\x};
+% \foreach \y in {-3,-2,...,3}  \node[left,  gray, font=\tiny] at (-1,\y) {\y};
+
 % S0 -  Referential Origin
 \node[draw, fill=Green!50, minimum width=15mm, minimum height=10mm ] (S0) at (0,0){$S_0$};
 
@@ -23,11 +29,25 @@
 % S0C
 \node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
 
+% sum_r % r = r1 + C*r2
+\node[circ, , left=8mm of S0 ]  (sum_r) {$+$};
+
+% C
+\node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
+
+
+% %--- Input r1 ---
+\draw [-latex] ([xshift=-10mm, yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
+
 % %--- Input r2 ---
-% \draw[-latex] (-1.5, 0) -- node[above]{$r_2$} (sum_r2);
+\draw[-latex] ([xshift=-10mm]C.west) -- node[above,at start, xshift=2mm]{$r_2$} (C);
+
+% %--- Input to sum_r ---
+\draw[-latex] (C) -- (sum_r);
 
 %--- r -> S0
-\draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
+% \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
+\draw[-latex] (sum_r.east) -- node[above]{$r$} (S0);
 
 %--- S0 -> u_r
 \draw[-latex] (S0) -- node[above] {$u_r$} (sum_u);
@@ -40,9 +60,6 @@
 %--- G0 -> sum_v ---
 \draw[-latex] (G0) -- (sum_v);
 
-%--- v -> S0C -> u_v -> sum_v ---
-\draw[-latex] ([yshift=10mm]S0C.north) node[left,yshift=-2mm]{$v$} -- (S0C);
-\draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
 
 %--- sum_v -> y output ---
 \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
@@ -51,11 +68,16 @@
 \coordinate (ybranch) at ([yshift=6mm] S0C.north);
 \draw [-latex] (ybranch) -- (ybranch -| sum_v) -- (sum_v.north);
 
-% % grid for debug   %% this i what you get for hardcoding the coordinates which should be relative
-% \draw[gray!40, step=0.5] (-1,-3) grid (12,3); 
-% \draw[gray,    step=1]   (-1,-3) grid (12,3);
-% \foreach \x in {-1,0,...,12} \node[below, gray, font=\tiny] at (\x,-3) {\x};
-% \foreach \y in {-3,-2,...,3}  \node[left,  gray, font=\tiny] at (-1,\y) {\y};
+% H0
+\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (C |- ybranch) {$H_0$};
+
+% %--- Input e ---
+\draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
+
+%--- v -> S0C -> u_v -> sum_v ---
+\draw[-latex] (H0.east) -- node[above, at end]{$v$}(H0.east -| S0C) -- (S0C.north);
+\draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
+
 
 \end{tikzpicture}
 \end{document}

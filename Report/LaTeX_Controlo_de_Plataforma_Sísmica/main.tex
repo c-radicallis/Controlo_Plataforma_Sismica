@@ -368,109 +368,64 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 
 \subsection{Identification in Closed-Loop Systems}
 
-\vspace{-2mm}
-\begin{figure}[H]
-
-Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. 
-\vspace{1mm}
-
-\begin{minipage}{0.55\textwidth}
-Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
-\end{minipage}
-\hfill
-\begin{minipage}{0.42\textwidth}
-
-       \centering
-    \includegraphics[width=\linewidth]{ID_in_CL_Sys/general_CL_sys.png}
-    \caption{Closed-loop system \citep{VanDenHof2020}}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{fig_general_CL_sys} 
-\end{minipage}
-\end{figure}
-
-
+Many systems operate under feedback control due to required safety of operation or to unstable behaviour of the plant, resulting that experiments can only be performed under presence of a stabilizing controller. Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. There can be additional reasons for performing experiments in closed loop, such as situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller. In this section, it will be shown that the feedback can cause difficulties in identification, but there are ways of dealing with them \citep{VanDenHof2020}.
 
 \begin{figure}[H]
-\begin{tikzpicture}
+\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+% sum_r2
+\node[circ]  (sum_r2) at (0,   0) {};
+\node[left=-1pt] at (sum_r2.center){\small $+$};
+\node[below=-1pt] at (sum_r2.center){\small $-$};
 
-% Sum shape
-\node[draw, circle, minimum size=0.6cm ] (sum) at (0,0){}; 
-%\draw (sum.north east) -- (sum.south west);%(sum.north west) -- (sum.south east);
-\node[left=-1pt] at (sum.center){\tiny $+$};
-\node[below] at (sum.center){\tiny $-$};
+% C
+\node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C$};
 
-% Controller
-\node [draw, fill=SkyBlue!50, minimum width=2cm, minimum height=1.2cm, right=1cm of sum ]  (controller) {$C(s)$};
+% sum_r1
+\node[circ , right=8mm of C ]  (sum_r1) {$+$};
 
-% System H(s)
-\node [draw, fill=Cyan!50,  minimum width=2cm,  minimum height=1.2cm, right=1.5cm of controller ] (system) {$H(s)$};
+% G0
+\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
 
-% Arrows with text label
-\draw[-stealth] (sum.east) -- (controller.west) node[midway,above]{$e$};
+% sum_v
+\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
 
-\draw[-stealth] (controller.east) -- (system.west) node[midway,above]{$u$};
-
-\draw[-stealth] (system.east) -- ++ (1.25,0) node[midway](output){}node[midway,above]{$y$};
-
-\draw[-stealth] (output.center) -- (sum.south) node[near end,left]{$y_m$};
-
-\draw (sum.west) -- ++(-1,0) node[midway,above]{$y_{ref}$};
-
-
-\end{tikzpicture}
-\caption{Closed-loop system 1}
-%\label{fig_general_CL_sys} 
-\end{figure}
-
-\begin{figure}[H]
-\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=7mm, inner sep=0pt}, thick ]
-
-%--- Nodes ---
-\node[circ]  (sum1) at (0,   0) {};
-\node[draw, fill=SkyBlue!30, minimum width=2cm, minimum height=1.2cm, right=1cm of sum1 ] (C) {$C$};
-\node[circ]  (sum2) at (4.4, 0) {};
-\node[draw, fill=Cyan!30, minimum width=2cm, minimum height=1.2cm] (G0)   at (6.4, 0) {$G_0$};
-\node[circ]  (sum3) at (8.6, 0) {};
-\node[draw, fill=Yellow!30, minimum width=2cm, minimum height=1.2cm] (H0)   at (8.6, 2.5) {$H_0$};
-
-\node[left=-1pt] at (sum1.center){\tiny $+$};
-\node[below] at (sum1.center){\tiny $-$};
+% H0
+\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
 %--- Input r2 ---
-\draw[-latex] (-1.5, 0) node[midway,above]{$r_2$} -- (sum1);
+\draw[-latex] (-1.5, 0) -- node[above]{$r_2$} (sum_r2);
 
-%--- sum1 -> C -> sum2 ---
-\draw[-latex] (sum1) node[midway,above]{$e_y$} -- (C);
-\draw[-latex] (C) node[midway,above]{$u$}   -- (sum2);
+%--- sum_r2 -> C -> sum_r1 ---
+\draw[-latex] (sum_r2) -- node[above]{$e_y$} (C);
+\draw[-latex] (C) -- (sum_r1);
 
-%--- r1 drops into sum2 from above ---
-\draw[-latex] (4.4, 1.8) node[above]{$r_1$} -- (sum2);
+%--- r1 drops into sum_r1 from above ---
+\draw[-latex] ([yshift=10mm]sum_r1.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_r1);
 
-%--- sum2 -> G0 ---
-\draw[-latex] (sum2) -- node[above]{$u$} (G0);
+%--- sum_r1 -> G0 ---
+\draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
 
-%--- G0 -> sum3 ---
-\draw[-latex] (G0) -- (sum3);
+%--- G0 -> sum_v ---
+\draw[-latex] (G0) -- (sum_v);
 
-%--- e -> H0 -> v -> sum3 ---
-\draw[-latex] (8.6, 4.2) node[above]{$e$} -- (H0);
-\draw[-latex] (H0) -- node[right]{$v$} (sum3);
+%--- e -> H0 -> v -> sum_v ---
+\draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+\draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
-%--- sum3 -> y output ---
-\draw[-latex] (sum3) -- node[above]{$y$} (10.2, 0);
+%--- sum_v -> y output ---
+\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
 
-%--- Feedback: y branches back to sum1 bottom ---
-\coordinate (ybranch) at (9.6, 0);
-%\filldraw (ybranch) circle (2pt);
-\draw (ybranch) -- ++(0, -1.5) -- (-0.5, -1.5) -- (-0.5, -0.35);
-\draw[-latex] (-0.5, -0.35) -- (sum1.south);
+%--- Feedback: y branches back to sum_r2 bottom ---
+\coordinate (ybranch) at ([xshift=5mm] sum_v.east);
+\draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+\draw[-latex] (0, -1.2) -- (sum_r2.south);
 
 \end{tikzpicture}
-\caption{Closed-loop system 3}
-%\label{fig_general_CL_sys} 
+\caption{Generic closed-loop system}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+\label{fig_general_CL_sys} 
 \end{figure}
 
-
-For the examples presented in this section we'll consider the system in figure \ref{fig_general_CL_sys}, where:
+For the examples presented in this section we'll consider the system represented in figure \ref{fig_general_CL_sys}, and the following conditions:
 \begin{itemize}
     \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
     \item $C$ is the system controller, which will vary between examples
@@ -484,6 +439,80 @@ For the examples presented in this section we'll consider the system in figure \
 \subsubsection{Parametric Modelling}\label{Parametric Modelling}
 
 \subsubsection{Two-Stage Method}\label{Two-Stage Method}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+% S0 -  Referential Origin
+\node[draw, fill=Green!50, minimum width=15mm, minimum height=10mm ] (S0) at (0,0){$S_0$};
+
+% sum_u
+\node[circ , right=8mm of S0 ]  (sum_u) {};
+\node[left=-1pt] at (sum_u.center){\small $+$};
+\node[above=-1pt] at (sum_u.center){\small $-$};
+
+% G0
+\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_u ] (G0)    {$G_0$};
+
+% sum_v
+\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+% S0C
+\node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
+
+% sum_r % r = r1 + C*r2
+\node[circ, , left=8mm of S0 ]  (sum_r) {$+$};
+
+% C
+\node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
+
+
+% %--- Input r1 ---
+\draw [-latex] ([xshift=-10mm, yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
+
+% %--- Input r2 ---
+\draw[-latex] ([xshift=-10mm]C.west) -- node[above,at start, xshift=2mm]{$r_2$} (C);
+
+% %--- Input to sum_r ---
+\draw[-latex] (C) -- (sum_r);
+
+%--- r -> S0
+% \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
+\draw[-latex] (sum_r.east) -- node[above]{$r$} (S0);
+
+%--- S0 -> u_r
+\draw[-latex] (S0) -- node[above] {$u_r$} (sum_u);
+% %--- r1 drops into sum_u from above ---
+% \draw[-latex] ([yshift=10mm]sum_u.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_u);
+
+%--- sum_u -> G0 ---
+\draw[-latex] (sum_u) -- node[above]{$u$} (G0);
+
+%--- G0 -> sum_v ---
+\draw[-latex] (G0) -- (sum_v);
+
+%--- sum_v -> y output ---
+\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+%--- v branches to sum_v
+\coordinate (ybranch) at ([yshift=6mm] S0C.north);
+\draw [-latex] (ybranch) -- (ybranch -| sum_v) -- (sum_v.north);
+
+% H0
+\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (C |- ybranch) {$H_0$};
+
+% %--- Input e ---
+\draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
+
+%--- v -> S0C -> u_v -> sum_v ---
+\draw[-latex] (H0.east) -- node[above,at start, xshift=5mm]{$v$}(H0.east -| S0C) -- (S0C.north);
+\draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
+
+\end{tikzpicture}
+\caption{Closed-loop system reformulated into pseudo-open loop form, using the sensitivity function}
+\label{transformed_CL_sys} 
+\end{figure}
+
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}

@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{patterns,decorations.pathmorphing,positioning, shapes.multipart, calc,arrows, shapes.geometric}
+\usepackage[dvipsnames]{xcolor}
+
+\begin{document}
+\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+
+%--- Nodes ---
+
+% S0
+\node[draw, fill=Green!30, minimum width=15mm, minimum height=10mm] (S0) at (0,   0){$S_0$};
+
+% sum_uv
+\node[circ , right=8mm of S0 ]  (sum_uv) {};
+\node[left=-1pt] at (sum_uv.center){\small $+$};
+\node[below=-1pt] at (sum_uv.center){\small $-$};
+
+
+% G0
+\node[draw, fill=Cyan!30, minimum width=15mm, minimum height=10mm , right=8mm of sum_uv ] (G0)    {$G_0$};
+
+% sum_v
+\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+% S0C
+\node[draw, fill=Yellow!30, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (S0C)  {$S_{0}C$};
+
+
+%--- r1 drops into sum_uv from above ---
+\draw[-latex] ([yshift=10mm]sum_uv.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_uv);
+
+%--- sum_uv -> G0 ---
+\draw[-latex] (sum_uv) -- node[above]{$u$} (G0);
+
+%--- G0 -> sum_v ---
+\draw[-latex] (G0) -- (sum_v);
+
+%--- e -> H0 -> v -> sum_v ---
+\draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+\draw[-latex] (H0) -- node[right]{$v$} (sum_v);
+
+%--- sum_v -> y output ---
+\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+\end{tikzpicture}
+\end{document}

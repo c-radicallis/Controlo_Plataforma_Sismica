@@ -1,4 +1,4 @@
-\documentclass[9pt]{extarticle}
+\documentclass[10pt]{extarticle}
 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -12,7 +12,7 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{svg}
-\usepackage[font=footnotesize]{caption}
+\usepackage{caption} %[font=footnotesize]
 \usepackage{graphicx}
 \usepackage{pdfpages}
 \usepackage{subcaption}
@@ -35,7 +35,7 @@
     urlcolor=cyan,
     pdfpagelayout=TwoPageLeft}
     
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 
 \usepackage{listings}
@@ -82,12 +82,12 @@
 \fancyfoot[R]{Page \thepage \space of \pageref*{LastPage}}}
 \pagestyle{otherpages}% Apply the general page style to all pages by default
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage} % CAPA
 \centering
 
-\begin{figure}
+\begin{figure} %IST LOGO
  \centering
  \includegraphics[width=0.30\textwidth]{Figures/Logo_IST_color.jpg}
 \end{figure}
@@ -95,47 +95,46 @@
 
 { \rule{\linewidth}{0.5mm} }
 
-{\Huge\bfseries Development of Control Strategies for Earthquake Reproduction on Shaking Platform \par}
-\vspace{0.2cm}
-{\huge\bfseries \par}
-\vspace{0.5cm}
-%{\scshape\huge Design of Mechatronic Systems\par} %
+\LARGE\textbf{ Development of Control Strategies for Earthquake Reproduction on Shaking Platform}
+%\vspace{5mm}
 
-\vspace{1cm}
-
-\begin{figure}[H]
+\begin{figure}[H] %imagem de capa
  \centering
- \fbox{\includegraphics[width=0.8\textwidth]{Figures/capa.png}}  %imagem de capa
+ \fbox{\includegraphics[width=0.5\textwidth]{Figures/capa.png}}  
 \end{figure}
 
-\vspace{1cm} 
+\vspace{5mm} 
 
-% Autores
-\vspace{.2cm}
+\Large \textbf{Afonso Costa Henrique} \par
 
-\huge Afonso Costa Henrique \\
-\href{mailto:afonso.henrique@tecnico.ulisboa.pt}{\Large afonso.henrique@tecnico.ulisboa.pt}\par
-%\href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{\large  Repository} {\large  \&}  \href{https://www.overleaf.com/read/scyrtvmjtzgc#eef70f}{\large  Report}\par
-\vspace{10mm}
+\vspace{5mm}
 
+\large Thesis to obtain the Master of Science Degree in \par
+\LARGE \textbf{Mechanical Engineering} \par
 
-Supervisors: \\
-\vspace{2mm}
-\Large
-{Miguel Ayala Botto  - \href{mailto:ayalabotto@tecnico.ulisboa.pt}{ayalabotto@tecnico.ulisboa.pt}}\\
-\vspace{1mm}
-{Fernando Pires de Oliveira  - \href{mailto:fvoliveira@lnec.pt}{fvoliveira@lnec.pt}}     \\
+\vspace{5mm}
 
+\large Supervisors: Miguel Ayala Botto \par
+Fernando Pires de Oliveira \par
 
-\vspace{.7cm}
+\vspace{5mm}
 
-\vfill {\large 2025\par} %Data
+\Large \textbf{Examination Committee} \par
+\large
+Chairperson: Lorem ipsum \par
+Supervisor: dolor sit amet \par
+Members of the Committee: consectetur adipiscing elit\par
+Maecenas feugiat \par
+sapien libero \par
+
+\vfill
+\Large \textbf{Março 2026} \par
 
 \end{titlepage}
 \setcounter{page}{2}
 \clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+ \normalsize
 %  %AGRADECIMENTOS
  
 % \vfill % pushes following text to bottom
@@ -199,13 +198,12 @@ The current seismic platform testing process at Laboratório Nacional de Engenha
 
 \begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=0.9\linewidth]{Intro/schematic_st1d_Fernando.png}}
+    \fbox{\includegraphics[width=0.95\textwidth]{Intro/schematic_st1d_Fernando.png}}
     \caption{Complete schematic representation of uniaxial shaking table (1D-ST) with a coupled 2DOF system \citep{oliveira2015}}
     \label{fig_schematic_st1d_Fernando}
 \end{figure}
 
-During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.
-
+\vspace{-5mm}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -217,15 +215,19 @@ During the seismic test, the structure is subjected to a series of tests with di
 \hfill
 \begin{minipage}{0.49\textwidth} \setlength{\parindent}{4pt}
 
-\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade).%, always with the same amplitude, to determine the system's transfer function.
+\hspace*{\parindent}During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.
+
+\hspace*{\parindent} Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
 This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.
 
-\hspace*{\parindent} At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform. However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
-
-\hspace*{\parindent} In addition, the system faces physical limitations inherent to the equipment, namely with regard to the finite field of displacement, velocity and acceleration, which must be duly considered during the tests.
+\hspace*{\parindent} At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.
 
 \end{minipage}
 \end{figure}
+
+However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
+
+In addition, the system faces physical limitations inherent to the equipment, namely with regard to the finite field of displacement, velocity and acceleration, which must be duly considered during the tests.
 
 \begin{figure}[H]
 \begin{minipage}{0.6\textwidth}
@@ -276,8 +278,8 @@ It's relevance for this work lies in the fact that the performance of the seismi
 \end{itemize}
 
 \end{minipage}
-\hspace{10mm}
-\begin{minipage}{0.3\textwidth}
+\hfill
+\begin{minipage}{0.39\textwidth}
     \centering
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
     \caption{ Schematized process of determining a response spectrum }
@@ -322,7 +324,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 \section{Literature Review} %\section{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
-\subsection{The role of experimental testing in seismic engineering} %Simulation and Reality: 
+\subsection{Purpose of Experimental Testing in Seismic Engineering} %Simulation and Reality: 
 % IS SEISMIC EXPERIMENTAL TESTING OF STRCUTURES STILL NECESSARY, DESPITE THE EVOLUTION OF COMPUTACIONAL SIMULATIONS?
 % https://consensus.app/search/is-seismic-experimental-testing-of-strcutures-stil/L-Ya5EyiQSqxujE68BaTQw/?utm_source=share&utm_medium=clipboard
 While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
@@ -331,7 +333,7 @@ Studies show that numerical simulations, even with advanced methods, require exp
 In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001,Zhang2023Experimentally,Liu2020Experimental,Bahraq2021Numerical,Malomo2022M-DEM,Qiu2024Seismic,Yavas2023A,Mokhtari2023A}
 
 
-\subsection{An Overview of Experimental Methods}
+\subsection{Overview of Experimental Methods}
 % IN THE FIELD OF SEISMIC ENGINEERING, WHAT ARE THE MOST WIDELY USED EXPERIMENTAL METHODS?
 % https://consensus.app/search/in-the-field-of-seismic-engineering-what-are-the-m/QdpmhhJsS76N_XJJZcAGgA/
 According to \cite{williams2001}, the most widely used experimental methods in the field of seismic engineering are:
@@ -364,7 +366,6 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
     \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
 
-\newpage
 \subsection{Identification in Closed-Loop Systems}
 
 \vspace{-2mm}
@@ -384,6 +385,88 @@ Biological and economical systems operate only under closed-loop conditions, and
     \caption{Closed-loop system \citep{VanDenHof2020}}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
     \label{fig_general_CL_sys} 
 \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+\begin{tikzpicture}
+
+% Sum shape
+\node[draw, circle, minimum size=0.6cm ] (sum) at (0,0){}; 
+%\draw (sum.north east) -- (sum.south west);%(sum.north west) -- (sum.south east);
+\node[left=-1pt] at (sum.center){\tiny $+$};
+\node[below] at (sum.center){\tiny $-$};
+
+% Controller
+\node [draw, fill=SkyBlue!50, minimum width=2cm, minimum height=1.2cm, right=1cm of sum ]  (controller) {$C(s)$};
+
+% System H(s)
+\node [draw, fill=Cyan!50,  minimum width=2cm,  minimum height=1.2cm, right=1.5cm of controller ] (system) {$H(s)$};
+
+% Arrows with text label
+\draw[-stealth] (sum.east) -- (controller.west) node[midway,above]{$e$};
+
+\draw[-stealth] (controller.east) -- (system.west) node[midway,above]{$u$};
+
+\draw[-stealth] (system.east) -- ++ (1.25,0) node[midway](output){}node[midway,above]{$y$};
+
+\draw[-stealth] (output.center) -- (sum.south) node[near end,left]{$y_m$};
+
+\draw (sum.west) -- ++(-1,0) node[midway,above]{$y_{ref}$};
+
+
+\end{tikzpicture}
+\caption{Closed-loop system 1}
+%\label{fig_general_CL_sys} 
+\end{figure}
+
+\begin{figure}[H]
+\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=7mm, inner sep=0pt}, thick ]
+
+%--- Nodes ---
+\node[circ]  (sum1) at (0,   0) {};
+\node[draw, fill=SkyBlue!30, minimum width=2cm, minimum height=1.2cm, right=1cm of sum1 ] (C) {$C$};
+\node[circ]  (sum2) at (4.4, 0) {};
+\node[draw, fill=Cyan!30, minimum width=2cm, minimum height=1.2cm] (G0)   at (6.4, 0) {$G_0$};
+\node[circ]  (sum3) at (8.6, 0) {};
+\node[draw, fill=Yellow!30, minimum width=2cm, minimum height=1.2cm] (H0)   at (8.6, 2.5) {$H_0$};
+
+\node[left=-1pt] at (sum1.center){\tiny $+$};
+\node[below] at (sum1.center){\tiny $-$};
+
+%--- Input r2 ---
+\draw[-latex] (-1.5, 0) node[midway,above]{$r_2$} -- (sum1);
+
+%--- sum1 -> C -> sum2 ---
+\draw[-latex] (sum1) node[midway,above]{$e_y$} -- (C);
+\draw[-latex] (C) node[midway,above]{$u$}   -- (sum2);
+
+%--- r1 drops into sum2 from above ---
+\draw[-latex] (4.4, 1.8) node[above]{$r_1$} -- (sum2);
+
+%--- sum2 -> G0 ---
+\draw[-latex] (sum2) -- node[above]{$u$} (G0);
+
+%--- G0 -> sum3 ---
+\draw[-latex] (G0) -- (sum3);
+
+%--- e -> H0 -> v -> sum3 ---
+\draw[-latex] (8.6, 4.2) node[above]{$e$} -- (H0);
+\draw[-latex] (H0) -- node[right]{$v$} (sum3);
+
+%--- sum3 -> y output ---
+\draw[-latex] (sum3) -- node[above]{$y$} (10.2, 0);
+
+%--- Feedback: y branches back to sum1 bottom ---
+\coordinate (ybranch) at (9.6, 0);
+%\filldraw (ybranch) circle (2pt);
+\draw (ybranch) -- ++(0, -1.5) -- (-0.5, -1.5) -- (-0.5, -0.35);
+\draw[-latex] (-0.5, -0.35) -- (sum1.south);
+
+\end{tikzpicture}
+\caption{Closed-loop system 3}
+%\label{fig_general_CL_sys} 
 \end{figure}
 
 
@@ -586,7 +669,6 @@ To represent the dynamics of a typical structure on test(which has two vibration
     % Define the ground (left of mT)
     \node[left=2cm of mT, ground, minimum width=5mm, minimum height=25mm ] (ground) {}; 
     \draw (ground.north east) -- (ground.south east); % Draw vertical edge of the ground block
-
 
     % Connect the ground to mT with a damper
     \draw ([yshift=5mm]ground.east) coordinate(aux) -- (mT.west|-aux) 

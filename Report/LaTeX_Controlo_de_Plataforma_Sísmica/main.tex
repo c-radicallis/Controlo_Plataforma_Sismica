@@ -430,23 +430,22 @@ In this section (Section \ref{Identification in Closed-Loop Systems}), we'll con
 
 For the system in figure \ref{fig_general_CL_sys} the following equations are derived:
 \begin{align}
-y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \\
-u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t)    
+    y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \\ \label{eq_y_original_CL}
+    u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t) \\ 
 \end{align}
 
-For the examples presented in this section we'll consider the following conditions:
-\begin{itemize}
-    \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
-    \item $C$ is the system controller, which will vary between examples
-    \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
-    \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
-\end{itemize}
+For simplicity, substituting $e(t)$  in \ref{eq_y_original_CL}:
+\begin{equation}
+    v(t) = H_0 \cdot e(t) \Longrightarrow y(t) &= G_0 \cdot u(t) + v(t)
+\end{equation}
 
-\subsubsection{Nonparametric Modelling}\label{Nonparametric Modelling}
+Introducing the sensitivity transfer function:
+\begin{equation}
+    S_0(z) = \frac{1}{1 + G_0 \cdot C}
+\end{equation}
 
-\subsubsection{Parametric Modelling}\label{Parametric Modelling}
+And 
 
-\subsubsection{Two-Stage Method}\label{Two-Stage Method}
 
 \begin{figure}[H]
 \centering
@@ -521,6 +520,22 @@ For the examples presented in this section we'll consider the following conditio
 \label{transformed_CL_sys} 
 \end{figure}
 
+For the examples presented in this section we'll consider the following conditions:
+\begin{itemize}
+    \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $C$ is the system controller, which will vary between examples
+    \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
+    \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
+\end{itemize}
+
+\subsubsection{Nonparametric Modelling}\label{Nonparametric Modelling}
+
+\subsubsection{Parametric Modelling}\label{Parametric Modelling}
+
+\subsubsection{Two-Stage Method}\label{Two-Stage Method}
+
+
+
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}
@@ -545,7 +560,7 @@ The following examples display the identification results obtained with the meth
 For this section, consider the following:
 \begin{itemize}
     \item A data sequence containing 32768 points was used
-    \item  $r_1(t) = 0$, as this mimicks the setup at LNEC, where the tracking error( $e_y = r_2 - y$) is what is input to the controller
+    \item  $r_1(t) = 0$, as this mimicks the setup at LNEC, where the tracking error ($e_y = r_2 - y$) is what is input to the controller
     \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$
     \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$

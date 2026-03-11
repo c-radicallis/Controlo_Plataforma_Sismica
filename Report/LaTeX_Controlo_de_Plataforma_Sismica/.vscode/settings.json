@@ -10,4 +10,5 @@
   "cSpell.language": "en",
   // if you want to completely disable cSpell in this workspace:
   // "cSpell.enabled": false
+  "latex-workshop.latex.autoBuild.run": "onFileChange"
 }

@@ -1,4 +1,4 @@
-\documentclass[10pt]{extarticle}
+\documentclass[draft, 10pt]{extarticle} %
 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -7,7 +7,6 @@
 \usepackage[nottoc]{tocbibind}
 
 \usepackage[a4paper, left=25mm, right=25mm,  top=25mm, bottom=25mm, includefoot] {geometry} % 
-%\setlength{\footskip}{10pt}
 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -38,8 +37,8 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 
-\usepackage{listings}
-\usepackage{matlab-prettifier}
+% \usepackage{listings}
+% \usepackage{matlab-prettifier}
 
 \usepackage{float}
 
@@ -54,28 +53,19 @@
 
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
-% \tikzset{
-%   block/.style = {
-%     draw,
-%     rectangle,
-%     minimum height=3em,
-%     minimum width=6em,
-%     align=center
-%   },
-%   sum/.style = {
-%     draw,
-%     circle,
-%     minimum size=2em,
-%     inner sep=0pt
-%   },
-%   input/.style = {coordinate},
-%   output/.style = {coordinate},
-%   arrow/.style = {-{Latex}}
-% }
+
+%% ----- FONT SELECTION -----
+\usepackage{microtype}   % fine-tunes spacing to avoid overflows
+\usepackage{lmodern}     % improved CM Roman
+
+% \usepackage{lmodern}  % improved version of Computer Modern (recommended)
+% \renewcommand{\familydefault}{\ttdefault}
+
+% \usepackage{inconsolata} % % Inconsolata (cleaner, modern typewriter feel)
+% \renewcommand{\familydefault}{\ttdefault}
 
 %% ----------  Packages above --------
-
-% Define a general page style with both header and footer
+%%  Define a general page style with both header and footer
 \fancypagestyle{otherpages}{
 \fancyhf{} % clear all header and footer fields
 \renewcommand{\headrulewidth}{0pt}
@@ -103,30 +93,37 @@
  \fbox{\includegraphics[width=0.5\textwidth]{Figures/capa.png}}  
 \end{figure}
 
-\vspace{5mm} 
+\vspace{8mm} 
 
 \Large \textbf{Afonso Costa Henrique} \par
 
-\vspace{5mm}
+\vspace{8mm}
 
 \large Thesis to obtain the Master of Science Degree in \par
 \LARGE \textbf{Mechanical Engineering} \par
 
-\vspace{5mm}
+\vspace{8mm}
 
-\large Supervisors: Miguel Ayala Botto \par
-Fernando Pires de Oliveira \par
-
-\vspace{5mm}
-
-\Large \textbf{Examination Committee} \par
 \large
-Chairperson: Lorem ipsum \par
-Supervisor: dolor sit amet \par
-Members of the Committee: consectetur adipiscing elit\par
-Maecenas feugiat \par
-sapien libero \par
+\begin{tabular}{l l}
+  Supervisors:& Miguel Ayala Botto \\
+              &Fernando Pires de Oliveira
+\end{tabular}
 
+\vspace{8mm}
+
+\Large \textbf{Examination Committee}
+
+\vspace{2mm}
+
+\large
+\begin{tabular}{r l}
+  Chairperson: & Lorem Ipsum \\
+  Supervisor: & Dolor Sit Amet \\
+  Members of the Committee: & Consectetur Adipiscing Elit \\
+                       & Maecenas Feugiat \\
+                       & Sapien Libero
+\end{tabular}
 \vfill
 \Large \textbf{Março 2026} \par
 
@@ -299,7 +296,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
     \item The seismic platform system with 1 degree of freedom (ST1D) is capable of testing models with a mass of up to 5 tons, and operates in a band of interest from 0 to 25 Hertz. It also has the following limitations (which should be confirmed in laboratory tests):
     \begin{itemize}
         \item Maximum displacement, in absolute value, of 100 mm
-        \item Maximum speed, in absolute value, of 0.4 m/s
+            \item Maximum speed, in absolute value, of 0.4 m/s
         \item Maximum acceleration, in absolute value, of 25 m/s$^2$
     \end{itemize}
     \item The model to be tested may initially exhibit linear behaviour, but as it degrades, it inevitably becomes non-linear. In general, the structures tested have two vibration modes in the seismic platform's band of interest, whose initial characteristics (without damage) are:
@@ -428,23 +425,27 @@ In this section (Section \ref{Identification in Closed-Loop Systems}), we'll con
 \label{fig_general_CL_sys} 
 \end{figure}
 
-For the system in figure \ref{fig_general_CL_sys} the following equations are derived:
+For the system in figure \ref{fig_general_CL_sys} the following equations are derived: 
 \begin{align}
-    y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \\ \label{eq_y_original_CL}
-    u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t) \\ 
+    y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
+    u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
 \end{align}
 
 For simplicity, substituting $e(t)$  in \ref{eq_y_original_CL}:
 \begin{equation}
-    v(t) = H_0 \cdot e(t) \Longrightarrow y(t) &= G_0 \cdot u(t) + v(t)
+    v(t) = H_0 \cdot e(t) \Longrightarrow y(t) = G_0 \cdot u(t) + v(t) \label{eq_v_H0e}
 \end{equation}
 
 Introducing the sensitivity transfer function:
 \begin{equation}
-    S_0(z) = \frac{1}{1 + G_0 \cdot C}
+    S_0 = \frac{1}{1 + G_0 \cdot C} \label{eq_S0}
 \end{equation}
 
-And 
+And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using relations \ref{eq_v_H0e} and \ref{eq_S0}, we get:
+\begin{align}
+    y(t) &= S_0 [ G_0 \cdot r_1(t) + G_0C \cdot r_2(t)  + v(t) ]\label{eq_y_transformed_CL} \\ 
+    u(t) &= S_0 [ r_1(t) + C \cdot r_2(t) - C \cdot v(t)] \label{eq_u_transformed_CL}
+\end{align}
 
 
 \begin{figure}[H]
@@ -821,9 +822,8 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
     
 \vspace{5mm}
 From the system of equations \ref{eq_2dof_system}, the following transfer functions relating the displacements of the each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
-
-\begin{minipage}{0.49\textwidth}
-
+\small
+\begin{minipage}{0.5\textwidth}
 \begin{align}
     \frac{x_T}{F_P} &= \frac{G_1 G_2 - G_{21}^2}{G_T G_1 G_2 - G_T G_{21}^2 - G_2 G_{T1}^2} = G_{xT/Fp}(s) \label{G_xT_Fp}\\
     \frac{x_1}{x_T} &= \frac{G_{T1} G_2}{G_1 G_2 - G_{21}^2} = G_{x1/xT}(s) \\
@@ -831,7 +831,7 @@ From the system of equations \ref{eq_2dof_system}, the following transfer functi
 \end{align}
 \end{minipage}
 \hfill
-\begin{minipage}{0.42\textwidth}
+\begin{minipage}{0.43\textwidth}
 \begin{align}
     G_T(s) &= m_T\cdot s^2 + (c_T + c_1)\cdot s + k_1 \\
     G_1(s) &= m_1\cdot s^2 + (c_1 + c_2)\cdot s + k_1 + k_2 \\
@@ -850,6 +850,7 @@ From the system of equations \ref{eq_2dof_system}, the following transfer functi
     % G_{x2/xT}(s) &= G_{x2/x1} \cdot G_{x1/xT}
 \end{align}
 
+\normalsize
 The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be determined such that the system's natural frequencies $f_i$ and damping ratios $\xi_i$ are similar to the structures in test. Equation \ref{eq_modal_frequencies} relates the natural frequency of the two modes of the 2DoF system to it's spring and mass properties, and equation \ref{eq_modal_damping} relates the damping coefficient and ratio to mass and natural frequency.
 
 \begin{equation}\label{eq_modal_frequencies}

@@ -1,4 +1,4 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{22}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -92,6 +92,12 @@ Z.~Qiu and A.~Elgamal.
 \newblock Seismic performance of a sheet-pile retaining structure in liquefiable soils: Numerical simulations of leap-2022 centrifuge tests.
 \newblock \emph{Soil Dynamics and Earthquake Engineering}, 2024.
 \newblock \doi{10.1016/j.soildyn.2023.108330}.
+
+\bibitem[S{\"o}derstr{\"o}m and Stoica(1989)]{Soderstrom_Stoica}
+T.~S{\"o}derstr{\"o}m and P.~Stoica.
+\newblock \emph{System Identification}.
+\newblock Prentice Hall International Series in Systems and Control Engineering. Prentice Hall International, Hemel Hempstead, UK, 1989.
+\newblock ISBN 0-12-881236-5.
 
 \bibitem[Tekeste(2021)]{tekeste2021}
 G.~G. Tekeste.

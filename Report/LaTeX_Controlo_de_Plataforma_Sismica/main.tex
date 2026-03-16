@@ -1,4 +1,4 @@
-\documentclass[ 10pt]{extarticle} %draft,
+\documentclass[draft, 10pt]{extarticle} %
 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -537,95 +537,59 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
 
-% ─────────────────────────────────────────
-\section*{Definitions}
-
-\textbf{Autocorrelation (WSS):}
+From the correlation function, the power spectral density is given by its Fourier transform:
 \begin{equation}
-    R_{xx}(\tau) = E\left[x(t)\, x(t+\tau)\right]
-\end{equation}
+    R_{yx}(\tau) = E\left[y(t)\, x(t-\tau)\right] \Longrightarrow     \Phi_{yx} = \mathcal{F}\left\{R_{yx}(\tau)\right\}
+\end{equation} 
 
-\textbf{Power Spectral Density (Wiener--Khinchin):}
-\begin{equation}
-    S_{xx}(f) = \mathcal{F}\left\{R_{xx}(\tau)\right\}
-    = \int_{-\infty}^{\infty} R_{xx}(\tau)\, e^{-j2\pi f \tau}\, d\tau
-\end{equation}
-
-\textbf{Cross-correlation:}
-\begin{equation}
-    R_{xy}(\tau) = E\left[x(t)\, y(t+\tau)\right]
-\end{equation}
-
-\textbf{Cross-spectral density:}
-\begin{equation}
-    S_{xy}(f) = \mathcal{F}\left\{R_{xy}(\tau)\right\}
-\end{equation}
-
-\textbf{Total average power:}
-\begin{equation}
-    P_x = R_{xx}(0) = \int_{-\infty}^{\infty} S_{xx}(f)\, df
-\end{equation}
-
-% ─────────────────────────────────────────
-\section*{LTI Input--Output Relations}
-
-For a system $y(t) = h(t) * x(t)$, i.e.\ $Y(f) = H(f)\,X(f)$:
-
-\textbf{Output PSD:}
-\begin{equation}
-    S_{yy}(f) = \left|H(f)\right|^2 S_{xx}(f)
-\end{equation}
-
-\textbf{Cross-PSD (input $\to$ output):}
-\begin{equation}
-    S_{xy}(f) = H(f)\, S_{xx}(f)
-\end{equation}
-
-\textbf{Cross-PSD (output $\to$ input):}
-\begin{equation}
-    S_{yx}(f) = H^*(f)\, S_{xx}(f)
-\end{equation}
-
-\textbf{Output autocorrelation:}
-\begin{equation}
-    R_{yy}(\tau) = h(\tau) * h(-\tau) * R_{xx}(\tau)
-\end{equation}
-
-\textbf{Cross-correlation:}
-\begin{equation}
-    R_{xy}(\tau) = h(\tau) * R_{xx}(\tau)
-\end{equation}
-
-% ─────────────────────────────────────────
-\section*{Properties of $S_{xx}(f)$}
-
+And, for a LTI system $y(t) = H \cdot x(t)$, we have the following properties:
 \begin{align}
-    S_{xx}(f) &\geq 0 \quad \forall\, f \\
-    S_{xx}(f) &\in \mathbb{R} \\
-    S_{xx}(-f) &= S_{xx}(f)
-    \quad \text{(even symmetry, real signals)} \\
-    S_{xx}(-f) &= S_{xx}^*(f)
-    \quad \text{(conjugate symmetry, general)}
+    \Phi_{y}     =& H \cdot H^{*} \,\Phi_{x} = \left|H\right|^2 \Phi_{x} \\
+    \Phi_{yx} =& H^{*} \, \Phi_{xx}
 \end{align}
 
-% ─────────────────────────────────────────
-\section*{Properties of $S_{xy}(f)$}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
 
-\begin{align}
-    S_{xy}(-f) &= S_{xy}^*(f) \\
-    S_{yx}(f)  &= S_{xy}^*(f) \\
-    \left|S_{xy}(f)\right|^2 &\leq S_{xx}(f)\, S_{yy}(f)
-    \quad \text{(Schwarz inequality)}
-\end{align}
+% G0
+\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
 
-\textbf{Coherence function:}
+% sum_v
+\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+% H0
+\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+
+%--- G0 -> sum_v ---
+\draw[-latex] (G0) -- (sum_v);
+
+%--- e -> H0 -> v -> sum_v ---
+\draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+\draw[-latex] (H0) -- node[right]{$v$} (sum_v);
+
+%--- sum_v -> y output ---
+\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+%--- sum_r1 -> G0 ---
+\draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
+
+\end{tikzpicture}
+\caption{Open loop system}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+\label{tikz_general_open_loop_sys} 
+\end{figure}
+
+For an open loop system, as in figure \ref{tikz_general_open_loop_sys}, taking the spectral density $\Phi_{yu}$, we get:
 \begin{equation}
-    \gamma^2_{xy}(f) = \frac{\left|S_{xy}(f)\right|^2}{S_{xx}(f)\, S_{yy}(f)},
-    \qquad 0 \leq \gamma^2_{xy} \leq 1
+    \Phi_{yu} =  G_{0}^{*} \, \Phi_{u} + \Phi_{vu}
 \end{equation}
 
-% ─────────────────────────────────────────
-\section*{Two Uncorrelated Inputs}
+If we didn't have a loop feeding $v$
+
+
+
+
+\textbf{Two Uncorrelated Inputs}
 
 For $y = H_1 r_1 + H_2 r_2$ with $r_1 \perp r_2$:
 
@@ -640,59 +604,9 @@ with $r_1 \perp v$:
     S_{yu}(f) = H_{yr}\, H_{ur}^*\, S_{r_1 r_1} + H_{yv}\, H_{uv}^*\, S_{vv}
 \end{equation}
 
-% ─────────────────────────────────────────
-\section*{Special Cases}
 
-\textbf{White noise input} $S_{xx}(f) = N_0/2$:
-\begin{equation}
-    S_{yy}(f) = \frac{N_0}{2}\left|H(f)\right|^2
-\end{equation}
-
-\textbf{Sinusoid} $x(t) = A\cos(2\pi f_0 t + \varphi)$:
-\begin{equation}
-    S_{xx}(f) = \frac{A^2}{4}\left[\delta(f - f_0) + \delta(f + f_0)\right]
-\end{equation}
-
-\textbf{Uncorrelated signals} ($x \perp y$):
-\begin{equation}
-    S_{xy}(f) = 0 \quad \forall\, f
-\end{equation}
-
-% ─────────────────────────────────────────
-\section*{Bandwidth and Power}
-
-\textbf{Band power:}
-\begin{equation}
-    P_{[f_1,f_2]} = \int_{f_1}^{f_2} S_{xx}(f)\, df
-\end{equation}
-
-\textbf{Noise equivalent bandwidth:}
-\begin{equation}
-    B_N = \frac{\displaystyle\int_{-\infty}^{\infty} \left|H(f)\right|^2 df}
-               {\left|H(f)\right|^2_{\max}}
-\end{equation}
-
-\textbf{RMS bandwidth:}
-\begin{equation}
-    B_{\mathrm{rms}} = \sqrt{\frac{\displaystyle\int f^2\, S_{xx}(f)\, df}
-                                  {\displaystyle\int S_{xx}(f)\, df}}
-\end{equation}
-
-% ─────────────────────────────────────────
-\section*{System Identification}
-
-\textbf{Transfer function from spectral densities:}
-\begin{equation}
-    H(f) = \frac{S_{xy}(f)}{S_{xx}(f)}
-\end{equation}
-
-\textbf{Cascade} $y = H_2(H_1 x)$:
-\begin{equation}
-    S_{yy}(f) = \left|H_2(f)\right|^2 \left|H_1(f)\right|^2 S_{xx}(f)
-\end{equation}
 
 \subsubsection{Two-Stage Method}\label{Two-Stage Method}
-
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}

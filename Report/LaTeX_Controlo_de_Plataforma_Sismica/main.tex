@@ -380,7 +380,50 @@ In section \ref{Two-Stage Method} a method for circumventing the issues introduc
 
 
 
-\subsubsection{ Closed Loop Setup: System, Signals \& Transfer Functions}
+
+\subsubsection{ Closed Loop System Setup}
+
+\paragraph{General Definitions \& Notation}
+For a signal discretized with sampling time $T_s$:
+\begin{itemize}
+    \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
+    \item The forward operator corresponds to a forward time shift of one sampling time
+    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{\pm k}$
+    \item $G(z)$, in upper case, designates a transfer function, while the lower case $g(k)$ is the corresponding pulse response at time instant $t = k T_s$, and both are related by:
+        \begin{equation}
+            G(z) = \sum_{k=0}^{\infty} g(k)\, z^{-k}
+        \end{equation}
+    \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
+    \item On various equations the transfer functions will have the complex variable omitted to ease the notation
+\end{itemize}
+
+\paragraph{Properties of signals processed by discrete LTI systems}
+
+\hspace{\parindent} The correlation of two signals is given by:
+\begin{align}
+    R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
+    R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
+\end{align} 
+
+For an LTI system $y(t) = G(z) \cdot x(t)$, we have the following:
+\begin{align}
+    \begin{aligned}
+    & R_{yx}(\tau) = \, E \left[ \, y(t) \, x(t-\tau) \, \right] = E \left[ \,  G(z) \cdot x(t) \, x(t-\tau) \, \right] =  G(z)  \cdot E \left[  x(t) \, x(t-\tau) \, \right] \Longrightarrow \\
+    & \Longrightarrow \, R_{yx}(\tau) = \,  H(z) \,  R_{x}(\tau)
+    \end{aligned}
+\end{align}
+
+The system's output-input signals cross-correlation can also be given by the convolution of its impulse response $h(k)$ with the input autocorrelation $R_{x}$:
+\begin{equation}
+     R_{yx}(\tau) = g(k) \star  R_{x}(\tau)
+\end{equation}
+
+\begin{align}
+    \Phi_{y}(\omega)  =& H(e^{i\omega}) \cdot H(e^{i\omega})^{*} \,\Phi_{x}(\omega) = \left|H(e^{i\omega})\right|^2 \Phi_{x}(\omega) \\
+    \Phi_{yx}(\omega) =& H(e^{i\omega})^{*} \, \Phi_{x}(\omega)
+\end{align}
+
+
 In this section (Section \ref{Identification in Closed-Loop Systems}), which is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica}, we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
@@ -448,14 +491,14 @@ For the system in figure \ref{fig_general_CL_sys}, the following equations are d
 In the whole of section \ref{Identification in Closed-Loop Systems}, for the examples presented, and, unless stated otherwise, we'll consider the following conditions:
 \begin{itemize}
     \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
-    \item $C$ is the system controller, which will vary between examples
-    \item $G_{0} = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
-    \item $H_{0} = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
+    \item $C(z)$ is the system controller, which will vary between examples
+    \item $G_{0}(z) = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
+    \item $H_{0}(z) = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
 \end{itemize}
 
 We'll start by transforming the system equations. The reasons why this is of interest we'll become apparent soon. Firstly, for simplicity’s sake, we'll substitute $e(t)$  in equation \ref{eq_y_original_CL}:
 \begin{equation}
-    v(t) = H_0 \cdot e(t) \Longrightarrow y(t) = G_0 \cdot u(t) + v(t) \label{eq_v_H0e}
+    v(t) = H_{0}(z) \cdot e(t) \Longrightarrow y(t) = G_0 \cdot u(t) + v(t) \label{eq_v_H0e}
 \end{equation}
 
 And introducing the sensitivity transfer function:
@@ -543,34 +586,6 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 \label{transformed_CL_sys} 
 \end{figure}
 
-\subsubsection{Discrete-time Signals and Systems: Defining Notation \& Properties}
-\paragraph{General Definitions \& Notation}
-For a signal discretized with sampling time $T_s$:
-\begin{itemize}
-    \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
-    \item The forward operator corresponds to a forward time shift of one sampling time
-    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{\pm k}$
-    \item $G(z)$, in upper case, designates a transfer function, while the lower case $g(k)$ is the corresponding pulse response at time instant $t = k T_s$, and both are related by:
-        \begin{equation}
-            G(z) = \sum_{k=0}^{\infty} g(k)\, z^{-k}
-        \end{equation}
-    \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
-\end{itemize}
-
-
-\paragraph{Properties of signals processed by discrete LTI systems}
-
-
-\hspace{\parindent} From the correlation function, the power spectral density is given by its Fourier transform:
-\begin{equation}
-    R_{yx}(\tau) = E\left[y(t)\, x(t-\tau)\right] \Longrightarrow     \Phi_{yx}(\omega) = \mathcal{F}\left\{R_{yx}(\tau)\right\}
-\end{equation} 
-
-And, for a LTI system $y(t) = H(z) \cdot x(t)$, we have the following properties:
-\begin{align}
-    \Phi_{y}(\omega)  =& H(e^{i\omega}) \cdot H(e^{i\omega})^{*} \,\Phi_{x}(\omega) = \left|H(e^{i\omega})\right|^2 \Phi_{x}(\omega) \\
-    \Phi_{yx}(\omega) =& H(e^{i\omega})^{*} \, \Phi_{x}(\omega)
-\end{align}
 
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
 
@@ -1037,7 +1052,7 @@ The acceleration response spectrum mean squared error for the tuned platform is 
         Displacement (tuned)  & $1.88 \cdot 10^{-6}$  \\
         \hline
     \end{tabular}
-    \caption{Mean squared error for response spectrum of platen with ground response spectrum as baseline }
+    \caption{Mean squared error for response spectrum of platen with ground response spectrum as baseline}
     \label{tab:mse_rs}
 \end{minipage}
 \end{table}
@@ -1047,7 +1062,7 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ before and after tuning}
+    \caption{Bode plots of $G_{xT/x_{\text{ref}}}(s)$ before and after tuning}
     \label{fig_Bode_of_G_xT_xref}    
 \end{minipage}
 \hfill

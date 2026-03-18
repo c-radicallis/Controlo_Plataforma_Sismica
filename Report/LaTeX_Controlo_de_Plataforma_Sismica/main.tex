@@ -1,13 +1,10 @@
-\documentclass[draft, 10pt]{extarticle} %
-
+\documentclass[10pt]{extarticle} %draft, 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
-
 \usepackage[nottoc]{tocbibind}
-
+% LTeX: enabled=false
 \usepackage[a4paper, left=25mm, right=25mm,  top=25mm, bottom=25mm, includefoot] {geometry} % 
-
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{svg}
@@ -27,28 +24,15 @@
 \usepackage{xurl}
 \usepackage{amssymb}
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    citecolor=black,      
-    urlcolor=cyan,
-    pdfpagelayout=TwoPageLeft}
-    
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageLeft}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
-
 % \usepackage{listings}
 % \usepackage{matlab-prettifier}
-
 \usepackage{float}
-
-\usepackage{silence}
-\WarningFilter{caption}{Unused}
-
+\usepackage{silence}\WarningFilter{caption}{Unused}
 \newcommand{\mycomment}[1]{}
-
 \usepackage{arydshln}
-
 \usepackage[english]{babel}
 
 \usepackage{titlesec}
@@ -60,25 +44,17 @@
 
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
-
 %% ----- FONT SELECTION -----
 \usepackage{microtype}   % fine-tunes spacing to avoid overflows
 \usepackage{lmodern}     % improved CM Roman
-
-% \usepackage{lmodern}  % improved version of Computer Modern (recommended)
-% \renewcommand{\familydefault}{\ttdefault}
-
-% \usepackage{inconsolata} % % Inconsolata (cleaner, modern typewriter feel)
-% \renewcommand{\familydefault}{\ttdefault}
-
 %% ----------  Packages above --------
 %%  Define a general page style with both header and footer
-\fancypagestyle{otherpages}{
+\fancypagestyle{otherpages}{ 
 \fancyhf{} % clear all header and footer fields
 \renewcommand{\headrulewidth}{0pt}
 \fancyfoot[R]{Page \thepage \space of \pageref*{LastPage}}}
 \pagestyle{otherpages}% Apply the general page style to all pages by default
-
+% LTeX: enabled=true
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage} % CAPA
@@ -110,7 +86,7 @@
 \LARGE \textbf{Mechanical Engineering} \par
 
 \vspace{8mm}
-
+% LTeX: enabled=false
 \large
 \begin{tabular}{l l}
   Supervisors:& Miguel Ayala Botto \\
@@ -132,8 +108,8 @@
                        & Sapien Libero
 \end{tabular}
 \vfill
-\Large \textbf{Março 2026} \par
-
+\Large \textbf{February 2026} \par
+% LTeX: enabled=true
 \end{titlepage}
 \setcounter{page}{2}
 \clearpage
@@ -159,16 +135,16 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{otherlanguage}{portuguese}
 \section{Resumo}
 
-% \begin{otherlanguage}{portuguese}
-% Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espetros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
+Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espetros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
-% \vspace{10mm}
+\vspace{10mm}
 
-% \textbf{Palavras-chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
-% \end{otherlanguage}
-%%%%%%
+\textbf{Palavras-chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
+\end{otherlanguage}
+%%%%%
 \clearpage
 \section{Abstract}
 
@@ -241,11 +217,11 @@ In addition, the system faces physical limitations inherent to the equipment, na
 
 \hspace*{\parindent} The \textbf{response spectrum} is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
-It's relevance for this work lies in the fact that the performance of the seismic table, will be assessed mostly based on it's ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
+It's relevance for this work lies in the fact that the performance of the seismic table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
 \vspace{5mm}
 
-\hspace*{\parindent} Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for the each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
+\hspace*{\parindent} Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 
 \vspace{5mm}
 
@@ -334,8 +310,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
 Studies show that numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, especially for complex interactions. Machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models.
 
-In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001,Zhang2023Experimentally,Liu2020Experimental,Bahraq2021Numerical,Malomo2022M-DEM,Qiu2024Seismic,Yavas2023A,Mokhtari2023A}
-
+In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001, Zhang2023Experimentally, Liu2020Experimental, Bahraq2021Numerical, Malomo2022M-DEM, Qiu2024Seismic, Yavas2023A, Mokhtari2023A}
 
 \subsection{Overview of Experimental Methods}
 % IN THE FIELD OF SEISMIC ENGINEERING, WHAT ARE THE MOST WIDELY USED EXPERIMENTAL METHODS?
@@ -344,7 +319,7 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 \begin{itemize}
     \item \textbf{Shaking Table Tests:} Shaking tables simulate real earthquake ground motions on structural or soil models, allowing direct observation of dynamic response and failure mechanisms. They are considered the gold standard for dynamic testing of buildings, bridges, tunnels, and other infrastructure. 
     They are used for both full-scale and scaled models, including innovative in-situ testing with mobile shaking tables \citep{williams2001,Bousias2017Experimental,Abovyan2024Method,Tsinidis2020Seismic,DeFelice2016Methods,El-Emam2018Experimental}. 
-    \item \textbf{Pseudo-Dynamic Testing} and \textbf{Hybrid Simulation:} In pseudo-dynamic testing, loads are applied over a greatly expanded time scale with the dynamic behaviour of the structure accounted for computationally. In hybrid simulation, just like pseudo-dynamic testing, a combination of physical testing and numerical modelling is used, but the experimental part of the process is performed at the correct rate so that the test specimen can respond dynamically. These methods are widely used for complex or large structures where full dynamic testing is impractical \citep{williams2001,Bousias2017Experimental}.
+    \item \textbf{Pseudo-Dynamic Testing} and \textbf{Hybrid Simulation:} In pseudo-dynamic testing, loads are applied over a greatly expanded timescale with the dynamic behaviour of the structure accounted for computationally. In hybrid simulation, just like pseudo-dynamic testing, a combination of physical testing and numerical modelling is used, but the experimental part of the process is performed at the correct rate so that the test specimen can respond dynamically. These methods are widely used for complex or large structures where full dynamic testing is impractical \citep{williams2001,Bousias2017Experimental}.
     \item \textbf{Static and Cyclic Loading Tests:} These tests apply static or cyclic loads to materials, structural elements, or systems to study their properties under earthquake-like conditions \citep{williams2001,Bousias2017Experimental,Fiorino2016Experimental}.
     \item \textbf{Centrifuge Modelling:} Centrifuge tests use scaled soil-structure models spun at high speeds to replicate gravitational stresses, enabling realistic simulation of soil-structure interaction during earthquakes, especially for underground structures such as tunnels. This method is mostly focused on testing soil properties, not structures \citep{williams2001,Tsinidis2020Seismic}.
     \item \textbf{Surface Based Seismic Methods:} Used for site characterization, through passive-source (microtremor) and active-source techniques, to determine ground shear-wave velocity profiles \citep{Luke2008Characterizing}.
@@ -372,17 +347,13 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
 
-Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economical systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
+Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
 
 In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables.
 
 In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented.
 
-
-
-
-\subsubsection{ Closed Loop System Setup}
-
+\subsubsection{Signals \& System Analysis}
 \paragraph{General Definitions \& Notation}
 For a signal discretized with sampling time $T_s$:
 \begin{itemize}
@@ -423,7 +394,7 @@ The system's output-input signals cross-correlation can also be given by the con
     \Phi_{yx}(\omega) =& H(e^{i\omega})^{*} \, \Phi_{x}(\omega)
 \end{align}
 
-
+\subsubsection{ Closed Loop System Setup}
 In this section (Section \ref{Identification in Closed-Loop Systems}), which is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica}, we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
@@ -667,7 +638,7 @@ with $r_1 \perp v$:
 
 \subsubsection{Example: Comparing Closed-Loop Identification Methods}
 
-The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling}, \ref{Parametric Modelling}, and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
+The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling} and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
 
 For this section, consider the following:
 \begin{itemize}
@@ -711,10 +682,7 @@ For this section, consider the following:
 \end{minipage}
 \end{figure}
 
-The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails.In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
-
-
-
+The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
 \section{Modelling Seismic Table Dynamics}\label{Modelling Seismic Table Dynamics}
 %\section{Modelação Matemática}
@@ -741,7 +709,7 @@ It's important to note that the servo valve and hydraulic actuators have since b
 \begin{table}[H]
 \centering
 \caption{ST1D model parameters \citep{tekeste2021}}
-\begin{tabular}{|c|l|c|}
+\begin{tabular}{|c| l |c|}
 \hline
 \textbf{Symbol} & \textbf{Description} & \textbf{Value (Units)} \\ \hline
 $k_p$ & Proportional gain of the controller & $1.2993 \, \text{V/cm}$ \\ \hline
@@ -759,8 +727,8 @@ $m_p$ & Mass of the platen & $1.9751 \, \text{ton}$ \\ \hline
 $c_t$ & Combined damping force of the actuator and the platen & $5.7800 \, \text{kNs/m}$ \\ \hline
 $k_{sp}$ & Stiffness of the SDOF structure & - \\ \hline
 $c_{sp}$ & Damping of the SDOF structure & - \\ \hline
-$m_t^*$ & Total mass considering the payload (shaking table) & - \\ \hline
-$H_{sp}$ & Transfer function relating platen and SDOF structure displacement & - \\ \hline
+$m_T$ & Total mass considering the payload (shaking table) & - \\ \hline
+%$H_{sp}$ & Transfer function relating platen and SDOF structure displacement & - \\ \hline
 \end{tabular}
 \label{tab:parameters}
 \end{table}
@@ -788,8 +756,7 @@ Given the previous results, an alternative approach was found in order to simula
 \end{figure}
 
 From the block diagram in figure \ref{fig_clean_block_force_output}, the following equations were derived:
-
-
+% LTeX: enabled=false
 \begin{align}
 \left\{
     \begin{aligned}
@@ -806,10 +773,10 @@ From the block diagram in figure \ref{fig_clean_block_force_output}, the followi
     & \Longleftrightarrow \frac{F_P}{i_{sv}} = \frac{A \cdot \frac{k_{sv} k_q}{1 + \tau_{sv} s} } {  k_{Pl} + \frac{A^2}{k_h}\cdot s  + A^2\cdot s \cdot G_{xT/Fp}} = G_{Fp/i_{sv}}(s) \quad \text{, where $k_{Pl}=k_c + C_l$}
     \end{aligned}
 \end{align}
-
+% LTeX: enabled=true
 It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \ref{eq_G_Fp_isv} \& \ref{G_xT_Fp}).
 
-To represent the dynamics of a typical structure on test(which has two vibration modes in the bandwidth of the seismic table), a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
+To represent the dynamics of a typical structure on test (which has two vibration modes in the bandwidth of the seismic table), a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
 
 \begin{figure}[H]
 \centering
@@ -932,7 +899,7 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
 
     
 \vspace{5mm}
-From the system of equations \ref{eq_2dof_system}, the following transfer functions relating the displacements of the each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
+From the system of equations \ref{eq_2dof_system}, the following transfer functions relating the displacements of each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
 \small
 \begin{minipage}{0.5\textwidth}
 \begin{align}
@@ -1021,7 +988,7 @@ Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/
 \begin{equation}
     G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1} \quad \text{ where: $Kp = 1540, Ki = 1670, Kd = 17.9 , Tf = 6.96\cdot10^{-5}$}
 \end{equation}
-Where the parameters $K_p, K_i, K_d$ and $T_f$ were obtained using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. This results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
+Where the parameters $K_p, K_i, K_d$ and $T_f$ were obtained using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
 
 \begin{figure}[H]
     \centering
@@ -1171,7 +1138,7 @@ The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\linewidth]{PID_MSE/stiffness_solutions.png}
-    \caption{For the 2DOF model (fig.\ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \ref{eq_modal_frequencies})}
+    \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \ref{eq_modal_frequencies})}
     \label{fig_close_modal_freqs}
 \end{minipage}
 \end{figure}
@@ -1222,13 +1189,13 @@ The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{
 Structures with % higher modal frequencies ($f_1=4$ Hz \& $f_2=10$ Hz) and 
 lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra which exceeds the desired one over the entire frequency spectrum, while structures with higher damping ($\zeta_1=0.1$ \& $\zeta_2=0.25$) result in response spectra which fall short of the desired one.
 
-The affect of modal frequencies on the performance of the seismic table is unclear, and likely depends heavily on the frequency content of the seismic signal.
+The effect of modal frequencies on the performance of the seismic table is unclear, and likely depends heavily on the frequency content of the seismic signal.
 
 
 \clearpage
 \subsection{Optimal Control}  
 
-\subsubsection{ State Space Model } \label{section_ss_model}
+\subsubsection{ State Space Model} \label{section_ss_model}
 For the 2-DoF system coupled to the seismic table, the following state space model was derived, where:
 
 \begin{align}
@@ -1300,7 +1267,7 @@ Controllability and observability matrices were built in MATLAB with \emph{ctrb}
 \begin{minipage}{0.49\textwidth}
 For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}, the optimal state feedback control law which minimizes the cost function (equation \ref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices.
 
-The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF(figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, because this increased the bandwidth, but, unlike the PIDF, did not result in amplification at low frequencies.(Figure \ref{fig_Bode_LQI_Qe9} to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
+The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, because this increased the bandwidth, but, unlike the PIDF, did not result in amplification at low frequencies.(Figure \ref{fig_Bode_LQI_Qe9} to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
 
 \end{minipage}
 \hfill
@@ -1501,7 +1468,7 @@ The Kalman estimator and the optimal state feedback control law which minimizes 
 
 
 \subsection{Conclusions on Simulation Results}
-Using optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectra that falls short at higher ones. 
+Using optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones. 
 
 The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
 
@@ -1553,7 +1520,7 @@ The optimal controller can be tuned for increasingly larger cut off frequencies 
 
 \subsection{Simulating the driver adaptation process}
 
-For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$ , $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}).
+For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}).
 
 \begin{figure}[H]
 \begin{minipage}{0.55\textwidth}
@@ -1664,10 +1631,8 @@ Median Displacement MSE & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}\) & \
 \end{figure}
 
 
-\subsection{ Conclusions: PIDF vs Optimal Control vs Driver Iteration }
-
+\subsection{ Conclusions: PIDF vs Optimal Control vs Driver Iteration}
 %The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
-
 The results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -1676,7 +1641,8 @@ The results indicate that the controllers previously studied offer superior perf
 In order to experimentally validate the performance of the control strategies studied in \ref{Evaluating Controller Performance in Simulation Environment}, the two controllers were implemented in the LabVIEW software running in real time on 
 
 
-\subsection{ Measurement and Control Chain }%Calibrar sensores da minimesa (ajustar offset e ganho nos amplificadores/condicionadores, e definir declive e ordenada na origem da função de conversão volts/bits para grandeza fisica medida
+\subsection{ Measurement and Control Chain}
+% Calibrar sensores da minimesa (ajustar offset e ganho nos amplificadores/condicionadores, e definir declive e ordenada na origem da função de conversão volts/bits para grandeza fisica medida
 Using the LNEC mini shaking table. This equipment consists of an electromagnetic shaker to input the motion to the platform, which rolls over the fixed body.
 The accelerometers for characterization are attached to the platform. This equipment has a
 displacement transducer (LVDT type) embedded used to measure the platform displacement
@@ -1688,10 +1654,10 @@ displacement transducer (LVDT type) embedded used to measure the platform displa
     \label{measurement_and_control_chain_schematic}
 \end{figure}
 
-\subsubsection{ Calibration of Displacement Sensor }
+\subsubsection{ Calibration of Displacement Sensor}
 ver excel no computador da mesa sismica
 
-\subsubsection{ Calibration of Acceleration Sensor }
+\subsubsection{ Calibration of Acceleration Sensor}
 \begin{enumerate}
     \item In the acquisition/control software, set scaling to 1 and offset to zero
     \item Place accelerometer vertically on a flat stationary surface (aligning the accelerometer measurement axis orthogonally to the acceleration of gravity) such that it will measure zero acceleration
@@ -1766,7 +1732,7 @@ In order to tune the controller to the system parameters, it is necessary to ide
 
 \subsubsection{Checking the shaker and table for mechanical issues}
 
-Given the unexpected nonlinearities found during the identification (figures \ref{fig_sine_nonlinearity} and \ref{fig_square_nonlinearity}), the power to the shaker was turned off and the table was directly actuated by hand through it's entire travel, and with direction changes, in order to feel for any binding or play in the system.  Since binding could be felt at certain points in the travel, both the shaker and the table slideways were disassembled to check for issues.
+Given the unexpected nonlinearities found during the identification (figures \ref{fig_sine_nonlinearity} and \ref{fig_square_nonlinearity}), the power to the shaker was turned off and the table was directly actuated by hand through its entire travel, and with direction changes, in order to feel for any binding or play in the system.  Since binding could be felt at certain points in the travel, both the shaker and the table slideways were disassembled to check for issues.
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -1786,7 +1752,7 @@ Given the unexpected nonlinearities found during the identification (figures \re
 
 With the table disconnected from the shaker, it was once again actuated by hand and appeared to be running smooth, without any binding or play. Regardless, the slideways were cleaned, visually inspected, lubed, and reassembled.
 
-With the table disconnected from the shaker, while actuating the shaker shaft by hand through its travel, often times binding could be felt. With the shaker disassembled, it was verified that a flat helical spring which connects the actuator shaft assembly to the shaker chassis had the come loose, and this may have been the source of the issue. Given the interface materials, cyanoacrylate glue was deemed suitable for the job, and the spring was bonded in it's original place. No other obvious issues were found.
+With the table disconnected from the shaker, while actuating the shaker shaft by hand through its travel, often times binding could be felt. With the shaker disassembled, it was verified that a flat helical spring which connects the actuator shaft assembly to the shaker chassis had the come loose, and this may have been the source of the issue. Given the interface materials, cyanoacrylate glue was deemed suitable for the job, and the spring was bonded in its original place. No other obvious issues were found.
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -1810,7 +1776,7 @@ Everything was reassembled together, and new data was collected for another syst
 
 \subsection{Experimental Results}
 
-Once the system was identified, the PIDF parameter tuning algorithm was run, defining three different bandwidths for the closed-loop response: 10Hz, 15Hz, and 20Hz. The three sets of parameters were then tested against the iterative drive signal correction process.For this seismic signal, it was found that all tuned controllers performed better than the 5th driver of the iterative process.
+Once the system was identified, the PIDF parameter tuning algorithm was run, defining three different bandwidths for the closed-loop response: 10Hz, 15Hz, and 20Hz. The three sets of parameters were then tested against the iterative drive signal correction process. For this seismic signal, it was found that all tuned controllers performed better than the 5th driver of the iterative process.
 
 For this other seismic signal, it was found that all tuned controllers performed better than the third driver in the iterative process. However, the fifth driver already performed better. 
 In these two tests, acceleration data were not measured, so the displacement data were extrapolated to determine the acceleration response spectrum.

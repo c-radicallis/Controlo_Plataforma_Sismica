@@ -1,4 +1,4 @@
-\documentclass[10pt]{extarticle} %draft, 
+\documentclass[draft,10pt]{extarticle} % 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -349,20 +349,18 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 
 Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
 
-In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables.
-
-In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented.
+In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. This segment is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
 
 \subsubsection{Signals \& System Analysis}
 \paragraph{General Definitions \& Notation}
 For a signal discretized with sampling time $T_s$:
 \begin{itemize}
     \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
-    \item The forward operator corresponds to a forward time shift of one sampling time
-    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{\pm k}$
+    \item The forward operator $z$ corresponds to a forward time shift of one sampling time
+    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{-k}$ or $z^k$, respectively
     \item $G(z)$, in upper case, designates a transfer function, while the lower case $g(k)$ is the corresponding pulse response at time instant $t = k T_s$, and both are related by:
         \begin{equation}
-            G(z) = \sum_{k=0}^{\infty} g(k)\, z^{-k}
+            G(z) = \sum_{k=-\infty}^{\infty} g(k)\, z^{-k}
         \end{equation}
     \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
     \item On various equations the transfer functions will have the complex variable omitted to ease the notation
@@ -370,24 +368,25 @@ For a signal discretized with sampling time $T_s$:
 
 \paragraph{Properties of signals processed by discrete LTI systems}
 
-\hspace{\parindent} The correlation of two signals is given by:
+\hspace{\parindent} The correlation of signals is given by:
 \begin{align}
     R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
     R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
 \end{align} 
 
+And the power spectral density:
+\begin{align}
+    \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\
+    \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
+\end{align} 
+
 For an LTI system $y(t) = G(z) \cdot x(t)$, we have the following:
 \begin{align}
-    \begin{aligned}
-    & R_{yx}(\tau) = \, E \left[ \, y(t) \, x(t-\tau) \, \right] = E \left[ \,  G(z) \cdot x(t) \, x(t-\tau) \, \right] =  G(z)  \cdot E \left[  x(t) \, x(t-\tau) \, \right] \Longrightarrow \\
-    & \Longrightarrow \, R_{yx}(\tau) = \,  H(z) \,  R_{x}(\tau)
-    \end{aligned}
+    R_{yx}(\tau)    =& \,  G(z) \,  R_{x}(\tau) = g(\tau) \star  R_{x}(\tau) \\
+    R_{xy}(\tau)    =& \,  G^{*}(z) \,  R_{x}(\tau) = g(-\tau) \star  R_{x}(\tau) \\
+    \Phi_{yx}(\tau) =& \,  G(e^{i\omega}) \,  \Phi_{x}(\tau) \\
+    \Phi_{yx}(\tau) =& \,  G(e^{-i\omega}) \,  \Phi_{x}(\tau) = G^{*}(e^{i\omega}) \,  \Phi_{x}(\tau)
 \end{align}
-
-The system's output-input signals cross-correlation can also be given by the convolution of its impulse response $h(k)$ with the input autocorrelation $R_{x}$:
-\begin{equation}
-     R_{yx}(\tau) = g(k) \star  R_{x}(\tau)
-\end{equation}
 
 \begin{align}
     \Phi_{y}(\omega)  =& H(e^{i\omega}) \cdot H(e^{i\omega})^{*} \,\Phi_{x}(\omega) = \left|H(e^{i\omega})\right|^2 \Phi_{x}(\omega) \\
@@ -395,7 +394,7 @@ The system's output-input signals cross-correlation can also be given by the con
 \end{align}
 
 \subsubsection{ Closed Loop System Setup}
-In this section (Section \ref{Identification in Closed-Loop Systems}), which is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica}, we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
+In this section (Section \ref{Identification in Closed-Loop Systems}), we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
 \centering

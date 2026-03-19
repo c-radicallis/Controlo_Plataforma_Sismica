@@ -369,9 +369,9 @@ For a signal discretized with sampling time $T_s$:
 \end{itemize}
 
 \paragraph{Properties of signals processed by discrete LTI systems}
-
+\vspace{-5mm}
 \begin{figure}[H]
-\begin{minipage}{0.37\textwidth}
+\begin{minipage}{0.37\textwidth}    
     \hspace{\parindent} The correlation of signals is given by:
     \vspace{-2mm}
     \begin{align}
@@ -385,44 +385,100 @@ For a signal discretized with sampling time $T_s$:
         \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
     \end{align} 
 
+    \vspace{5mm}
+
     \begin{center}
-        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
-        % G0
-        \node[draw, fill=Cyan!50, minimum width=20mm, minimum height=8mm  ] (G0) at (0,0)   {$G(z)$};
-        %--- G0 -> y output ---
-        \draw[-latex] (G0) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G0.east);
-        %--- u -> G0 ---
-        \draw[-latex] ([xshift=-15mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
-        \end{tikzpicture}
-        \vspace{-2mm}
-        \caption{Discrete-time LTI System}\label{tikz_LTI_sys} 
+        \begin{tikzpicture}
+            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
+            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$H(z)$};
+
+            \draw[-latex] ([xshift=-20mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G);
+            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G.east);
+
+            \draw [-latex] ([xshift=-10mm]G.west) -- ([xshift=-10mm]G_2.west) -- (G_2.west);
+            \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east);
+        \end{tikzpicture}\vspace{-2mm}
+        \caption{System}\label{tikz_LTI_sys} 
     \end{center}
-        \vspace{-1mm}
-    For an LTI system $y(t) = G(z) \cdot x(t)$, with $u$ and $y$ quasi-stationary signals, we have the following properties:
-    \vspace{-2mm}
-    \begin{align}
-        R_{yx}(\tau)    =& \, G(z) \,  R_{x}(\tau)  \\
-                        =& \, g(\tau) \star  R_{x}(\tau) \\[2mm]
-        R_{xy}(\tau)    =& \, G^{*}(z) \,  R_{x}(\tau)   \\
-                        =& \, g(-\tau) \star  R_{x}(\tau) \\[2mm]
-        \Phi_{yx}(\tau) =& \, G(e^{i\omega}) \,  \Phi_{x}(\tau) \\
-        \Phi_{xy}(\tau) =& \, G^{*}(e^{i\omega}) \,  \Phi_{x}(\tau) 
-    \end{align}
+    
+
 \end{minipage}
 \hfill
 \begin{minipage}{0.6\textwidth}
     \centering
     \includegraphics[width=\linewidth]{convolution_correlations.jpg}
-    \caption{Visual comparison of convolution, cross-correlation and autocorrelation. For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example}
+    \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different time instants.}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
     \label{convolution_correlations}    
+
+    % \vspace{5mm}
+    % \vspace{5mm}
+
+
 \end{minipage}
 \end{figure}
 
+For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $u$ and $y$ quasi-stationary signals, we have the following properties:
 
-\begin{align}
-    \Phi_{y}(\omega)  =& H(e^{i\omega}) \cdot H(e^{i\omega})^{*} \,\Phi_{x}(\omega) = \left|H(e^{i\omega})\right|^2 \Phi_{x}(\omega) \\
-    \Phi_{yx}(\omega) =& H(e^{i\omega})^{*} \, \Phi_{x}(\omega)
-\end{align}
+\begin{minipage}{0.42\textwidth}
+    \begin{align}
+        R_{yx}(\tau) =& \, G(z) \,  R_{x}(\tau)  \\
+                     =& \, g(\tau) \star  R_{x}(\tau) \nonumber \\[1mm]
+        R_{xy}(\tau) =& \, G^{*}(z) \,  R_{x}(\tau)   \\
+                     =& \, g(-\tau) \star  R_{x}(\tau) \nonumber \\[1mm]
+        R_{yy}(\tau) =& \, G^{*}(z) \, G(z) \, R_{x}(\tau)   \\
+                     =& \, g(-\tau) \star g(\tau) \star R_{x}(\tau) \nonumber
+    \end{align}
+\end{minipage}
+\hfill
+\begin{minipage}{0.42\textwidth}
+    \begin{align}
+        \Phi_{yx}(\omega) =& \, G(e^{i\omega}) \,  \Phi_{x}(\omega) \\
+                          & \nonumber \\[1mm]
+        \Phi_{xy}(\omega) =& \, G^{*}(e^{i\omega}) \,  \Phi_{x}(\omega) \\
+                          & \nonumber \\[1mm]
+        \Phi_{y}(\omega)  =& \, G(e^{i\omega}) \, G^{*}(e^{i\omega}) \,\Phi_{x}(\omega)\\
+                          =& \, \left|G(e^{i\omega})\right|^2 \Phi_{x}(\omega) \nonumber
+    \end{align}
+\end{minipage}
+
+\begin{figure}[H]
+    \begin{minipage}{0.59\textwidth}
+        In the case of two systems which generate an output from a common input signal, as in figure \ref{tikz_LTI_sys}, we have the following relations, then $w$ can be given as function of $y$:
+        \begin{align}
+            w(t) =& \, H(z)\, x(t) = H(z)\, G^{-1}(z) \, y(t) \\
+            \Phi_{wy}(\omega) =& H(e^{i\omega}) G^{-1}(e^{i\omega}) \Phi_{y}(\omega) =  H(e^{i\omega}) G^{*}(e^{i\omega}) \Phi_{x}(\omega)
+        \end{align}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.39\textwidth}
+        \begin{tikzpicture}
+        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
+        \node[draw, fill=Green!30, minimum width=12mm, minimum height=8mm, right= 10mm  of G] (G*)  {$G^{*}(z)$};
+        \draw[-latex] (G.east) -- node[above]{$R_{yx}$} (G*.west);
+        % \draw[-latex] (G*.east) -- node[above,at end, xshift=-2mm]{$R_y$} ([xshift=10mm] G*.east);
+
+        \node[draw, fill=Green!30, minimum width=12mm, minimum height=8mm, below= 6mm  of G] (G*_bottom)  {$G^{*}(z)$};
+        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=8mm, below= 6mm  of G*] (G_bottom)  {$G(z)$};
+        \draw[-latex] (G*_bottom.east) -- node[above]{$R_{xy}$} (G_bottom.west);
+        % \draw[-latex] (G_bottom.east) -- node[above,at end, xshift=-2mm]{$R_y$} ([xshift=10mm] G_bottom.east);
+
+        \coordinate (branch) at ($([xshift=-4mm] G.west)!0.5!([xshift=-4mm] G*_bottom.west)$); % input: branch point centered vertically between G and Gs_bottom
+        \draw([xshift=-8mm] branch) -- node[above, at start, xshift=2mm]{$R_x$} (branch);
+        \draw[-latex] (branch) -- ([xshift=-4mm] G.west)         -- (G.west);
+        \draw[-latex] (branch) -- ([xshift=-4mm] G*_bottom.west) -- (G*_bottom.west);
+
+        \coordinate (branch_right) at ($([xshift=4mm] G*.east)!0.5!([xshift=4mm] G_bottom.east)$);
+        \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=8mm]branch_right);
+        \draw  (G*.east)       -- ([xshift=4mm]G*.east)       -- (branch_right) ;
+        \draw  (G_bottom.east) -- ([xshift=4mm]G_bottom.east) -- (branch_right) ;
+        \end{tikzpicture} \vspace{-2mm}
+        \caption{Ilustration of how linear systems transform correlation signals}\label{tikz_correlation} %correlation signals, which is also entirely analogous to the way they transform spectral density signals. 
+    \end{minipage}
+
+\end{figure}
+
+
+
 
 \subsubsection{ Closed Loop System Setup}
 In this section (Section \ref{Identification in Closed-Loop Systems}), we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
@@ -539,7 +595,6 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 
         % C
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
-
 
         % %--- Input r1 ---
         \draw [-latex] ([ yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);

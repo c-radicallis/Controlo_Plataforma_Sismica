@@ -1,4 +1,4 @@
-\documentclass[draft,10pt]{extarticle} % 
+\documentclass[draft,10pt]{extarticle}
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -30,7 +30,9 @@
 % \usepackage{listings}
 % \usepackage{matlab-prettifier}
 \usepackage{float}
-\usepackage{silence}\WarningFilter{caption}{Unused}
+\usepackage{silence}
+\WarningFilter{caption}{Unused}
+\WarningFilter{hyperref}{Draft mode on}
 \newcommand{\mycomment}[1]{}
 \usepackage{arydshln}
 \usepackage[english]{babel}
@@ -368,25 +370,54 @@ For a signal discretized with sampling time $T_s$:
 
 \paragraph{Properties of signals processed by discrete LTI systems}
 
-\hspace{\parindent} The correlation of signals is given by:
-\begin{align}
-    R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
-    R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
-\end{align} 
+\begin{figure}[H]
+\begin{minipage}{0.37\textwidth}
+    \hspace{\parindent} The correlation of signals is given by:
+    \vspace{-2mm}
+    \begin{align}
+        R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
+        R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
+    \end{align} 
+    And the power spectral density:
+    \vspace{-2mm}
+    \begin{align}
+        \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\
+        \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
+    \end{align} 
 
-And the power spectral density:
-\begin{align}
-    \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\
-    \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
-\end{align} 
+    \begin{center}
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=20mm, minimum height=8mm  ] (G0) at (0,0)   {$G(z)$};
+        %--- G0 -> y output ---
+        \draw[-latex] (G0) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G0.east);
+        %--- u -> G0 ---
+        \draw[-latex] ([xshift=-15mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
+        \end{tikzpicture}
+        \vspace{-2mm}
+        \caption{Discrete-time LTI System}\label{tikz_LTI_sys} 
+    \end{center}
+        \vspace{-1mm}
+    For an LTI system $y(t) = G(z) \cdot x(t)$, with $u$ and $y$ quasi-stationary signals, we have the following properties:
+    \vspace{-2mm}
+    \begin{align}
+        R_{yx}(\tau)    =& \, G(z) \,  R_{x}(\tau)  \\
+                        =& \, g(\tau) \star  R_{x}(\tau) \\[2mm]
+        R_{xy}(\tau)    =& \, G^{*}(z) \,  R_{x}(\tau)   \\
+                        =& \, g(-\tau) \star  R_{x}(\tau) \\[2mm]
+        \Phi_{yx}(\tau) =& \, G(e^{i\omega}) \,  \Phi_{x}(\tau) \\
+        \Phi_{xy}(\tau) =& \, G^{*}(e^{i\omega}) \,  \Phi_{x}(\tau) 
+    \end{align}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{convolution_correlations.jpg}
+    \caption{Visual comparison of convolution, cross-correlation and autocorrelation. For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example}
+    \label{convolution_correlations}    
+\end{minipage}
+\end{figure}
 
-For an LTI system $y(t) = G(z) \cdot x(t)$, we have the following:
-\begin{align}
-    R_{yx}(\tau)    =& \,  G(z) \,  R_{x}(\tau) = g(\tau) \star  R_{x}(\tau) \\
-    R_{xy}(\tau)    =& \,  G^{*}(z) \,  R_{x}(\tau) = g(-\tau) \star  R_{x}(\tau) \\
-    \Phi_{yx}(\tau) =& \,  G(e^{i\omega}) \,  \Phi_{x}(\tau) \\
-    \Phi_{yx}(\tau) =& \,  G(e^{-i\omega}) \,  \Phi_{x}(\tau) = G^{*}(e^{i\omega}) \,  \Phi_{x}(\tau)
-\end{align}
 
 \begin{align}
     \Phi_{y}(\omega)  =& H(e^{i\omega}) \cdot H(e^{i\omega})^{*} \,\Phi_{x}(\omega) = \left|H(e^{i\omega})\right|^2 \Phi_{x}(\omega) \\
@@ -397,59 +428,59 @@ For an LTI system $y(t) = G(z) \cdot x(t)$, we have the following:
 In this section (Section \ref{Identification in Closed-Loop Systems}), we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
-\centering
-\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
-% sum_r2
-\node[circ]  (sum_r2) at (0,   0) {};
-\node[left=-1pt] at (sum_r2.center){\small $+$};
-\node[below=-1pt] at (sum_r2.center){\small $-$};
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
 
-% C
-\node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C$};
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C$};
 
-% sum_r1
-\node[circ , right=8mm of C ]  (sum_r1) {$+$};
+        % sum_r1
+        \node[circ , right=8mm of C ]  (sum_r1) {$+$};
 
-% G0
-\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
 
-% sum_v
-\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
 
-% H0
-\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+        % H0
+        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
-%--- Input r2 ---
-\draw[-latex] (-1.5, 0) -- node[above]{$r_2$} (sum_r2);
+        %--- Input r2 ---
+        \draw[-latex] (-1.5, 0) -- node[above]{$r_2$} (sum_r2);
 
-%--- sum_r2 -> C -> sum_r1 ---
-\draw[-latex] (sum_r2) -- node[above]{$e_y$} (C);
-\draw[-latex] (C) -- (sum_r1);
+        %--- sum_r2 -> C -> sum_r1 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e_y$} (C);
+        \draw[-latex] (C) -- (sum_r1);
 
-%--- r1 drops into sum_r1 from above ---
-\draw[-latex] ([yshift=10mm]sum_r1.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_r1);
+        %--- r1 drops into sum_r1 from above ---
+        \draw[-latex] ([yshift=10mm]sum_r1.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_r1);
 
-%--- sum_r1 -> G0 ---
-\draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+        %--- sum_r1 -> G0 ---
+        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
 
-%--- G0 -> sum_v ---
-\draw[-latex] (G0) -- (sum_v);
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
 
-%--- e -> H0 -> v -> sum_v ---
-\draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
-\draw[-latex] (H0) -- node[right]{$v$} (sum_v);
+        %--- e -> H0 -> v -> sum_v ---
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
-%--- sum_v -> y output ---
-\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
 
-%--- Feedback: y branches back to sum_r2 bottom ---
-\coordinate (ybranch) at ([xshift=5mm] sum_v.east);
-\draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-\draw[-latex] (0, -1.2) -- (sum_r2.south);
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
 
-\end{tikzpicture}
-\caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-\label{fig_general_CL_sys} 
+        \end{tikzpicture}
+    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    \label{fig_general_CL_sys} 
 \end{figure}
 
 For the system in figure \ref{fig_general_CL_sys}, the following equations are derived: 
@@ -484,110 +515,110 @@ And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using 
 
 Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 \begin{figure}[H]
-\centering
-\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
-% S0 -  Referential Origin
-\node[draw, fill=Green!50, minimum width=15mm, minimum height=10mm ] (S0) at (0,0){$S_0$};
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % S0 -  Referential Origin
+        \node[draw, fill=Green!50, minimum width=15mm, minimum height=10mm ] (S0) at (0,0){$S_0$};
 
-% sum_u
-\node[circ , right=8mm of S0 ]  (sum_u) {};
-\node[left=-1pt] at (sum_u.center){\small $+$};
-\node[above=-1pt] at (sum_u.center){\small $-$};
+        % sum_u
+        \node[circ , right=8mm of S0 ]  (sum_u) {};
+        \node[left=-1pt] at (sum_u.center){\small $+$};
+        \node[above=-1pt] at (sum_u.center){\small $-$};
 
-% G0
-\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_u ] (G0)    {$G_0$};
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_u ] (G0)    {$G_0$};
 
-% sum_v
-\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
 
-% S0C
-\node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
+        % S0C
+        \node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
 
-% sum_r % r = r1 + C*r2
-\node[circ, , left=8mm of S0 ]  (sum_r) {$+$};
+        % sum_r % r = r1 + C*r2
+        \node[circ, , left=8mm of S0 ]  (sum_r) {$+$};
 
-% C
-\node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
 
 
-% %--- Input r1 ---
-\draw [-latex] ([ yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
+        % %--- Input r1 ---
+        \draw [-latex] ([ yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
 
-% %--- Input r2 ---
-\draw[-latex] ([xshift=-10mm]C.west) -- node[above,at start, xshift=2mm]{$r_2$} (C);
+        % %--- Input r2 ---
+        \draw[-latex] ([xshift=-10mm]C.west) -- node[above,at start, xshift=2mm]{$r_2$} (C);
 
-% %--- Input to sum_r ---
-\draw[-latex] (C) -- (sum_r);
+        % %--- Input to sum_r ---
+        \draw[-latex] (C) -- (sum_r);
 
-%--- r -> S0
-% \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
-\draw[-latex] (sum_r.east) -- node[above]{$r$} (S0);
+        %--- r -> S0
+        % \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
+        \draw[-latex] (sum_r.east) -- node[above]{$r$} (S0);
 
-%--- S0 -> u_r
-\draw[-latex] (S0) -- node[above] {$u_r$} (sum_u);
-% %--- r1 drops into sum_u from above ---
-% \draw[-latex] ([yshift=10mm]sum_u.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_u);
+        %--- S0 -> u_r
+        \draw[-latex] (S0) -- node[above] {$u_r$} (sum_u);
+        % %--- r1 drops into sum_u from above ---
+        % \draw[-latex] ([yshift=10mm]sum_u.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_u);
 
-%--- sum_u -> G0 ---
-\draw[-latex] (sum_u) -- node[above]{$u$} (G0);
+        %--- sum_u -> G0 ---
+        \draw[-latex] (sum_u) -- node[above]{$u$} (G0);
 
-%--- G0 -> sum_v ---
-\draw[-latex] (G0) -- (sum_v);
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
 
-%--- sum_v -> y output ---
-\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
 
-%--- v branches to sum_v
-\coordinate (ybranch) at ([yshift=6mm] S0C.north);
-\draw [-latex] (ybranch) -- (ybranch -| sum_v) -- (sum_v.north);
+        %--- v branches to sum_v
+        \coordinate (ybranch) at ([yshift=6mm] S0C.north);
+        \draw [-latex] (ybranch) -- (ybranch -| sum_v) -- (sum_v.north);
 
-% H0
-\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r |- ybranch) {$H_0$};
+        % H0
+        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r |- ybranch) {$H_0$};
 
-% %--- Input e ---
-\draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
+        % %--- Input e ---
+        \draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
 
-%--- v -> S0C -> u_v -> sum_v ---
-\draw[-latex] (H0.east) -- node[above,at start, xshift=5mm]{$v$}(H0.east -| S0C) -- (S0C.north);
-\draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
+        %--- v -> S0C -> u_v -> sum_v ---
+        \draw[-latex] (H0.east) -- node[above,at start, xshift=5mm]{$v$}(H0.east -| S0C) -- (S0C.north);
+        \draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
 
-\end{tikzpicture}
-\caption{Closed-loop system reformulated into pseudo-open loop form using the sensitivity function. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
-\label{transformed_CL_sys} 
+        \end{tikzpicture}
+    \caption{Closed-loop system reformulated into pseudo-open loop form using the sensitivity function. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
+    \label{transformed_CL_sys} 
 \end{figure}
 
 
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
 
 \begin{figure}[H]
-\centering
-\begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
 
-% G0
-\node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm  ] (G0) at (0,0)   {$G_0$};
 
-% sum_v
-\node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
 
-% H0
-\node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+        % H0
+        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
-%--- G0 -> sum_v ---
-\draw[-latex] (G0) -- (sum_v);
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
 
-%--- e -> H0 -> v -> sum_v ---
-\draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
-\draw[-latex] (H0) -- node[right]{$v$} (sum_v);
+        %--- e -> H0 -> v -> sum_v ---
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
-%--- sum_v -> y output ---
-\draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
 
-%--- sum_r1 -> G0 ---
-\draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
+        %--- sum_r1 -> G0 ---
+        \draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
 
-\end{tikzpicture}
-\caption{Open-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-\label{tikz_general_open_loop_sys} 
+        \end{tikzpicture}
+    \caption{Open-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    \label{tikz_general_open_loop_sys} 
 \end{figure}
 
 For an open loop system, as in figure \ref{tikz_general_open_loop_sys}, taking the spectral density $\Phi_{yu}$, we get:

@@ -371,7 +371,7 @@ For a signal discretized with sampling time $T_s$:
 \paragraph{Properties of signals processed by discrete LTI systems}
 \vspace{-5mm}
 \begin{figure}[H]
-\begin{minipage}{0.37\textwidth}    
+\begin{minipage}{0.36\textwidth}    
     \hspace{\parindent} The correlation of signals is given by:
     \vspace{-2mm}
     \begin{align}
@@ -417,9 +417,9 @@ For a signal discretized with sampling time $T_s$:
 \end{minipage}
 \end{figure}
 
-For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $u$ and $y$ quasi-stationary signals, we have the following properties:
+For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $x$ and $y$ quasi-stationary signals, we have the following properties:
 
-\begin{minipage}{0.42\textwidth}
+\begin{minipage}{0.4\textwidth}
     \begin{align}
         R_{yx}(\tau) =& \, G(z) \,  R_{x}(\tau)  \\
                      =& \, g(\tau) \star  R_{x}(\tau) \nonumber \\[1mm]
@@ -430,7 +430,7 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
     \end{align}
 \end{minipage}
 \hfill
-\begin{minipage}{0.42\textwidth}
+\begin{minipage}{0.40\textwidth}
     \begin{align}
         \Phi_{yx}(\omega) =& \, G(e^{i\omega}) \,  \Phi_{x}(\omega) \\
                           & \nonumber \\[1mm]
@@ -450,25 +450,25 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
         \end{align}
     \end{minipage}
     \hfill
-    \begin{minipage}{0.39\textwidth}
+    \begin{minipage}{0.365\textwidth}
         \begin{tikzpicture}
-        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
-        \node[draw, fill=Green!30, minimum width=12mm, minimum height=8mm, right= 10mm  of G] (G*)  {$G^{*}(z)$};
+        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=9mm  ] (G) at (0,0)   {$G(z)$};
+        \node[draw, fill=Green!30, minimum width=12mm, minimum height=9mm, right= 10mm  of G] (G*)  {$G^{*}(z)$};
         \draw[-latex] (G.east) -- node[above]{$R_{yx}$} (G*.west);
         % \draw[-latex] (G*.east) -- node[above,at end, xshift=-2mm]{$R_y$} ([xshift=10mm] G*.east);
 
-        \node[draw, fill=Green!30, minimum width=12mm, minimum height=8mm, below= 6mm  of G] (G*_bottom)  {$G^{*}(z)$};
-        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=8mm, below= 6mm  of G*] (G_bottom)  {$G(z)$};
+        \node[draw, fill=Green!30, minimum width=12mm, minimum height=9mm, below= 5mm  of G] (G*_bottom)  {$G^{*}(z)$};
+        \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=9mm, below= 5mm  of G*] (G_bottom)  {$G(z)$};
         \draw[-latex] (G*_bottom.east) -- node[above]{$R_{xy}$} (G_bottom.west);
         % \draw[-latex] (G_bottom.east) -- node[above,at end, xshift=-2mm]{$R_y$} ([xshift=10mm] G_bottom.east);
 
         \coordinate (branch) at ($([xshift=-4mm] G.west)!0.5!([xshift=-4mm] G*_bottom.west)$); % input: branch point centered vertically between G and Gs_bottom
-        \draw([xshift=-8mm] branch) -- node[above, at start, xshift=2mm]{$R_x$} (branch);
+        \draw([xshift=-6mm] branch) -- node[above, at start, xshift=2mm]{$R_x$} (branch);
         \draw[-latex] (branch) -- ([xshift=-4mm] G.west)         -- (G.west);
         \draw[-latex] (branch) -- ([xshift=-4mm] G*_bottom.west) -- (G*_bottom.west);
 
         \coordinate (branch_right) at ($([xshift=4mm] G*.east)!0.5!([xshift=4mm] G_bottom.east)$);
-        \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=8mm]branch_right);
+        \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=6mm]branch_right);
         \draw  (G*.east)       -- ([xshift=4mm]G*.east)       -- (branch_right) ;
         \draw  (G_bottom.east) -- ([xshift=4mm]G_bottom.east) -- (branch_right) ;
         \end{tikzpicture} \vspace{-2mm}

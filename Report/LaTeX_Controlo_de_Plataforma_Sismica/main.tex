@@ -1,4 +1,4 @@
-\documentclass[draft,10pt]{extarticle}
+\documentclass[10pt]{extarticle}
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -371,13 +371,16 @@ For a signal discretized with sampling time $T_s$:
 \paragraph{Properties of signals processed by discrete LTI systems}
 \vspace{-5mm}
 \begin{figure}[H]
-\begin{minipage}{0.36\textwidth}    
-    \hspace{\parindent} The correlation of signals is given by:
+\begin{minipage}{0.318\textwidth}    
+    \hspace{\parindent} The correlation  is given by:
     \vspace{-2mm}
     \begin{align}
         R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
         R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
     \end{align} 
+
+    \vspace{5mm}
+
     And the power spectral density:
     \vspace{-2mm}
     \begin{align}
@@ -390,30 +393,24 @@ For a signal discretized with sampling time $T_s$:
     \begin{center}
         \begin{tikzpicture}
             \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
-            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$H(z)$};
+            % \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
 
-            \draw[-latex] ([xshift=-20mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G);
-            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G.east);
+            \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G); % x
+            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G.east); % y
 
-            \draw [-latex] ([xshift=-10mm]G.west) -- ([xshift=-10mm]G_2.west) -- (G_2.west);
-            \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east);
+            % \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
+            % \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east); %w
         \end{tikzpicture}\vspace{-2mm}
         \caption{System}\label{tikz_LTI_sys} 
     \end{center}
-    
 
 \end{minipage}
 \hfill
-\begin{minipage}{0.6\textwidth}
+\begin{minipage}{0.67\textwidth}
     \centering
     \includegraphics[width=\linewidth]{convolution_correlations.jpg}
     \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different time instants.}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
     \label{convolution_correlations}    
-
-    % \vspace{5mm}
-    % \vspace{5mm}
-
-
 \end{minipage}
 \end{figure}
 
@@ -442,15 +439,8 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
 \end{minipage}
 
 \begin{figure}[H]
-    \begin{minipage}{0.59\textwidth}
-        In the case of two systems which generate an output from a common input signal, as in figure \ref{tikz_LTI_sys}, we have the following relations, then $w$ can be given as function of $y$:
-        \begin{align}
-            w(t) =& \, H(z)\, x(t) = H(z)\, G^{-1}(z) \, y(t) \\
-            \Phi_{wy}(\omega) =& H(e^{i\omega}) G^{-1}(e^{i\omega}) \Phi_{y}(\omega) =  H(e^{i\omega}) G^{*}(e^{i\omega}) \Phi_{x}(\omega)
-        \end{align}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.365\textwidth}
+    \centering
+    \begin{minipage}{0.415\textwidth}
         \begin{tikzpicture}
         \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=9mm  ] (G) at (0,0)   {$G(z)$};
         \node[draw, fill=Green!30, minimum width=12mm, minimum height=9mm, right= 10mm  of G] (G*)  {$G^{*}(z)$};
@@ -462,26 +452,42 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
         \draw[-latex] (G*_bottom.east) -- node[above]{$R_{xy}$} (G_bottom.west);
         % \draw[-latex] (G_bottom.east) -- node[above,at end, xshift=-2mm]{$R_y$} ([xshift=10mm] G_bottom.east);
 
-        \coordinate (branch) at ($([xshift=-4mm] G.west)!0.5!([xshift=-4mm] G*_bottom.west)$); % input: branch point centered vertically between G and Gs_bottom
-        \draw([xshift=-6mm] branch) -- node[above, at start, xshift=2mm]{$R_x$} (branch);
-        \draw[-latex] (branch) -- ([xshift=-4mm] G.west)         -- (G.west);
-        \draw[-latex] (branch) -- ([xshift=-4mm] G*_bottom.west) -- (G*_bottom.west);
+        \coordinate (branch) at ($([xshift=-6mm] G.west)!0.5!([xshift=-6mm] G*_bottom.west)$); % input: branch point centered vertically between G and Gs_bottom
+        \draw([xshift=-8mm] branch) -- node[above, at start, xshift=2mm]{$R_x$} (branch);
+        \draw[-latex] (branch) -- ([xshift=-6mm] G.west)         -- (G.west);
+        \draw[-latex] (branch) -- ([xshift=-6mm] G*_bottom.west) -- (G*_bottom.west);
 
-        \coordinate (branch_right) at ($([xshift=4mm] G*.east)!0.5!([xshift=4mm] G_bottom.east)$);
-        \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=6mm]branch_right);
-        \draw  (G*.east)       -- ([xshift=4mm]G*.east)       -- (branch_right) ;
-        \draw  (G_bottom.east) -- ([xshift=4mm]G_bottom.east) -- (branch_right) ;
+        \coordinate (branch_right) at ($([xshift=6mm] G*.east)!0.5!([xshift=6mm] G_bottom.east)$);
+        \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=8mm]branch_right);
+        \draw  (G*.east)       -- ([xshift=6mm]G*.east)       -- (branch_right) ;
+        \draw  (G_bottom.east) -- ([xshift=6mm]G_bottom.east) -- (branch_right) ;
         \end{tikzpicture} \vspace{-2mm}
         \caption{Ilustration of how linear systems transform correlation signals}\label{tikz_correlation} %correlation signals, which is also entirely analogous to the way they transform spectral density signals. 
-    \end{minipage}
+        \end{minipage}
+    \hspace{20mm}
+    \begin{minipage}{0.28\textwidth}
+        \begin{tikzpicture}
+            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G_{1}(z)$};
+            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
 
+            \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G); % x
+            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y_1$} ([xshift=12mm] G.east); % y_1
+
+            \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
+            \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$y_2$} ([xshift=12mm] G_2.east); %y_2
+        \end{tikzpicture}\vspace{-2mm}
+        \caption{Two systems with a common input signal}\label{tikz_two_sys_common_input} 
+    \end{minipage}
 \end{figure}
 
+In the case of two systems which generate an output from a common input signal, as in figure \ref{tikz_two_sys_common_input}, then $y_2$ can be given as function of $y_1$, and we have the following relations:
+\begin{align}
+    y_{2}(t) =& \, G_{2}(z)\, x(t) = G_{2}(z)\, G_{1}^{-1}(z) \, y_{1}(t) \\
+    \Phi_{y_ {2}y_{1}}(\omega) =& G_{2} G_{1}^{-1} \, \Phi_{y_{1}}(\omega) =  G_{2} G_{1}^{-1}\, G_{1} G_{1}^{*}\Phi_{x}(\omega) =  G_{2}(e^{i\omega}) G_{1}^{*}(e^{i\omega}) \, \Phi_{x}(\omega)
+\end{align}
 
-
-
-\subsubsection{ Closed Loop System Setup}
-In this section (Section \ref{Identification in Closed-Loop Systems}), we'll consider the system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
+\subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
+In this section we'll consider the closed loop system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
     \centering
@@ -565,8 +571,9 @@ And introducing the sensitivity transfer function:
 
 And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using relations \ref{eq_v_H0e} and \ref{eq_S0}, we get:
 \begin{align}
-    y(t) &= S_0 [ G_0 \cdot r_1(t) + G_0C \cdot r_2(t)]  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\ 
-    u(t) &= S_0 [ r_1(t) + C \cdot r_2(t)] - S_{0}C \cdot v(t) \label{eq_u_transformed_CL}
+    y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\ 
+         &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega)\\ \nonumber
+    u(t) &= S_0 r_1(t) + S_0 C \cdot r_2(t) - S_{0}C \cdot v(t) \label{eq_u_transformed_CL}
 \end{align}
 
 Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
@@ -646,6 +653,20 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
 
 \begin{figure}[H]
+    \begin{minipage}{0.63\textwidth}
+        For our system, taking the spectral density $\Phi_{yu}$, we get:
+        \begin{equation}
+            \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
+        \end{equation}
+
+        If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}, where the output $y$ (which contains the disturbance $e$) was not being fed back into the controller, then, given the fact that $e$ and $u$ are uncorrelated ($\Longrightarrow \Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the espectral densities:
+        \begin{equation}
+            \widehat{G}_{0}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)}
+        \end{equation}
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.33\textwidth}
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
 
@@ -672,34 +693,18 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
         \draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
 
         \end{tikzpicture}
-    \caption{Open-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{tikz_general_open_loop_sys} 
+        \caption{Open-loop System}\label{tikz_general_open_loop_sys} 
+    \end{minipage}
+
 \end{figure}
 
-For an open loop system, as in figure \ref{tikz_general_open_loop_sys}, taking the spectral density $\Phi_{yu}$, we get:
-\begin{equation}
-    \Phi_{yu} =  G_{0}^{*} \, \Phi_{u} + \Phi_{vu}
-\end{equation}
-
-If we didn't have a loop feeding $v$ back into $u$
-
-
-
-
-\textbf{Two Uncorrelated Inputs}
-
-For $y = H_1 r_1 + H_2 r_2$ with $r_1 \perp r_2$:
-
-\begin{equation}
-    S_{yy}(f) = \left|H_1\right|^2 S_{r_1 r_1} + \left|H_2\right|^2 S_{r_2 r_2}
-\end{equation}
-
-For two outputs $y = H_{yr}r_1 + H_{yv}v$ and $u = H_{ur}r_1 + H_{uv}v$
-with $r_1 \perp v$:
-
-\begin{equation}
-    S_{yu}(f) = H_{yr}\, H_{ur}^*\, S_{r_1 r_1} + H_{yv}\, H_{uv}^*\, S_{vv}
-\end{equation}
+Applying the same technique for our closed loop system, from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
+\begin{align}
+    \Phi_{u}(\omega)  =& 
+                      =& \left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \\[2mm]
+    \Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega)\\ \nonumber
+                      =&\left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) 
+\end{align}
 
 
 

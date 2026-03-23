@@ -1,4 +1,4 @@
-\documentclass[10pt]{extarticle}
+\documentclass[draft , 10pt]{extarticle}
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -36,8 +36,10 @@
 \newcommand{\mycomment}[1]{}
 \usepackage{arydshln}
 \usepackage[english]{babel}
+\usepackage{cases}
 
 \usepackage{titlesec}
+\setcounter{tocdepth}{4}
 \setcounter{secnumdepth}{4}
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -161,16 +163,11 @@ The results indicate that both the tuned PIDF and the optimal controllers offer 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \tableofcontents % Indice
-%\clearpage
 
+\pagebreak
 \listoftables % Tabelas
-%\clearpage
-    
 \listoffigures %Figuras
-%\clearpage
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \clearpage
 \section{Introduction}
@@ -269,9 +266,7 @@ It's relevance for this work lies in the fact that the performance of the seismi
 \end{minipage}
 \end{figure}
 
-\clearpage
-
-
+\pagebreak
 \subsection{Objectives}
 The objective of this work is to implement a controller, or strategy, to ensure that the seismic platform reproduces the test seismic signal (reference/earthquake) as accurately as possible, taking into account the following aspects:
 \begin{itemize}
@@ -300,7 +295,6 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 
     \item Performance will be evaluated by comparing the response spectrum of the measured signal with that of the reference signal.
 \end{itemize}
-
 
 %\clearpage
 \section{Literature Review} %\section{Revisão do Estado da Arte}\label{sec:sota}
@@ -406,10 +400,10 @@ For a signal discretized with sampling time $T_s$:
 
 \end{minipage}
 \hfill
-\begin{minipage}{0.67\textwidth}
+\begin{minipage}{0.66\textwidth}
     \centering
     \includegraphics[width=\linewidth]{convolution_correlations.jpg}
-    \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different time instants.}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
+    \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different lag values. (Cite wikipedia user)}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
     \label{convolution_correlations}    
 \end{minipage}
 \end{figure}
@@ -545,11 +539,11 @@ In this section we'll consider the closed loop system represented in figure \ref
     \label{fig_general_CL_sys} 
 \end{figure}
 
-For the system in figure \ref{fig_general_CL_sys}, the following equations are derived: 
-\begin{align}
-    y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
-    u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
-\end{align}
+For the system in figure \ref{fig_general_CL_sys}, the following equations are derived:
+\begin{numcases}{}
+    y(t) = G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
+    u(t) = r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
+\end{numcases}
 
 In the whole of section \ref{Identification in Closed-Loop Systems}, for the examples presented, and, unless stated otherwise, we'll consider the following conditions:
 \begin{itemize}
@@ -571,12 +565,13 @@ And introducing the sensitivity transfer function:
 
 And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using relations \ref{eq_v_H0e} and \ref{eq_S0}, we get:
 \begin{align}
-    y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\ 
-         &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega)\\ \nonumber
-    u(t) &= S_0 r_1(t) + S_0 C \cdot r_2(t) - S_{0}C \cdot v(t) \label{eq_u_transformed_CL}
+    y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\  
+         &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} \cdot r_2(t) + H_{yv} \cdot v(t) \nonumber \\[2mm]
+    u(t) &= S_0 r_1(t) + S_0 C \cdot r_2(t) - S_{0}C \cdot v(t)   \label{eq_u_transformed_CL}  \\
+         &= H_{ur_{1}} \cdot r_1(t) + H_{ur_{2}} \cdot r_2(t) + H_{uv} \cdot v(t) \nonumber
 \end{align}
 
-Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
+The block diagram resulting from these reworked equations is shown in Figure \ref{transformed_CL_sys}:
 \begin{figure}[H]
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
@@ -700,9 +695,9 @@ Figure \ref{transformed_CL_sys} shows a block diagram of the reworked equations:
 
 Applying the same technique for our closed loop system, from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
 \begin{align}
-    \Phi_{u}(\omega)  =& 
+    \Phi_{u}(\omega)  =&  H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber\\ 
                       =& \left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \\[2mm]
-    \Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega)\\ \nonumber
+    \Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber \\ 
                       =&\left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) 
 \end{align}
 
@@ -774,6 +769,7 @@ For this section, consider the following:
 
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
+%\clearpage
 \section{Modelling Seismic Table Dynamics}\label{Modelling Seismic Table Dynamics}
 %\section{Modelação Matemática}
 %Os modelos devem ser implementados em Matlab/Simulink e complementados com funções, scripts e interfaces que facilitem a parametrização, cálculo de propriedades (como modos de vibração), análise e simulação com diferentes tipos de entradas (sinais sinusoidais, ondas quadradas e inputs externos como sinais sísmicos).
@@ -1029,6 +1025,7 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
     \xi_i = \frac{ c_i}{2\cdot m_i\cdot \omega_i}
 \end{equation}
 
+%\clearpage
 \section{Evaluating Controller Performance in Simulation Environment}\label{Evaluating Controller Performance in Simulation Environment}
 
 \begin{minipage}{0.49\textwidth}
@@ -1046,7 +1043,7 @@ Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_
 \end{figure}
 \end{minipage}
 
-\subsection{Tuned PIDF}
+\subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
 
 For a preliminary analysis of the mathematical model, some simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table. Table \ref{tab:modal_params} contains the parameters for the 2DOF coupled structure (Figure \ref{schematic_2dof}).
 
@@ -1282,8 +1279,8 @@ lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra whic
 The effect of modal frequencies on the performance of the seismic table is unclear, and likely depends heavily on the frequency content of the seismic signal.
 
 
-\clearpage
-\subsection{Optimal Control}  
+%\clearpage
+\subsection{Optimal Control}  \label{sec_Optimal_Control}
 
 \subsubsection{ State Space Model} \label{section_ss_model}
 For the 2-DoF system coupled to the seismic table, the following state space model was derived, where:
@@ -1557,15 +1554,10 @@ The Kalman estimator and the optimal state feedback control law which minimizes 
 \end{figure}
 
 
-\subsection{Conclusions on Simulation Results}
-Using optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones. 
 
-The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
+\subsection{LNEC's seismic platform driver signal adaptation process}
 
-%%%%%%%% %%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{LNEC's seismic platform driver signal adaptation process}
-
-\subsection{The functioning of the driver adaptation software}
+\subsubsection{The functioning of the driver adaptation software}
 
 \begin{minipage}{0.49\textwidth}
     As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the seismic table in terms of response spectrum. 
@@ -1608,13 +1600,13 @@ The optimal controller can be tuned for increasingly larger cut off frequencies 
     \label{Adapt_INV_Panel}
 \end{figure}
 
-\subsection{Simulating the driver adaptation process}
+\subsubsection{Simulating the driver adaptation process}
 
 For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}).
 
 \begin{figure}[H]
 \begin{minipage}{0.55\textwidth}
-\subsubsection{System Identification}
+\paragraph{System Identification}
 The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the seismic table is run for 3 minutes with a pink noise signal as input. 
 
 This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, seismic table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
@@ -1630,14 +1622,14 @@ The driver and simulated acquired data files are then input to \emph{Adapt}, whe
 \end{minipage}
 \end{figure}
 
-\subsubsection{Generating the target files (.tgt)}
+\paragraph{Generating the target files (.tgt)}
 The acceleration signal of each seism was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
 
-\subsubsection{Generating the adapted driver}
+\paragraph{Generating the adapted driver}
 
 The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used to generate driver 1  in \emph{Adapt.exe}. The process was repeated to generate subsequent drivers.
 
-\subsubsection{Performance Analysis}
+\paragraph{Performance Analysis}
 
 \begin{figure}[H]
     \centering
@@ -1723,7 +1715,9 @@ Median Displacement MSE & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}\) & \
 
 \subsection{ Conclusions: PIDF vs Optimal Control vs Driver Iteration}
 %The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
-The results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
+Regarding the analysis in sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
+
+The results indicate that the tuned controllers (PIDF \& Optimal) offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 

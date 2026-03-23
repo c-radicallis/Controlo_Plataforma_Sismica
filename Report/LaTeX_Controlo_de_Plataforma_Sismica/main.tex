@@ -477,7 +477,7 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
 In the case of two systems which generate an output from a common input signal, as in figure \ref{tikz_two_sys_common_input}, then $y_2$ can be given as function of $y_1$, and we have the following relations:
 \begin{align}
     y_{2}(t) =& \, G_{2}(z)\, x(t) = G_{2}(z)\, G_{1}^{-1}(z) \, y_{1}(t) \\
-    \Phi_{y_ {2}y_{1}}(\omega) =& G_{2} G_{1}^{-1} \, \Phi_{y_{1}}(\omega) =  G_{2} G_{1}^{-1}\, G_{1} G_{1}^{*}\Phi_{x}(\omega) =  G_{2}(e^{i\omega}) G_{1}^{*}(e^{i\omega}) \, \Phi_{x}(\omega)
+    \Phi_{y_ {2}y_{1}}(\omega) =& G_{2} G_{1}^{-1} \, \Phi_{y_{1}}(\omega)  =  G_{2}(e^{i\omega}) G_{1}^{*}(e^{i\omega}) \, \Phi_{x}(\omega)
 \end{align}
 
 \subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
@@ -567,9 +567,9 @@ And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using 
 \begin{align}
     y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\  
          &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} \cdot r_2(t) + H_{yv} \cdot v(t) \nonumber \\[2mm]
-    u(t) &= S_0 r_1(t) + S_0 C \cdot r_2(t) - S_{0}C \cdot v(t)   \label{eq_u_transformed_CL}  \\
+    u(t) &= S_0 \cdot r_1(t) + S_0 C \cdot r_2(t) - S_{0}C \cdot v(t)   \label{eq_u_transformed_CL}  \\
          &= H_{ur_{1}} \cdot r_1(t) + H_{ur_{2}} \cdot r_2(t) + H_{uv} \cdot v(t) \nonumber
-\end{align}
+ \end{align}
 
 The block diagram resulting from these reworked equations is shown in Figure \ref{transformed_CL_sys}:
 \begin{figure}[H]
@@ -640,7 +640,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         \draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
 
         \end{tikzpicture}
-    \caption{Closed-loop system reformulated into pseudo-open loop form using the sensitivity function. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
+    \caption{The closed-loop system is reformulated into pseudo-open loop form by reworking the equations. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
     \label{transformed_CL_sys} 
 \end{figure}
 
@@ -695,10 +695,11 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 Applying the same technique for our closed loop system, from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
 \begin{align}
-    \Phi_{u}(\omega)  =&  H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber\\ 
-                      =& \left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \\[2mm]
-    \Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber \\ 
-                      =&\left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) 
+\Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}}(\omega) + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}}(\omega) + \left|H_{uv}\right|^2 \Phi_{v}(\omega) \nonumber\\ 
+                 =& \left|S_{0}\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0} C\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0} C\right|^2 \Phi_{v}(\omega) \nonumber \\
+                 =& \left|S_{0}(e^{i\omega})\right|^2 \left[\Phi_{r_{1}}(\omega) + \left| C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \right] \\[2mm]
+\Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber \\ 
+                    =&\left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) 
 \end{align}
 
 

@@ -579,31 +579,27 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         \node[draw, fill=Green!50, minimum width=15mm, minimum height=10mm ] (S0) at (0,0){$S_0$};
 
         % sum_u
-        \node[circ , right=8mm of S0 ]  (sum_u) {};
+        \node[circ , right=11mm of S0 ]  (sum_u) {};
         \node[left=-1pt] at (sum_u.center){\small $+$};
         \node[above=-1pt] at (sum_u.center){\small $-$};
 
         % G0
-        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_u ] (G0)    {$G_0$};
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=11mm of sum_u ] (G0)    {$G_0$};
 
         % sum_y
-        \node[circ, , right=8mm of G0 ]  (sum_y) {$+$};
+        \node[circ,  right=8mm of G0 ]  (sum_y) {$+$};
 
         % S0C
-        \node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, above=6mm of sum_u ] (C_v)  {$C$};
 
         % sum_r % r = r1 + C*r2
-        \node[circ, , left=8mm of S0 ]  (sum_r) {$+$};
+        \node[circ, , left=15mm of S0 ]  (sum_r) {$+$};
 
         % C
-        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
-
-        % another S0 above sum_y
-        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm, above=8mm of sum_y ] (S0_v) {$S_0$};
-
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=6mm of sum_r ] (C) {$C$};
 
         % %--- Input r1 ---
-        \draw [-latex] ([ yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
+        \draw [-latex] ([yshift=14mm, xshift=-2mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=14mm] C.west -| sum_r) -- (sum_r.north);
 
         % %--- Input r2 ---
         \draw[-latex] ([xshift=-10mm]C.west) -- node[above,at start, xshift=2mm]{$r_2$} (C);
@@ -630,24 +626,27 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         \draw[-latex] (sum_y) -- node[above]{$y$} ([xshift=12mm] sum_y.east);
 
         % H0
-        \coordinate (ybranch) at ([yshift=6mm] S0C.north);
-        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r |- ybranch) {$H_0$};
+        \coordinate (ybranch) at ([yshift=6mm] C_v.north);
+        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r.west |- ybranch) {$H_0$};
 
         % %--- Input e ---
         \draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
 
-        %--- v -> S0C -> u_v -> sum_y ---
-        \draw[-latex] (H0.east) -- node[above,at start, xshift=5mm]{$v$}(H0.east -| S0C) -- (S0C.north);
-        \draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
+        % another S0 
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm ] (S0_v) at (H0 -| S0) {$S_0$};
 
-                %--- v branches to sum_y
-        \draw[-latex] (H0.east -| S0C) -- (H0.east -| S0_v) -- (S0_v.north);
-        \draw[-latex] (S0_v) -- (sum_y);
+        %--- v -> C_v -> u_v -> sum_y ---
+        \draw[-latex] (C_v) -- node[right]{$u_v$} (sum_u);
+
+        % %--- v branches to sum_y
+        \draw[-latex] (H0.east) -- node[above]{$v$}(S0_v);
+        \draw[-latex] (S0_v) -- (S0_v -| C_v) -- (C_v.north);
+        \draw[-latex] (S0_v -| C_v) -- (S0_v -| sum_y) -- (sum_y.north);
 
 
 
         \end{tikzpicture}
-    \caption{The closed-loop system is reformulated into pseudo-open loop form by reworking the equations. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
+    \caption{The closed-loop system is reformulated into pseudo-open loop form by reworking the equations. The control action, $u$, is now decomposed in two: the noise free control action, $u_r$(resulting from the reference, $r$) and the corrupted control action, $u_v$(resulting from disturbance on the output being fed back to the controller).}
     \label{transformed_CL_sys} 
 \end{figure}
 
@@ -676,7 +675,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm  ] (G0) at (0,0)   {$G_0$};
 
         % sum_v
-        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+        \node[circ, right=8mm of G0 ]  (sum_v) {$+$};
 
         % H0
         \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
@@ -708,8 +707,11 @@ Applying the same technique for our closed loop system (figure \ref{tikz_general
                 %  =& \left|S_{0}(e^{i\omega})\right|^2 \left[\Phi_{r_{1}}(\omega) + \left| C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \right] \\[2mm]
 \Phi_{yu}(\omega) =& \, H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}} + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}} + H_{yv}{} H^{*}_{uv} \Phi_{v} \nonumber \\ 
                   =& \, S_0 G_0 \cdot S^{*}_{0} \, \Phi_{r_{1}} + S_0 G_0 C \cdot \left(S_0 C\right)^{*} \Phi_{r_{2}} + S_0 \cdot \left(-S_0 C\right)^{*} \Phi_{v} \nonumber \\ 
-                  =&\left|S_{0}\right|^2  \left[ G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} \right]
+                  =&\left|S_{0}\right|^2  \left[ G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} \right] \\[2mm]
+\widehat{G}_{0}(e^{i\omega}) =& \frac{G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} }{ \Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}} + \left|C\right|^2 \Phi_{v} }
 \end{align}
+
+
 
 
 

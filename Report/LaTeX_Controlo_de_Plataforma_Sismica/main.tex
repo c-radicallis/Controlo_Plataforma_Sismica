@@ -1,4 +1,4 @@
-\documentclass[draft , 10pt]{extarticle}
+\documentclass[10pt]{extarticle}%draft , 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -16,6 +16,7 @@
 \usepackage{wrapfig}
 \usepackage{subcaption}
 \usepackage{amsmath}
+\numberwithin{equation}{subsection}
 \usepackage{physics}
 \usepackage{mathrsfs}
 \usepackage{tabularx}
@@ -360,16 +361,17 @@ For a signal discretized with sampling time $T_s$:
         \end{equation}
     \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
     \item Various equations will have the function variables omitted to ease the notation
+    \item The circumflex denotes an estimated model or property from some data (ex. $\widehat{G}(z)$ or $\widehat{\Phi}_{u}(\omega)$)
 \end{itemize}
 
 \paragraph{Properties of signals processed by discrete LTI systems}
 \vspace{-5mm}
 \begin{figure}[H]
-\begin{minipage}{0.318\textwidth}    
+\hspace{-2mm}\begin{minipage}{0.34\textwidth}    
     \hspace{\parindent} The correlation  is given by:
     \vspace{-2mm}
     \begin{align}
-        R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\
+        R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\[2mm]
         R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
     \end{align} 
 
@@ -378,8 +380,8 @@ For a signal discretized with sampling time $T_s$:
     And the power spectral density:
     \vspace{-2mm}
     \begin{align}
-        \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\
-        \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
+    \hspace{-2mm}    \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\[2mm]
+    \hspace{-2mm}    \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
     \end{align} 
 
     \vspace{5mm}
@@ -547,13 +549,13 @@ For the system in figure \ref{tikz_general_CL_sys}, the following equations are 
 
 In the whole of section \ref{Identification in Closed-Loop Systems}, for the examples presented, and, unless stated otherwise, we'll consider the following conditions:
 \begin{itemize}
-    \item $r_{1}(t)$, $r_{2}(t)$, $e(t)$ are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
+    \item $r_{1}(t)$, $r_{2}(t)$ (refered to as reference/setpoint signals), $e(t)$(refered to as disturbance or noise) are Gaussian white noise data sequences generated with MATLAB's \emph{wgn} function, with power set to 1
     \item $C(z)$ is the system controller, which will vary between examples
     \item $G_{0}(z) = \frac{1}{1-1.6z^{-1}+0.89z^{-2}}$ is the plant
     \item $H_{0}(z) = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
 \end{itemize}
 
-We'll start by transforming the system equations. The reasons why this is of interest we'll become apparent soon. Firstly, for simplicity’s sake, we'll substitute $e(t)$  in equation \ref{eq_y_original_CL}:
+We'll start by transforming the system equations. The reasons why this is of interest we'll become apparent soon. Firstly, for simplicity’s sake, we'll substitute $e(t)$  in equation \eqref{eq_y_original_CL}:
 \begin{equation}
     v(t) = H_{0}(z) \cdot e(t) \Longrightarrow y(t) = G_0 \cdot u(t) + v(t) \label{eq_v_H0e}
 \end{equation}
@@ -563,7 +565,7 @@ And introducing the sensitivity transfer function:
     S_0 = \frac{1}{1 + G_0 \cdot C} \label{eq_S0}
 \end{equation}
 
-And rewriting equations \ref{eq_y_original_CL} and \ref{eq_u_original_CL} using relations \ref{eq_v_H0e} and \ref{eq_S0}, we get:
+And rewriting equations \eqref{eq_y_original_CL} and \eqref{eq_u_original_CL} using relations \eqref{eq_v_H0e} and \eqref{eq_S0}, we get:
 \begin{align}
     y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\  
          &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} \cdot r_2(t) + H_{yv} \cdot v(t) \nonumber \\[2mm]
@@ -652,9 +654,9 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
-
 \begin{figure}[H]
     \begin{minipage}{0.63\textwidth}
+        \paragraph{Why it works open-loop}
         For our system, taking the spectral density $\Phi_{yu}$, we get:
         \begin{equation}
             \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
@@ -662,7 +664,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
         If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}, where the output $y$ (which contains the disturbance $e$) was not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the espectral densities:
         \begin{equation}
-            \widehat{G}_{0}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)}
+            \widehat{G}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)} \label{eq_G_spectral_estimate_open_loop}
         \end{equation}
 
     \end{minipage}
@@ -699,7 +701,8 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 \end{figure}
 
-Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
+\paragraph{The problem in closed-loop}
+Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \eqref{eq_y_transformed_CL} and \eqref{eq_u_transformed_CL}, we find:
 \begin{align}
 \Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}} + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}} + \left|H_{uv}\right|^2 \Phi_{v} \nonumber\\ 
                  =& \left|S_{0}\right|^2 \Phi_{r_{1}} + \left|S_{0} C\right|^2 \Phi_{r_{2}} + \left|- S_{0} C\right|^2 \Phi_{v} \nonumber \\
@@ -708,8 +711,26 @@ Applying the same technique for our closed loop system (figure \ref{tikz_general
 \Phi_{yu}(\omega) =& \, H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}} + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}} + H_{yv}{} H^{*}_{uv} \Phi_{v} \nonumber \\ 
                   =& \, S_0 G_0 \cdot S^{*}_{0} \, \Phi_{r_{1}} + S_0 G_0 C \cdot \left(S_0 C\right)^{*} \Phi_{r_{2}} + S_0 \cdot \left(-S_0 C\right)^{*} \Phi_{v} \nonumber \\ 
                   =&\left|S_{0}\right|^2  \left[ G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} \right] \\[2mm]
-\widehat{G}_{0}(e^{i\omega}) =& \frac{G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} }{ \Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}} + \left|C\right|^2 \Phi_{v} }
+\widehat{G}(e^{i\omega}) =& \, \frac{\Phi_{yu}(\omega)}{\Phi_{u}(\omega)} \, =\, \frac{G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} }{ \Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}} + \left|C\right|^2 \Phi_{v} } \label{eq_G_spectral_estimate}
 \end{align}
+
+From equation \eqref{eq_G_spectral_estimate} we can verify that, if $C(z)=0$, then we simply have the open-loop case as in equation \eqref{eq_G_spectral_estimate_open_loop}:
+\begin{equation}
+    C(z)=0  \quad \Longrightarrow \widehat{G}(e^{i\omega}) =\, \frac{G_0 \,  \Phi_{r_{1}} +  0 - 0 }{ \Phi_{r_{1}} + 0 + 0} =\, \frac{G_{0}(e^{i\omega}) \,  \Phi_{r_{1}}(\omega) }{ \Phi_{r_{1}}(\omega) } = \, G_{0}(e^{i\omega})   
+\end{equation}
+
+What's more interesting, though, is the closed-loop scenario, so we'll consider $C(z) \neq 0$. From equation \eqref{eq_G_spectral_estimate} we can verify that, if the disturbance $v$ is very small ($\Phi_{v}(\omega) \longrightarrow 0 $), the identification of the plant's true dynamics is possible:
+\begin{align}
+    \Phi_{v}(\omega) \longrightarrow 0  \; & \Longrightarrow \widehat{G}(e^{i\omega}) =\, \frac{G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - 0 }{ \Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}} + 0 } = \, \frac{ G_0 \cdot \left[\Phi_{r_{1}} + \left|C\right|^2 \Phi_{r_{2}}\right] }{ \quad \Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}}} = \, G_{0}(e^{i\omega})   
+\end{align}
+
+But if the disturbance $v$ is very large compared to the reference signals $r_1$ and $r_2$, then it results:
+\begin{equation}
+    \frac{\Phi_{r_{1}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; , \frac{\Phi_{r_{1}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; \Longrightarrow \widehat{G}(e^{i\omega}) =\,\frac{0 +  0 - C^{*} }{ 0 + 0 + \left|C\right|^2 } = \frac{- C^{*}}{C \cdot C^{*}} = \frac{-1}{C(e^{i\omega})}
+\end{equation}
+
+So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
+
 
 
 
@@ -872,7 +893,7 @@ From the block diagram in figure \ref{fig_clean_block_force_output}, the followi
     \end{aligned}
 \end{align}
 % LTeX: enabled=true
-It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \ref{eq_G_Fp_isv} \& \ref{G_xT_Fp}).
+It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \eqref{eq_G_Fp_isv} \& \ref{G_xT_Fp}).
 
 To represent the dynamics of a typical structure on test (which has two vibration modes in the bandwidth of the seismic table), a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
 
@@ -932,7 +953,7 @@ To represent the dynamics of a typical structure on test (which has two vibratio
 
 
 %\vspace{5mm}
-For the system in figure \ref{schematic_2dof} the following equations of motion are obtained (system of equations \ref{eq_2dof_system}):
+For the system in figure \ref{schematic_2dof} the following equations of motion are obtained (system of equations \eqref{eq_2dof_system}):
 
 \begin{align}\label{eq_2dof_system}
 \left\{
@@ -997,9 +1018,9 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
 
     
 \vspace{5mm}
-From the system of equations \ref{eq_2dof_system}, the following transfer functions relating the displacements of each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
+From the system of equations \eqref{eq_2dof_system}, the following transfer functions relating the displacements of each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
 \small
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.51\textwidth}
 \begin{align}
     \frac{x_T}{F_P} &= \frac{G_1 G_2 - G_{21}^2}{G_T G_1 G_2 - G_T G_{21}^2 - G_2 G_{T1}^2} = G_{xT/Fp}(s) \label{G_xT_Fp}\\
     \frac{x_1}{x_T} &= \frac{G_{T1} G_2}{G_1 G_2 - G_{21}^2} = G_{x1/xT}(s) \\
@@ -1007,7 +1028,7 @@ From the system of equations \ref{eq_2dof_system}, the following transfer functi
 \end{align}
 \end{minipage}
 \hfill
-\begin{minipage}{0.43\textwidth}
+\begin{minipage}{0.45\textwidth}
 \begin{align}
     G_T(s) &= m_T\cdot s^2 + (c_T + c_1)\cdot s + k_1 \\
     G_1(s) &= m_1\cdot s^2 + (c_1 + c_2)\cdot s + k_1 + k_2 \\
@@ -1027,7 +1048,7 @@ From the system of equations \ref{eq_2dof_system}, the following transfer functi
 \end{align}
 
 \normalsize
-The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be determined such that the system's natural frequencies $f_i$ and damping ratios $\xi_i$ are similar to the structures in test. Equation \ref{eq_modal_frequencies} relates the natural frequency of the two modes of the 2DoF system to it's spring and mass properties, and equation \ref{eq_modal_damping} relates the damping coefficient and ratio to mass and natural frequency.
+The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be determined such that the system's natural frequencies $f_i$ and damping ratios $\xi_i$ are similar to the structures in test. Equation \eqref{eq_modal_frequencies} relates the natural frequency of the two modes of the 2DoF system to it's spring and mass properties, and equation \eqref{eq_modal_damping} relates the damping coefficient and ratio to mass and natural frequency.
 
 \begin{equation}\label{eq_modal_frequencies}
 \omega_{1,2}^{2} = \frac{1}{2}\frac{m_1 k_2 + m_2 (k_1 + k_2)}{m_1 m_2} \mp \frac{1}{2} \sqrt{\left( \frac{m_1 k_2 + m_2 (k_1 + k_2)}{m_1 m_2} \right)^2 - 4 \frac{k_1 k_2}{m_1 m_2}} 
@@ -1237,7 +1258,7 @@ The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{
 \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\linewidth]{PID_MSE/stiffness_solutions.png}
-    \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \ref{eq_modal_frequencies})}
+    \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \eqref{eq_modal_frequencies})}
     \label{fig_close_modal_freqs}
 \end{minipage}
 \end{figure}
@@ -1364,7 +1385,7 @@ Controllability and observability matrices were built in MATLAB with \emph{ctrb}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
-For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}, the optimal state feedback control law which minimizes the cost function (equation \ref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices.
+For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}, the optimal state feedback control law which minimizes the cost function (equation \eqref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices.
 
 The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, because this increased the bandwidth, but, unlike the PIDF, did not result in amplification at low frequencies.(Figure \ref{fig_Bode_LQI_Qe9} to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
 
@@ -1482,7 +1503,7 @@ The state weight matrix $Q$ had every element set to zero, except the entry corr
 \begin{minipage}{0.49\textwidth}
 A controller using a Kalman filter (\emph{kest} in figure \ref{fig_LQG_loop}) to reconstruct the states was also implemented, with process and sensor noise covariance matrices, $Q_n$ and $R_n$, set as identity matrices.
 
-The Kalman estimator and the optimal state feedback control law which minimizes the cost function (equation \ref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqgtrack} function.
+The Kalman estimator and the optimal state feedback control law which minimizes the cost function (equation \eqref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqgtrack} function.
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}

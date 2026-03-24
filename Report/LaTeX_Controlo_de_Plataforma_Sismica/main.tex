@@ -359,7 +359,7 @@ For a signal discretized with sampling time $T_s$:
             G(z) = \sum_{k=-\infty}^{\infty} g(k)\, z^{-k}
         \end{equation}
     \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
-    \item On various equations the transfer functions will have the complex variable omitted to ease the notation
+    \item Various equations will have the function variables omitted to ease the notation
 \end{itemize}
 
 \paragraph{Properties of signals processed by discrete LTI systems}
@@ -481,7 +481,7 @@ In the case of two systems which generate an output from a common input signal, 
 \end{align}
 
 \subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
-In this section we'll consider the closed loop system represented in figure \ref{fig_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
+In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
     \centering
@@ -536,10 +536,10 @@ In this section we'll consider the closed loop system represented in figure \ref
 
         \end{tikzpicture}
     \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{fig_general_CL_sys} 
+    \label{tikz_general_CL_sys} 
 \end{figure}
 
-For the system in figure \ref{fig_general_CL_sys}, the following equations are derived:
+For the system in figure \ref{tikz_general_CL_sys}, the following equations are derived:
 \begin{numcases}{}
     y(t) = G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
     u(t) = r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
@@ -586,8 +586,8 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         % G0
         \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_u ] (G0)    {$G_0$};
 
-        % sum_v
-        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+        % sum_y
+        \node[circ, , right=8mm of G0 ]  (sum_y) {$+$};
 
         % S0C
         \node[draw, fill=Emerald!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_u ] (S0C)  {$S_{0}C$};
@@ -597,6 +597,10 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
         % C
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, left=8mm of sum_r ] (C) {$C$};
+
+        % another S0 above sum_y
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm, above=8mm of sum_y ] (S0_v) {$S_0$};
+
 
         % %--- Input r1 ---
         \draw [-latex] ([ yshift=15mm]C.west) -- node[above,at start, xshift=2mm]{$r_1$}([yshift=15mm] C.west -| sum_r) -- (sum_r.north);
@@ -619,25 +623,28 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         %--- sum_u -> G0 ---
         \draw[-latex] (sum_u) -- node[above]{$u$} (G0);
 
-        %--- G0 -> sum_v ---
-        \draw[-latex] (G0) -- (sum_v);
+        %--- G0 -> sum_y ---
+        \draw[-latex] (G0) -- (sum_y);
 
-        %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
-
-        %--- v branches to sum_v
-        \coordinate (ybranch) at ([yshift=6mm] S0C.north);
-        \draw [-latex] (ybranch) -- (ybranch -| sum_v) -- (sum_v.north);
+        %--- sum_y -> y output ---
+        \draw[-latex] (sum_y) -- node[above]{$y$} ([xshift=12mm] sum_y.east);
 
         % H0
+        \coordinate (ybranch) at ([yshift=6mm] S0C.north);
         \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r |- ybranch) {$H_0$};
 
         % %--- Input e ---
         \draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
 
-        %--- v -> S0C -> u_v -> sum_v ---
+        %--- v -> S0C -> u_v -> sum_y ---
         \draw[-latex] (H0.east) -- node[above,at start, xshift=5mm]{$v$}(H0.east -| S0C) -- (S0C.north);
         \draw[-latex] (S0C) -- node[right]{$u_v$} (sum_u);
+
+                %--- v branches to sum_y
+        \draw[-latex] (H0.east -| S0C) -- (H0.east -| S0_v) -- (S0_v.north);
+        \draw[-latex] (S0_v) -- (sum_y);
+
+
 
         \end{tikzpicture}
     \caption{The closed-loop system is reformulated into pseudo-open loop form by reworking the equations. The control action $u$ is now decomposed in two: the noise free control action $u_r$ (resulting from the reference $r$), and the corrupted control action $u_v$ (resulting from disturbance on the output being fed back to the controller).}
@@ -654,7 +661,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
             \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
         \end{equation}
 
-        If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}, where the output $y$ (which contains the disturbance $e$) was not being fed back into the controller, then, given the fact that $e$ and $u$ are uncorrelated ($\Longrightarrow \Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the espectral densities:
+        If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}, where the output $y$ (which contains the disturbance $e$) was not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the espectral densities:
         \begin{equation}
             \widehat{G}_{0}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)}
         \end{equation}
@@ -693,13 +700,15 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 \end{figure}
 
-Applying the same technique for our closed loop system, from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
+Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \ref{eq_y_transformed_CL} and \ref{eq_u_transformed_CL}, we find:
 \begin{align}
-\Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}}(\omega) + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}}(\omega) + \left|H_{uv}\right|^2 \Phi_{v}(\omega) \nonumber\\ 
-                 =& \left|S_{0}\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0} C\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0} C\right|^2 \Phi_{v}(\omega) \nonumber \\
-                 =& \left|S_{0}(e^{i\omega})\right|^2 \left[\Phi_{r_{1}}(\omega) + \left| C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \right] \\[2mm]
-\Phi_{yu}(\omega) =& H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}}(\omega) + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}}(\omega) + H_{yv}{} H^{*}_{uv} \Phi_{v}(\omega) \nonumber \\ 
-                    =&\left|S_{0}(e^{i\omega})\right|^2 \Phi_{r_{1}}(\omega) + \left|S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|- S_{0}(e^{i\omega}) C(e^{i\omega})\right|^2 \Phi_{v}(\omega) 
+\Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}} + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}} + \left|H_{uv}\right|^2 \Phi_{v} \nonumber\\ 
+                 =& \left|S_{0}\right|^2 \Phi_{r_{1}} + \left|S_{0} C\right|^2 \Phi_{r_{2}} + \left|- S_{0} C\right|^2 \Phi_{v} \nonumber \\
+                 =& \left|S_{0}\right|^2 \left[\Phi_{r_{1}} + \left| C\right|^2 \Phi_{r_{2}} + \left|C\right|^2 \Phi_{v} \right] \\[2mm]
+                %  =& \left|S_{0}(e^{i\omega})\right|^2 \left[\Phi_{r_{1}}(\omega) + \left| C(e^{i\omega})\right|^2 \Phi_{r_{2}}(\omega) + \left|C(e^{i\omega})\right|^2 \Phi_{v}(\omega) \right] \\[2mm]
+\Phi_{yu}(\omega) =& \, H_{yr_{1}} H^{*}_{ur_{1}} \Phi_{r_{1}} + H_{yr_{2}} H^{*}_{ur_{2}} \Phi_{r_{2}} + H_{yv}{} H^{*}_{uv} \Phi_{v} \nonumber \\ 
+                  =& \, S_0 G_0 \cdot S^{*}_{0} \, \Phi_{r_{1}} + S_0 G_0 C \cdot \left(S_0 C\right)^{*} \Phi_{r_{2}} + S_0 \cdot \left(-S_0 C\right)^{*} \Phi_{v} \nonumber \\ 
+                  =&\left|S_{0}\right|^2  \left[ G_0 \,  \Phi_{r_{1}} +  G_0 \left|C\right|^2 \Phi_{r_{2}} - C^{*} \, \Phi_{v} \right]
 \end{align}
 
 

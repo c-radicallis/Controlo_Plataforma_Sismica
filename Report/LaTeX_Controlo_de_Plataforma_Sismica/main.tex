@@ -482,6 +482,7 @@ In the case of two systems which generate an output from a common input signal, 
     \Phi_{y_ {2}y_{1}}(\omega) =& G_{2} G_{1}^{-1} \, \Phi_{y_{1}}(\omega)  =  G_{2}(e^{i\omega}) G_{1}^{*}(e^{i\omega}) \, \Phi_{x}(\omega)
 \end{align}
 
+\pagebreak
 \subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
 In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
@@ -542,10 +543,10 @@ In this section we'll consider the closed loop system represented in figure \ref
 \end{figure}
 
 For the system in figure \ref{tikz_general_CL_sys}, the following equations are derived:
-\begin{numcases}{}
-    y(t) = G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
-    u(t) = r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
-\end{numcases}
+\begin{align} %\begin{numcases}{}
+    y(t) &= G_0 \cdot u(t) + H_0 \cdot e(t) \label{eq_y_original_CL} \\ 
+    u(t) &= r_1(t) + C \cdot r_2(t) - C \cdot y(t) \label{eq_u_original_CL}
+\end{align} %\end{numcases}
 
 In the whole of section \ref{Identification in Closed-Loop Systems}, for the examples presented, and, unless stated otherwise, we'll consider the following conditions:
 \begin{itemize}
@@ -654,9 +655,10 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 
 \subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
+\paragraph{Why it works in open-loop}
+\vspace{-5mm}
 \begin{figure}[H]
     \begin{minipage}{0.63\textwidth}
-        \paragraph{Why it works open-loop}
         For our system, taking the spectral density $\Phi_{yu}$, we get:
         \begin{equation}
             \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
@@ -726,17 +728,23 @@ What's more interesting, though, is the closed-loop scenario, so we'll consider 
 
 But if the disturbance $v$ is very large compared to the reference signals $r_1$ and $r_2$, then it results:
 \begin{equation}
-    \frac{\Phi_{r_{1}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; , \frac{\Phi_{r_{1}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; \Longrightarrow \widehat{G}(e^{i\omega}) =\,\frac{0 +  0 - C^{*} }{ 0 + 0 + \left|C\right|^2 } = \frac{- C^{*}}{C \cdot C^{*}} = \frac{-1}{C(e^{i\omega})}
+    \frac{\Phi_{r_{1}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; , \frac{\Phi_{r_{2}}(\omega)}{\Phi_{v}(\omega)} \longrightarrow 0 \; \Longrightarrow \widehat{G}(e^{i\omega}) =\,\frac{0 +  0 - C^{*} }{ 0 + 0 + \left|C\right|^2 } = \frac{- C^{*}}{C \cdot C^{*}} = \frac{-1}{C(e^{i\omega})}
 \end{equation}
 
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
-
-
-
-
+\paragraph{Remark on parametric modelling}
+As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately ($\widehat{H}(z) \approx H_0(z)$), also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, additional steps, solving 
 
 \subsubsection{Two-Stage Method}\label{Two-Stage Method}
+\hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order and nonlinear (for example, the variable structure in sliding mode control), nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired. The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. 
+ 
+If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable $r(t) = r_1(t) + C(z) \cdot r_2(t)$, and, rewriting the equation, we get:
+\begin{equation}
+    u(t) = S_{0} \cdot r(t) - S_{0} C \cdot v(t) 
+\end{equation}
+
+Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that, since $r(t)$ and $v(t)$ are uncorrelated, $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$.
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}
@@ -772,14 +780,14 @@ For this section, consider the following:
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise01.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ before and after tuning}
+    \caption{$C(z)=5$ \& $e(t)=0.1$}
     \label{fig_two_stage/example/K5_noise01}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise1.png}
-    \caption{Input to servo before and after tuning}
+    \caption{$C(z)=5$ \& $e(t)=0.1$}
     \label{fig_two_stage/example/K5_noise1}
 \end{minipage}
 \end{figure}
@@ -788,14 +796,14 @@ For this section, consider the following:
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise005.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ before and after tuning}
+    \caption{$C(z)=0.5 \left(z^{-1} + 0.8 z^{-2}\right)$ \& $e(t)=0.05$}
     \label{fig_two_stage/example/noise005}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise08.png}
-    \caption{Input to servo before and after tuning}
+    \caption{$C(z)=0.5 \left(z^{-1} + 0.8 z^{-2}\right)$ \& $e(t)=0.8$}
     \label{fig_two_stage/example/noise08}
 \end{minipage}
 \end{figure}

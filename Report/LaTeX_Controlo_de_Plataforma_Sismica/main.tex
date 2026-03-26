@@ -1,4 +1,4 @@
-\documentclass[10pt]{extarticle}%draft , 
+\documentclass[draft ,10pt]{extarticle} 
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -734,7 +734,7 @@ But if the disturbance $v$ is very large compared to the reference signals $r_1$
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
 \paragraph{Remark on parametric modelling}
-As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately ($\widehat{H}(z) \approx H_0(z)$), also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, additional steps, solving 
+As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, additional steps, solving 
 
 \subsubsection{Two-Stage Method}\label{Two-Stage Method}
 \hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order and nonlinear (for example, the variable structure in sliding mode control), nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired. The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. 
@@ -744,7 +744,9 @@ If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference
     u(t) = S_{0} \cdot r(t) - S_{0} C \cdot v(t) 
 \end{equation}
 
-Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that, since $r(t)$ and $v(t)$ are uncorrelated, $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$.
+Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$, since $r(t)$ and $v(t)$ are uncorrelated.
+
+
 
 \begin{enumerate}
     \item \textbf{Identification of the sensitivity function $S_0$:}
@@ -769,7 +771,7 @@ The following examples display the identification results obtained with the meth
 For this section, consider the following:
 \begin{itemize}
     \item A data sequence containing 32768 points was used
-    \item  $r_1(t) = 0$, as this mimicks the setup at LNEC, where the tracking error ($e_y = r_2 - y$) is what is input to the controller
+    \item  $r_1(t) = 0$, where the tracking error ($e_y = r_2 - y$) is what is input to the controller, as this mimicks the setup at LNEC
     \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$
     \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
@@ -1899,12 +1901,123 @@ Everything was reassembled together, and new data was collected for another syst
 
 \subsection{ Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}
 
+\begin{equation}
+    C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
+\end{equation}
+
 \subsection{Experimental Results}
 
 Once the system was identified, the PIDF parameter tuning algorithm was run, defining three different bandwidths for the closed-loop response: 10Hz, 15Hz, and 20Hz. The three sets of parameters were then tested against the iterative drive signal correction process. For this seismic signal, it was found that all tuned controllers performed better than the 5th driver of the iterative process.
 
 For this other seismic signal, it was found that all tuned controllers performed better than the third driver in the iterative process. However, the fifth driver already performed better. 
 In these two tests, acceleration data were not measured, so the displacement data were extrapolated to determine the acceleration response spectrum.
+
+\pagebreak
+\subsection{Further Simulation Studies}
+
+$\Longrightarrow$ Avaliar robustez do método de indentificação e sintonização do controlador
+
+$\Longrightarrow$ Simular dados com o modelo da mesa uniaxial, desta vez introduzindo uma perturbação na saida
+
+\begin{figure}[H]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
+
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_\text{default}$};
+
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C ] (G0) {$G_\text{1D-ST}$};
+
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+        % % H0
+        % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+
+        %--- Input r2 ---
+        \draw[-latex] (-1.5, 0) -- node[above]{$x_{drv}$} (sum_r2);
+
+        %--- sum_r2 -> C -> G0 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+        \draw[-latex] (C) -- node[above]{$i_{sv}$}(G0);
+
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
+
+        %--- e -> H0 -> v -> sum_v ---
+        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e_0$} -- (H0);
+        \draw[-latex] ([yshift = 10mm] sum_v.north) -- node[right]{$v \; \text{(disturbance)}$} (sum_v);
+
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$x_{acq}$} ([xshift=12mm] sum_v.east);
+
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+
+        \end{tikzpicture}
+    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    %\label{tikz_general_CL_sys} 
+\end{figure}
+
+
+
+$\Longrightarrow$ Fazer identificação $\widehat{G}(z)$ a partir dos dados simulados
+
+$\Longrightarrow$ Sintonizar controladores para $\widehat{G}(z)$
+
+$\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simulação para o modelo 1DST com perturbações na saida
+
+\begin{figure}[H]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
+
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_\text{tuned}$};
+
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of C ] (G0)    {$G_0$};
+
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+        %--- Input r2 ---
+        \draw[-latex] (-1.5, 0) -- node[above]{$x_{drv}$} (sum_r2);
+
+        %--- sum_r2 -> C -> G0 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+        \draw[-latex] (C) -- node[above]{$i_{sv}$}(G0);
+
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
+
+        %--- e -> H0 -> v -> sum_v ---
+        \draw[-latex] ([yshift = 10mm] sum_v.north) -- node[right]{$v$} (sum_v);
+
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$x^{sim}_{acq}$} ([xshift=12mm] sum_v.east);
+
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+
+        \end{tikzpicture}
+    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    %\label{tikz_general_CL_sys} 
+\end{figure}
+
+
 
 \clearpage
 % BIBLIOGRAFIA

@@ -1,4 +1,4 @@
-\documentclass[draft ,10pt]{extarticle} 
+\documentclass[ 10pt]{extarticle} %draft ,
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -40,12 +40,13 @@
 \usepackage{cases}
 
 \usepackage{titlesec}
-\setcounter{tocdepth}{4}
-\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
 {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\usepackage{indentfirst}
 
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
@@ -304,7 +305,7 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 \subsection{Purpose of Experimental Testing in Seismic Engineering} %Simulation and Reality: 
 % IS SEISMIC EXPERIMENTAL TESTING OF STRCUTURES STILL NECESSARY, DESPITE THE EVOLUTION OF COMPUTACIONAL SIMULATIONS?
 % https://consensus.app/search/is-seismic-experimental-testing-of-strcutures-stil/L-Ya5EyiQSqxujE68BaTQw/?utm_source=share&utm_medium=clipboard
-While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
+\hspace{\parindent}While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
 Studies show that numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, especially for complex interactions. Machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models.
 
 In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001, Zhang2023Experimentally, Liu2020Experimental, Bahraq2021Numerical, Malomo2022M-DEM, Qiu2024Seismic, Yavas2023A, Mokhtari2023A}
@@ -342,14 +343,123 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
     \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
 
-\subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
+\section{Control Systems}
 
-Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
+There are two generic confgurations for control systems: open-loop control and closed-loop control, shown in Figure  Every control system is a variation of one of these two confgurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specifed reference, or desired output, r(t). % (remember Section 3.1).
+In a perfectly controlled system, y(t) = r(t). The output of the controller is the system's input in the strict sense (the input must be a manipulated variable).
+
+\begin{figure}[H]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
+
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C$};
+
+        % sum_r1
+        \node[circ , right=8mm of C ]  (sum_r1) {$+$};
+
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of sum_r1 ] (G0)    {$G_0$};
+
+        % sum_v
+        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+        % H0
+        \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+
+        %--- Input r2 ---
+        \draw[-latex] (-1.5, 0) -- node[above]{$r_2$} (sum_r2);
+
+        %--- sum_r2 -> C -> sum_r1 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e_y$} (C);
+        \draw[-latex] (C) -- (sum_r1);
+
+        %--- r1 drops into sum_r1 from above ---
+        \draw[-latex] ([yshift=10mm]sum_r1.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_r1);
+
+        %--- sum_r1 -> G0 ---
+        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+
+        %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- (sum_v);
+
+        %--- e -> H0 -> v -> sum_v ---
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
+
+        %--- sum_v -> y output ---
+        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+
+        \end{tikzpicture}
+    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+    \label{tikz_general_CL_sys} 
+\end{figure}
+
+
+In open-loop control the controller receives the reference that the system should follow, and decides from this desired output what control action to take. This control action will be the input of the system. It is not checked whether or not the system's output does follow the reference. So, if there is some unexpected deviation from the reference, this does not change the control action. Open-loop control only uses blocks in series. In open-loop control,
+$y(s) = G(s)u(s) = G(s)C(s)r(s)$% (9.46)
+and since we want y(s) = r(s) then we should have $C(s) = G^{-1}(s)$, i.e. the controller should be an inverse model of the system to control. Notice that if the model of the system is proper then the controller is not proper; you will learn why this brings problems in Chapter 11.
+
+Closed-loop control uses negative feedback. The reference is compared with the system output. Ideally, the error should be zero. What the controller receives is this error, so the control action is based on the error. The simplest closed-loop controller is proportional: C(s) = K. With Proportional control, if the error is small, the control action is small too; if the error is large, the control action is also large. There are techniques to choose an appropriate value of K, and also to develop more complex controllers, with poles and zeros, which will be addressed in %Part 4
+
+\subsection{Open Loop Control}
+Open loop control:
+\begin{itemize}
+    \item is conceptually simpler than closed loop control;
+    \item does not require a measurement of the output;
+    \item consequently, it can be implemented even when the output cannot be measured, or is dificult or expensive to measure: no sensor for the output variable is required to implement it;
+    \item can anticipate control actions if the reference is known in advance;
+    \item works well if two conditions are simultaneously met:
+    \begin{itemize}
+        \item we know a perfect model of the plant;
+        \item there are no unknown disturbances of either the control action or the output.
+    \end{itemize} 
+\end{itemize}
+
+Open-loop control does not work that well in practice. If the model of the plant is not perfect, o if there is noise, things do not work that well, and, most importantly, it is nigh to impossible to control unstable plants in open loop
+
+\subsubsection{Design of Open Loop Controllers}
+
+\begin{equation}
+    C(s) =  \frac{1}{G(s)}
+\end{equation}
+
+
+\subsection{Closed Loop Control}
+Thanks to output feedback, closed loop control can mitigate the effects of noise and wrong models. 
+A closed loop can also stabilise unstable plants. However, badly designed closed loop control can also make stable plants unstable.
+
+It is possible to combine open-loop and closed-loop control in a single control system.
+
+\subsubsection{ Proportional-integral-derivative Controllers}
+Proportional-integral-derivative controllers apply a control action
+which is the sum of three control actions:
+\begin{equation}
+    C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
+\end{equation}
+
+\subsubsection{Full State Feedback Controllers}
+
+
+
+
+
+\section{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
+\hspace{\parindent}Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
 
 In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. This segment is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
 
-\subsubsection{Signals \& System Analysis}
-\paragraph{General Definitions \& Notation}
+\subsection{Signals \& System Analysis}
+\subsubsection{General Definitions \& Notation}
 For a signal discretized with sampling time $T_s$:
 \begin{itemize}
     \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
@@ -364,7 +474,7 @@ For a signal discretized with sampling time $T_s$:
     \item The circumflex denotes an estimated model or property from some data (ex. $\widehat{G}(z)$ or $\widehat{\Phi}_{u}(\omega)$)
 \end{itemize}
 
-\paragraph{Properties of signals processed by discrete LTI systems}
+\subsubsection{Properties of signals processed by discrete LTI systems}
 \vspace{-5mm}
 \begin{figure}[H]
 \hspace{-2mm}\begin{minipage}{0.34\textwidth}    
@@ -483,7 +593,7 @@ In the case of two systems which generate an output from a common input signal, 
 \end{align}
 
 \pagebreak
-\subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
+\subsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
 In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
@@ -654,8 +764,8 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 \end{figure}
 
 
-\subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
-\paragraph{Why it works in open-loop}
+\subsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
+\subsubsection{Why it works in open-loop}
 \vspace{-5mm}
 \begin{figure}[H]
     \begin{minipage}{0.63\textwidth}
@@ -703,7 +813,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 \end{figure}
 
-\paragraph{The problem in closed-loop}
+\subsubsection{The problem in closed-loop}
 Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \eqref{eq_y_transformed_CL} and \eqref{eq_u_transformed_CL}, we find:
 \begin{align}
 \Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}} + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}} + \left|H_{uv}\right|^2 \Phi_{v} \nonumber\\ 
@@ -733,38 +843,60 @@ But if the disturbance $v$ is very large compared to the reference signals $r_1$
 
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
-\paragraph{Remark on parametric modelling}
+\subsubsection{Remark on parametric modelling}
 As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, additional steps, solving 
 
-\subsubsection{Two-Stage Method}\label{Two-Stage Method}
-\hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order and nonlinear (for example, the variable structure in sliding mode control), nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired. The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. 
- 
-If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable $r(t) = r_1(t) + C(z) \cdot r_2(t)$, and, rewriting the equation, we get:
+\subsection{Two-Stage Method for Closed Loop Identification}\label{Two-Stage Method}
+\subsubsection{Introduction}
+\hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order, nonlinear, of the variable structure (as in sliding mode control), etc., nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired.
+
+The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. This approach works on the principle that, by decomposing the control action, $u$, in two components: the noise free control action, $u_r$ which results from the reference, $r$; and the corrupted control action, $u_v$ which results from the disturbance $v$ on the output being fed back to the control.
+\begin{align}
+    u(t) =& u_r + u_v  \\
+         =& S_0 \left[ r_{1}(t) + C r_{2}(t) \right] - S_0 C v(t) 
+\end{align}
+
+It is then possible to estimate $G_0$, not from $u$ (which is corrupted), but from $y$ and $u_r$, since $u_r$ is uncorrelated to $v$ and $u_v$:
+\begin{align}
+    y(t) =& \, G_0 u(t) + v(t) \nonumber \\ 
+         =& \, G_0 \left[u_{r}(t) + u_{v}(t) \right] + v(t)  \nonumber\\ 
+         =& \, G_0 u_{r}(t) + \left[G_0 u_v(t) + v(t) \right]
+\end{align}
+
+\subsubsection{The Method} 
+\paragraph{Estimating the sensitivity function}
+
+\hspace{\parindent}If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable:
+\begin{equation}
+    r(t) = r_1(t) + C(z) \cdot r_2(t)
+\end{equation} 
+
+And, rewriting the equation, we get:
 \begin{equation}
     u(t) = S_{0} \cdot r(t) - S_{0} C \cdot v(t) 
 \end{equation}
 
-Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$, since $r(t)$ and $v(t)$ are uncorrelated.
+Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that $r(t)$ and $v(t)$ are uncorrelated, $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$. This is the first step:
+\begin{equation}
+    \widehat{S}(z) = \frac{u(t)}{r(t)}
+\end{equation}
+
+\paragraph{Reconstructing the noise-free control action}
+From the known reference signal $r(t)$, the identified sensitivity function can be used to compute the noise-free control action $\widehat{u}_{r}(t)$:
+\begin{equation}
+    \widehat{u}_{r}(t) = \widehat{S}(z) \cdot r(t)
+\end{equation}
+
+Since the sole purpose of the sensitivity function is computing a noise-free control action, to this end, the model can be of arbitrarily high order, but restricting variance, and thus reducing the number of parameters, may still be of interest.
+
+\paragraph{Estimating the plant}
+From the computed noise-free control action, $\widehat{u}_{r}$, and measured system output $y$, it is now possible to estimate the plant: % (which is uncorrelated with $v$)
+\begin{equation}
+    \widehat{G}(z) = \, \frac{y(t)}{\widehat{u}_{r}(t)}
+\end{equation}
 
 
-
-\begin{enumerate}
-    \item \textbf{Identification of the sensitivity function $S_0$:}
-    \begin{itemize}
-        \item A linear FIR model with 100 parameters was fitted (the number of parameters was chosen arbitrarily for this stage).
-        \item A Hammerstein--Wiener model was then defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a refined model.
-    \end{itemize}
-    
-    \item \textbf{Reconstruction of the control action isolated from noise effects ($\hat{u}_r$).}
-    
-    \item \textbf{Identification of $G_0$:}
-    \begin{itemize}
-        \item Non-parametric identification indicated a 4th-order model.
-        \item A model with 4 poles and 3 zeros was fitted using the reconstructed control action and the measured output.
-    \end{itemize}
-\end{enumerate}
-
-\subsubsection{Example: Comparing Closed-Loop Identification Methods}
+\subsection{Example: Comparing Closed-Loop Identification Methods}
 
 The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling} and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
 
@@ -777,7 +909,7 @@ For this section, consider the following:
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
 \end{itemize}  
 
-
+\subsubsection{}
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
@@ -812,8 +944,9 @@ For this section, consider the following:
 
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
+
 %\clearpage
-\section{Modelling Seismic Table Dynamics}\label{Modelling Seismic Table Dynamics}
+\section{A Model of LNEC's Uniaxail Seismic Table}\label{Modelling Seismic Table Dynamics}
 %\section{Modelação Matemática}
 %Os modelos devem ser implementados em Matlab/Simulink e complementados com funções, scripts e interfaces que facilitem a parametrização, cálculo de propriedades (como modos de vibração), análise e simulação com diferentes tipos de entradas (sinais sinusoidais, ondas quadradas e inputs externos como sinais sísmicos).
 
@@ -1913,7 +2046,7 @@ For this other seismic signal, it was found that all tuned controllers performed
 In these two tests, acceleration data were not measured, so the displacement data were extrapolated to determine the acceleration response spectrum.
 
 \pagebreak
-\subsection{Further Simulation Studies}
+\subsection{Further Simulation Studies (Robustness)}
 
 $\Longrightarrow$ Avaliar robustez do método de indentificação e sintonização do controlador
 

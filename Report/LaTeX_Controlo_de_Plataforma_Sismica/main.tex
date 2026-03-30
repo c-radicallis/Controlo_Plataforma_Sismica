@@ -1,4 +1,4 @@
-\documentclass[ 10pt]{extarticle} %draft ,
+\documentclass[draft , 10pt]{extarticle} %
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
@@ -345,7 +345,7 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
 
 \section{Control Systems}
 
-There are two generic confgurations for control systems: open-loop control and closed-loop control, shown in Figure  Every control system is a variation of one of these two confgurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specifed reference, or desired output, r(t). % (remember Section 3.1).
+There are two generic confgurations for control systems: open-loop control and closed-loop control, shown in Figure  Every control system is a variation of one of these two confgurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specified reference, or desired output, r(t). % (remember Section 3.1).
 In a perfectly controlled system, y(t) = r(t). The output of the controller is the system's input in the strict sense (the input must be a manipulated variable).
 
 \begin{figure}[H]
@@ -401,11 +401,11 @@ In a perfectly controlled system, y(t) = r(t). The output of the controller is t
 
         \end{tikzpicture}
     \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{tikz_general_CL_sys} 
+    %\label{tikz_general_CL_sys} 
 \end{figure}
 
 
-In open-loop control the controller receives the reference that the system should follow, and decides from this desired output what control action to take. This control action will be the input of the system. It is not checked whether or not the system's output does follow the reference. So, if there is some unexpected deviation from the reference, this does not change the control action. Open-loop control only uses blocks in series. In open-loop control,
+In open-loop control the controller receives the reference that the system should follow, and decides from this desired output what control action to take. This control action will be the input of the system. It is not checked whether the system's output does follow the reference. So, if there is some unexpected deviation from the reference, this does not change the control action. Open-loop control only uses blocks in series. In open-loop control,
 $y(s) = G(s)u(s) = G(s)C(s)r(s)$% (9.46)
 and since we want y(s) = r(s) then we should have $C(s) = G^{-1}(s)$, i.e. the controller should be an inverse model of the system to control. Notice that if the model of the system is proper then the controller is not proper; you will learn why this brings problems in Chapter 11.
 
@@ -416,7 +416,7 @@ Open loop control:
 \begin{itemize}
     \item is conceptually simpler than closed loop control;
     \item does not require a measurement of the output;
-    \item consequently, it can be implemented even when the output cannot be measured, or is dificult or expensive to measure: no sensor for the output variable is required to implement it;
+    \item consequently, it can be implemented even when the output cannot be measured, or is difficult or expensive to measure: no sensor for the output variable is required to implement it;
     \item can anticipate control actions if the reference is known in advance;
     \item works well if two conditions are simultaneously met:
     \begin{itemize}

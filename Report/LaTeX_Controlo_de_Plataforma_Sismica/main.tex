@@ -115,7 +115,7 @@
 \end{tabular}
 \vfill
 \Large \textbf{February 2026} \par
-% LTeX: enabled=true
+
 \end{titlepage}
 \setcounter{page}{2}
 \clearpage
@@ -142,7 +142,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{otherlanguage}{portuguese}
-\section{Resumo}
+\section*{Resumo}
 
 Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espetros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
@@ -151,8 +151,9 @@ Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simu
 \textbf{Palavras-chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
 \end{otherlanguage}
 %%%%%
+% LTeX: enabled=true
 \clearpage
-\section{Abstract}
+\section*{Abstract}
 
 Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
 This paper analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller; a tuned PIDF controller (proportional, integral, and filtered derivative) ; and an optimal controller. 
@@ -190,7 +191,7 @@ The current seismic platform testing process at Laboratório Nacional de Engenha
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
-    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is susoected to result from poor Identification. }
+    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
     \label{fig_lnec_test_process_diagram}
 \end{minipage}
 \hfill
@@ -255,7 +256,7 @@ It's relevance for this work lies in the fact that the performance of the seismi
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Seismic Design of Buildings and Bridges: Response spectra help in defining design forces.
     \item Code Based Seismic Analysis: Building codes (e.g., \textit{ASCE 7, Eurocode 8, IS 1893}) provide standard response spectra.
-    \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behavior.
+    \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behaviour.
 \end{itemize}
 
 \end{minipage}
@@ -297,6 +298,8 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 
     \item Performance will be evaluated by comparing the response spectrum of the measured signal with that of the reference signal.
 \end{itemize}
+
+\subsection{Outline of Dissertation}
 
 %\clearpage
 \section{Literature Review} %\section{Revisão do Estado da Arte}\label{sec:sota}
@@ -1225,7 +1228,7 @@ For a preliminary analysis of the mathematical model, some simulations were run 
 
 \begin{table}[H]
     \centering
-    \renewcommand{\arraystretch}{1.3}
+    \renewcommand{\arraystretch}{1.3}x
     \begin{tabular}{|c|c|c|}
         \hline
         \textbf{System Properties} & \textbf{1st Mode} & \textbf{2nd Mode} \\

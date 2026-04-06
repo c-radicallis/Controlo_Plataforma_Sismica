@@ -10,5 +10,14 @@
   "cSpell.language": "en",
   // if you want to completely disable cSpell in this workspace:
   // "cSpell.enabled": false
-  "latex-workshop.latex.autoBuild.run": "onFileChange"
+  "latex-workshop.latex.autoBuild.run": "onFileChange",
+  "latex-workshop.view.outline.sections": [
+    "part",
+    "chapter",
+    "section",
+    "subsection",
+    "subsubsection",
+    "paragraph",
+    "subparagraph"
+  ]
 }

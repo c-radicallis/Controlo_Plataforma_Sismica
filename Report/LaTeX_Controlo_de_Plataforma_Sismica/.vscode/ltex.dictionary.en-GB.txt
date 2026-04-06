@@ -2,3 +2,10 @@ PIDF
 LNEC
 geoenergy
 Laboratório
+SDOF
+microtremor
+SISO
+kPa
+kNs
+cyanoacrylate
+Hammerstein-Wiener

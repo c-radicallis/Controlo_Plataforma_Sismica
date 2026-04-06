@@ -1,4 +1,4 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -22,6 +22,12 @@ S.~Bousias.
 \newblock \emph{Lecture Notes in Civil Engineering Dynamic Response of Infrastructure to Environmentally Induced Loads}, chapter Experimental Methods and Activities in Support of Earthquake Engineering, pages 139--157.
 \newblock Springer International Publishing, 2017.
 \newblock \doi{10.1007/978-3-319-56136-3_8}.
+
+\bibitem[Cmglee(2012)]{cmglee_convolution_correlation}
+Cmglee.
+\newblock Comparison of convolution, cross-correlation and autocorrelation, 2012.
+\newblock URL \url{https://commons.wikimedia.org/wiki/File:Comparison_convolution_correlation.svg}.
+\newblock Licensed under Creative Commons Attribution-ShareAlike 3.0 (CC BY-SA 3.0); modified from original.
 
 \bibitem[de~Felice et~al.(2016)de~Felice, Santis, Lourenço, and Mendes]{DeFelice2016Methods}
 G.~de~Felice, S.~D. Santis, P.~Lourenço, and N.~Mendes.
@@ -103,7 +109,6 @@ T.~S{\"o}derstr{\"o}m and P.~Stoica.
 G.~G. Tekeste.
 \newblock \emph{Real-time hybrid simulation including a shaking table: development and application to soil-structure interaction}.
 \newblock Phd thesis, Universidade de Aveiro, 2021.
-\newblock URL \url{http://hdl.handle.net/10773/32045}.
 
 \bibitem[Tsinidis et~al.(2020)Tsinidis, Silva, Anastasopoulos, Bilotta, Bobet, Hashash, He, Kampas, Knappett, Madabhushi, Nikitas, Pitilakis, Silvestri, Viggiani, and Fuentes]{Tsinidis2020Seismic}
 G.~Tsinidis, F.~D. Silva, I.~Anastasopoulos, E.~Bilotta, A.~Bobet, Y.~Hashash, C.~He, G.~Kampas, J.~Knappett, G.~Madabhushi, N.~Nikitas, K.~Pitilakis, F.~Silvestri, G.~Viggiani, and R.~Fuentes.
@@ -115,7 +120,7 @@ G.~Tsinidis, F.~D. Silva, I.~Anastasopoulos, E.~Bilotta, A.~Bobet, Y.~Hashash, C
 P.~M.~J. Van~den Hof.
 \newblock System identification -- data-driven modelling of dynamic systems.
 \newblock Eindhoven, The Netherlands, February 2020.
-\newblock February 2020.
+\newblock URL \url{http://publications.pvandenhof.nl/discsysid/ManuscrSysid_Febr2020.pdf}.
 
 \bibitem[Williams and Blakeborough(2001)]{williams2001}
 M.~S. Williams and A.~Blakeborough.

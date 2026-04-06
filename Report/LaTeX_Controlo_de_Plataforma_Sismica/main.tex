@@ -361,7 +361,7 @@ For a signal discretized with sampling time $T_s$:
             G(z) = \sum_{k=-\infty}^{\infty} g(k)\, z^{-k}
         \end{equation}
     \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
-    \item Various equations will have the function variables omitted to ease the notation
+    \item Various equations will have the notation eased by omitting the function variables to improve readability
     \item The circumflex denotes an estimated model or property from some data (ex. $\widehat{G}(z)$ or $\widehat{\Phi}_{u}(\omega)$)
 \end{itemize}
 
@@ -491,45 +491,36 @@ In a perfectly controlled system, y(t) = r(t). The output of the controller is t
 
 \begin{figure}[H]
     \centering
-\begin{minipage}{0.35\textwidth}
-        \begin{center}
-        \begin{tikzpicture}
-            \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
-            % \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
+\begin{minipage}{0.4\textwidth}
+    \begin{tikzpicture}
+    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              , label=below:{ Open-loop Controller}] at (0,0) (C) {$C(z)$};
+    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=8mm of C , label=below:{System to control}    ] (G0)    {$G(z)$};
 
-            \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G); % x
-            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G.east); % y
+    \draw[-latex] (-1.5, 0) -- node[above]{$r$} node[below]{reference}     (C);
+    \draw[-latex] (C) -- node[above]{$u$}       node[below]{control action}(G0);
+    \draw[-latex] (G0) -- node[above]{$y$}      node[below]{output}        ([xshift=12mm] G0.east);
 
-            % \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
-            % \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east); %w
-        \end{tikzpicture}\vspace{-2mm}
-        \caption{System}\label{tikz_LTI_sys} 
-    \end{center}
-
+    \end{tikzpicture}\vspace{-2mm} 
+    \caption{Control in open-loop}\label{tikz_Control_Systems_open_loop} 
 \end{minipage}
 \hfill
-\begin{minipage}{0.6\textwidth}
-    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+\begin{minipage}{0.59\textwidth}
+    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=7mm, inner sep=0pt}, thick ]
     % sum_r2
     \node[circ]  (sum_r2) at (0,   0) {};
     \node[left=-1pt] at (sum_r2.center){\small $+$};
     \node[below=-1pt] at (sum_r2.center){\small $-$};
 
-    % C
-    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C$};
-
-    % G0
-    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of C ] (G0)    {$G_0$};
+    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 , label=above:{\parbox{17mm}{\centering closed-loop controller}}] (C) {$C(z)$};
+    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of C        , label=above:{\parbox{15mm}{\centering system to control}}   ] (G0)    {$G(z)$};
 
     %--- Input r2 ---
-    \draw[-latex] (-1.5, 0) -- node[above]{$x_{drv}$} (sum_r2);
+    \draw[-latex] (-1.5, 0) -- node[above]{$r$}node[below]{reference} (sum_r2);
 
     %--- sum_r2 -> C -> G0 ---
-    \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
-    \draw[-latex] (C) -- node[above]{$i_{sv}$}(G0);
-
-    %--- sum_v -> y output ---
-    \draw[-latex] (G0) -- node[above]{$x^{sim}_{acq}$} ([xshift=12mm] G0.east);
+    \draw[-latex] (sum_r2) -- node[below]{$e$} node[above]{\parbox{12mm}{\centering tracking error}} (C);
+    \draw[-latex] (C) --      node[below]{$u$} node[above]{\parbox{12mm}{\centering control action}}(G0);
+    \draw[-latex] (G0) --     node[below]{$y$} node[above]{output}        ([xshift=12mm] G0.east);
 
     %--- Feedback: y branches back to sum_r2 bottom ---
     \coordinate (ybranch) at ([xshift=5mm] G0.east);
@@ -537,8 +528,8 @@ In a perfectly controlled system, y(t) = r(t). The output of the controller is t
     \draw[-latex] (0, -1.2) -- (sum_r2.south);
 
     \end{tikzpicture}
-\caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-%\label{tikz_general_CL_sys} 
+\caption{Control in closed-loop}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+\label{tikz_Control_Systems_closed_loop} 
 \end{minipage}
 \end{figure}
 
@@ -584,10 +575,10 @@ which is the sum of three control actions:
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
 
-\paragraph{Full State Feedback Controllers}
+\paragraph{Full State Feedback Control}
 
 
-
+\subparagraph{State Observers}
 
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
@@ -595,7 +586,7 @@ which is the sum of three control actions:
 
 In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. This segment is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
 
-\pagebreak
+%\pagebreak
 \subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
 In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 

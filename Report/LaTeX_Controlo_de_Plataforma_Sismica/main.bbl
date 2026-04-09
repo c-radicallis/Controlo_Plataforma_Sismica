@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -28,6 +28,10 @@ Cmglee.
 \newblock Comparison of convolution, cross-correlation and autocorrelation, 2012.
 \newblock URL \url{https://commons.wikimedia.org/wiki/File:Comparison_convolution_correlation.svg}.
 \newblock Licensed under Creative Commons Attribution-ShareAlike 3.0 (CC BY-SA 3.0); modified from original.
+
+\bibitem[da~Costa(2012/2013)]{Sa_da_Costa}
+J.~S. da~Costa.
+\newblock Optimal control, 2012/2013.
 
 \bibitem[de~Felice et~al.(2016)de~Felice, Santis, Lourenço, and Mendes]{DeFelice2016Methods}
 G.~de~Felice, S.~D. Santis, P.~Lourenço, and N.~Mendes.

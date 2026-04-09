@@ -514,7 +514,7 @@ There are two generic configurations for control systems: open-loop control (fig
     %--- Input r2 ---
     \draw[-latex] (-1, 0) -- node[above,at start, xshift=3mm]{$r$}(sum_r2); %node[below]{reference} 
     \draw[-latex] (sum_r2) --  node[above]{$e$}  (C); % node[above]{\parbox{12mm}{\centering tracking error}}
-    \draw[-latex] (C) --       node[above,at start, xshift=3mm]{$u$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
+    \draw[-latex] (C) --       node[above]{$u$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
     \draw[-latex] (G0) --      node[above,at end, xshift=-3mm]{$y$} ([xshift=12mm] G0.east); % node[above]{output}                                  
 
     %--- Feedback: y branches back to sum_r2 bottom ---
@@ -1451,11 +1451,20 @@ The effect of modal frequencies on the performance of the seismic table is uncle
 \subsubsection{Optimal Control}  \label{sec_Optimal_Control}
 
 \paragraph{ State Space Model} \label{section_ss_model}
-For the 2-DoF system coupled to the seismic table, the following state space model was derived, where:
+For the seismic table with a coupled 2-DoF system, the following state space model was derived, where:
+\begin{align}
+\dot{x}(t)  &=  A \cdot x(t) &+ B \cdot u(t) \\
+y(t) &= C\cdot x(t) &+ D\cdot u(t)
+\end{align}
+
+With $x(t)$ being the state vector:
+\begin{equation}
+x = [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T}
+\end{equation}
+
+And the control action $u(t)$, which is the signal to the servo-valve $i_{sv}$, the state equations are:
 
 \begin{align}
-    \dot{x}(t) \enspace &=  \quad A \cdot x(t) \ + \ B \cdot u(t) \ \Longleftrightarrow \nonumber \\
-    \Longleftrightarrow 
     \begin{bmatrix} 
         \dot{Q}_{sv} \\[6pt]
         \dot{F}_p \\[6pt]
@@ -1499,22 +1508,20 @@ For the 2-DoF system coupled to the seismic table, the following state space mod
     \cdot i_{sv}
 \end{align}
 
-\vspace{2mm}
-
-Where the desired output is $x_T$, and there is no feedthrough: 
-$$ C = \begin{bmatrix}
-0 & 0 & 1 & 0 & 0 & 0 & 0 & 0
-\end{bmatrix}
-\quad \quad D = 0$$
+With the system output being the platen position $x_T$, and without input feedthrough:
 \begin{equation}
-y(t) = C\cdot x(t) + D\cdot u(t) = x_T
+y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
 \end{equation}
 
+
 \paragraph{Controllability \& Observability}
-A system is said to be state controllable at t = t0 if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval If every state is controllable, then the system is said to be completely state controllable.
+\subparagraph{Controllability}
+A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
 
-The system is said to be completely observable if every state x(t0) can be determined from the observation of y(t) over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time.
+\subparagraph{Observability}
+A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.
 
+\subparagraph{Evaluating Controllability \& Observability in MATLAB}
 Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
 
 

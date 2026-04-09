@@ -122,7 +122,7 @@ AA = [-1/tau_sv, 0              , 0      , 0          , 0     , 0              ,
               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
               0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2];        
 BB = [k_svk_q/tau_sv ; zeros(7,1)];
-CC = [zeros(1,2), 1 , zeros(1,5)];  % measuring xT
+CC = [zeros(1,2), 1 , zeros(1,5)];  % output is xT
 DD = 0;
 
 end

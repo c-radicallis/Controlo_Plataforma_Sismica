@@ -76,6 +76,13 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2,AA , BB , CC , DD 
 [~,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
+% 
+% close all
+% OL = G_Fp_isv*G_xT_Fp;
+% OL_min = minreal(OL, 1e-1)
+% figure;bodeplot(OL,OL_min)
+% figure;pzmap(OL,OL_min)
+
 
 %% Finding Response Spectre of Table with tuned PID
 

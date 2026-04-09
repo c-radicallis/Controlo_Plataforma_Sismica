@@ -40,10 +40,6 @@ G_c = tf(k_p,1);% Controller
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
 [s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2);
 
-sys = ss(AA,BB,CC,DD)
-sys.InputName = {'i_sv'};   % plant input: control signal
-sys.OutputName = {'xT'};  % plant output
-
 %% 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\
 %load('mat and fig files\obsv_ctrb_vpa1e5.mat')
 
@@ -51,18 +47,25 @@ nx = size(AA,1);    % Number of states
 nu = size(BB,2);    % Number of control inputs (should be 1)
 ny = size(CC,1);    % Number of outputs
 
+sys = ss(AA,BB,CC,DD)
+sys.InputName = {'i_sv'};   % plant input: control signal
+sys.OutputName = {'xT'};  % plant output
+
 Q = 1e9*diag([zeros(1,nx),1]);%blkdiag(eye(nx), eye(ny));
 R = 1e-9*eye(nu);
 K = lqi(sys, Q, R)% Design the LQI controller for the original system
 
-G = eye(nx);         % Process noise matrix (assuming full-state noise)
-H = zeros(ny, nx);   % No direct noise feedthrough
+G = zeros(nx);         % Process noise matrix 
+H = zeros(ny, nx);   % Noise feedthrough
+% x = A*x + B*u + G*w
+% y = C*x + D*u + H*w + v
 sys_aug = ss(AA,[BB G], CC,[DD H]); % Create the augmented system
+
 Qn = eye(nx);% Define noise covariance data
 Rn = eye(ny);% Here Qn should be for process noise (nx-by-nx) and Rn for measurement noise (ny-by-ny)
 kest = kalman(sys_aug, Qn, Rn)% Construct the Kalman estimator using the augmented system
 
-trksys = lqgtrack(kest, K);% Build the LQG Tracking Controller- Combine the estimator and state-feedback gain into the tracking controller
+trksys = lqgtrack(kest, K)% Build the LQG Tracking Controller- Combine the estimator and state-feedback gain into the tracking controller
 trksys.InputName = {'x_ref', 'xT'};
 trksys.OutputName = {'i_sv'};
 

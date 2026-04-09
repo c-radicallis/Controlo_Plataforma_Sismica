@@ -1,4 +1,4 @@
-\documentclass[draft , 10pt]{extarticle} %
+\documentclass[ 10pt]{extarticle} %draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -392,8 +392,8 @@ For a signal discretized with sampling time $T_s$:
             \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
             % \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
 
-            \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G); % x
-            \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y$} ([xshift=15mm] G.east); % y
+            \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=3mm]{$x$} (G); % x
+            \draw[-latex] (G) -- node[above,at end, xshift=-3mm]{$y$} ([xshift=15mm] G.east); % y
 
             % \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
             % \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east); %w
@@ -486,19 +486,16 @@ In the case of two systems which generate an output from a common input signal, 
 
 \subsection{Control Systems}
 
-There are two generic configurations for control systems: open-loop control and closed-loop control, shown in Figure  Every control system is a variation of one of these two configurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specified reference, or desired output, r(t). % (remember Section 3.1).
-In a perfectly controlled system, y(t) = r(t). The output of the controller is the system's input in the strict sense (the input must be a manipulated variable).
-
+There are two generic configurations for control systems: open-loop control (figure \ref{tikz_Control_Systems_open_loop}) and closed-loop control (figure \ref{tikz_Control_Systems_closed_loop}).
 \begin{figure}[H]
     \centering
 \begin{minipage}{0.4\textwidth}
     \begin{tikzpicture}
-    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              , label=below:{ Open-loop Controller}] at (0,0) (C) {$C(z)$};
-    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=8mm of C , label=below:{System to control}    ] (G0)    {$G(z)$};
-
-    \draw[-latex] (-1.5, 0) -- node[above]{$r$} node[below]{reference}     (C);
-    \draw[-latex] (C) -- node[above]{$u$}       node[below]{control action}(G0);
-    \draw[-latex] (G0) -- node[above]{$y$}      node[below]{output}        ([xshift=12mm] G0.east);
+    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              ] at (0,0) (C) {$C(z)$}; % , label=below:{ Open-loop Controller}
+    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=10mm of C ] (G0)    {$G(z)$};      % , label=below:{System to control}    
+    \draw[-latex] (-1.5, 0) -- node[above,at start, xshift=3mm]{$r$} (C);                    % node[below]{reference}     
+    \draw[-latex] (C) -- node[above]{$u$}       (G0);                   % node[below]{control action}
+    \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);% node[below]{output}        
 
     \end{tikzpicture}\vspace{-2mm} 
     \caption{Control in open-loop}\label{tikz_Control_Systems_open_loop} 
@@ -511,21 +508,19 @@ In a perfectly controlled system, y(t) = r(t). The output of the controller is t
     \node[left=-1pt] at (sum_r2.center){\small $+$};
     \node[below=-1pt] at (sum_r2.center){\small $-$};
 
-    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 , label=above:{\parbox{17mm}{\centering closed-loop controller}}] (C) {$C(z)$};
-    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of C        , label=above:{\parbox{15mm}{\centering system to control}}   ] (G0)    {$G(z)$};
+    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=10mm of sum_r2] (C) {$C(z)$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
+    \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C       ] (G0){$G(z)$};% , label=above:{\parbox{15mm}{\centering system to control}}     
 
     %--- Input r2 ---
-    \draw[-latex] (-1.5, 0) -- node[above]{$r$}node[below]{reference} (sum_r2);
-
-    %--- sum_r2 -> C -> G0 ---
-    \draw[-latex] (sum_r2) -- node[below]{$e$} node[above]{\parbox{12mm}{\centering tracking error}} (C);
-    \draw[-latex] (C) --      node[below]{$u$} node[above]{\parbox{12mm}{\centering control action}}(G0);
-    \draw[-latex] (G0) --     node[below]{$y$} node[above]{output}        ([xshift=12mm] G0.east);
+    \draw[-latex] (-1, 0) -- node[above,at start, xshift=3mm]{$r$}(sum_r2); %node[below]{reference} 
+    \draw[-latex] (sum_r2) --  node[above]{$e$}  (C); % node[above]{\parbox{12mm}{\centering tracking error}}
+    \draw[-latex] (C) --       node[above,at start, xshift=3mm]{$u$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
+    \draw[-latex] (G0) --      node[above,at end, xshift=-3mm]{$y$} ([xshift=12mm] G0.east); % node[above]{output}                                  
 
     %--- Feedback: y branches back to sum_r2 bottom ---
     \coordinate (ybranch) at ([xshift=5mm] G0.east);
-    \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-    \draw[-latex] (0, -1.2) -- (sum_r2.south);
+    \draw (ybranch) --+(0, -1) -- (0, -1);
+    \draw[-latex] (0, -1) -- (sum_r2.south);
 
     \end{tikzpicture}
 \caption{Control in closed-loop}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
@@ -533,13 +528,15 @@ In a perfectly controlled system, y(t) = r(t). The output of the controller is t
 \end{minipage}
 \end{figure}
 
+Every control system is a variation of one of these two configurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specified reference, or desired output, r(t). % (remember Section 3.1).
+In a perfectly controlled system, y(t) = r(t). The output of the controller is the system's input in the strict sense (the input must be a manipulated variable).
+
+
+\subsubsection{Open Loop Control}
 In open-loop control the controller receives the reference that the system should follow, and decides from this desired output what control action to take. This control action will be the input of the system. It is not checked whether the system's output does follow the reference. So, if there is some unexpected deviation from the reference, this does not change the control action. Open-loop control only uses blocks in series. In open-loop control,
 $y(s) = G(s)u(s) = G(s)C(s)r(s)$% (9.46)
 and since we want y(s) = r(s) then we should have $C(s) = G^{-1}(s)$, i.e. the controller should be an inverse model of the system to control. Notice that if the model of the system is proper then the controller is not proper; you will learn why this brings problems in Chapter 11.
 
-Closed-loop control uses negative feedback. The reference is compared with the system output. Ideally, the error should be zero. What the controller receives is this error, so the control action is based on the error. The simplest closed-loop controller is proportional: C(s) = K. With Proportional control, if the error is small, the control action is small too; if the error is large, the control action is also large. There are techniques to choose an appropriate value of K, and also to develop more complex controllers, with poles and zeros, which will be addressed in %Part 4
-
-\subsubsection{Open Loop Control}
 Open loop control:
 \begin{itemize}
     \item is conceptually simpler than closed loop control;
@@ -563,9 +560,12 @@ Open-loop control does not work that well in practice. If the model of the plant
 
 
 \subsubsection{Closed Loop Control}
+Closed-loop control uses negative feedback. The reference is compared with the system output. Ideally, the error should be zero. What the controller receives is this error, so the control action is based on the error. The simplest closed-loop controller is proportional: C(s) = K. With Proportional control, if the error is small, the control action is small too; if the error is large, the control action is also large. There are techniques to choose an appropriate value of K, and also to develop more complex controllers, with poles and zeros, which will be addressed in %Part 4
+
 Thanks to output feedback, closed loop control can mitigate the effects of noise and wrong models. 
 A closed loop can also stabilise unstable plants. However, badly designed closed loop control can also make stable plants unstable.
 
+\subsubsection{Combined Open- and Closed-Loop Control}
 It is possible to combine open-loop and closed-loop control in a single control system.
 
 \paragraph{ Proportional-integral-derivative Controllers}
@@ -1511,7 +1511,11 @@ y(t) = C\cdot x(t) + D\cdot u(t) = x_T
 \end{equation}
 
 \paragraph{Controllability \& Observability}
-Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
+A system is said to be state controllable at t = t0 if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval If every state is controllable, then the system is said to be completely state controllable.
+
+The system is said to be completely observable if every state x(t0) can be determined from the observation of y(t) over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time.
+
+Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
 
 
 \paragraph{LQR Servo Controller}

@@ -575,10 +575,12 @@ which is the sum of three control actions:
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
 
-\paragraph{Full State Feedback Control}
+\subsubsection{State Feedback Control}
+\paragraph{Optimal Control}
 
 
-\subparagraph{State Observers}
+\paragraph{State Observers}
+\subparagraph{Kalman Filter}
 
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
@@ -1647,16 +1649,21 @@ The state weight matrix $Q$ had every element set to zero, except the entry corr
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
-A controller using a Kalman filter (\emph{kest} in figure \ref{fig_LQG_loop}) to reconstruct the states was also implemented, with process and sensor noise covariance matrices, $Q_n$ and $R_n$, set as identity matrices.
+Given how state feedback controllers requires some knowledge of the system states, either by measurement or estimation, to compute the control action, and that on the shaking platform the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_loop}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
 
-The Kalman estimator and the optimal state feedback control law which minimizes the cost function (equation \eqref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqgtrack} function.
+The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}.
+
+
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
+
+    \includegraphics[width=\linewidth]{LQG/lqgtrack1.png}
+    \caption{LQG loop} \label{fig_LQG_loop}
+
     \includegraphics[width=\linewidth]{LQG/LQG_loop.png}
-    \caption{LQG loop}
-    \label{fig_LQG_loop}
+    \caption{Controller Block Diagram} \label{fig_LQG_inside_controller}
     \end{minipage}
 \end{figure}
 

@@ -489,11 +489,11 @@ In the case of two systems which generate an output from a common input signal, 
 There are two generic configurations for control systems: open-loop control (figure \ref{tikz_Control_Systems_open_loop}) and closed-loop control (figure \ref{tikz_Control_Systems_closed_loop}).
 \begin{figure}[H]
     \centering
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.49\textwidth}
     \begin{tikzpicture}
     \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              ] at (0,0) (C) {$C(z)$}; % , label=below:{ Open-loop Controller}
     \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=10mm of C ] (G0)    {$G(z)$};      % , label=below:{System to control}    
-    \draw[-latex] (-1.5, 0) -- node[above,at start, xshift=3mm]{$r$} (C);                    % node[below]{reference}     
+    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r$} (C);                    % node[below]{reference}     
     \draw[-latex] (C) -- node[above]{$u$}       (G0);                   % node[below]{control action}
     \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);% node[below]{output}        
 
@@ -501,18 +501,18 @@ There are two generic configurations for control systems: open-loop control (fig
     \caption{Control in open-loop}\label{tikz_Control_Systems_open_loop} 
 \end{minipage}
 \hfill
-\begin{minipage}{0.59\textwidth}
+\begin{minipage}{0.49\textwidth}
     \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=7mm, inner sep=0pt}, thick ]
     % sum_r2
     \node[circ]  (sum_r2) at (0,   0) {};
     \node[left=-1pt] at (sum_r2.center){\small $+$};
     \node[below=-1pt] at (sum_r2.center){\small $-$};
 
-    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=10mm of sum_r2] (C) {$C(z)$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
+    \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=8mm, right=8mm of sum_r2] (C) {$C(z)$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
     \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C       ] (G0){$G(z)$};% , label=above:{\parbox{15mm}{\centering system to control}}     
 
     %--- Input r2 ---
-    \draw[-latex] (-1, 0) -- node[above,at start, xshift=3mm]{$r$}(sum_r2); %node[below]{reference} 
+    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r$}(sum_r2); %node[below]{reference} 
     \draw[-latex] (sum_r2) --  node[above]{$e$}  (C); % node[above]{\parbox{12mm}{\centering tracking error}}
     \draw[-latex] (C) --       node[above]{$u$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
     \draw[-latex] (G0) --      node[above,at end, xshift=-3mm]{$y$} ([xshift=12mm] G0.east); % node[above]{output}                                  
@@ -528,59 +528,181 @@ There are two generic configurations for control systems: open-loop control (fig
 \end{minipage}
 \end{figure}
 
-Every control system is a variation of one of these two configurations, or a combination thereof. Both add, to the system we want to control, another system called controller, intended to make the controlled system's output y(t) follow some specified reference, or desired output, r(t). % (remember Section 3.1).
-In a perfectly controlled system, y(t) = r(t). The output of the controller is the system's input in the strict sense (the input must be a manipulated variable).
+Every control system is a variation and/or a combination of these two configurations. Both add, to the system we want to control, another system called controller which outputs a control action $u(t)$, which is the controlled system's input intended to make the controlled system's output $y(t)$ follow some specified reference $r(t)$ (which is just the desired output).  In a perfectly controlled system the output will match the reference, $y(t) = r(t)$. 
 
+\subsubsection{Open-Loop Control}
+In open-loop control the controller receives the reference that the system should follow and computes a control action.  It is not checked whether the system's output then follows the reference, and the control action is not modified to account for any deviations that occur.
 
-\subsubsection{Open Loop Control}
-In open-loop control the controller receives the reference that the system should follow, and decides from this desired output what control action to take. This control action will be the input of the system. It is not checked whether the system's output does follow the reference. So, if there is some unexpected deviation from the reference, this does not change the control action. Open-loop control only uses blocks in series. In open-loop control,
-$y(s) = G(s)u(s) = G(s)C(s)r(s)$% (9.46)
-and since we want y(s) = r(s) then we should have $C(s) = G^{-1}(s)$, i.e. the controller should be an inverse model of the system to control. Notice that if the model of the system is proper then the controller is not proper; you will learn why this brings problems in Chapter 11.
-
-Open loop control:
-\begin{itemize}
-    \item is conceptually simpler than closed loop control;
-    \item does not require a measurement of the output;
-    \item consequently, it can be implemented even when the output cannot be measured, or is difficult or expensive to measure: no sensor for the output variable is required to implement it;
-    \item can anticipate control actions if the reference is known in advance;
-    \item works well if two conditions are simultaneously met:
-    \begin{itemize}
-        \item we know a perfect model of the plant;
-        \item there are no unknown disturbances of either the control action or the output.
-    \end{itemize} 
-\end{itemize}
-
-Open-loop control does not work that well in practice. If the model of the plant is not perfect, o if there is noise, things do not work that well, and, most importantly, it is nigh to impossible to control unstable plants in open loop
-
-\paragraph{Design of Open Loop Controllers}
-
+For an open-loop control system we have the following equation:
 \begin{equation}
-    C(s) =  \frac{1}{G(s)}
+    y(t) = G(z) \, u(t) = G(z)C(z) \, r(t) 
 \end{equation}
 
+The main advantages of open-loop control are:
+\begin{itemize}
+    \item It is conceptually simpler than closed-loop control
+    \item It does not require real-time measurement of the output and consequently no sensor for the output variable is required to implement it
+    \item If the reference is known in advance, the control action can be computed a priori
+\end{itemize}  
 
-\subsubsection{Closed Loop Control}
-Closed-loop control uses negative feedback. The reference is compared with the system output. Ideally, the error should be zero. What the controller receives is this error, so the control action is based on the error. The simplest closed-loop controller is proportional: C(s) = K. With Proportional control, if the error is small, the control action is small too; if the error is large, the control action is also large. There are techniques to choose an appropriate value of K, and also to develop more complex controllers, with poles and zeros, which will be addressed in %Part 4
+Open-loop control works well if two conditions are simultaneously met: A perfect model of the plant exists and there are no unknown disturbances of either the control action or the output. In practice, open-loop control does not work well due to imperfect modelling of the plants, the existence of process and measurement disturbances, and the fact that it cannot control unstable plants.
 
-Thanks to output feedback, closed loop control can mitigate the effects of noise and wrong models. 
-A closed loop can also stabilise unstable plants. However, badly designed closed loop control can also make stable plants unstable.
+\paragraph{Design of Open-Loop Controllers}
 
-\subsubsection{Combined Open- and Closed-Loop Control}
+Since we want the output to match the reference:
+\begin{equation}
+    r(t) = y(t) = G(z)C(z) \, r(t) \Longrightarrow C(z) = \frac{1}{G(z)}
+\end{equation}  
+
+Thus, the controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller isn't, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealized controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
+
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
+    \caption{Open-Loop controller: Reference \& Output}
+    %\label{fig_Bode_of_G_xT_xref}    
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
+    \caption{Control action}
+    %\label{fig_Input_to_Servo}
+\end{minipage}
+\end{figure}
+
+\subsubsection{Closed-Loop Control}
+Closed-loop control uses feedback, meaning the output is being measured and compared with the reference. The difference between the reference and the measured output is the tracking error $e(t)$. In closed-loop control, the tracking error is the input to the controller:
+\begin{equation}
+    y(t)  = G(z) \, u(t)  = G(z) C(z) e(t)  = G(z) C(z) [r(t) - y(t)]
+\end{equation}
+
+The simplest form of closed-loop control is with a proportional controller, $C(z) = K$, meaning the control action is proportional to the tracking error:
+\begin{equation}
+    u(t)  = C(z)\, e(t) = K \, e(t) \quad, K \in \mathbb{R}
+\end{equation}
+
+Thanks to output feedback, closed-loop control can mitigate the effects of disturbances and imperfect models, since the control action is computed from the tracking error, and thus compensates for any deviations from the reference. 
+
+Closed-loop control can also be used to stabilise unstable plants, and the opposite is also true: Badly designed closed-loop control can destabilise stable plants.
+
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
+    \caption{Open-Loop controller: Reference \& Output}
+    %\label{fig_Bode_of_G_xT_xref}    
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
+    \caption{Control action}
+    %\label{fig_Input_to_Servo}
+\end{minipage}
+\end{figure}
+
+
+\paragraph{Combined Open- and Closed-Loop Control}
 It is possible to combine open-loop and closed-loop control in a single control system.
 
-\paragraph{ Proportional-integral-derivative Controllers}
-Proportional-integral-derivative controllers apply a control action
-which is the sum of three control actions:
+\begin{figure}[H]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
+
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
+
+        % another S0 
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=5mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
+
+
+        % sum_r1
+        \node[circ , right=8mm of C ]  (sum_r1) {$+$};
+
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=6mm of sum_r1 ] (G0)    {$G$};
+
+        % % sum_v
+        % \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+        % H0
+        % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+
+        %--- Input r2 ---
+        \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+
+        %--- sum_r2 -> C -> sum_r1 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+        \draw[-latex] (C) -- (sum_r1);
+
+        %--- r1 drops into sum_r1 from above ---
+        % \draw[-latex] ([yshift=10mm]sum_r1.north) -- (sum_r1);
+        \draw[-latex] (C_open) -- (C_open -| sum_r1) -- (sum_r1.north);
+
+        % r --> C_open
+        \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
+
+        %--- sum_r1 -> G0 ---
+        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+
+        % %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
+        %--- e -> H0 -> v -> sum_v ---
+        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);
+
+        %--- sum_v -> y output ---
+        % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] G0.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+
+    \end{tikzpicture}
+\caption{Combined Open- and Closed-Loop Control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+\label{tikz_Control_Systems_Combined_control} 
+\end{figure}
+
+
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
+    \caption{Open-Loop controller: Reference \& Output}
+    %\label{fig_Bode_of_G_xT_xref}    
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
+    \caption{Control action}
+    %\label{fig_Input_to_Servo}
+\end{minipage}
+\end{figure}
+
+
+\paragraph{PIDF Controller}
+Proportional-integral-derivative filtered controllers apply a control action which is the sum of three components: One proportional to the tracking error, another proportional to the integral of the error, and another proportional to a filtered derivative of the error. 
+
+A discrete PIDF controller can be formulated as in the following equation:
 \begin{equation}
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
+Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
 
-\subsubsection{State Feedback Control}
-\paragraph{Optimal Control}
+\paragraph{Full State Feedback Control}
+\subparagraph{Optimal Control}
 
 
-\paragraph{State Observers}
-\subparagraph{Kalman Filter}
+\subparagraph{State Observers}
+
 
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
@@ -862,7 +984,7 @@ It is then possible to estimate $G_0$, not from $u$ (which is corrupted), but fr
 \paragraph{The Method} 
 \subparagraph{Estimating the sensitivity function}
 
-\hspace{\parindent}If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable:
+If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable:
 \begin{equation}
     r(t) = r_1(t) + C(z) \cdot r_2(t)
 \end{equation} 

@@ -42,10 +42,11 @@
 \usepackage{titlesec}
 \setcounter{tocdepth}{6}
 \setcounter{secnumdepth}{6}
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\titleformat{\subparagraph}{\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{}
+\titlespacing*{\subparagraph}{0pt}{1ex}{0.5ex}
 \usepackage{indentfirst}
 
 \usepackage{tikz}
@@ -553,7 +554,7 @@ In the case of two systems which generate an output from a common input signal, 
 There are two generic configurations for control systems: open-loop control (figure \ref{tikz_Control_Systems_open_loop}) and closed-loop control (figure \ref{tikz_Control_Systems_closed_loop}).
 \begin{figure}[H]
     \centering
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.47\textwidth}
     \begin{tikzpicture}
     \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              ] at (0,0) (C) {$C(z)$}; % , label=below:{ Open-loop Controller}
     \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=10mm of C ] (G0)    {$G(z)$};      % , label=below:{System to control}    
@@ -565,7 +566,7 @@ There are two generic configurations for control systems: open-loop control (fig
     \caption{Control in open-loop}\label{tikz_Control_Systems_open_loop} 
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.51\textwidth}
     \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=7mm, inner sep=0pt}, thick ]
     % sum_r2
     \node[circ]  (sum_r2) at (0,   0) {};
@@ -593,6 +594,8 @@ There are two generic configurations for control systems: open-loop control (fig
 \end{figure}
 
 Every control system is a variation and/or a combination of these two configurations. Both add, to the system we want to control, another system called controller which outputs a control action $u(t)$, which is the controlled system's input intended to make the controlled system's output $y(t)$ follow some specified reference $r(t)$ (which is just the desired output).  In a perfectly controlled system the output will match the reference, $y(t) = r(t)$. 
+
+This section aims to give the reader an overview of the essential control configurations, their advantages and limitations, as well as controller structures and design methods. Open-loop and closed-loop architectures are addressed, with the latter including classical output feedback control with a PIDF, and then full state feedback with optimal control and the underlying concepts of controllability, observability, and state estimation. This segment is specially influenced by the work in \cite{DuarteValerio} and \cite{Botto}.
 
 \subsubsection{Open-Loop Control}
 In open-loop control the controller receives the reference that the system should follow and computes a control action.  It is not checked whether the system's output then follows the reference, and the control action is not modified to account for any deviations that occur.
@@ -759,20 +762,27 @@ A discrete PIDF controller can be formulated as in the following equation:
 \begin{equation}
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
+
 Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
 
 \paragraph{Full State Feedback Control}
+
+
+\subparagraph{Controllability}
+A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
+
 \subparagraph{Optimal Control}
 
+\subparagraph{Observability}
+A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.
 
 \subparagraph{State Observers}
-
 
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
 \hspace{\parindent}Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
 
-In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. This segment is specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
+In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. These segments are specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
 
 %\pagebreak
 \subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
@@ -1026,7 +1036,7 @@ But if the disturbance $v$ is very large compared to the reference signals $r_1$
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
 \paragraph{Remark on parametric modelling}
-As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, additional steps, solving 
+As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, more steps, solving additional equations, etc. All these conditions often make those approaches undesirable, however, the parametric identification method introduced in section \ref{Two-Stage Method} is able to address the closed-loop identification issues while being of simple implementation.
 
 \subsubsection{Two-Stage Method for Closed Loop Identification}\label{Two-Stage Method}
 \paragraph{Introduction}
@@ -1091,36 +1101,36 @@ For this section, consider the following:
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
 \end{itemize}  
 
-\paragraph{ C(z) = 5}
+%\paragraph[Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}]{Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}}
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.47\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise01.png}
-    \caption{$C(z)=5$ \& $e(t)=0.1$}
+    \caption{Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=0.1 \cdot e_0(t)$}
     \label{fig_two_stage/example/K5_noise01}    
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.52\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise1.png}
-    \caption{$C(z)=5$ \& $e(t)=0.1$}
+    \caption{Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=1 \cdot e_0(t)$}
     \label{fig_two_stage/example/K5_noise1}
 \end{minipage}
 \end{figure}
 
-\paragraph{ C(z) = 0.5(z-1 + 0.8 z-2)}
+%\paragraph[Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}]{Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}}
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise005.png}
-    \caption{$C(z)=0.5 \left(z^{-1} + 0.8 z^{-2}\right)$ \& $e(t)=0.05$}
+    \caption{Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.05 \cdot e_0(t)$}
     \label{fig_two_stage/example/noise005}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise08.png}
-    \caption{$C(z)=0.5 \left(z^{-1} + 0.8 z^{-2}\right)$ \& $e(t)=0.8$}
+    \caption{Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.8 \cdot e_0(t)$}
     \label{fig_two_stage/example/noise08}
 \end{minipage}
 \end{figure}
@@ -1433,6 +1443,8 @@ Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/
 \end{equation}
 Where the parameters $K_p, K_i, K_d$ and $T_f$ were obtained using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
 
+The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Response_Spectra.png}
@@ -1701,18 +1713,7 @@ With the system output being the platen position $x_T$, and without input feedth
 y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
 \end{equation}
 
-
-\paragraph{Controllability \& Observability}
-\subparagraph{Controllability}
-
-A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
-
-\subparagraph{Observability}
-
-A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.
-
-\subparagraph{Evaluating Controllability \& Observability in MATLAB}
-
+\paragraph{Evaluating Controllability \& Observability}
 Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
 
 
@@ -1726,6 +1727,8 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
 
 The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, because this increased the bandwidth, but, unlike the PIDF, did not result in amplification at low frequencies.(Figure \ref{fig_Bode_LQI_Qe9} to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
 
+The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
+
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
@@ -1735,7 +1738,7 @@ The state weight matrix $Q$ had every element set to zero, except the entry corr
     \label{fig_LQI_loop}
 
     \begin{equation}
-     J(u) = \int ^{\infty}_0 (x^{T}(t)Qx(t) + u^{T}(t)Ru(t)) dt 
+     J(u) = \int ^{\infty}_0 (x^{T}(t) Q\,x(t) + u^{T}(t) R\, u(t))\, dt 
      \label{eq_LQI_cost_function}
     \end{equation} 
     \end{minipage}
@@ -1840,21 +1843,23 @@ The state weight matrix $Q$ had every element set to zero, except the entry corr
 \begin{minipage}{0.49\textwidth}
 Given how state feedback controllers requires some knowledge of the system states, either by measurement or estimation, to compute the control action, and that on the shaking platform the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_loop}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
 
-The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}.
-
-
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
 
-    \includegraphics[width=\linewidth]{LQG/lqgtrack1.png}
+    \includegraphics[width=0.95\linewidth]{LQG/lqgtrack1.png}
     \caption{LQG loop} \label{fig_LQG_loop}
 
     \includegraphics[width=\linewidth]{LQG/LQG_loop.png}
     \caption{Controller Block Diagram} \label{fig_LQG_inside_controller}
     \end{minipage}
 \end{figure}
+
+The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}.
+
+The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQG_servo.m}{location}.
+
 
 \begin{figure}[H]
     \centering
@@ -1977,7 +1982,7 @@ The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedo
 
 \paragraph{Simulating the driver adaptation process}
 
-For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}).
+For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
 \begin{figure}[H]
 \begin{minipage}{0.55\textwidth}
@@ -2145,6 +2150,8 @@ In order to tune the controller to the system parameters, it is necessary to ide
 
 
 \subsubsection{Applying Two-Stage Identification Method}
+
+The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/minimesa_data/blob/main/}{location}.
 
 \begin{figure}[H]
     \centering

@@ -1,4 +1,4 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -17,6 +17,10 @@ A.~A. Bahraq, M.~Al-Osta, M.~I. Khan, and S.~Ahmad.
 \newblock \emph{Structures}, 32:\penalty0 1986--2003, 2021.
 \newblock \doi{10.1016/J.ISTRUC.2021.04.004}.
 
+\bibitem[Botto(2021)]{Botto}
+M.~A. Botto.
+\newblock Optimal control, 2021.
+
 \bibitem[Bousias(2017)]{Bousias2017Experimental}
 S.~Bousias.
 \newblock \emph{Lecture Notes in Civil Engineering Dynamic Response of Infrastructure to Environmentally Induced Loads}, chapter Experimental Methods and Activities in Support of Earthquake Engineering, pages 139--157.
@@ -28,10 +32,6 @@ Cmglee.
 \newblock Comparison of convolution, cross-correlation and autocorrelation, 2012.
 \newblock URL \url{https://commons.wikimedia.org/wiki/File:Comparison_convolution_correlation.svg}.
 \newblock Licensed under Creative Commons Attribution-ShareAlike 3.0 (CC BY-SA 3.0); modified from original.
-
-\bibitem[da~Costa(2012/2013)]{Sa_da_Costa}
-J.~S. da~Costa.
-\newblock Optimal control, 2012/2013.
 
 \bibitem[de~Felice et~al.(2016)de~Felice, Santis, Lourenço, and Mendes]{DeFelice2016Methods}
 G.~de~Felice, S.~D. Santis, P.~Lourenço, and N.~Mendes.
@@ -109,6 +109,10 @@ T.~S{\"o}derstr{\"o}m and P.~Stoica.
 \newblock Prentice Hall International Series in Systems and Control Engineering. Prentice Hall International, Hemel Hempstead, UK, 1989.
 \newblock ISBN 0-12-881236-5.
 
+\bibitem[{Sá da Costa}(2012)]{Sa_da_Costa}
+J.~{Sá da Costa}.
+\newblock Optimal control, 2012.
+
 \bibitem[Tekeste(2021)]{tekeste2021}
 G.~G. Tekeste.
 \newblock \emph{Real-time hybrid simulation including a shaking table: development and application to soil-structure interaction}.
@@ -119,6 +123,11 @@ G.~Tsinidis, F.~D. Silva, I.~Anastasopoulos, E.~Bilotta, A.~Bobet, Y.~Hashash, C
 \newblock Seismic behaviour of tunnels: From experiments to analysis.
 \newblock \emph{Tunnelling and Underground Space Technology}, 2020.
 \newblock \doi{10.1016/j.tust.2020.103334}.
+
+\bibitem[Valério(2025)]{DuarteValerio}
+D.~Valério.
+\newblock Lecture notes of signals, systems and control, November 2025.
+\newblock URL \url{https://fenix.tecnico.ulisboa.pt/downloadFile/2252418289018459/Signals_systems_and_control.pdf}.
 
 \bibitem[Van~den Hof(2020)]{VanDenHof2020}
 P.~M.~J. Van~den Hof.

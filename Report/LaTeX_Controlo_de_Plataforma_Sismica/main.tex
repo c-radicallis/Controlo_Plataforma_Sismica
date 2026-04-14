@@ -211,6 +211,70 @@ However, it is not always possible to achieve satisfactory performance with the 
 In addition, the system faces physical limitations inherent to the equipment, namely with regard to the finite field of displacement, velocity and acceleration, which must be duly considered during the tests.
 
 \begin{figure}[H]
+    \centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+        % sum_r2
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1pt] at (sum_r2.center){\small $+$};
+        \node[below=-1pt] at (sum_r2.center){\small $-$};
+
+        % C
+        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
+
+        % another S0 
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=5mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
+
+
+        % sum_r1
+        \node[circ , right=8mm of C ]  (sum_r1) {$+$};
+
+        % G0
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=6mm of sum_r1 ] (G0)    {$G$};
+
+        % % sum_v
+        % \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+
+        % H0
+        % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+
+        %--- Input r2 ---
+        \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+
+        %--- sum_r2 -> C -> sum_r1 ---
+        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+        \draw[-latex] (C) -- (sum_r1);
+
+        %--- r1 drops into sum_r1 from above ---
+        % \draw[-latex] ([yshift=10mm]sum_r1.north) -- (sum_r1);
+        \draw[-latex] (C_open) -- (C_open -| sum_r1) -- (sum_r1.north);
+
+        % r --> C_open
+        \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
+
+        %--- sum_r1 -> G0 ---
+        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+
+        % %--- G0 -> sum_v ---
+        \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
+        %--- e -> H0 -> v -> sum_v ---
+        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);S
+
+        %--- sum_v -> y output ---
+        % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] G0.east);
+        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+
+    \end{tikzpicture}
+\caption{LNEC Seismic table offline drive generation and closed-loop control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+\label{tikz_LNEC_control} 
+\end{figure}
+
+
+\begin{figure}[H]
 \begin{minipage}{0.6\textwidth}
 \setlength{\parindent}{2pt}
 %\vspace{-10mm}
@@ -1577,8 +1641,8 @@ The effect of modal frequencies on the performance of the seismic table is uncle
 \paragraph{ State Space Model} \label{section_ss_model}
 For the seismic table with a coupled 2-DoF system, the following state space model was derived, where:
 \begin{align}
-\dot{x}(t)  &=  A \cdot x(t) &+ B \cdot u(t) \\
-y(t) &= C\cdot x(t) &+ D\cdot u(t)
+\dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
+y(t) &= C\cdot x(t) + D\cdot u(t)
 \end{align}
 
 With $x(t)$ being the state vector:
@@ -1640,12 +1704,15 @@ y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 
 
 \paragraph{Controllability \& Observability}
 \subparagraph{Controllability}
+
 A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
 
 \subparagraph{Observability}
+
 A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.
 
 \subparagraph{Evaluating Controllability \& Observability in MATLAB}
+
 Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
 
 

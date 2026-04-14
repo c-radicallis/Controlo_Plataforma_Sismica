@@ -57,17 +57,25 @@ function [s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xre
 c1 = zeta1*2*m1*2*pi*f1; %N/m/s
 c2 = zeta2*2*m2*2*pi*f2; %N/m/s
 
-syms k1 k2
-assume(k1 ,"positive")
-assume(k2 ,"positive")
+if m1 == 0
+    k1=0;k2=k1;
+    c1=0;c2=c1;
+    m1=eps;m2=m1; 
 
-Y = vpasolve([
-    (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  ,
-    (m1*k2 + m2*(k1+k2))/(2*m1*m2)+ 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f2)^2,
-], [k1,k2]);
-
-k1 = double(Y.k1);
-k2 = double(Y.k2);
+elseif m2==0
+    k2=0; c2=0; m2=eps; 
+    k1=m1*(2*pi*f1)^2;
+else % m1 & m2 != 0
+    syms k1 k2
+    assume(k1 ,"positive")
+    assume(k2 ,"positive")
+    Y = vpasolve([
+        (m1*k2 + m2*(k1+k2))/(2*m1*m2) - 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f1)^2  ,
+        (m1*k2 + m2*(k1+k2))/(2*m1*m2)+ 0.5*sqrt( ((m1*k2+m2*(k1+k2))/(m1*m2))^2 - 4*( k1*k2 )/(m1*m2) ) == (2*pi*f2)^2,
+    ], [k1,k2]);
+    k1 = double(Y.k1)
+    k2 = double(Y.k2)
+end
 
 %Servo-valve parameters
 % All converted to SI units
@@ -120,9 +128,10 @@ AA = [-1/tau_sv, 0              , 0      , 0          , 0     , 0              ,
               0 ,              0 , 0      , 0          , 0     , 0              , 0         , 1     ;
               0 ,           1/mT , -k1/mT , k1/mT      ,  0    , (-cT - c1) /mT ,  c1 /mT   , 0     ;
               0 ,            0   , k1/m1  ,(-k1-k2)/m1 , k2/m1 , c1/m1          ,(-c1-c2)/m1, c2/m1 ;
-              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2];        
+              0 ,            0   , 0      , k2/m2      , -k2/m2, 0              , c2/m2     , -c2/m2]      
 BB = [k_svk_q/tau_sv ; zeros(7,1)];
 CC = [zeros(1,2), 1 , zeros(1,5)];  % output is xT
 DD = 0;
+
 
 end

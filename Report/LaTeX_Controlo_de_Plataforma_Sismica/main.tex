@@ -1,4 +1,4 @@
-\documentclass[ 10pt]{extarticle} %draft ,
+\documentclass[ draft ,10pt]{extarticle} %
 % LTeX: enabled=false
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -48,6 +48,8 @@
 \titleformat{\subparagraph}{\normalfont\normalsize\bfseries}{\thesubparagraph}{1em}{}
 \titlespacing*{\subparagraph}{0pt}{1ex}{0.5ex}
 \usepackage{indentfirst}
+
+\usepackage{wrapfig}
 
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
@@ -767,11 +769,131 @@ Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$
 
 \paragraph{Full State Feedback Control}
 
+\begin{figure}[H]
+\begin{minipage}{0.7\textwidth}
+In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}, which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
+\begin{equation}
+    F(t) = k _1\cdot ( x_{ref}(t) - x(t))
+\end{equation}
+
+Where the transfer function relating output to the reference:
+\begin{equation}
+    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_1}
+\end{equation}
+
+From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$), the system will always oscillate, and it is not possible to stabilise the system using just output feedback control.
+
+\end{minipage}
+\hfill
+\begin{minipage}{0.26\textwidth}
+    \centering
+    \begin{tikzpicture}[
+        every node/.style={outer sep=0pt}, thick, % Set default node style and line thickness
+        mass/.style={draw, thick}, % Define style for masses (rectangles)
+        ground/.style={fill, pattern=north east lines, draw=none}] % Define style for ground
+
+        \node[mass, minimum width=20mm, minimum height=20mm , fill=SkyBlue] (mT) {$M$}; % First mass 
+        \draw[latex-] (mT.west) -- ++ (-10mm,0) node[midway, above]{$F(t)$}; % Force applied to mT
+        \node[ground, minimum width=40mm, minimum height=5mm , below=0mm of mT ] (ground) {}; 
+        \draw (ground.north west) -- (ground.north east); 
+
+        %\draw[thin, dashed] (mT.south) -- (mT.south |- disp_line); % Align displacement lines
+        \draw[latex-] ([yshift=2.5mm] mT.east |- mT.north) -- ++ (-1,0) node[above,midway]{$x(t)$} node[left, minimum height=5mm, minimum width=1mm ] (g'T){};
+        \draw[thick] (g'T.north east) -- (g'T.south east); 
+    \end{tikzpicture}
+    \caption{Mass with a force acting on it. The force is the manipulated input, and the mass position is the output.} \label{tikz_StateFeedbackControl_intro}
+\end{minipage}
+\end{figure}
+
+If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action, we have the following control law:
+\begin{equation}
+    F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
+\end{equation}
+
+And the closed-loop transfer function:
+\begin{equation}
+    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_2 s + k_1}
+\end{equation}
+
+
+From which we can now see that the gains $k_1$ and $k_2$ may be chosen freely to place the closed-loop poles, $p_1$ and $p_2$, anywhere in the s-plane:
+\begin{equation}
+    s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+\end{equation}
+
+% \begin{align}
+%     & s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow \\
+%     & \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+% \end{align}
+
+\begin{figure}[H]
+    \centering
+    % \begin{minipage}{0.33\textwidth}
+
+    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+
+    \node[circ]  (sum_r2) at (0,   0) {};
+    \node[left=-1mm] at (sum_r2.center){\small $+$};
+    \node[below=-1mm] at (sum_r2.center){\small $-$};
+
+    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=5mm of sum_r2] (k) {$k_1$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
+    \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=7mm of k      ] (M){$M$};% , label=above:{\parbox{15mm}{\centering system to control}}     
+
+    \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum_r2); %node[below]{reference} 
+    \draw[-latex] (sum_r2) --  (k); % node[above]{\parbox{12mm}{\centering tracking error}}
+    \draw[-latex] (k) --       node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
+    \draw[-latex] (M) --      node[above,at end, xshift=-3mm]{$x$} ([xshift=10mm] M.east); % node[above]{output}                                  
+
+    %--- Feedback: y branches back to sum_r2 bottom ---
+    \coordinate (ybranch) at ([xshift=5mm] M.east);
+    \draw (ybranch) --+(0, -1) -- (0, -1);
+    \draw[-latex] (0, -1) -- (sum_r2.south);
+
+    \end{tikzpicture}
+    \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with output feedback} \label{tikz_StateFeedbackControl_intro_outputControl} 
+
+    % \end{minipage}
+
+
+    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+
+    \node[circ]  (sum1) at (0,   0) {};
+    \node[left=-1mm] at (sum1.center){\small $+$};
+    \node[below=-1mm] at (sum1.center){\small $-$};
+        \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum1); %node[below]{reference} 
+
+    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=5mm of sum1] (k1) {$k_1$};
+        \draw[-latex] (sum1) --  (k1); % node[above]{\parbox{12mm}{\centering tracking error}}
+
+    \node[circ , right=5mm of k1]  (sum2) {};
+    \node[left=-1mm] at (sum2.center){\small $+$};
+    \node[below=-1mm] at (sum2.center){\small $-$};
+            \draw[-latex] (k1) --  (sum2); % node[above]{\parbox{12mm}{\centering tracking error}}
+
+    \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=15mm of sum2 ] (M){$M$};
+
+    \draw[-latex] (sum2) --   node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
+    \draw[-latex] (M) --      node[above,midway]{$x$} ([xshift=10mm] M.east); % node[above]{output}                                  
+
+    %--- Feedback: y branches back to sum_r2 bottom ---
+    \coordinate (ybranch) at ([xshift=5mm] M.east);
+    \draw (ybranch) --+(0, -1.6) -- (0, -1.6);
+    \draw[-latex] (0, -1.6) -- (sum_r2.south);
+
+    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, below=2mm of M , xshift=-12mm ] (k2) {$k_2$};
+        \draw[-latex] (M.south) -- node[right]{$\dot{x}$}(M.south |- k2) -- (k2.east)  ; 
+        \draw[-latex] (k2.west) -- (k2 -| sum2.south) -- (sum2.south);
+
+    \end{tikzpicture}
+    \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with state feedback, where the states are mass position and velocity} \label{tikz_StateFeedbackControl_intro_stateControl} 
+\end{figure}
+
+\subparagraph{Optimal Control}
+
 
 \subparagraph{Controllability}
 A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
 
-\subparagraph{Optimal Control}
 
 \subparagraph{Observability}
 A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.

@@ -49,8 +49,6 @@
 \titlespacing*{\subparagraph}{0pt}{1ex}{0.5ex}
 \usepackage{indentfirst}
 
-\usepackage{wrapfig}
-
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
 %% ----- FONT SELECTION -----
@@ -213,68 +211,68 @@ However, it is not always possible to achieve satisfactory performance with the 
 
 In addition, the system faces physical limitations inherent to the equipment, namely with regard to the finite field of displacement, velocity and acceleration, which must be duly considered during the tests.
 
-\begin{figure}[H]
-    \centering
-        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
-        % sum_r2
-        \node[circ]  (sum_r2) at (0,   0) {};
-        \node[left=-1pt] at (sum_r2.center){\small $+$};
-        \node[below=-1pt] at (sum_r2.center){\small $-$};
+% \begin{figure}[H]
+%     \centering
+%         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
+%         % sum_r2
+%         \node[circ]  (sum_r2) at (0,   0) {};
+%         \node[left=-1pt] at (sum_r2.center){\small $+$};
+%         \node[below=-1pt] at (sum_r2.center){\small $-$};
 
-        % C
-        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
+%         % C
+%         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
 
-        % another S0 
-        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=5mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
+%         % another S0 
+%         \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=5mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
 
 
-        % sum_r1
-        \node[circ , right=8mm of C ]  (sum_r1) {$+$};
+%         % sum_r1
+%         \node[circ , right=8mm of C ]  (sum_r1) {$+$};
 
-        % G0
-        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=6mm of sum_r1 ] (G0)    {$G$};
+%         % G0
+%         \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=6mm of sum_r1 ] (G0)    {$G$};
 
-        % % sum_v
-        % \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
+%         % % sum_v
+%         % \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
 
-        % H0
-        % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
+%         % H0
+%         % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
-        %--- Input r2 ---
-        \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+%         %--- Input r2 ---
+%         \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
 
-        %--- sum_r2 -> C -> sum_r1 ---
-        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
-        \draw[-latex] (C) -- (sum_r1);
+%         %--- sum_r2 -> C -> sum_r1 ---
+%         \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+%         \draw[-latex] (C) -- (sum_r1);
 
-        %--- r1 drops into sum_r1 from above ---
-        % \draw[-latex] ([yshift=10mm]sum_r1.north) -- (sum_r1);
-        \draw[-latex] (C_open) -- (C_open -| sum_r1) -- (sum_r1.north);
+%         %--- r1 drops into sum_r1 from above ---
+%         % \draw[-latex] ([yshift=10mm]sum_r1.north) -- (sum_r1);
+%         \draw[-latex] (C_open) -- (C_open -| sum_r1) -- (sum_r1.north);
 
-        % r --> C_open
-        \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
+%         % r --> C_open
+%         \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
 
-        %--- sum_r1 -> G0 ---
-        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+%         %--- sum_r1 -> G0 ---
+%         \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
 
-        % %--- G0 -> sum_v ---
-        \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
-        %--- e -> H0 -> v -> sum_v ---
-        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
-        % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);S
+%         % %--- G0 -> sum_v ---
+%         \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
+%         %--- e -> H0 -> v -> sum_v ---
+%         % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+%         % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);S
 
-        %--- sum_v -> y output ---
-        % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+%         %--- sum_v -> y output ---
+%         % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
 
-        %--- Feedback: y branches back to sum_r2 bottom ---
-        \coordinate (ybranch) at ([xshift=5mm] G0.east);
-        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+%         %--- Feedback: y branches back to sum_r2 bottom ---
+%         \coordinate (ybranch) at ([xshift=5mm] G0.east);
+%         \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
+%         \draw[-latex] (0, -1.2) -- (sum_r2.south);
 
-    \end{tikzpicture}
-\caption{LNEC Seismic table offline drive generation and closed-loop control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-\label{tikz_LNEC_control} 
-\end{figure}
+%     \end{tikzpicture}
+% \caption{LNEC Seismic table offline drive generation and closed-loop control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+% \label{tikz_LNEC_control} 
+% \end{figure}
 
 
 \begin{figure}[H]
@@ -604,7 +602,7 @@ In open-loop control the controller receives the reference that the system shoul
 
 For an open-loop control system we have the following equation:
 \begin{equation}
-    y(t) = G(z) \, u(t) = G(z)C(z) \, r(t) 
+    y(s) = G(s) \, u(s) = G(s)C(s) \, r(s) 
 \end{equation}
 
 The main advantages of open-loop control are:
@@ -620,7 +618,7 @@ Open-loop control works well if two conditions are simultaneously met: A perfect
 
 Since we want the output to match the reference:
 \begin{equation}
-    r(t) = y(t) = G(z)C(z) \, r(t) \Longrightarrow C(z) = \frac{1}{G(z)}
+    r(s) = y(s) = G(s)C(s) \, r(s) \Longrightarrow C(s) = \frac{1}{G(s)}
 \end{equation}  
 
 Thus, the controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller isn't, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealized controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
@@ -629,27 +627,27 @@ Thus, the controller should be an inverse model of the system to control. This i
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Open-Loop controller: Reference \& Output}
-    %\label{fig_Bode_of_G_xT_xref}    
+    \caption{Open-Loop control: Reference \& Output}
+    \label{fig_open_ref_y}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Control action}
-    %\label{fig_Input_to_Servo}
+    \caption{Open-Loop control: Control action}
+    \label{fig_open_u}
 \end{minipage}
 \end{figure}
 
 \subsubsection{Closed-Loop Control}
 Closed-loop control uses feedback, meaning the output is being measured and compared with the reference. The difference between the reference and the measured output is the tracking error $e(t)$. In closed-loop control, the tracking error is the input to the controller:
 \begin{equation}
-    y(t)  = G(z) \, u(t)  = G(z) C(z) e(t)  = G(z) C(z) [r(t) - y(t)]
+    y(s)  = G(s) \, u(s)  = G(s) C(s) e(s)  = G(s) C(s) [r(s) - y(s)]
 \end{equation}
 
-The simplest form of closed-loop control is with a proportional controller, $C(z) = K$, meaning the control action is proportional to the tracking error:
+The simplest form of closed-loop control is with a proportional controller, $C(s) = K$, meaning the control action is proportional to the tracking error:
 \begin{equation}
-    u(t)  = C(z)\, e(t) = K \, e(t) \quad, K \in \mathbb{R}
+    u(s)  = C(s)\, e(s) = K \, e(s) \quad, K \in \mathbb{R}
 \end{equation}
 
 Thanks to output feedback, closed-loop control can mitigate the effects of disturbances and imperfect models, since the control action is computed from the tracking error, and thus compensates for any deviations from the reference. 
@@ -660,23 +658,25 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Open-Loop controller: Reference \& Output}
-    %\label{fig_Bode_of_G_xT_xref}    
+    \caption{Close-loop control: Reference \& Output} \label{fig_closed_ref_y}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Control action}
-    %\label{fig_Input_to_Servo}
+    \caption{Close-loop control: Control action} \label{fig_closed_u}
 \end{minipage}
 \end{figure}
 
-
-\paragraph{Combined Open- and Closed-Loop Control}
-It is possible to combine open-loop and closed-loop control in a single control system.
-
 \begin{figure}[H]
+\paragraph{Combined Open- and Closed-Loop Control}
+\begin{minipage}{0.4\textwidth}
+    It is possible to combine open-loop and closed-loop control in a single control system. Figure \ref{tikz_Control_Systems_Combined_control} shows this configuration.
+    
+    In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
+\end{minipage}
+\hfill
+\begin{minipage}{0.58\textwidth}
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
         % sum_r2
@@ -688,7 +688,7 @@ It is possible to combine open-loop and closed-loop control in a single control 
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
 
         % another S0 
-        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=5mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=3mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
 
 
         % sum_r1
@@ -704,7 +704,7 @@ It is possible to combine open-loop and closed-loop control in a single control 
         % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
         %--- Input r2 ---
-        \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+        \draw[-latex] (-1.5, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
 
         %--- sum_r2 -> C -> sum_r1 ---
         \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
@@ -731,28 +731,26 @@ It is possible to combine open-loop and closed-loop control in a single control 
 
         %--- Feedback: y branches back to sum_r2 bottom ---
         \coordinate (ybranch) at ([xshift=5mm] G0.east);
-        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-        \draw[-latex] (0, -1.2) -- (sum_r2.south);
+        \draw (ybranch) --+(0, -1) -- (0, -1);
+        \draw[-latex] (0, -1) -- (sum_r2.south);
 
     \end{tikzpicture}
 \caption{Combined Open- and Closed-Loop Control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
 \label{tikz_Control_Systems_Combined_control} 
+\end{minipage}
 \end{figure}
-
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Open-Loop controller: Reference \& Output}
-    %\label{fig_Bode_of_G_xT_xref}    
+    \caption{Combined open- and close-loop control: Reference \& Output} \label{fig_Combined_ref_y}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Control action}
-    %\label{fig_Input_to_Servo}
+    \caption{Combined open- and close-loop control: Control action} \label{fig_Combined_u}
 \end{minipage}
 \end{figure}
 
@@ -767,16 +765,15 @@ A discrete PIDF controller can be formulated as in the following equation:
 
 Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
 
-\paragraph{Full State Feedback Control}
-
 \begin{figure}[H]
+\paragraph{Full State Feedback Control}
 \begin{minipage}{0.7\textwidth}
 In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}, which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
 \begin{equation}
     F(t) = k _1\cdot ( x_{ref}(t) - x(t))
 \end{equation}
 
-Where the transfer function relating output to the reference:
+Where the transfer function relating output to the reference is:
 \begin{equation}
     \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_1}
 \end{equation}
@@ -804,99 +801,107 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
     \caption{Mass with a force acting on it. The force is the manipulated input, and the mass position is the output.} \label{tikz_StateFeedbackControl_intro}
 \end{minipage}
 \end{figure}
-
-If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action, we have the following control law:
-\begin{equation}
-    F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
-\end{equation}
-
-And the closed-loop transfer function:
-\begin{equation}
-    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_2 s + k_1}
-\end{equation}
-
-
-From which we can now see that the gains $k_1$ and $k_2$ may be chosen freely to place the closed-loop poles, $p_1$ and $p_2$, anywhere in the s-plane:
-\begin{equation}
-    s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
-\end{equation}
-
-% \begin{align}
-%     & s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow \\
-%     & \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
-% \end{align}
-
+\vspace{-8mm}
 \begin{figure}[H]
-    \centering
-    % \begin{minipage}{0.33\textwidth}
+    \begin{minipage}{0.52\textwidth}
+        If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action, we have the following control law:
+        \begin{equation}
+            F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
+        \end{equation}
 
-    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+        And the closed-loop transfer function:
+        \begin{equation}
+            \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_2 s + k_1}
+        \end{equation}
 
-    \node[circ]  (sum_r2) at (0,   0) {};
-    \node[left=-1mm] at (sum_r2.center){\small $+$};
-    \node[below=-1mm] at (sum_r2.center){\small $-$};
+        From which we can now see that the gains $k_1$ and $k_2$ may be chosen freely to place the closed-loop poles, $p_1$ and $p_2$, anywhere in the s-plane:
+        % \begin{equation}
+        %     s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+        % \end{equation}
+        \begin{align}
+            & s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow \nonumber \\ 
+            & \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+        \end{align}
 
-    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=5mm of sum_r2] (k) {$k_1$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
-    \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=7mm of k      ] (M){$M$};% , label=above:{\parbox{15mm}{\centering system to control}}     
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.44\textwidth}\centering
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
 
-    \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum_r2); %node[below]{reference} 
-    \draw[-latex] (sum_r2) --  (k); % node[above]{\parbox{12mm}{\centering tracking error}}
-    \draw[-latex] (k) --       node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
-    \draw[-latex] (M) --      node[above,at end, xshift=-3mm]{$x$} ([xshift=10mm] M.east); % node[above]{output}                                  
+        \node[circ]  (sum_r2) at (0,   0) {};
+        \node[left=-1mm] at (sum_r2.center){\small $+$};
+        \node[below=-1mm] at (sum_r2.center){\small $-$};
 
-    %--- Feedback: y branches back to sum_r2 bottom ---
-    \coordinate (ybranch) at ([xshift=5mm] M.east);
-    \draw (ybranch) --+(0, -1) -- (0, -1);
-    \draw[-latex] (0, -1) -- (sum_r2.south);
+        \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=8mm of sum_r2] (k) {$k_1$};% , label=above:{\parbox{17mm}{\centering closed-loop controller}}
+        \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=8mm of k      ] (M){$M$};% , label=above:{\parbox{15mm}{\centering system to control}}     
 
-    \end{tikzpicture}
-    \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with output feedback} \label{tikz_StateFeedbackControl_intro_outputControl} 
+        \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum_r2); %node[below]{reference} 
+        \draw[-latex] (sum_r2) --  (k); % node[above]{\parbox{12mm}{\centering tracking error}}
+        \draw[-latex] (k) --       node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
+        \draw[-latex] (M) --      node[above,at end, xshift=-3mm]{$x$} ([xshift=12mm] M.east); % node[above]{output}                                  
 
-    % \end{minipage}
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=5mm] M.east);
+        \draw (ybranch) --+(0, -1) -- (0, -1);
+        \draw[-latex] (0, -1) -- (sum_r2.south);
 
+        \end{tikzpicture}
+        \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with output feedback} \label{tikz_StateFeedbackControl_intro_outputControl} 
 
-    \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
+        \node[circ]  (sum1) at (0,   0) {};
+        \node[left=-1mm] at (sum1.center){\small $+$};
+        \node[below=-1mm] at (sum1.center){\small $-$};
+            \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum1); %node[below]{reference} 
 
-    \node[circ]  (sum1) at (0,   0) {};
-    \node[left=-1mm] at (sum1.center){\small $+$};
-    \node[below=-1mm] at (sum1.center){\small $-$};
-        \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum1); %node[below]{reference} 
+        \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=5mm of sum1] (k1) {$k_1$};
+            \draw[-latex] (sum1) --  (k1); % node[above]{\parbox{12mm}{\centering tracking error}}
 
-    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, right=5mm of sum1] (k1) {$k_1$};
-        \draw[-latex] (sum1) --  (k1); % node[above]{\parbox{12mm}{\centering tracking error}}
+        \node[circ , right=5mm of k1]  (sum2) {};
+        \node[left=-1mm] at (sum2.center){\small $+$};
+        \node[below=-1mm] at (sum2.center){\small $-$};
+                \draw[-latex] (k1) --  (sum2); % node[above]{\parbox{12mm}{\centering tracking error}}
 
-    \node[circ , right=5mm of k1]  (sum2) {};
-    \node[left=-1mm] at (sum2.center){\small $+$};
-    \node[below=-1mm] at (sum2.center){\small $-$};
-            \draw[-latex] (k1) --  (sum2); % node[above]{\parbox{12mm}{\centering tracking error}}
+        \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=15mm of sum2 ] (M){$M$};
 
-    \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=15mm of sum2 ] (M){$M$};
+        \draw[-latex] (sum2) --   node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
+        \draw[-latex] (M) --      node[above,midway]{$x$} ([xshift=8mm] M.east); % node[above]{output}                                  
 
-    \draw[-latex] (sum2) --   node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
-    \draw[-latex] (M) --      node[above,midway]{$x$} ([xshift=10mm] M.east); % node[above]{output}                                  
+        %--- Feedback: y branches back to sum_r2 bottom ---
+        \coordinate (ybranch) at ([xshift=4mm] M.east);
+        \draw (ybranch) --+(0, -1.6) -- (0, -1.6);
+        \draw[-latex] (0, -1.6) -- (sum_r2.south);
 
-    %--- Feedback: y branches back to sum_r2 bottom ---
-    \coordinate (ybranch) at ([xshift=5mm] M.east);
-    \draw (ybranch) --+(0, -1.6) -- (0, -1.6);
-    \draw[-latex] (0, -1.6) -- (sum_r2.south);
+        \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, below=2mm of M , xshift=-12mm ] (k2) {$k_2$};
+            \draw[-latex] (M.south) -- node[right]{$\dot{x}$}(M.south |- k2) -- (k2.east)  ; 
+            \draw[-latex] (k2.west) -- (k2 -| sum2.south) -- (sum2.south);
 
-    \node[draw, fill=SkyBlue!50, minimum width=8mm, minimum height=8mm, below=2mm of M , xshift=-12mm ] (k2) {$k_2$};
-        \draw[-latex] (M.south) -- node[right]{$\dot{x}$}(M.south |- k2) -- (k2.east)  ; 
-        \draw[-latex] (k2.west) -- (k2 -| sum2.south) -- (sum2.south);
-
-    \end{tikzpicture}
-    \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with state feedback, where the states are mass position and velocity} \label{tikz_StateFeedbackControl_intro_stateControl} 
+        \end{tikzpicture}
+        \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with state feedback, where the states are position and velocity of the mass} \label{tikz_StateFeedbackControl_intro_stateControl} 
+    \end{minipage}
 \end{figure}
 
 \subparagraph{Optimal Control}
+Optimal control is precisely about designing the optimal state feedback controller gains. This is done by defining some performance index which is a function of the control action:
+\begin{equation}
+    J(u(t)) = \int_{t_0}^{T} g( x(t) , u(t) ) \, dt
+\end{equation}
 
+Where $x(t)$ is the states, and $u(t)$ the control action of a given system:
+\begin{equation}
+    \dot{x}(t) = f\left( x(t) , u(t)\right)
+\end{equation}
+
+Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find a controller for reference tracking, so we'll define the performance index such that the control action minimizes the tracking error:
+
+An advantage of the linear quadratic optimal control method over the pole-placement method is that the former provides a systematic way of computing the state feedback control gain matrix guaranteeing a viable solution in terms of control action feasibility.
 
 \subparagraph{Controllability}
-A system is said to be state controllable if it is possible to construct an unconstrained control signal that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. 
+A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. It is important to note that controllability is not a property of the system, but, instead, a property of the state space representation, and is affected only by the state and input matrices, $A$ and $B$, respectively \citep{Botto}.
 
 
 \subparagraph{Observability}
-A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}.
+A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}. It is important to note that observability, like controllability, is not a property of the system, but a property of the state space representation, and is affected only by the state and output matrices, $A$ and $C$, respectively \citep{Botto}.
 
 \subparagraph{State Observers}
 

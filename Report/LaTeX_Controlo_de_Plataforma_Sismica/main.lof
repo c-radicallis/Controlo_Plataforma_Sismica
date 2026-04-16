@@ -1,0 +1,97 @@
+\babel@toc {english}{}\relax 
+\babel@toc {portuguese}{}\relax 
+\babel@toc {english}{}\relax 
+\contentsline {figure}{\numberline {1}{\ignorespaces Complete schematic representation of uniaxial shaking table (1D-ST) with a coupled 2DOF system \citep {oliveira2015}}}{9}{figure.caption.3}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }}{9}{figure.caption.4}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Schematized process of determining a response spectrum }}{10}{figure.caption.5}%
+\contentsline {figure}{\numberline {4}{\ignorespaces System}}{14}{figure.caption.6}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different lag values. (Adapted from original of \cite {cmglee_convolution_correlation})}}{14}{figure.caption.6}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Illustration of how linear systems transform correlation signals}}{14}{figure.caption.7}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Two systems with a common input signal}}{14}{figure.caption.7}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Control in open-loop}}{15}{figure.caption.8}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Control in closed-loop}}{15}{figure.caption.8}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Open-loop control example: Reference \& Output}}{16}{figure.caption.9}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Open-loop control example: Control action}}{16}{figure.caption.9}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Close-loop control example: Reference \& Output}}{16}{figure.caption.10}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Close-loop control example: Control action}}{16}{figure.caption.10}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Combined Open- and Closed-Loop Control}}{16}{figure.caption.11}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Combined open- and close-loop control example: Reference \& Output}}{17}{figure.caption.12}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Combined open- and close-loop control example: Control action}}{17}{figure.caption.12}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Mass with a force acting on it. The force is the manipulated input, and the mass position is the output.}}{17}{figure.caption.13}%
+\contentsline {figure}{\numberline {18}{\ignorespaces System from figure \ref {tikz_StateFeedbackControl_intro} with output feedback}}{18}{figure.caption.14}%
+\contentsline {figure}{\numberline {19}{\ignorespaces System from figure \ref {tikz_StateFeedbackControl_intro} with state feedback, where the states are position and velocity of the mass}}{18}{figure.caption.14}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Closed-loop System}}{20}{figure.caption.15}%
+\contentsline {figure}{\numberline {21}{\ignorespaces The closed-loop system is reformulated into pseudo-open loop form by reworking the equations. The control action, $u$, is now decomposed in two: the noise free control action, $u_r$(resulting from the reference, $r$) and the corrupted control action, $u_v$(resulting from disturbance on the output being fed back to the controller).}}{21}{figure.caption.16}%
+\contentsline {figure}{\numberline {22}{\ignorespaces Open-loop System}}{21}{figure.caption.17}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=0.1 \cdot e_0(t)$}}{24}{figure.caption.18}%
+\contentsline {figure}{\numberline {24}{\ignorespaces Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=1 \cdot e_0(t)$}}{24}{figure.caption.18}%
+\contentsline {figure}{\numberline {25}{\ignorespaces Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.05 \cdot e_0(t)$}}{24}{figure.caption.19}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.8 \cdot e_0(t)$}}{24}{figure.caption.19}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Schematic diagram of a shaking table system with payload rigidly attached \citep {tekeste2021}}}{25}{figure.caption.20}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Block diagram of the ST1D}}{26}{figure.caption.22}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Schematic representation of the 2 degree of freedom mass-spring-damper system coupled to the platen}}{26}{figure.caption.23}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Adaptive control scheme}}{27}{figure.caption.24}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Response spectrum for fault normal signals. The response spectrum was obtained by sampling 500 frequencies, logarithmically spaced between 0.1 and 30 Hz}}{28}{figure.caption.26}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Bode plots of $G_{xT/x_{\text {ref}}}(s)$ before and after tuning}}{29}{figure.caption.28}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Input to servo before and after tuning}}{29}{figure.caption.28}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Accelerations before and after tuning}}{29}{figure.caption.29}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Displacements before and after tuning}}{29}{figure.caption.29}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Accelerations before and after tuning - Detailed view of the signals covering the period between 1.5 and 2.7 seconds}}{30}{figure.caption.30}%
+\contentsline {figure}{\numberline {37}{\ignorespaces Displacements before and after tuning - Detailed view of the signals covering the period between 14.1 and 15.7 seconds}}{30}{figure.caption.30}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Acceleration tracking error before and after tuning}}{30}{figure.caption.31}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Displacement tracking error before and after tuning}}{30}{figure.caption.31}%
+\contentsline {figure}{\numberline {40}{\ignorespaces Response spectra for $m_1=m_2=2 \text { ton}$, and different modal frequencies and damping}}{31}{figure.caption.32}%
+\contentsline {figure}{\numberline {41}{\ignorespaces Response spectra for $m_1=m_2=2\text { ton}$, with $f_2=10$ Hz}}{31}{figure.caption.33}%
+\contentsline {figure}{\numberline {42}{\ignorespaces Response spectra for $m_1=m_2=2\text { ton}$, and modal frequencies which are close together ($f_2 \approx 2.415\cdot f_1$) (see figure \ref {fig_close_modal_freqs})}}{32}{figure.caption.34}%
+\contentsline {figure}{\numberline {43}{\ignorespaces Response Spectra MSE vs $\zeta _1$ and $\zeta _2$, with $m_1=m_2=2\text { ton, }f_1=1.5 Hz, f_2=6 Hz$}}{32}{figure.caption.35}%
+\contentsline {figure}{\numberline {44}{\ignorespaces Response Spectra MSE vs $\zeta _1$ and $\zeta _2$, with $m_1=m_2=2\text { ton, }f_1=1.5 Hz, f_2=6 Hz$}}{33}{figure.caption.36}%
+\contentsline {figure}{\numberline {45}{\ignorespaces For the 2DOF model (fig. \ref {schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$ (Equation \eqref {eq_modal_frequencies})}}{33}{figure.caption.36}%
+\contentsline {figure}{\numberline {46}{\ignorespaces Response Spectra MSE vs $\zeta _1$ and $\zeta _2$, with $m_1=m_2=2\text { ton, }f_1=4 Hz, f_2=10 Hz$. For high modal frequencies, the response spectrum MSE increases abruptly for $\zeta _2 > 0.14 - 0.8\cdot \zeta _1 $, but remains mostly unchanged otherwise.}}{33}{figure.caption.37}%
+\contentsline {figure}{\numberline {47}{\ignorespaces Response Spectra MSE vs $\zeta _1$ and $\zeta _2$, with $m_1=m_2=2\text { ton, }f_1=3 Hz, f_2=7.2 Hz$ (modal frequencies close together)}}{33}{figure.caption.37}%
+\contentsline {figure}{\numberline {48}{\ignorespaces Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text { ton, } \zeta _1=0.02, \zeta _2=0.05$ (low damping)}}{34}{figure.caption.38}%
+\contentsline {figure}{\numberline {49}{\ignorespaces Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text { ton, } \zeta _1=0.02, \zeta _2=0.05$ (low damping)}}{34}{figure.caption.39}%
+\contentsline {figure}{\numberline {50}{\ignorespaces Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text { ton, } \zeta _1=0.1, \zeta _2=0.25$ (high damping)}}{34}{figure.caption.39}%
+\contentsline {figure}{\numberline {51}{\ignorespaces Tracking loop with full state feedback control.}}{35}{figure.caption.40}%
+\contentsline {figure}{\numberline {52}{\ignorespaces Bode plots of $G_ {xT/x_{\text {ref}}}(s)$ for the default controller, tuned PIDF, and optimal state-feedback controller with $Q=10^3$ (which results in a similar bandwidth to the tuned PIDF).}}{36}{figure.caption.41}%
+\contentsline {figure}{\numberline {53}{\ignorespaces Bode plots of $G_ {xT/x_{\text {ref}}}(s)$ for the default controller, tuned PIDF, and optimal state-feedback controller with $Q=10^9$.}}{36}{figure.caption.41}%
+\contentsline {figure}{\numberline {54}{\ignorespaces Response spectrum for fault normal. The response spectrum was obtained by sampling 500 frequencies logarithmically spaced between 0.1 and 30 Hz}}{36}{figure.caption.42}%
+\contentsline {figure}{\numberline {55}{\ignorespaces Input to servo}}{37}{figure.caption.43}%
+\contentsline {figure}{\numberline {56}{\ignorespaces Force to Platen}}{37}{figure.caption.43}%
+\contentsline {figure}{\numberline {57}{\ignorespaces Accelerations}}{37}{figure.caption.44}%
+\contentsline {figure}{\numberline {58}{\ignorespaces Displacements}}{37}{figure.caption.44}%
+\contentsline {figure}{\numberline {59}{\ignorespaces Accelerations - Detailed view of the signals covering the period between 1.6 and 2.8 seconds}}{37}{figure.caption.45}%
+\contentsline {figure}{\numberline {60}{\ignorespaces Displacements - Detailed view of the signals covering the period between 14.2 and 15.7 seconds}}{37}{figure.caption.45}%
+\contentsline {figure}{\numberline {61}{\ignorespaces Acceleration tracking error}}{38}{figure.caption.46}%
+\contentsline {figure}{\numberline {62}{\ignorespaces Displacement tracking error}}{38}{figure.caption.46}%
+\contentsline {figure}{\numberline {63}{\ignorespaces LQG loop}}{38}{figure.caption.47}%
+\contentsline {figure}{\numberline {64}{\ignorespaces Controller Block Diagram}}{38}{figure.caption.47}%
+\contentsline {figure}{\numberline {65}{\ignorespaces Response spectrum for fault normal. The response spectrum was obtained by sampling 500 frequencies logarithmically spaced between 0.1 and 30 Hz}}{39}{figure.caption.48}%
+\contentsline {figure}{\numberline {66}{\ignorespaces Input to servo}}{39}{figure.caption.49}%
+\contentsline {figure}{\numberline {67}{\ignorespaces Force to Platen}}{39}{figure.caption.49}%
+\contentsline {figure}{\numberline {68}{\ignorespaces Accelerations}}{40}{figure.caption.50}%
+\contentsline {figure}{\numberline {69}{\ignorespaces Displacements}}{40}{figure.caption.50}%
+\contentsline {figure}{\numberline {70}{\ignorespaces Acceleration tracking error}}{40}{figure.caption.51}%
+\contentsline {figure}{\numberline {71}{\ignorespaces Displacement tracking error}}{40}{figure.caption.51}%
+\contentsline {figure}{\numberline {72}{\ignorespaces A simplified block diagram of driver signal modification loop}}{41}{figure.caption.52}%
+\contentsline {figure}{\numberline {73}{\ignorespaces Adapt Project Parameters menu - In this menu the user configures which files were used for determining the system's FRF, and the reference (or target) signal.}}{41}{figure.caption.53}%
+\contentsline {figure}{\numberline {74}{\ignorespaces Adapt FRF Parameters menu - The modification of the driver signal requires the identification of the frequency response function of the system. In this menu the user sets parameters which are used in the composition of a displacement signal from acceleration and displacement data acquired from a test run where 3 minutes of pink noise are used as input. The user also defines the settings for the computation of the FRF.}}{42}{figure.caption.54}%
+\contentsline {figure}{\numberline {75}{\ignorespaces Adapt INV Panel menu - This menu is used to generate new driver signals, and takes as inputs the original reference (referred to as \emph {target}), the driver signal used in the test run, it's measured output at the seismic table, and user defined parameters which affect which parts of the signal are modified, and by how much they're modified.}}{43}{figure.caption.55}%
+\contentsline {figure}{\numberline {76}{\ignorespaces Identified frequency response function from \emph {Adapt} (using "bad" settings) versus the model from Section \ref {Modelling Seismic Table Dynamics}}}{43}{figure.caption.56}%
+\contentsline {figure}{\numberline {77}{\ignorespaces Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref {bode_compare}.}}{44}{figure.caption.57}%
+\contentsline {figure}{\numberline {78}{\ignorespaces Frequency response function of identified system using 1024 Low Sidelobe windows results in a rougher approximation of the transfer function, but handles noisy data better.}}{45}{figure.caption.58}%
+\contentsline {figure}{\numberline {79}{\ignorespaces Frequency response function of identified system using 20 Hanning windows results in a much better approximation of the transfer function, but likely wouldn't work as well if using noisy sensor data.}}{45}{figure.caption.58}%
+\contentsline {figure}{\numberline {80}{\ignorespaces Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref {bode_compare_better_id}.}}{45}{figure.caption.59}%
+\contentsline {figure}{\numberline {81}{\ignorespaces Acceleration response spectrum MSE for various seismic signals. (For the Erzikan sism (figures \ref {erzikan_4th_N} \& \ref {erzikan_4th_P}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}}{46}{figure.caption.60}%
+\contentsline {figure}{\numberline {82}{\ignorespaces Displacement response spectrum MSE for various seismic signals. (For the Erzikan sism (figures \ref {erzikan_4th_N} \& \ref {erzikan_4th_P}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}}{46}{figure.caption.61}%
+\contentsline {figure}{\numberline {83}{\ignorespaces Erzikan fault normal response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PIDF (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}}{47}{figure.caption.63}%
+\contentsline {figure}{\numberline {84}{\ignorespaces Erzikan fault parallel response spectra. In this case the adapted drivers perform very poorly for frequencies above 10Hz.}}{47}{figure.caption.64}%
+\contentsline {figure}{\numberline {85}{\ignorespaces measurement and control chain schematic}}{48}{figure.caption.65}%
+\contentsline {figure}{\numberline {86}{\ignorespaces Cap}}{49}{figure.caption.66}%
+\contentsline {figure}{\numberline {87}{\ignorespaces Cap}}{50}{figure.caption.67}%
+\contentsline {figure}{\numberline {88}{\ignorespaces F}}{50}{figure.caption.67}%
+\contentsline {figure}{\numberline {89}{\ignorespaces Caption}}{50}{figure.caption.68}%
+\contentsline {figure}{\numberline {90}{\ignorespaces another Caption 2}}{50}{figure.caption.68}%
+\contentsline {figure}{\numberline {91}{\ignorespaces imagem do interior do shaker}}{51}{figure.caption.69}%
+\contentsline {figure}{\numberline {92}{\ignorespaces imagem das guias da mesa}}{51}{figure.caption.69}%
+\contentsline {figure}{\numberline {93}{\ignorespaces Closed-loop System}}{52}{figure.caption.70}%
+\contentsline {figure}{\numberline {94}{\ignorespaces Closed-loop System}}{52}{figure.caption.71}%

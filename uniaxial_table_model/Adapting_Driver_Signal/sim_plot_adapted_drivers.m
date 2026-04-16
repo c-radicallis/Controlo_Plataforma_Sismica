@@ -78,9 +78,9 @@ G_c = tf(k_p,1);% Controller
 
 % 
 % close all
-% OL = G_Fp_isv*G_xT_Fp;
-% OL_min = minreal(OL, 1e-1)
-% figure;bodeplot(OL,OL_min)
+OL = G_Fp_isv*G_xT_Fp;
+OL_min = minreal(OL, 1e-1)
+figure;bodeplot(OL,OL_min)
 % figure;pzmap(OL,OL_min)
 
 

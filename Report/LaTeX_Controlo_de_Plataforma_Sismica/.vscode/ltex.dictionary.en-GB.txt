@@ -10,3 +10,4 @@ kNs
 cyanoacrylate
 Hammerstein-Wiener
 feedthrough
+Riccati

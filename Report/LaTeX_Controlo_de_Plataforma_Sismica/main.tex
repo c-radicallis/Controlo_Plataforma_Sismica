@@ -1,4 +1,4 @@
-\documentclass[ draft ,10pt]{extarticle} %
+\documentclass[10pt]{extarticle} % draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -626,15 +626,15 @@ Thus, the controller should be an inverse model of the system to control. This i
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Open-Loop control: Reference \& Output}
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Open-loop control example: Reference \& Output}
     \label{fig_open_ref_y}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Open-Loop control: Control action}
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Open-loop control example: Control action}
     \label{fig_open_u}
 \end{minipage}
 \end{figure}
@@ -657,14 +657,14 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Close-loop control: Reference \& Output} \label{fig_closed_ref_y}    
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Close-loop control example: Reference \& Output} \label{fig_closed_ref_y}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Close-loop control: Control action} \label{fig_closed_u}
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Close-loop control example: Control action} \label{fig_closed_u}
 \end{minipage}
 \end{figure}
 
@@ -743,14 +743,14 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Bode_of_G_xT_xref.png}
-    \caption{Combined open- and close-loop control: Reference \& Output} \label{fig_Combined_ref_y}    
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Combined open- and close-loop control example: Reference \& Output} \label{fig_Combined_ref_y}    
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Input_to_Servo.png}
-    \caption{Combined open- and close-loop control: Control action} \label{fig_Combined_u}
+    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+    \caption{Combined open- and close-loop control example: Control action} \label{fig_Combined_u}
 \end{minipage}
 \end{figure}
 
@@ -764,6 +764,8 @@ A discrete PIDF controller can be formulated as in the following equation:
 \end{equation}
 
 Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
+
+The proportional component outputs a control action proportional to the error. If the proportional control results in steady-state error, the integral action will grow over time and correct for it. Additional integrators may be added to correct for steaty-state error. The reasoning behind the derivative term is that, if there is a large variation of the error, the control action will immediately increase to counter it, rather than waiting for a large error (where the proportional action will kick in), or, even worse, for an accumulation of the error (where the integral action will kick in).
 
 \begin{figure}[H]
 \paragraph{Full State Feedback Control}
@@ -848,6 +850,8 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
         \end{tikzpicture}
         \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with output feedback} \label{tikz_StateFeedbackControl_intro_outputControl} 
 
+        \vspace{5mm}
+
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
         \node[circ]  (sum1) at (0,   0) {};
         \node[left=-1mm] at (sum1.center){\small $+$};
@@ -884,27 +888,84 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
 \subparagraph{Optimal Control}
 Optimal control is precisely about designing the optimal state feedback controller gains. This is done by defining some performance index which is a function of the control action:
 \begin{equation}
-    J(u(t)) = \int_{t_0}^{T} g( x(t) , u(t) ) \, dt
+    J(u(t)) = \int_{t_0}^{T} g\left( x(t) , u(t) \right) \, dt
 \end{equation}
 
-Where $x(t)$ is the states, and $u(t)$ the control action of a given system:
+Where $x(t)$ is the states, and $u(t)$ the control action, of a given system:
+\begin{equation} \label{eq_LQR_performance_index}
+    \dot{x}(t) = f\left( x(t) , u(t)\right) = A x(t) + B u(t)
+\end{equation} 
+
+Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find the optimal gains $k$ for reference tracking with LQR servo controller. An advantage of the linear quadratic optimal control method, over a pole-placement method, is that it provides a systematic way of computing the state feedback control gain matrix, guaranteeing a viable solution in terms of control action feasibility. To ensure the controller minimizes the tracking error we'll define the performance index, specifying matrices $Q$ and $R$, such that the minimization of the index mostly minimizes the state which is the tracking error (or, more precisely, in the case of our servo controller, the integral of the tracking error):
 \begin{equation}
-    \dot{x}(t) = f\left( x(t) , u(t)\right)
+    J(u(t))=\int_{0}^{t} x^\intercal Q x + u^\intercal R u \,dt
+\end{equation}
+The first term in the integrand affects state response, while the second affects control action.
+
+Notice how the performance index integral in equation \ref{eq_LQR_performance_index} is defined for a finite time. The solution for the finite time control problem is optimal, however, it is a time-varying gain vector $k(t)$:
+\begin{equation}
+    k(t) = R^{-1} B^\intercal P(t)
 \end{equation}
 
-Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find a controller for reference tracking, so we'll define the performance index such that the control action minimizes the tracking error:
+Which is computed by first solving $P(t)$ from the matrix differential Riccati equation:
+\begin{equation}
+    -\dot{P}(t) = A^\intercal P(t) + P(t) A - P(t) B R^{-1} B^\intercal P(t) + Q
+\end{equation}
 
-An advantage of the linear quadratic optimal control method over the pole-placement method is that the former provides a systematic way of computing the state feedback control gain matrix guaranteeing a viable solution in terms of control action feasibility.
+Alternatively, for the sake of simplicity, the performance index is defined for infinite time, and, in this case, as $t \rightarrow \infty$, the optimal control solution becomes the steady-state solution, with the gain vector $k$ and matrix $P$ becoming constant, making computation much faster and easier:
+\begin{align}
+    0 =& A^\intercal P + P A - P B R^{-1} B^\intercal P + Q \\
+    k =& R^{-1} B^\intercal P
+\end{align}
+This solution is suboptimal, however.
 
 \subparagraph{Controllability}
-A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable. For the existence of an optimal control vector, the system must be completely state controllable \citep{Sa_da_Costa}. It is important to note that controllability is not a property of the system, but, instead, a property of the state space representation, and is affected only by the state and input matrices, $A$ and $B$, respectively \citep{Botto}.
+For the existence of an optimal control vector, a system must be completely state controllable. A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable \citep{Sa_da_Costa}. 
 
+It is important to note that controllability is not a property of the system, but, instead, a property of the state space representation, and is affected only by the state and input matrices, $A$ and $B$, respectively \citep{Botto}.
 
 \subparagraph{Observability}
-A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time \citep{Sa_da_Costa}. It is important to note that observability, like controllability, is not a property of the system, but a property of the state space representation, and is affected only by the state and output matrices, $A$ and $C$, respectively \citep{Botto}.
+In order to implement state feedback control one must, obviously, know the states. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time. A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector \citep{Sa_da_Costa}.
+
+It is important to note that observability, like controllability, is not a property of the system, but a property of the state space representation, and is affected only by the state and output matrices, $A$ and $C$, respectively \citep{Botto}.
 
 \subparagraph{State Observers}
+A state observer estimates system states from measurements of inputs and outputs of a system. This is done such that state feedback control can be applied to systems with unmeasurable states. In section \ref{sec_LQG Servo Controller} a stationary Kalman filter (isn't recursively updated) is implemented to estimate the systems states, mixing a priori information from the identified system model with the measured output to compute an estimate of the states.
 
+For a given plant:
+\begin{align}   
+    \dot{x} =& A x + B u +  w \\
+    y =& C x + v
+\end{align}
+
+Where $w(t)$ and $v(t)$ are Gaussian white noise processes with covariance matrices:
+\begin{align}
+    Q_n =& E\left[ w w^\intercal\right] \\
+    R_n =& E\left[ v v^\intercal\right] 
+\end{align}
+
+The Kalman estimator:
+\begin{align}   
+    \dot{\widehat{x}} =& A \widehat{x} + B u + L_K \left( y - C \widehat{x} \right) \\
+    \widehat{y} =& C \widehat{x} 
+\end{align}
+
+Computes state estimate $\widehat{x}(t)$ that minimize steady-state error covariance:
+\begin{equation}
+    P = \lim_{t \rightarrow \infty} E \left( (x - \widehat{x}) (x - \widehat{x})^\intercal \right)
+\end{equation}
+
+Where the filter gain $L_K$ is given by:
+\begin{equation}
+    L_K = P C^\intercal R^{-1}_n
+\end{equation}
+
+Where $P$ is the solution of the algebraic Riccati equation:
+\begin{equation}
+    A P + P A^\intercal + B Q_n B^\intercal - P C^\intercal R^{-1}_n C P = 0
+\end{equation}
+
+Matrices $Q_n$ and $R_n$ can be used to tune the observer, biasing the states estimates towards what our model of system expects (done when the measurements are unreliable), or what the sensors are reading (done when the model isn't good).
 
 \subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
 \hspace{\parindent}Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
@@ -1964,7 +2025,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 \end{minipage}
 \end{figure}
 
-\paragraph{LQG Servo Controller}\label{LQG Servo Controller}
+\paragraph{LQG Servo Controller}\label{sec_LQG Servo Controller}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}

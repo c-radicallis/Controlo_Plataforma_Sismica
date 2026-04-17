@@ -88,7 +88,7 @@ k_pl=1.67401e-7/1e3 ; %Valve pressure gain & leakadge factor (kpl=1.67401e-7 m3/
 Be=193716.28*1e3 ;  %Oil Bulk modulus (Be=193716.28 kPa)
 Vt=0.002659   ;  %Oil Volume on actuator chamber (Vt=0.002659 m3)
 A=0.012456    ;  %Piston area (A=0.012456 m2)
-k_h=4*Be*A^2/Vt*1e3; %(kPa m1)
+k_h=4*Be*A^2/Vt; %(kPa m1)
 
 % mT=1.9751*1e3;       %Platen mass (mp=1.9751 t)
 % cT=5.78*1e3;        %Total damping, actuator + platen (ct=5.78 kN s/m1)

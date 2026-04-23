@@ -1,4 +1,4 @@
-function [picos_ddx_m, picos_x_m] = ResponseSpectrum(f_vector_accel, t_vector, ref_accel, ref_disp, f_vector_disp)
+function [picos_ddx_m, picos_x_m] = ResponseSpectrum(f_vector_accel, ref_accel, ref_disp, f_vector_disp)
     m    = 1;
     zeta = 0.05;
 
@@ -12,13 +12,12 @@ function [picos_ddx_m, picos_x_m] = ResponseSpectrum(f_vector_accel, t_vector, r
         picos_x_m = zeros(length(f_vector_disp), 1);
     end
 
-    dt = t_vector(2) - t_vector(1);
-
+    Ts=0.005;
     for i = 1:accel_points
         k = m * (2*pi*f_vector_accel(i))^2;
         c = zeta * 2 * m * 2*pi*f_vector_accel(i);
 
-        sys_d  = c2d(tf([c k], [m c k]), dt, 'zoh');
+        sys_d  = c2d(tf([c k], [m c k]), Ts, 'zoh');
         [b, a] = tfdata(sys_d, 'v');
 
         picos_ddx_m(i) = max(abs(filter(b, a, ref_accel)));

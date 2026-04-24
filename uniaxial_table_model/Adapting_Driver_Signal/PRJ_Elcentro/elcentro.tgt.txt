@@ -1,8 +1,8 @@
 LNEC Test File eXtractor
 
-File: elcentro.tgt
+File: Elcentro.tgt
 
-Created in: 2025-07-16 16:33:58.055106
+Created in: 2026-04-24 10:34:27.616314
 
 Number of channels: 6
 

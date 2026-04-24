@@ -6,7 +6,7 @@ function [picos_ddx_m, picos_x_m] = ResponseSpectrum(f_vector_accel, ref_accel, 
     picos_ddx_m  = zeros(accel_points, 1);
     picos_x_m    = [];
 
-    do_displacement = nargin == 5;  % both ref_disp and f_vector_disp provided
+    do_displacement = nargin == 4;  % both ref_disp and f_vector_disp provided
 
     if do_displacement
         picos_x_m = zeros(length(f_vector_disp), 1);

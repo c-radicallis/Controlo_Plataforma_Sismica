@@ -1,5 +1,5 @@
 % Acoes
-
+addpath ('C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\FuncoesMatlab\' )
 clear all, %close all
 
 %----Acao de entrada-----------------------------------------------------
@@ -50,10 +50,10 @@ sc=1;
 % In(:,1)=erzikan(:,1);In(:,2)=erzikan(:,cl)*sc;
 %
 %Sismo Jiji
-% cl=3; %2-NS;3-EW
-% load jiji.txt
-% In=jiji;
-% In(:,1)=jiji(:,1);In(:,2)=jiji(:,cl)*sc;
+cl=3; %2-NS;3-EW
+load jiji.txt
+In=jiji;
+In(:,1)=jiji(:,1);In(:,2)=jiji(:,cl)*sc;
 %
 %Sismo Kobe
 % cl=3; %2-NS(FN);3-EW(FP)

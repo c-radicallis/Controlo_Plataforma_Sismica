@@ -38,10 +38,10 @@ sc=1;
 % In(:,1)=SinalAcel(:,1);In(:,2)=SinalAcel(:,2)*9.86*sc;
 %
 %Sismo Elcentro
-cl=3; %2-FN;3-FP
-load elcentro.txt
-In=elcentro;
-In(:,1)=elcentro(:,1);In(:,2)=elcentro(:,cl)*sc;
+% cl=3; %2-FN;3-FP
+% load elcentro.txt
+% In=elcentro;
+% In(:,1)=elcentro(:,1);In(:,2)=elcentro(:,cl)*sc;
 %
 %Sismo Erzikan
 % cl=3; %2-NS;3-EW
@@ -50,10 +50,10 @@ In(:,1)=elcentro(:,1);In(:,2)=elcentro(:,cl)*sc;
 % In(:,1)=erzikan(:,1);In(:,2)=erzikan(:,cl)*sc;
 %
 %Sismo Jiji
-% cl=3; %2-NS;3-EW
-% load jiji.txt
-% In=jiji;
-% In(:,1)=jiji(:,1);In(:,2)=jiji(:,cl)*sc;
+cl=3; %2-NS;3-EW
+load jiji.txt
+In=jiji;
+In(:,1)=jiji(:,1);In(:,2)=jiji(:,cl)*sc;
 %
 %Sismo Kobe
 % cl=3; %2-NS(FN);3-EW(FP)

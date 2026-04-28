@@ -8,8 +8,7 @@ function d2y = secondDerivativeTime3(y, dt)
 %   the constant time step between samples.
 %
 %   Interior (i = 3..N-2), fourth-order accurate:
-%       d2y(i) ≈ [ -y(i+2) + 16*y(i+1) - 30*y(i) + 16*y(i-1) - y(i-2) ] 
-%                 / (12 * dt^2)
+%       d2y(i) ≈ [ -y(i+2) + 16*y(i+1) - 30*y(i) + 16*y(i-1) - y(i-2) ] / (12 * dt^2)
 %
 %   Boundaries:
 %     • i = 1: forward, second-order:

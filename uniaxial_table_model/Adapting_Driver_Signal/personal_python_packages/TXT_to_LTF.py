@@ -309,9 +309,9 @@ def txt_to_drv(file_path, out_dir):
 
 ## Example / Test
 
-out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\1-8-2025')
-filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\1-8-2025\Noise_convertable_0.txt'
-txt_to_drv( filepath, out_dir)
+# out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\1-8-2025')
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\1-8-2025\Noise_convertable_0.txt'
+# txt_to_drv( filepath, out_dir)
 
 # Pink Noise
 # out_dir = Path(r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\pink_noise')
@@ -334,6 +334,11 @@ txt_to_drv( filepath, out_dir)
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\jiji.txt'
 # txt_to_ltf(filepath, out_dir)
 
+# # novo Jiji
+# out_dir =  r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\optimized_benchmark_results\Jiji'
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\optimized_benchmark_results\Jiji\jiji_intVX_XVA.txt'
+# txt_to_ltf(filepath, out_dir)
+
 # # Kobe
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Kobe'
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\kobe.txt'
@@ -348,6 +353,12 @@ txt_to_drv( filepath, out_dir)
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Rinaldi'
 # filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\AcaoSismica\Sismos\rinaldi.txt'
 # txt_to_ltf(filepath, out_dir)
+ 
+# # novo Rinaldi costape10_time
+# out_dir =  r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\optimized_benchmark_results\Rinaldi'
+# filepath = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\minimesa_data\optimized_benchmark_results\Rinaldi\rinaldi_costape10_time.txt'
+# txt_to_ltf(filepath, out_dir)
+
 
 # # sylmar
 # out_dir = r'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Sylmar'

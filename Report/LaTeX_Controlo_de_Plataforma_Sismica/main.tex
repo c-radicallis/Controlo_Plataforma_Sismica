@@ -1,8 +1,8 @@
-\documentclass[ draft , 10pt, twoside]{extarticle} %
+\documentclass[  10pt, twoside]{report} %draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
-\usepackage[nottoc]{tocbibind}
-\usepackage[a4paper, inner=2.5cm, outer=2.5cm,  top=25mm, bottom=25mm, includefoot] {geometry} % 
+\usepackage[nottoc, notlot, notlof]{tocbibind}
+\usepackage[a4paper, tmargin=2.5cm, bmargin=2.5cm,lmargin=2.5cm, rmargin=2.5cm, includefoot] {geometry} % 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{svg}
@@ -23,7 +23,7 @@
 \usepackage{xurl}
 \usepackage{amssymb}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageRight}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageRight,pdftitle={Development of Control Strategies for Earthquake Reproduction on Shaking Platform}, pdfauthor={Afonso Costa Henrique},pdfsubject={Development of Control Strategies for Earthquake Reproduction on Shaking Platform}}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 % \usepackage{listings}
@@ -40,15 +40,16 @@
 \usepackage{titlesec}
 \setcounter{tocdepth}{6}
 \setcounter{secnumdepth}{6}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% paragraph — uses letters
+\renewcommand{\theparagraph}{\thesubsubsection.\alph{paragraph}}
 \titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-\renewcommand{\thesubparagraph}{\theparagraph.\alph{subparagraph}}
-\titleformat{\subparagraph}{\normalfont\normalsize\bfseries}{\thesubparagraph.}{1em}{}
-\titlespacing*{\subparagraph}{0pt}{1ex}{0.5ex}
-
-\let\oldsection\section
-\renewcommand{\section}{\cleardoublepage\oldsection}
+\let\oldsection\chapter
+\renewcommand{\chapter}{\cleardoublepage\oldsection}
 
 \usepackage{indentfirst}
 
@@ -56,7 +57,10 @@
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
 %% ----- FONT SELECTION -----
 \usepackage{microtype}   % fine-tunes spacing to avoid overflows
-\usepackage{lmodern}     % improved CM Roman
+% \usepackage{lmodern}     % improved CM Roman
+\renewcommand{\rmdefault}{phv}
+\renewcommand{\sfdefault}{phv}
+
 %% ----------  Packages above --------
 % Define a simple centered-number style (put this in your preamble)
 \fancypagestyle{plainroman}{
@@ -64,44 +68,49 @@
   \fancyfoot[C]{\thepage}            % just the page number, centered
   \renewcommand{\headrulewidth}{0pt} % no header line
 }
-%%  Define a general page style with both header and footer
-\fancypagestyle{otherpages}{ 
-\fancyhf{} % clear all header and footer fields
-\renewcommand{\headrulewidth}{0pt}
-\fancyfoot[R]{Page \thepage \space of \pageref*{LastPage}}}
+% \usepackage{nomencl}
+% \makenomenclature
+
+% \usepackage[acronym,nonumberlist,nopostdot,nogroupskip]{glossaries}
+% \setglossarystyle{long}
+% \renewcommand{\glsnamefont}[1]{\textbf{#1}} % acronym in bold face
+% \makeglossaries
+
+% \usepackage{setspace}
+% \renewcommand{\baselinestretch}{1.5}
+
+\usepackage{etoolbox}
+\AtBeginEnvironment{minipage}{\setlength{\parindent}{4pt}}
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage} % CAPA
+\thispagestyle {empty}
+
+\hspace{15mm}\includegraphics[bb=7.0cm 7.5cm 0cm 0cm,scale=0.23]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+
 \centering
 
-\begin{figure} %IST LOGO
- \centering
- \includegraphics[width=0.30\textwidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-\end{figure}
+\vspace{2.5cm}
 
+\fbox{\includegraphics[width=0.4\textwidth]{Intro/Triaxial_with_2floor.jpg}}  
 
-{ \rule{\linewidth}{0.5mm} }
+\vspace{5mm} 
+
 
 \LARGE\textbf{ Development of Control Strategies for Earthquake Reproduction on Shaking Platform}
-%\vspace{5mm}
 
-\begin{figure}[H] %imagem de capa
- \centering
- \fbox{\includegraphics[width=0.5\textwidth]{Figures/capa.png}}  
-\end{figure}
-
-\vspace{8mm} 
+\vspace{5mm} 
 
 \Large \textbf{Afonso Costa Henrique} \par
 
-\vspace{8mm}
+\vspace{5mm}
 
 \large Thesis to obtain the Master of Science Degree in \par
 \LARGE \textbf{Mechanical Engineering} \par
 
-\vspace{8mm}
+\vspace{5mm}
 
 \large
 \begin{tabular}{l l}
@@ -109,7 +118,7 @@
               &Fernando Pires de Oliveira
 \end{tabular}
 
-\vspace{8mm}
+\vspace{5mm}
 
 \Large \textbf{Examination Committee}
 
@@ -124,7 +133,7 @@
                        & Sapien Libero
 \end{tabular}
 \vfill
-\Large \textbf{February 2026} \par
+\Large \textbf{May 2026} \par
 
 \end{titlepage}
 \pagenumbering{Roman}
@@ -165,9 +174,34 @@ Eternamente grato
 \mbox{}
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\null\vskip5cm%
+\begin{flushleft}
+Declaration
+
+I declare that this document is an original work of my own authorship and that it fulfills all the requirements of the Code of Conduct and Good Practices of the Universidade de Lisboa.
+\end{flushleft}
+\vfill\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\mbox{}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgments}
+\addcontentsline{toc}{section}{Acknowledgments}% Add entry in the table of contents as section
+
+A few words about the university, financial support, research advisor, dissertation readers, faculty or other professors, lab mates, other friends and family...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\mbox{}
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{otherlanguage}{portuguese}
 \section*{Resumo}
+\addcontentsline{toc}{section}{Resumo}% Add entry in the table of contents as section
 
 Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares, ou outras dinâmicas pouco estudadas. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural.
 
@@ -177,7 +211,7 @@ Adicionalmente, para a finalidade de se sintonizar os controladores, é proposto
 
 Os resultados indicam que ambos os controladores PID-F e o LQI oferecem desempenho superior quando comparados com o método OLI, sendo o controlador LQI aquele com melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
-\vspace{10mm}
+\vfill
 
 \textbf{Palavras-chave:} Engenharia Sísmica, Controlo de Sistemas, Identificação de Sistemas, Identificação em Anel Fechado
 \end{otherlanguage}
@@ -185,6 +219,7 @@ Os resultados indicam que ambos os controladores PID-F e o LQI oferecem desempen
 % LTeX: enabled=true
 \clearpage
 \section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}% Add entry in the table of contents as section
 
 Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
 
@@ -194,40 +229,66 @@ Additionally, in order to tune the controllers, an identification method more ap
 
 The results indicate that both the PID-F and LQI controller offer superior performance compared to the OLI method, whereas the optimal controller performed the best. The performance of the controllers depends on system identification, and the sensitivity of each method to the quality of the identification requires further investigation.
 
-\vspace{10mm}
+\vfill
 
 \textbf{Keywords:} : Earthquake Engineering, Control Systems, System Identification, Closed-loop Identification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
+\cleardoublepage 
 \tableofcontents % Indice
 
-\pagebreak 
+\cleardoublepage 
+\phantomsection
+\addcontentsline{toc}{section}{List of Tables}
 \listoftables % Tabelas
+
+\cleardoublepage 
+\phantomsection
+\addcontentsline{toc}{section}{List of Figures}
 \listoffigures %Figuras
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Nomenclature}
+\addcontentsline{toc}{section}{Nomenclature}% Add entry in the table of contents as section
+
 
 
 \section*{Glossary}
+\addcontentsline{toc}{section}{Glossary}% Add entry in the table of contents as section
+
 
 
 
 \clearpage
-\pagestyle{otherpages}% Apply the general page style to all pages by default
+\pagestyle{plain}% Apply the general page style to all pages by default
 \pagenumbering{arabic}
-\section{Introduction}
 
-\subsection{Seismic Platform  Tests at LNEC}
-The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
+\chapter{Introduction}
+
+Shaking-table tests consist of mounting a physical model on a stiff platform that is driven so as to reproduce the desired ground-motion time history (reference signal). This experimental technique was introduced in the 1940s and became widespread during the 1960s. Early systems relied on mechanical profiled cams to generate the excitation, but servo-hydraulic systems soon became the standard solution ([1],[2],[3]). 
+
+At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 electrodynamic shaker attached to a movable table was installed in the 60s to perform seismic tests [4]. A uniaxial shaking table (ST1D), shown in figure \ref{fig_3D_render_uniaxial}, was developed and installed, consisting of a 3 m x 2 m horizontal steel platform and a vertical platform body driven by a hydraulic actuator supplied by a dedicated oil-hydraulic circuit ([5], [6]). During this period, adaptive control strategies were developed, implemented, and validated both on a small scale shaking table and on the ST1D, for tracking reference earthquake spectrum (frequency domain), iteratively ([7],[8]). Increasingly demanding requirements for reproducing seismic excitation along all three directions motivated the development of the triaxial shaking table (ST3D), shown in figure \ref{fig_3D_render_triaxial}, which has been installed and operational at LNEC since the mid-1990s [4].
 
 \begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
     \centering
-    \fbox{\includegraphics[width=0.95\textwidth]{Intro/schematic_st1d_Fernando.png}}
-    \caption{Complete schematic representation of uniaxial shaking table (1D-ST) with a coupled 2DOF system \citep{oliveira2015}}
-    \label{fig_schematic_st1d_Fernando}
+    \fbox{\includegraphics[width=0.95\textwidth]{Intro/Triaxial_with_2floor.jpg}}
+    \caption{A 3D rendering of LNEC's triaxial shaking table with a scaled test specimen of a two-story building. The rigid elements (platen and linkages) are shown in red, and the actuators in black and silver.}
+    \label{fig_3D_render_triaxial}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \fbox{\includegraphics[width=0.95\textwidth]{Figures/capa.png}}
+    \caption{A 3D rendering of LNEC's uniaxial shaking table with a coupled 2DOF system (red and orange carts). The platen is shown in light green, and the actuators in blue.}
+    \label{fig_3D_render_uniaxial}
+\end{minipage}
 \end{figure}
+
+\section{Seismic Platform  Tests at LNEC}
+
+The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
 
 \vspace{-5mm}
 
@@ -326,7 +387,7 @@ In addition, the system faces physical limitations inherent to the equipment, na
 \begin{minipage}{0.6\textwidth}
 \setlength{\parindent}{2pt}
 %\vspace{-10mm}
-\subsubsection{Response Spectrum}% in Civil Engineering} %\subsection{Key Aspects of Response Spectrum}
+\subsection{Response Spectrum}% in Civil Engineering} %\section{Key Aspects of Response Spectrum}
 
 \hspace*{\parindent} The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
@@ -362,7 +423,7 @@ It's relevance for this work lies in the fact that the performance of the seismi
 \end{itemize}
 
 \vspace{5mm}
-%\subsection{Applications in Civil Engineering}
+%\section{Applications in Civil Engineering}
 \hspace*{\parindent} Some of its applications in Civil Engineering are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Seismic Design of Buildings and Bridges: Response spectra help in defining design forces.
@@ -381,7 +442,7 @@ It's relevance for this work lies in the fact that the performance of the seismi
 \end{figure}
 
 \pagebreak
-\subsection{Objectives}
+\section{Objectives}
 The objective of this work is to implement a controller, or strategy, to ensure that the seismic platform reproduces the test seismic signal (reference/earthquake) as accurately as possible, taking into account the following aspects:
 \begin{itemize}
     \item The amplitude of the earthquake increases progressively with each test during the experimental campaign;
@@ -410,14 +471,14 @@ The objective of this work is to implement a controller, or strategy, to ensure 
     \item Performance will be evaluated by comparing the response spectrum of the measured signal with that of the reference signal.
 \end{itemize}
 
-\subsection{Outline of Dissertation}
+\section{Outline of Dissertation}
 Taking into account the objectives 
 
 %\clearpage
-\section{Literature Review on Experimental Testing in Seismic Engineering} %\section{Revisão do Estado da Arte}\label{sec:sota}
+\chapter{Literature Review on Experimental Testing in Seismic Engineering} %\chapter{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
-\subsection{The Purpose of Experimental Testing} %Simulation and Reality: 
+\section{The Purpose of Experimental Testing} %Simulation and Reality: 
 % IS SEISMIC EXPERIMENTAL TESTING OF STRCUTURES STILL NECESSARY, DESPITE THE EVOLUTION OF COMPUTACIONAL SIMULATIONS?
 % https://consensus.app/search/is-seismic-experimental-testing-of-strcutures-stil/L-Ya5EyiQSqxujE68BaTQw/?utm_source=share&utm_medium=clipboard
 \hspace{\parindent}While computational simulations have become highly sophisticated and efficient, they still face limitations in accurately modelling complex, nonlinear, or poorly understood behaviours, especially in components with significant uncertainties or novel materials. 
@@ -425,7 +486,7 @@ Studies show that numerical simulations, even with advanced methods, require exp
 
 In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001, Zhang2023Experimentally, Liu2020Experimental, Bahraq2021Numerical, Malomo2022M-DEM, Qiu2024Seismic, Yavas2023A, Mokhtari2023A}
 
-\subsection{An Overview of Experimental Methods}
+\section{An Overview of Experimental Methods}
 % IN THE FIELD OF SEISMIC ENGINEERING, WHAT ARE THE MOST WIDELY USED EXPERIMENTAL METHODS?
 % https://consensus.app/search/in-the-field-of-seismic-engineering-what-are-the-m/QdpmhhJsS76N_XJJZcAGgA/
 According to \cite{williams2001}, the most widely used experimental methods in the field of seismic engineering are:
@@ -445,13 +506,13 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-\subsection{Seismic Table Control Strategies}
+\section{Seismic Table Control Strategies}
 
-Shaking-table tests consist of mounting a physical model on a stiff platform that is driven so as to reproduce the desired ground-motion time history (reference signal). This experimental technique was introduced in the 1940s and became widespread during the 1960s. Early systems relied on mechanical profiled cams to generate the excitation, but servo-hydraulic systems soon became the standard solution ([1],[2],[3]). At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 electrodynamic shaker attached to a movable table was installed in the 60s to perform seismic tests [4]. A uniaxial shaking table (ST1D) was developed and installed, consisting of a 3 m × 2 m horizontal steel platform and a vertical platform body driven by a hydraulic actuator supplied by a dedicated oil-hydraulic circuit ([5], [6]). During this period, adaptive control strategies were developed, implemented, and validated both on a small scale shaking table and on the ST1D, for tracking reference earthquake spectrum (frequency domain), iteratively ([7],[8]). Increasingly demanding requirements for reproducing seismic excitation along all three directions motivated the development of the triaxial shaking table (ST3D), which has been installed and operational at LNEC since the mid-1990s [4]. The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies: i) Three-Variable Control (TVC), also known in control theory literature as state variable control [9], which combines the displacement, velocity and acceleration feedback [1]; ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); iii) Adaptive Inverse Control (AIC) [10], suitable for non-sinusoidal signals on linear systems; iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC’s ST3D.
+The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies: i) Three-Variable Control (TVC), also known in control theory literature as state variable control [9], which combines the displacement, velocity and acceleration feedback [1]; ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); iii) Adaptive Inverse Control (AIC) [10], suitable for non-sinusoidal signals on linear systems; iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC’s ST3D.
 Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) ([1], [11]). This is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms [12]. Alternative control approaches have been proposed in the literature, including: i) Acceleration Trajectory Tracking Control (ATTC) [13]; ii) displacement feedforward-feedback controller using an optimal controller [14]; iii) Model-based feedforward-feedback controller for acceleration tracking [15]; iii) minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal [16].
 
 
-\subsubsection{Innovations in Recent Literature}
+\subsection{Innovations in Recent Literature}
 Advanced control methods, such as active disturbance rejection control (ADRC), adaptive model-based state estimators, and nonlinear signal-based control, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. %619
 Offline iterative control and frequency-splitting techniques enable double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing rigid structures like dams and nuclear facilities. %14
 Proportional-derivative (PD) control and affordable hardware have made seismic table testing more accessible in resource-limited settings. %18
@@ -464,12 +525,12 @@ Adaptive control has been shown to significantly improve the accuracy of shaking
     \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
 
-\section{ System Identification \& Control}
+\chapter{ System Identification \& Control}
 
 This chapter presents the theoretical foundations underlying the system identification and control strategies employed in this work. It is organized into three main parts. The first part, Section 3.1, establishes the signal and system analysis framework, covering the definitions, notation, and properties of signals processed by discrete linear time-invariant (LTI) systems. The second part, Section 3.2, addresses control system design, progressing from open-loop to closed-loop architectures, and introducing the specific controllers considered in this work: a PIDF controller, and full state feedback control with optimal control formulation, including the concepts of controllability, observability, and state estimation. The third part, Section 3.3, tackles the problem of system identification in closed-loop settings, discussing the limitations of classical spectral analysis methods and presenting the Two-Stage Method as a suitable approach for closed-loop identification.
 
-\subsection{Signals \& System Analysis}
-\subsubsection{General Definitions \& Notation}
+\section{Signals \& System Analysis}
+\subsection{General Definitions \& Notation}
 For a signal discretized with sampling time $T_s$:
 \begin{itemize}
     \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
@@ -485,7 +546,7 @@ For a signal discretized with sampling time $T_s$:
 \end{itemize}
 
 
-\subsubsection{Properties of signals processed by discrete LTI systems}
+\subsection{Properties of signals processed by discrete LTI systems}
 
 For time signals $x(t)$ and $y(t)$ the correlation  is given by:
 \begin{align}
@@ -499,7 +560,6 @@ And the power spectral density:
     \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
 \end{align} 
 
-\clearpage
 
 For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $x$ and $y$ quasi-stationary signals, we have the following properties:
 \vspace{-5mm}
@@ -590,20 +650,19 @@ In the case of two systems which generate an output from a common input signal, 
     \end{minipage}
 \end{figure}
 
-\vspace{-5mm}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{convolution_correlations.jpg}
-    \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different lag values. (Adapted from original of \cite{cmglee_convolution_correlation})}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
-    \label{convolution_correlations}    
-\end{figure}
-
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{convolution_correlations.jpg}
+%     \caption{Visualization of convolution, cross-correlation, and autocorrelation. The output of the computation is represented by the shaded area, and is shown for 5 different lag values. (Adapted from original of \cite{cmglee_convolution_correlation})}% For the operations involving function f, and assuming the height of f is 1.0, the value of the result at 5 different points is indicated by the shaded area below each point. Note that placing $f \star g$ next to $R_{gf}$, instead of next to $R_{fg}$ facilitates comparing the 5 snapshots below the graphs. They are identical sets, except for the orientation of function f, as denoted by the little bump on its left-hand corner. But since f is symmetric, the orientation does not matter, which explains why $R_{gf}$ and $f \star g$ are identical in this example
+%     \label{convolution_correlations}    
+% \end{figure}
 
 
 
 
-\subsection{Control Systems}
+
+\section{Control Systems}
 
 There are two generic configurations for control systems: open-loop control (figure \ref{tikz_Control_Systems_open_loop}) and closed-loop control (figure \ref{tikz_Control_Systems_closed_loop}).
 \begin{figure}[H]
@@ -651,7 +710,7 @@ Every control system is a variation and/or a combination of these two configurat
 
 This section aims to give the reader an overview of the essential control configurations, their advantages and limitations, as well as controller structures and design methods. Open-loop and closed-loop architectures are addressed, with the latter including classical output feedback control with a PIDF, and then full state feedback with optimal control and the underlying concepts of controllability, observability, and state estimation. This segment is specially influenced by the work in \cite{DuarteValerio} and \cite{Botto}.
 
-\subsubsection{Open-Loop Control}
+\subsection{Open-Loop Control}
 In open-loop control the controller receives the reference that the system should follow and computes a control action.  It is not checked whether the system's output then follows the reference, and the control action is not modified to account for any deviations that occur.
 
 For an open-loop control system we have the following equation:
@@ -668,7 +727,7 @@ The main advantages of open-loop control are:
 
 Open-loop control works well if two conditions are simultaneously met: A perfect model of the plant exists and there are no unknown disturbances of either the control action or the output. In practice, open-loop control does not work well due to imperfect modelling of the plants, the existence of process and measurement disturbances, and the fact that it cannot control unstable plants.
 
-\paragraph{Design of Open-Loop Controllers}
+\subsubsection{Design of Open-Loop Controllers}
 
 Since we want the output to match the reference:
 \begin{equation}
@@ -693,7 +752,7 @@ Thus, the controller should be an inverse model of the system to control. This i
 \end{minipage}
 \end{figure}
 
-\subsubsection{Closed-Loop Control}
+\subsection{Closed-Loop Control}
 Closed-loop control uses feedback, meaning the output is being measured and compared with the reference. The difference between the reference and the measured output is the tracking error $e(t)$. In closed-loop control, the tracking error is the input to the controller:
 \begin{equation}
     y(s)  = G(s) \, u(s)  = G(s) C(s) e(s)  = G(s) C(s) [r(s) - y(s)]
@@ -723,7 +782,7 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \end{figure}
 
 \begin{figure}[H]
-\paragraph{Combined Open- and Closed-Loop Control}
+\subsubsection{Combined Open- and Closed-Loop Control}
 \begin{minipage}{0.4\textwidth}
     It is possible to combine open-loop and closed-loop control in a single control system. Figure \ref{tikz_Control_Systems_Combined_control} shows this configuration.
     
@@ -809,7 +868,7 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \end{figure}
 
 
-\paragraph{PIDF Controller}
+\subsubsection{PIDF Controller}
 Proportional-integral-derivative filtered controllers apply a control action which is the sum of three components: One proportional to the tracking error, another proportional to the integral of the error, and another proportional to a filtered derivative of the error. 
 
 A discrete PIDF controller can be formulated as in the following equation:
@@ -822,7 +881,7 @@ Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$
 The proportional component outputs a control action proportional to the error. If the proportional control results in steady-state error, the integral action will grow over time and correct for it. Additional integrators may be added to correct for steady-state error. The reasoning behind the derivative term is that, if there is a large variation of the error, the control action will immediately increase to counter it, rather than waiting for a large error (where the proportional action will kick in), or, even worse, for an accumulation of the error (where the integral action will kick in).
 
 \begin{figure}[H]
-\paragraph{Full State Feedback Control}
+\subsubsection{Full State Feedback Control}
 \begin{minipage}{0.7\textwidth}
 In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}, which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
 \begin{equation}
@@ -939,7 +998,7 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
     \end{minipage}
 \end{figure}
 
-\subparagraph{Optimal Control}
+\paragraph{Optimal Control}
 Optimal control is precisely about designing the optimal state feedback controller gains. This is done by defining some performance index which is a function of the control action:
 \begin{equation}
     J \left( x(t) , u(t) \right) = \int_{t_0}^{T} g\left( x(t) , u(t) \right) \, dt
@@ -974,17 +1033,17 @@ Alternatively, for the sake of simplicity, the performance index is defined for 
 \end{align}
 This solution is suboptimal, however.
 
-\subparagraph{Controllability}
+\paragraph{Controllability}
 For the existence of an optimal control vector, a system must be completely state controllable. A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable \citep{Sa_da_Costa}. 
 
 It is important to note that controllability is not a property of the system, but, instead, a property of the state space representation, and is affected only by the state and input matrices, $A$ and $B$, respectively \citep{Botto}.
 
-\subparagraph{Observability}
+\paragraph{Observability}
 In order to implement state feedback control one must, obviously, know the states. The concept of observability is useful in solving the problem of reconstructing unmeasurable state variables from measurable variables in the minimum possible length of time. A system is said to be completely observable if every state can be determined from the observation of the system output over a finite time interval. The system is, therefore, completely observable if every transition of the state eventually affects every element of the output vector \citep{Sa_da_Costa}.
 
 It is important to note that observability, like controllability, is not a property of the system, but a property of the state space representation, and is affected only by the state and output matrices, $A$ and $C$, respectively \citep{Botto}.
 
-\subparagraph{State Observers}
+\paragraph{State Observers}
 A state observer estimates system states from measurements of inputs and outputs of a system. This is done such that state feedback control can be applied to systems with unmeasurable states. In section \ref{sec_LQG Servo Controller} a stationary Kalman filter (isn't recursively updated) is implemented to estimate the systems states, mixing a priori information from the identified system model with the measured output to compute an estimate of the states.
 
 For a given plant:
@@ -1022,14 +1081,14 @@ Where $P$ is the solution of the algebraic Riccati equation:
 
 Matrices $Q_n$ and $R_n$ can be used to tune the observer, biasing the states estimates towards what our model of system expects (done when the measurements are unreliable), or what the sensors are reading (done when the model isn't good).
 
-\subsection{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
+\section{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
 %\hspace{\parindent} 
 Many systems operate under feedback control due to required safety of operation (as is the case of LNEC's shaking tables), or to unstable behaviour of the plant meaning that experiments can only be performed under presence of a stabilizing controller. Biological and economic systems operate only under closed-loop conditions, and it is not even possible to remove the feedback loop. On occasion, performing experiments in closed loop may be preferable to operating in open loop, such as a situation in which the objective of the identification is to design a better controller, then, the dynamics of the plant in closed loop with the original controller may be more relevant than the open loop for designing an improved controller \citep{VanDenHof2020}. 
 
 In section \ref{Nonparametric Modelling} it will be shown that the identification of systems working in closed loop can be problematic under certain conditions, with a specific focus on nonparametric modelling by spectral analysis, as this is the method currently used at LNEC when synthesizing adapted drivers for the shaking tables. In section \ref{Two-Stage Method} a method for circumventing the issues introduced by the feedback loop will be presented. These segments are specially influenced by the works of \cite{VanDenHof2020} and \cite{Soderstrom_Stoica},
 
 %\pagebreak
-\subsubsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
+\subsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
 In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
@@ -1200,8 +1259,8 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 \end{figure}
 
 
-\subsubsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
-\paragraph{Why it works in open-loop}
+\subsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
+\subsubsection{Why it works in open-loop}
 \vspace{-5mm}
 \begin{figure}[H]
     \begin{minipage}{0.63\textwidth}
@@ -1249,7 +1308,7 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 \end{figure}
 
-\paragraph{The problem in closed-loop}
+\subsubsection{The problem in closed-loop}
 Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \eqref{eq_y_transformed_CL} and \eqref{eq_u_transformed_CL}, we find:
 \begin{align}
 \Phi_{u}(\omega) =& \left|H_{ur_{1}}\right|^2 \Phi_{r_{1}} + \left|H_{ur_{2}}\right|^2 \Phi_{r_{2}} + \left|H_{uv}\right|^2 \Phi_{v} \nonumber\\ 
@@ -1279,11 +1338,11 @@ But if the disturbance $v$ is very large compared to the reference signals $r_1$
 
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
-\paragraph{Remark on parametric modelling}
+\subsubsection{Remark on parametric modelling}
 As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, more steps, solving additional equations, etc. All these conditions often make those approaches undesirable, however, the parametric identification method introduced in section \ref{Two-Stage Method} is able to address the closed-loop identification issues while being of simple implementation.
 
-\subsubsection{Two-Stage Method for Closed Loop Identification}\label{Two-Stage Method}
-\paragraph{Introduction}
+\subsection{Two-Stage Method for Closed Loop Identification}\label{Two-Stage Method}
+\subsubsection{Introduction}
 \hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order, nonlinear, of the variable structure (as in sliding mode control), etc., nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired.
 
 The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. This approach works on the principle that, by decomposing the control action, $u$, in two components: the noise free control action, $u_r$ which results from the reference, $r$; and the corrupted control action, $u_v$ which results from the disturbance $v$ on the output being fed back to the control.
@@ -1299,8 +1358,8 @@ It is then possible to estimate $G_0$, not from $u$ (which is corrupted), but fr
          =& \, G_0 u_{r}(t) + \left[G_0 u_v(t) + v(t) \right]
 \end{align}
 
-\paragraph{The Method} 
-\subparagraph{Estimating the sensitivity function}
+\subsubsection{The Method} 
+\paragraph{Estimating the sensitivity function}
 
 If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable:
 \begin{equation}
@@ -1317,7 +1376,7 @@ Now the reason for formulating the problem using the sensitivity function become
     \widehat{S}(z) = \frac{u(t)}{r(t)}
 \end{equation}
 
-\subparagraph{Reconstructing the noise-free control action}
+\paragraph{Reconstructing the noise-free control action}
 From the known reference signal $r(t)$, the identified sensitivity function can be used to compute the noise-free control action $\widehat{u}_{r}(t)$:
 \begin{equation}
     \widehat{u}_{r}(t) = \widehat{S}(z) \cdot r(t)
@@ -1325,14 +1384,14 @@ From the known reference signal $r(t)$, the identified sensitivity function can 
 
 Since the sole purpose of the sensitivity function is computing a noise-free control action, to this end, the model can be of arbitrarily high order, but restricting variance, and thus reducing the number of parameters, may still be of interest.
 
-\subparagraph{Estimating the plant}
+\paragraph{Estimating the plant}
 From the computed noise-free control action, $\widehat{u}_{r}$, and measured system output $y$, it is now possible to estimate the plant: % (which is uncorrelated with $v$)
 \begin{equation}
     \widehat{G}(z) = \, \frac{y(t)}{\widehat{u}_{r}(t)}
 \end{equation}
 
 
-\subsubsection{Example: Comparing Closed-Loop Identification Methods}
+\subsection{Example: Comparing Closed-Loop Identification Methods}
 
 The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling} and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
 
@@ -1345,7 +1404,7 @@ For this section, consider the following:
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
 \end{itemize}  
 
-%\paragraph[Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}]{Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}}
+%\subsubsection[Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}]{Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}}
 \begin{figure}[H]
 \begin{minipage}{0.47\textwidth}
     \centering
@@ -1362,7 +1421,7 @@ For this section, consider the following:
 \end{minipage}
 \end{figure}
 
-%\paragraph[Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}]{Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}}
+%\subsubsection[Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}]{Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}}
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
@@ -1382,17 +1441,23 @@ For this section, consider the following:
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
 
-\section{Evaluating Controller Performance in Simulation Environment}\label{Evaluating Controller Performance in Simulation Environment}
+\chapter{Evaluating Controller Performance in Simulation Environment for LNEC's Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
 In this section a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
-\subsection{A Model of LNEC's Uniaxial Seismic Table}\label{Modelling Seismic Table Dynamics}
-%\section{Modelação Matemática}
+\section{A Model of LNEC's Uniaxial Seismic Table}\label{Modelling Seismic Table Dynamics}
+%\chapter{Modelação Matemática}
 %Os modelos devem ser implementados em Matlab/Simulink e complementados com funções, scripts e interfaces que facilitem a parametrização, cálculo de propriedades (como modos de vibração), análise e simulação com diferentes tipos de entradas (sinais sinusoidais, ondas quadradas e inputs externos como sinais sísmicos).
 
-\subsubsection{Previous Works}
+\subsection{Previous Works}
 
-In \cite{oliveira2015} a complete schematic representation of the ST1D, with a coupled 2DOF system, and instrumentation, can be found (figure \ref{fig_schematic_st1d_Fernando}).
+In \cite{oliveira2015} a complete schematic representation of the ST1D, with a coupled 2DOF system, instrumentation, control, and acquisition system can be found (figure \ref{fig_schematic_st1d_Fernando}):
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.95\textwidth]{Intro/schematic_st1d_Fernando.png}}
+    \caption{Complete schematic representation of uniaxial shaking table (ST1D) with a coupled 2DOF system \citep{oliveira2015}}
+    \label{fig_schematic_st1d_Fernando}
+\end{figure}
 
 In \citet{tekeste2021} a model for the ST1D with a coupled 1DOF system %rigidly attached payload
 is devised from linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). 
@@ -1446,7 +1511,7 @@ was built in order to simulate the ST1D dynamics, however, its implementation re
 %     \label{fig_simulink_tekeste}
 % \end{figure}
 
-\subsubsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}
+\subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}
 
 Given the previous results, an alternative approach was found in order to simulate the system, which consisted on obtaining the transfer function relating the desired platen position, $x_{ref}$, as input, and the force applied to the platen, $F_P$, as output.
 
@@ -1642,8 +1707,8 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 \end{equation}
 
 %\clearpage
-\subsection{Control Strategies}
-\subsubsection{Tuned PIDF} \label{sec_Tuned_PIDF}
+\section{Control Strategies}
+\subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
 Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information. Another simple enhancement would be to add a filtered derivative term to the controller (making it a PIDF), since this should be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
@@ -1663,20 +1728,20 @@ For a preliminary analysis of the mathematical model, some simulations were run 
 \begin{table}[H]
     \centering
     \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{ c c c }
         \hline
         \textbf{System Properties} & \textbf{1st Mode} & \textbf{2nd Mode} \\
         \hline
         Frequency ($f_i$) [Hz] & $4$ & $10$ \\
-        \hline
+        %\hline
         Damping Ratio ($\zeta_i$) & $0.02$ & $0.05$ \\
         \hline
         \textbf{Element's Properties} & \textbf{Element 1} & \textbf{Element 2} \\
         \hline
         Mass ($m_i$) [kg] & $2000$ & $2000$ \\
-        \hline
+        %\hline
         Stiffness ($k_i$) [N/m] & $3.30\cdot 10^5$ & $1.89\cdot 10^6$ \\
-        \hline
+        %\hline
         Damping Coefficient ($c_i$) [N$\cdot$m/s] & $1.26\cdot 10^3$ & $1.26\cdot 10^4$ \\
         \hline
     \end{tabular}
@@ -1705,7 +1770,7 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{ c c c }
         \hline
         Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
         \hline
@@ -1783,7 +1848,7 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 \end{minipage}
 \end{figure}
 
-\paragraph{Performance Sensitivity to Test Structure Parameters}%Analysis of Tuned PIDF 
+\subsubsection{Performance Sensitivity to Test Structure Parameters}%Analysis of Tuned PIDF 
 
 The mass, modal frequencies, and damping of the structures coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table with the tuned PIDF performs for different damping, modal frequencies, and mass of the test structure. 
 
@@ -1886,9 +1951,9 @@ The effect of modal frequencies on the performance of the seismic table is uncle
 
 
 %\clearpage
-\subsubsection{Optimal Control}  \label{sec_Optimal_Control}
+\subsection{Optimal Control}  \label{sec_Optimal_Control}
 
-\paragraph{ State Space Model} \label{section_ss_model}
+\subsubsection{ State Space Model} \label{section_ss_model}
 For the seismic table with a coupled 2-DoF system, the following state space model was derived, where:
 \begin{align}
 \dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
@@ -1951,11 +2016,11 @@ With the system output being the platen position $x_T$, and without input feedth
 y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
 \end{equation}
 
-\paragraph{Evaluating Controllability \& Observability}
+\subsubsection{Evaluating Controllability \& Observability}
 Controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be of full rank.
 
 
-\paragraph{LQR Servo Controller}
+\subsubsection{LQR Servo Controller}
 
 \vspace{-4mm}
 
@@ -2075,7 +2140,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 \end{minipage}
 \end{figure}
 
-\paragraph{LQG Servo Controller}\label{sec_LQG Servo Controller}
+\subsubsection{LQG Servo Controller}\label{sec_LQG Servo Controller}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -2173,9 +2238,9 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 
 
-\subsubsection{LNEC's seismic platform driver signal adaptation process}\label{sec_LNEC_method}
+\subsection{LNEC's seismic platform driver signal adaptation process}\label{sec_LNEC_method}
 
-\paragraph{The functioning of the driver adaptation software}
+\subsubsection{The functioning of the driver adaptation software}
 
 \begin{minipage}{0.47\textwidth}
     As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the seismic table in terms of response spectrum. 
@@ -2218,13 +2283,13 @@ The code implementation can be found at the following GitHub repository \href{ht
     \label{Adapt_INV_Panel}
 \end{figure}
 
-\paragraph{Simulating the driver adaptation process}
+\subsubsection{Simulating the driver adaptation process}
 
 For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
 \begin{figure}[H]
 \begin{minipage}{0.55\textwidth}
-\paragraph{System Identification}
+\subsubsection{System Identification}
 The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the seismic table is run for 3 minutes with a pink noise signal as input. 
 
 This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, seismic table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
@@ -2240,14 +2305,14 @@ The driver and simulated acquired data files are then input to \emph{Adapt}, whe
 \end{minipage}
 \end{figure}
 
-\paragraph{Generating the target files (.tgt)}
+\subsubsection{Generating the target files (.tgt)}
 The acceleration signal of each seism was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
 
-\paragraph{Generating the adapted driver}
+\subsubsection{Generating the adapted driver}
 
 The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used to generate driver 1  in \emph{Adapt.exe}. The process was repeated to generate subsequent drivers.
 
-\paragraph{Performance Analysis}
+\subsubsection{Performance Analysis}
 
 \begin{figure}[H]
     \centering
@@ -2331,7 +2396,7 @@ Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}
 \end{figure}
 
 
-\subsection{ Conclusions: PIDF vs Optimal Control vs Driver Iteration}
+\section{ Conclusions: PIDF vs Optimal Control vs Driver Iteration}
 %The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
 Regarding the analysis in sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
 
@@ -2339,11 +2404,11 @@ The results indicate that the tuned controllers (PIDF \& Optimal) offer superior
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
-\section{Experimental Validation}
+\chapter{Experimental Validation}
 In order to experimentally validate the performance of the control strategies studied in \ref{Evaluating Controller Performance in Simulation Environment}, the two controllers were implemented in the LabVIEW software running in real time on 
 
 
-\subsection{ Measurement and Control Chain}
+\section{ Measurement and Control Chain}
 % Calibrar sensores da minimesa (ajustar offset e ganho nos amplificadores/condicionadores, e definir declive e ordenada na origem da função de conversão volts/bits para grandeza fisica medida
 Using the LNEC mini shaking table. This equipment consists of an electromagnetic shaker to input the motion to the platform, which rolls over the fixed body.
 The accelerometers for characterization are attached to the platform. This equipment has a
@@ -2356,10 +2421,10 @@ displacement transducer (LVDT type) embedded used to measure the platform displa
     \label{measurement_and_control_chain_schematic}
 \end{figure}
 
-\subsubsection{ Calibration of Displacement Sensor}
+\subsection{ Calibration of Displacement Sensor}
 ver excel no computador da mesa sismica
 
-\subsubsection{ Calibration of Acceleration Sensor}
+\subsection{ Calibration of Acceleration Sensor}
 \begin{enumerate}
     \item In the acquisition/control software, set scaling to 1 and offset to zero
     \item Place accelerometer vertically on a flat stationary surface (aligning the accelerometer measurement axis orthogonally to the acceleration of gravity) such that it will measure zero acceleration
@@ -2368,7 +2433,7 @@ ver excel no computador da mesa sismica
     \item Set scaling in the conditioner and the software such that the output is 1G
 \end{enumerate}
 
-\subsection{Identification of Electrodynamic Shaker}
+\section{Identification of Electrodynamic Shaker}
 
 In order to identify a model of the shaker+mini table system, white noise signals of different amplitudes were used as input. Two controller settings were also used, one using just proportional control with P=1, and another with proportional and integral control, with P=10 and I=1.
 
@@ -2387,7 +2452,7 @@ In order to tune the controller to the system parameters, it is necessary to ide
 
 
 
-\subsubsection{Applying Two-Stage Identification Method}
+\subsection{Applying Two-Stage Identification Method}
 
 The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/minimesa_data/blob/main/}{location}.
 
@@ -2434,7 +2499,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 
     
 
-\subsubsection{Checking the shaker and table for mechanical issues}
+\subsection{Checking the shaker and table for mechanical issues}
 
 Given the unexpected nonlinearities found during the identification (figures \ref{fig_sine_nonlinearity} and \ref{fig_square_nonlinearity}), the power to the shaker was turned off and the table was directly actuated by hand through its entire travel, and with direction changes, in order to feel for any binding or play in the system.  Since binding could be felt at certain points in the travel, both the shaker and the table slideways were disassembled to check for issues.
 
@@ -2476,13 +2541,13 @@ With the table disconnected from the shaker, while actuating the shaker shaft by
 
 Everything was reassembled together, and new data was collected for another system identification, however, a nonlinearity was still found.
 
-\subsection{ Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}
+\section{ Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}
 
 \begin{equation}
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
 
-\subsection{Experimental Results}
+\section{Experimental Results}
 
 Once the system was identified, the PIDF parameter tuning algorithm was run, defining three different bandwidths for the closed-loop response: 10Hz, 15Hz, and 20Hz. The three sets of parameters were then tested against the iterative drive signal correction process. For this seismic signal, it was found that all tuned controllers performed better than the 5th driver of the iterative process.
 
@@ -2491,7 +2556,7 @@ In these two tests, acceleration data were not measured, so the displacement dat
 
 \pagebreak
 
-\subsection{Further Simulation Studies (Robustness)}
+\section{Further Simulation Studies (Robustness)}
 % LTeX: enabled=false
 
 $\Longrightarrow$ Avaliar robustez do método de indentificação e sintonização do controlador
@@ -2510,7 +2575,7 @@ $\Longrightarrow$ Simular dados com o modelo da mesa uniaxial, desta vez introdu
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_\text{default}$};
 
         % G0
-        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C ] (G0) {$G_\text{1D-ST}$};
+        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C ] (G0) {$G_\text{ST1D}$};
 
         % sum_v
         \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
@@ -2551,7 +2616,7 @@ $\Longrightarrow$ Fazer identificação $\widehat{G}(z)$ a partir dos dados simu
 
 $\Longrightarrow$ Sintonizar controladores para $\widehat{G}(z)$
 
-$\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simulação para o modelo 1DST com perturbações na saida
+$\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simulação para o modelo ST1D com perturbações na saida
 
 \begin{figure}[H]
     \centering
@@ -2606,7 +2671,7 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 
 \end{document}
 
-% \section{Preliminary Conclusions \& Future Developments}
+% \chapter{Preliminary Conclusions \& Future Developments}
 % \begin{itemize}
 %     \item Both the displacement and acceleration tracking errors were significantly improved with the simple PIDF tune (Figures \ref{fig_response_spectrum_of_3}  to \ref{fig_Platen_Displacement_Tracking_Error}, table \ref{tab:mse_rs}).
 %     \begin{itemize}
@@ -2622,7 +2687,7 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 %     \end{itemize}
 % \end{itemize}
 
-% \section{Possible modal frequencies for experimental setup on 1DST}
+% \chapter{Possible modal frequencies for experimental setup on ST1D}
 % The existing cart, with a mass of 1790 kg, and coil springs with stiffness of 17 kN/m (2 units) and 200 kN/m (4 units), allow coupling to the seismic table a 1-dof system with frequencies as high as 3.44 Hz, and as low as 0.41 Hz (with three 1100 kg masses added to the cart). Adding three 1100 kg masses to the cart setup with highest spring stiffness configuration results in a natural frequency of 2 Hz.
  
 % \begin{align*}
@@ -2636,37 +2701,37 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 
 
 % \clearpage
-% \section{Proposed structure for the master's thesis}
+% \chapter{Proposed structure for the master's thesis}
 
-% \subsection{Metodologia de Ensaios Sísmicos no LNEC}
+% \section{Metodologia de Ensaios Sísmicos no LNEC}
 % %Tempo estimado: 3 semanas;
 % Compreender a metodologia de ensaios sísmicos utilizada no LNEC e desenvolver funções e modelos em Matlab/Simulink que reproduzam os ensaios em ambiente de simulação.
 
-% \subsubsection{O modelo em anel fechado com controlador PID}
+% \subsection{O modelo em anel fechado com controlador PID}
 % Descrever e analisar o modelo do sistema em anel fechado utilizando um controlador PID.
 
-% \subsubsection{Identificação dinâmica}
+% \subsection{Identificação dinâmica}
 % Realizar a identificação dinâmica do sistema para caracterizar as suas propriedades dinâmicas.
 
-% \subsubsection{Geração do sinal de comando}
+% \subsection{Geração do sinal de comando}
 % Desenvolver e avaliar algoritmos para a geração do sinal de comando.
 
-% \subsubsection{Construção do espectro de resposta}
+% \subsection{Construção do espectro de resposta}
 % Construir o espectro de resposta do sistema e utilizá-lo para análise de desempenho.
 
-% \subsubsection{Análise do método como um todo}
+% \subsection{Análise do método como um todo}
 % Realizar uma avaliação abrangente da metodologia adotada.
 
-% \subsubsection{Análise do sistema com o modelo matemático construído}
+% \subsection{Análise do sistema com o modelo matemático construído}
 % Utilizar métodos analíticos como Lugar das Raízes (LGR) ou diagramas de Bode para estudar o comportamento do sistema baseado no modelo matemático desenvolvido.
 
-% \subsubsection{Avaliação do comportamento sob ações sísmicas}
+% \subsection{Avaliação do comportamento sob ações sísmicas}
 % Examinar o desempenho do sistema perante ações sísmicas e identificar as suas vantagens e limitações.
 
-% \subsubsection{Avaliação do método de geração do sinal de comando}
+% \subsection{Avaliação do método de geração do sinal de comando}
 % Avaliar a eficácia e eficiência do método de geração do sinal de comando.
 
-% \subsubsection{Resumo do Método de Ensaio no LNEC}
+% \subsection{Resumo do Método de Ensaio no LNEC}
 % Os ensaios realizados no LNEC visam avaliar a vulnerabilidade estrutural, verificando a evolução dos danos com o aumento da severidade sísmica. A metodologia consiste nos seguintes passos:
 
 % \begin{enumerate}
@@ -2679,46 +2744,46 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 % \end{enumerate}
 
 
-% \subsection{Instalação Experimental}
+% \section{Instalação Experimental}
 % %Tempo estimado: 5 semanas;
 % Concluir a instalação da plataforma sísmica ST1D, incluindo os sistemas hidráulico e de automação. Compreender o funcionamento do sistema de medição e controlo, que utiliza equipamento National Instruments e programação em LabView. Implementar e analisar o controlador PID em cascata com retroação de deslocamento e força.
 
-% \subsection{Formação em LabView}
+% \section{Formação em LabView}
 % %Tempo estimado: 2 semanas;
 % Participar na formação organizada pelo LNEC para desenvolver competências em LabView, necessárias para a posterior implementação do controlador otimizado na plataforma ST1D.
 
-% \subsection{Validação Experimental do Sistema}
+% \section{Validação Experimental do Sistema}
 % %Tempo estimado: 6 semanas;
 % Realizar os ensaios experimentais para validar os modelos desenvolvidos e o funcionamento da plataforma sísmica ST1D.
 
-% \subsubsection{Configuração dos Ensaios}
+% \subsection{Configuração dos Ensaios}
 % Configurar a plataforma com base nos requisitos previamente definidos, incluindo a definição de parâmetros como amplitude, frequência e tipo de entrada para o controlador.
 
-% \subsection{Definição da Instrumentação e Calibração do Sistema}
+% \section{Definição da Instrumentação e Calibração do Sistema}
 % %Tempo estimado: 3 semanas;
 % Proceder à definição da instrumentação a utilizar nos ensaios, calibrar os sensores com recurso a padrões de referência metrológicos, e parametrizar curvas de calibração na aplicação para operação e controlo da plataforma sísmica;
 
 
-% \subsubsection{Ensaios de Validação do Modelo 1-DOF}
+% \subsection{Ensaios de Validação do Modelo 1-DOF}
 % Realizar testes experimentais utilizando o modelo 1-DOF e comparar os resultados obtidos com os previstos pelos modelos matemáticos desenvolvidos em Matlab/Simulink.
 
-% \subsubsection{Ensaios de Validação do Modelo 2-DOF}
+% \subsection{Ensaios de Validação do Modelo 2-DOF}
 % Reproduzir cenários dinâmicos mais complexos com o modelo 2-DOF e analisar o desempenho da plataforma e a precisão do modelo em prever a resposta estrutural.
 
-% \subsubsection{Avaliação do Desempenho do Controlador PID}
+% \subsection{Avaliação do Desempenho do Controlador PID}
 % Estudar o comportamento do sistema com o controlador PID implementado, comparando as respostas esperadas e observadas em condições reais.
 
-% \subsubsection{Testes com Diferentes Tipos de Sinais}
+% \subsection{Testes com Diferentes Tipos de Sinais}
 % Avaliar a resposta da plataforma com diferentes tipos de entradas, incluindo sinais harmónicos, aleatórios e sinais sísmicos reais.
 
-% \subsubsection{Geração do Espectro de Resposta Experimental}
+% \subsection{Geração do Espectro de Resposta Experimental}
 % Obter o espectro de resposta experimental e comparar com os resultados teóricos e de simulação, analisando discrepâncias e ajustando os modelos conforme necessário.
 
-% \subsection{Relatório Final e Apresentação}
+% \section{Relatório Final e Apresentação}
 % %Tempo estimado: 3 semanas;
 % Elaborar o relatório final e preparar a apresentação do trabalho desenvolvido.
 
-% \subsubsection{Elaboração do Relatório Final}
+% \subsection{Elaboração do Relatório Final}
 % Preparar um documento detalhado que inclua:
 % \begin{itemize}
 %     \item Descrição do trabalho realizado e do progresso alcançado;
@@ -2728,14 +2793,14 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 %     \item Identificação de limitações e propostas de trabalhos futuros.
 % \end{itemize}
 
-% \subsubsection{Apresentação dos Resultados}
+% \subsection{Apresentação dos Resultados}
 % Preparar uma apresentação que resuma o trabalho e destaque as principais conclusões, destinada a um público técnico e/ou académico.
 
-% % \section{Cronograma}
+% % \chapter{Cronograma}
 % % %Tempo estimado: Variável; depende das fases e iterações.
 % % Organizar um cronograma detalhado para cada uma das atividades, com prazos claros e estimativas de duração para o cumprimento das etapas do projeto.
 
-% % \section{Conclusão}
+% % \chapter{Conclusão}
 % % O presente plano visa o desenvolvimento completo de modelos matemáticos e experimentais para a plataforma sísmica ST1D, incluindo a implementação de sistemas de controlo, simulações e validações experimentais. O cumprimento deste plano contribuirá para o avanço no estudo de resposta dinâmica de estruturas sob ações sísmicas, bem como para o aprimoramento da metodologia de ensaios do LNEC.
 
 
@@ -2797,7 +2862,7 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 
 % %%%%%%%%%%%% TRASH CAN %%%%%%%%%%%%
 
-% \section{Definição do Problema}
+% \chapter{Definição do Problema}
 % O atual processo para realização de ensaios em plataforma sísmica no LNEC compreende a sintetização \textit{offline} de um sinal de comando (Drive) diferente da referência por forma a que a plataforma vibre de acordo com o sinal de referência, i.e., o sismo (Ref.). O sistema plataforma sísmica mais estrutura a testar tem implementado um controlador PI - Proporcional Integral, com parâmetros fixos. 
 
 % No ensaio sísmico, a estrutura é exposta a um conjunto de testes com amplitudes do sismo diferentes, i.e., inicialmente é testada com o sismo a uma amplitude reduzida, sendo depois avaliados os danos. De seguida, com o mesmo sismo a uma amplitude maior, são novamente avaliados os danos, e assim sucessivamente até uma amplitude definida, que normalmente é a amplitude do sismo original. 
@@ -2808,7 +2873,7 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 
 % A par disto, existe ainda a limitação física do equipamento, que se traduz na prática na limitação finita do campo de deslocamento, velocidade e aceleração, que devem ser contabilizados.
 
-% \section{Definição de Objetivos}
+% \chapter{Definição de Objetivos}
 % Implementar o melhor controlador (ou estratégia) que garanta que as vibrações da plataforma seguem exatamente o sinal sísmico de teste (referência/sismo), tendo em conta que:
 % \begin{itemize}
 %     \item A amplitude do sismo aumenta de teste para teste na mesma campanha de ensaio;
@@ -2820,19 +2885,19 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 % \end{itemize}
 
 
-% \section{Revisão do Estado da Arte}
+% \chapter{Revisão do Estado da Arte}
 % %Tempo estimado: 2 semanas e, realizar ao longo do trabalho sempre que se julgue necessário;
 % Pesquisa de referências sobre as técnicas para ensaios sísmicos e em particular sobre os ensaios em plataforma sísmica, incluindo os métodos de ensaio, configurações de montagem, bem como a instrumentação para medição e controlo dos equipamentos;
 
 
 
 
-% \section{Modelação Matemática}
+% \chapter{Modelação Matemática}
 % %Tempo estimado: 2 semanas;
 % Estes modelos devem ser programados Matlab/Simulink; devem ser preparadas funções/scripts/interfaces que permitam facilmente parametrizar o modelo, calcular propriedades (modos de vibração), analisar e simular para várias entradas (sonda sinusoidal, onda quadrada, input externo – sismo);
 
 
-% \subsection{Modelo 1-DOF}
+% \section{Modelo 1-DOF}
 % Pesquisa geral de modelos ou classe de modelos matemáticos para reproduzir o comportamento dinâmico de plataformas sísmicas acionadas por unidades óleo-hidráulicas, compreender o equipamento plataforma sísmica ST1D e modelar os componentes principais que contribuem para o seu comportamento dinâmico;
 
 % % 1DOF model
@@ -2855,50 +2920,50 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 % % FT do anel fechado
 % $G_{cl} = \frac{G_{ol}\cdot k_p}{1 + G_{ol}\cdot k_p}$
 
-% \subsection{Modelo 2-DOF}
+% \section{Modelo 2-DOF}
 % Definição do modelo 2DOF massa/mola/amortecedor da estrutura a associar à plataforma que simula a estrutura a testar, tendo em conta as características definidas e, considerar a possibilidade de introduzir não-linearidades;
 
 
 
-% \section{Metodologia de Ensaios Sísmicos no LNEC}
+% \chapter{Metodologia de Ensaios Sísmicos no LNEC}
 % %Tempo estimado: 3 semanas;
 % Compreender o método de ensaios sísmicos LNEC e construir as funções/modelos em Matlab/Simulink que permitam reproduzir o ensaio em ambiente de simulação, nomeadamente:
 
-% \subsection{O modelo em anel fechado do sistema com um controlador PID}
+% \section{O modelo em anel fechado do sistema com um controlador PID}
 % Descrever e analisar o modelo em anel fechado do sistema utilizando um controlador PID.
 
-% \subsection{A identificação dinâmica}
+% \section{A identificação dinâmica}
 % Realizar a identificação dinâmica do sistema para avaliação de suas características.
 
-% \subsection{A geração do sinal de comando}
+% \section{A geração do sinal de comando}
 % Desenvolver e avaliar o método de geração do sinal de comando.
 
-% \subsection{A construção do espectro de resposta}
+% \section{A construção do espectro de resposta}
 % Construir e analisar o espectro de resposta do sistema.
 
-% \subsection{Analisar o método no seu todo}
+% \section{Analisar o método no seu todo}
 % Realizar uma análise abrangente do método utilizado.
 
-% \subsection{Analisar o sistema com o modelo matemático construído através de métodos analíticos}
+% \section{Analisar o sistema com o modelo matemático construído através de métodos analíticos}
 % Utilizar métodos analíticos, como LGR (Lugar das Raízes), diagramas de Bode ou outros, para analisar o sistema com o modelo matemático construído.
 
-% \subsection{Avaliar o seu comportamento às ações sísmicas e concluir quanto às vantagens e desvantagens}
+% \section{Avaliar o seu comportamento às ações sísmicas e concluir quanto às vantagens e desvantagens}
 % Avaliar o comportamento do sistema sob ações sísmicas e discutir as vantagens e desvantagens identificadas.
 
-% \subsection{Avaliar o comportamento do método de geração do sinal de comando}
+% \section{Avaliar o comportamento do método de geração do sinal de comando}
 % Analisar o desempenho e a eficácia do método de geração do sinal de comando.
 
 
 
 
 
-% \subsection{Método de Ensaio de Estruturas em Plataforma Sísmica no LNEC}
+% \section{Método de Ensaio de Estruturas em Plataforma Sísmica no LNEC}
 
 % Os ensaios sísmicos realizados no LNEC têm como objetivo geral avaliar a vulnerabilidade da estrutura a testar, refletindo a progressão do dano estrutural à medida que a severidade da ação sísmica aumenta. Dessa forma, o ensaio sísmico compreende um conjunto de testes realizados na estrutura com uma ação sísmica que se distingue em cada teste por apresentar uma severidade diferente, i.e., uma amplitude (valor de pico) distinta. 
 
 % O processo inicia-se com o teste à severidade mais baixa, após o qual os danos são avaliados. Em seguida, realiza-se o teste com severidade superior, avaliam-se novamente os danos, e assim sucessivamente até a severidade mais alta. Tipicamente, o último teste é realizado com a ação sísmica original, ou seja, a ação com fator de escala igual a 1.
 
-% \subsubsection{Procedimento}
+% \subsection{Procedimento}
 
 % O método utilizado no LNEC segue o seguinte procedimento:
 
@@ -2935,52 +3000,52 @@ $\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simu
 
 
 
-% \section{Instalação Experimental}
+% \chapter{Instalação Experimental}
 % %Tempo estimado: 5 semanas;
 % Acompanhar a finalização da instalação experimental plataforma sísmica ST1D, parte hidráulica e de automação, finalizando os esquemas de funcionamento e compreender a implementação do sistema de medição e controlo com recurso a equipamento National Instruments e programação em Labview; em particular, compreender e acompanhar a implementação o controlador PID em cascata com retroação de deslocamento e força; caracterizar o sistema plataforma sísmica com e determinar a gama de deslocamentos, velocidades e acelerações exequíveis;
 
 
 
 
-% \section{Formação em Labview}
+% \chapter{Formação em Labview}
 % %Tempo estimado: 2 semana;
 % Participar na formação em Labview organizada no LNEC para compreensão da linguagem de programação e posterior futura implementação do melhor controlador no sistema da mesa sísmica ST1D;
 
 
 
-% \section{Estratégias de Controlo para Plataforma Sísmica}
+% \chapter{Estratégias de Controlo para Plataforma Sísmica}
 % %Tempo estimado: 6 semanas;
 % Pesquisa geral sobre estratégias para controlo de plataformas de ensaios sísmicos, avaliar a sua aplicabilidade ao presente caso, implementar em ambiente de simulação Matlab/Simulink, realizar as análises relevantes e necessárias, simular com as ações sísmicas disponibilizadas e modelo construído e, avaliar o seu desempenho; Estratégias a considerar: além do PID, considerar LQR, LQG, Retroação de Força, Controlo Preditivo, Adaptativo, ou outra que se julgue com potencial; comparar o desempenho das várias estratégias analisadas e concluir;
 
 
 
 
-% \section{Identificação do Sistema}
+% \chapter{Identificação do Sistema}
 % %Tempo estimado: 4 semanas;
 % Avaliar dentro dos métodos de identificação (domínio do tempo ou frequência) aquele que poderá ser mais adequado ao presente caso, i.e. lidar com as não linearidades do modelo e reproduzir melhor o comportamento dinâmico da estrutura; atendendo que atualmente a identificação é realizada com amplitude baixa (para não danificar o modelo), será possível utilizar a resposta do sismo anterior para identificar o modelo, ou complementar o modelo identificado com amplitudes mais altas?;
 % Implementar em Matlab/Simulink os métodos considerados e avaliar desempenho por comparação com o método existente;
 
 
-% \section{Definição de Metodologia a Aplicar na Realização de Ensaios Sísmicos}
+% \chapter{Definição de Metodologia a Aplicar na Realização de Ensaios Sísmicos}
 % %Tempo estimado: 4 semanas;
 % Com base nos resultados das simulações efetuadas redefinir a metodologia a aplicar na realização de ensaios sísmicos e implementar em Labview, para a realização de ensaios em plataforma na sísmica e sua validação;
 
 
 
 
-% \section{Definição da Instrumentação e Calibração do Sistema}
+% \chapter{Definição da Instrumentação e Calibração do Sistema}
 
 % Proceder à definição da instrumentação a utilizar nos ensaios, calibrar os sensores com recurso a padrões de referência metrológicos, e parametrizar curvas de calibração na aplicação para operação e controlo da plataforma sísmica;
 % %Tempo estimado: 3 semanas;
 
 
-% \section{Realização de ensaios experimentais }
+% \chapter{Realização de ensaios experimentais }
 % %Tempo estimado: 5 semanas;
 % Preparação de um ensaio experimental, recorrendo a uma estrutura existente a qual será alterada para reproduzir o dano ao longo do ensaio, e aplicação da nova metodologia de ensaios na plataforma sísmica ST1D e, avaliação do desempenho; realizar também um ensaio com metodologia atual para comparação e evidenciar o potencial da nova;
 
 
 
-% % \section{Redação da Tese}
+% % \chapter{Redação da Tese}
 % % %Tempo estimado: 5 semanas;
 % % Preparação do documento escrito da tese, artigo, bem como a preparação da apresentação oral, seguindo uma apresentação lógica dos aspetos técnicos e científicos do trabalho;
 

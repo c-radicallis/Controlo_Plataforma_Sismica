@@ -1,4 +1,4 @@
-\documentclass[  10pt, twoside]{report} %draft ,
+\documentclass[draft ,  10pt, twoside]{report} %
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -78,9 +78,6 @@
 
 % \usepackage{setspace}
 % \renewcommand{\baselinestretch}{1.5}
-
-\usepackage{etoolbox}
-\AtBeginEnvironment{minipage}{\setlength{\parindent}{4pt}}
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -271,49 +268,51 @@ Shaking-table tests consist of mounting a physical model on a stiff platform tha
 At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 electrodynamic shaker attached to a movable table was installed in the 60s to perform seismic tests [4]. A uniaxial shaking table (ST1D), shown in figure \ref{fig_3D_render_uniaxial}, was developed and installed, consisting of a 3 m x 2 m horizontal steel platform and a vertical platform body driven by a hydraulic actuator supplied by a dedicated oil-hydraulic circuit ([5], [6]). During this period, adaptive control strategies were developed, implemented, and validated both on a small scale shaking table and on the ST1D, for tracking reference earthquake spectrum (frequency domain), iteratively ([7],[8]). Increasingly demanding requirements for reproducing seismic excitation along all three directions motivated the development of the triaxial shaking table (ST3D), shown in figure \ref{fig_3D_render_triaxial}, which has been installed and operational at LNEC since the mid-1990s [4].
 
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.48\textwidth}
     \centering
-    \fbox{\includegraphics[width=0.95\textwidth]{Intro/Triaxial_with_2floor.jpg}}
-    \caption{A 3D rendering of LNEC's triaxial shaking table with a scaled test specimen of a two-story building. The rigid elements (platen and linkages) are shown in red, and the actuators in black and silver.}
-    \label{fig_3D_render_triaxial}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \fbox{\includegraphics[width=0.95\textwidth]{Figures/capa.png}}
+    \fbox{\includegraphics[width=0.97\textwidth]{Figures/capa.png}}
     \caption{A 3D rendering of LNEC's uniaxial shaking table with a coupled 2DOF system (red and orange carts). The platen is shown in light green, and the actuators in blue.}
     \label{fig_3D_render_uniaxial}
 \end{minipage}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Intro/Triaxial_with_2floor.jpg}
+    \caption{A 3D rendering of LNEC's triaxial shaking table with a scaled test specimen of a two-story building. The rigid elements (platen and linkages) are shown in red, and the actuators in black and silver.}
+    \label{fig_3D_render_triaxial}
+\end{minipage}
 \end{figure}
 
+\clearpage
 \section{Seismic Platform  Tests at LNEC}
 
 The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
+Figure \ref{fig_lnec_test_process_diagram} shows the work flow of a usual seismic test.\par
 
-\vspace{-5mm}
+% \vspace{-5mm}
 
 \begin{figure}[H]
+\noindent
+\begin{minipage}{0.47\textwidth}\setlength{\parindent}{15pt}
+
+During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
+
+Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
+This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.\par
+
+At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.\par
+
+\end{minipage}
+\hfill
 \begin{minipage}{0.49\textwidth}
+
     \centering
     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
     \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
     \label{fig_lnec_test_process_diagram}
 \end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth} \setlength{\parindent}{4pt}
-
-%\hspace*{\parindent}
-During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.
-
-%\hspace*{\parindent}
- Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
-This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.
-
-%\hspace*{\parindent} 
-At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.
-
-\end{minipage}
 \end{figure}
+
 
 However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
 
@@ -382,24 +381,25 @@ In addition, the system faces physical limitations inherent to the equipment, na
 % \label{tikz_LNEC_control} 
 % \end{figure}
 
-
 \begin{figure}[H]
-\begin{minipage}{0.6\textwidth}
-\setlength{\parindent}{2pt}
-%\vspace{-10mm}
+\noindent
+\begin{minipage}{0.58\textwidth}\setlength{\parindent}{15pt}
+
 \subsection{Response Spectrum}% in Civil Engineering} %\section{Key Aspects of Response Spectrum}
 
-\hspace*{\parindent} The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
+The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
 It's relevance for this work lies in the fact that the performance of the seismic table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
 \vspace{5mm}
 
-\hspace*{\parindent} Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
+% \hspace*{\parindent} 
+Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 
 \vspace{5mm}
 
-\hspace*{\parindent} Some fundamental concepts on response spectrum are:
+% \hspace*{\parindent} 
+Some fundamental concepts on response spectrum are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Ground Motion Dependency
     \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
@@ -424,7 +424,8 @@ It's relevance for this work lies in the fact that the performance of the seismi
 
 \vspace{5mm}
 %\section{Applications in Civil Engineering}
-\hspace*{\parindent} Some of its applications in Civil Engineering are:
+% \hspace*{\parindent} 
+Some of its applications in Civil Engineering are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Seismic Design of Buildings and Bridges: Response spectra help in defining design forces.
     \item Code Based Seismic Analysis: Building codes (e.g., \textit{ASCE 7, Eurocode 8, IS 1893}) provide standard response spectra.

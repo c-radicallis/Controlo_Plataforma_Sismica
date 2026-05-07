@@ -1,4 +1,4 @@
-\documentclass[ draft ,10pt, twoside]{extarticle} %
+\documentclass[ draft , 10pt, twoside]{extarticle} %
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc]{tocbibind}
@@ -23,7 +23,7 @@
 \usepackage{xurl}
 \usepackage{amssymb}
 \usepackage{hyperref}
-\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageLeft}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageRight}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 % \usepackage{listings}
@@ -69,6 +69,8 @@
 \fancyhf{} % clear all header and footer fields
 \renewcommand{\headrulewidth}{0pt}
 \fancyfoot[R]{Page \thepage \space of \pageref*{LastPage}}}
+
+\raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage} % CAPA
@@ -138,22 +140,24 @@
 \normalsize
 
 % Dedicatoria
-\vspace*{\fill} % pushes following text to bottom
+
+
 \begin{flushright}
 
-Ao professor Miguel Botto e ao Fernando Oliveira,\\ % que me trouxeram a este projeto e sempre me guiaram
+\vspace*{\fill} % pushes following text to bottom
+% Ao professor Miguel Botto e ao Fernando Oliveira,\\ % que me trouxeram a este projeto e sempre me guiaram
 
-Ao António Correia, \\%pela 
+% Ao António Correia, \\%pela 
 
-Ao Paulo Candeias, \\ %um poço de conhecimento e uma ajuda indispensável
-
-Aos meus pais, que me deram a possibilidade de estudar \\[10mm]
-
+% Ao Paulo Candeias, \\ %um poço de conhecimento e uma ajuda indispensável
 % \vspace{5mm}
 
+Aos meus pais, que me deram a possibilidade de estudar,
+
+
 Eternamente grato
+\vspace*{\fill}
 \end{flushright}
-\vspace*{\fill} % pushes following text to bottom
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -165,7 +169,13 @@ Eternamente grato
 \begin{otherlanguage}{portuguese}
 \section*{Resumo}
 
-Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares ou outros pouco desenvolvidos. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural. Neste artigo, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI, um controlador PIDF sintonizado, e controlo ótimo. Os resultados indicam que ambos os controladores PIDF e o controlo ótimo oferecem desempenho superior em termos de espetros de resposta quando comparados com o método iterativo, sendo o controlo ótimo o método com o melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da precisão da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
+Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares, ou outras dinâmicas pouco estudadas. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural.
+
+Nesta tese, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, chamado de OLI, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI (proporcional-integral) , um controlador sintonizado PID-F (proporcional-integral-derivativo-filtrado), e um controlador ótimo de formulação linear-quadrática-integral (LQI). 
+
+Adicionalmente, para a finalidade de se sintonizar os controladores, é proposto um método de idêntificação próprio para sistemas que operam apenas em anel fechado, como é o caso das mesas sismicas do LNEC. Este método é aplicado na identificação de um agitador eletrodinâmico, sendo o modelo identificado usado para comparar, novamente, as três estratégias de controlo. Adicionalmente, é implementado um processo de otimização dos parametros da função de custo para o LQI.
+
+Os resultados indicam que ambos os controladores PID-F e o LQI oferecem desempenho superior quando comparados com o método OLI, sendo o controlador LQI aquele com melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
 
 \vspace{10mm}
 
@@ -177,8 +187,12 @@ Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simu
 \section*{Abstract}
 
 Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
-This paper analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller; a tuned PIDF controller (proportional, integral, and filtered derivative) ; and an optimal controller. 
-The results indicate that both the tuned PIDF and the optimal controllers offer superior performance in terms of response spectra compared to the iterative method, whereas the optimal controller performed the best. The performance of the controllers depends on a reliable dynamic model identification of the uniaxial shaking table, and the sensitivity of each method to the quality of the identification requires further investigation.
+
+This thesis analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used OLI method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller, a tuned PID-F controller (proportional, integral, and filtered derivative), and a LQI controller. 
+
+Additionally, in order to tune the controllers, an identification method more appropriate for systems operating only under closed-loop, such as LNEC's shaking tables, is proposed. This method is then applied on the identification of an electrodynamic shaker, whose identified model is then used to, once again, compared the performance of the three control strategies. 
+
+The results indicate that both the PID-F and LQI controller offer superior performance compared to the OLI method, whereas the optimal controller performed the best. The performance of the controllers depends on system identification, and the sensitivity of each method to the quality of the identification requires further investigation.
 
 \vspace{10mm}
 
@@ -188,7 +202,7 @@ The results indicate that both the tuned PIDF and the optimal controllers offer 
 \clearpage
 \tableofcontents % Indice
 
-\pagebreak
+\pagebreak 
 \listoftables % Tabelas
 \listoffigures %Figuras
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -431,7 +445,13 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-\subsection{Seismic Table Control Strategies and Innovations in Recent Literature}
+\subsection{Seismic Table Control Strategies}
+
+Shaking-table tests consist of mounting a physical model on a stiff platform that is driven so as to reproduce the desired ground-motion time history (reference signal). This experimental technique was introduced in the 1940s and became widespread during the 1960s. Early systems relied on mechanical profiled cams to generate the excitation, but servo-hydraulic systems soon became the standard solution ([1],[2],[3]). At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 electrodynamic shaker attached to a movable table was installed in the 60s to perform seismic tests [4]. A uniaxial shaking table (ST1D) was developed and installed, consisting of a 3 m × 2 m horizontal steel platform and a vertical platform body driven by a hydraulic actuator supplied by a dedicated oil-hydraulic circuit ([5], [6]). During this period, adaptive control strategies were developed, implemented, and validated both on a small scale shaking table and on the ST1D, for tracking reference earthquake spectrum (frequency domain), iteratively ([7],[8]). Increasingly demanding requirements for reproducing seismic excitation along all three directions motivated the development of the triaxial shaking table (ST3D), which has been installed and operational at LNEC since the mid-1990s [4]. The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies: i) Three-Variable Control (TVC), also known in control theory literature as state variable control [9], which combines the displacement, velocity and acceleration feedback [1]; ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); iii) Adaptive Inverse Control (AIC) [10], suitable for non-sinusoidal signals on linear systems; iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC’s ST3D.
+Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) ([1], [11]). This is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms [12]. Alternative control approaches have been proposed in the literature, including: i) Acceleration Trajectory Tracking Control (ATTC) [13]; ii) displacement feedforward-feedback controller using an optimal controller [14]; iii) Model-based feedforward-feedback controller for acceleration tracking [15]; iii) minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal [16].
+
+
+\subsubsection{Innovations in Recent Literature}
 Advanced control methods, such as active disturbance rejection control (ADRC), adaptive model-based state estimators, and nonlinear signal-based control, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. %619
 Offline iterative control and frequency-splitting techniques enable double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing rigid structures like dams and nuclear facilities. %14
 Proportional-derivative (PD) control and affordable hardware have made seismic table testing more accessible in resource-limited settings. %18
@@ -922,21 +942,19 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
 \subparagraph{Optimal Control}
 Optimal control is precisely about designing the optimal state feedback controller gains. This is done by defining some performance index which is a function of the control action:
 \begin{equation}
-    J(u(t)) = \int_{t_0}^{T} g\left( x(t) , u(t) \right) \, dt
+    J \left( x(t) , u(t) \right) = \int_{t_0}^{T} g\left( x(t) , u(t) \right) \, dt
 \end{equation}
 
-Where $x(t)$ is the states, and $u(t)$ the control action, of a given system:
+Where $x(t)$ is the states, and $u(t)$ the control action, of a given LTI system:
 \begin{equation} \label{eq_LQR_performance_index}
-    \dot{x}(t) = f\left( x(t) , u(t)\right) = A x(t) + B u(t)
+    \dot{x}(t) = f\left( x(t) , u(t)\right) = A \, x(t) + B \, u(t)
 \end{equation} 
 
-Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find the optimal gains $k$ for reference tracking with LQR servo controller. An advantage of the linear quadratic optimal control method, over a pole-placement method, is that it provides a systematic way of computing the state feedback control gain matrix, guaranteeing a viable solution in terms of control action feasibility. To ensure the controller minimizes the tracking error we'll define the performance index, specifying matrices $Q$ and $R$, such that the minimization of the index mostly minimizes the state which is the tracking error (or, more precisely, in the case of our servo controller, the integral of the tracking error):
+Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find the optimal gains $k$ for reference tracking with LQR servo controller. An advantage of the linear quadratic optimal control method, over a pole-placement method, is that it provides a systematic way of computing the state feedback control gain matrix, guaranteeing a viable solution in terms of control action feasibility. To ensure the controller minimizes the tracking error we'll define the performance index (equation \ref{eq_J_LQ}), by specifying matrices $Q$ and $R$, such that the minimization of the index mostly minimizes the state, or states, which somehow represent tracking error. In the case of the LQI controller in section \ref{sec_Optimal_Control}, the system will be augmented with a stated which is the integral of the tracking error, and this is the state that will be weighted by matrix Q:
 
-{\huge Explicar melhor vetor de estados, que inclui um estado que corresponde ao integral do erro}
-
-\begin{equation}
-    J(u(t))=\int_{0}^{t} x^\intercal Q x + u^\intercal R u \,dt
-\end{equation}
+\begin{equation} \label{eq_J_LQ}
+    J \left( x(t) , u(t) \right)=\int_{0}^{t} x^\intercal Q x + u^\intercal R u \,dt
+\end{equation} 
 The first term in the integrand affects state response, while the second affects control action.
 
 Notice how the performance index integral in equation \ref{eq_LQR_performance_index} is defined for a finite time. The solution for the finite time control problem is optimal, however, it is a time-varying gain vector $k(t)$:
@@ -1365,6 +1383,9 @@ The figure on the left shows the results of the identification with some noise, 
 
 
 \section{Evaluating Controller Performance in Simulation Environment}\label{Evaluating Controller Performance in Simulation Environment}
+
+In this section a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
+
 \subsection{A Model of LNEC's Uniaxial Seismic Table}\label{Modelling Seismic Table Dynamics}
 %\section{Modelação Matemática}
 %Os modelos devem ser implementados em Matlab/Simulink e complementados com funções, scripts e interfaces que facilitem a parametrização, cálculo de propriedades (como modos de vibração), análise e simulação com diferentes tipos de entradas (sinais sinusoidais, ondas quadradas e inputs externos como sinais sísmicos).
@@ -1678,31 +1699,22 @@ The code implementation can be found at the following GitHub repository \href{ht
     \label{fig_response_spectrum_of_3}
 \end{figure}
 
-\begin{table}[H]
-\begin{minipage}{0.58\textwidth}
-
 In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller.
 
 The acceleration response spectrum mean squared error for the tuned platform is significantly reduced compared to the standard tune (Table \ref{tab:mse_rs}), however, it exceeds the desired response spectrum for the entire frequency spectrum.
 
-\end{minipage}
-\hfill
-\begin{minipage}{0.4\textwidth}
+\begin{table}[H]
     \centering
-    \begin{tabular}{ccc}
+    \begin{tabular}{|c|c|c|}
         \hline
-        MSE & F. Parallel  \\
+        Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
         \hline
-        Acceleration & 1.78  \\
-        Acceleration (tuned) & 0.0327 \\
-        \hline
-        Displacement          & $1.94\cdot 10^{-6}$  \\
-        Displacement (tuned)  & $1.88 \cdot 10^{-6}$  \\
+        Baseline & 1.78          & $1.94 \cdot 10^{-6}$ \\
+        Tuned    & 0.0327        & $1.88 \cdot 10^{-6}$ \\
         \hline
     \end{tabular}
     \caption{Mean squared error for response spectrum of platen with ground response spectrum as baseline}
     \label{tab:mse_rs}
-\end{minipage}
 \end{table}
 
 
@@ -2161,7 +2173,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 
 
-\subsubsection{LNEC's seismic platform driver signal adaptation process}
+\subsubsection{LNEC's seismic platform driver signal adaptation process}\label{sec_LNEC_method}
 
 \paragraph{The functioning of the driver adaptation software}
 
@@ -2289,14 +2301,14 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{lccc}
+\begin{tabular}{cccc}
 \hline
 Control Strategy  & PIDF & Optimal Control & Adapted Driver (3rd)\\
 \hline
-Mean Acceleration MSE     & \(8.27 \times 10^{-2}\) & \(2.09 \times 10^{-2}\) & \(4.17 \times 10^{-1}\) \\
-Median Acceleration MSE   & \(3.20 \times 10^{-2}\) & \(4.39 \times 10^{-4}\) & \(9.48 \times 10^{-2}\) \\
-Mean Displacement MSE  & \(5.97 \times 10^{-7}\) & \(3.01 \times 10^{-11}\) & \(1.62 \times 10^{-5}\) \\
-Median Displacement MSE & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}\) & \(1.73 \times 10^{-5}\) \\
+Mean Acceleration MSE ($m/s^2$)    & \(8.27 \times 10^{-2}\) & \(2.09 \times 10^{-2}\) & \(4.17 \times 10^{-1}\) \\
+Median Acceleration MSE ($m/s^2$) & \(3.20 \times 10^{-2}\) & \(4.39 \times 10^{-4}\) & \(9.48 \times 10^{-2}\) \\
+Mean Displacement MSE ($m$) & \(5.97 \times 10^{-7}\) & \(3.01 \times 10^{-11}\) & \(1.62 \times 10^{-5}\) \\
+Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}\) & \(1.73 \times 10^{-5}\) \\
 \hline
 \end{tabular}
 \caption{Comparison of mean and median response spectrum MSE for various seismic signals.}

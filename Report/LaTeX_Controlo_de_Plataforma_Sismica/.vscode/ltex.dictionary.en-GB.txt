@@ -11,3 +11,4 @@ cyanoacrylate
 Hammerstein-Wiener
 feedthrough
 Riccati
+LQI

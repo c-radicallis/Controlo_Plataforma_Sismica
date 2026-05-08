@@ -1,4 +1,4 @@
-\documentclass[draft ,  10pt, twoside]{report} %
+\documentclass[  10pt, twoside]{report} %draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -385,7 +385,7 @@ In addition, the system faces physical limitations inherent to the equipment, na
 \noindent
 \begin{minipage}{0.58\textwidth}\setlength{\parindent}{15pt}
 
-\subsection{Response Spectrum}% in Civil Engineering} %\section{Key Aspects of Response Spectrum}
+\subsection{Response Spectrum}% in Civil Engineering %\section{Key Aspects of Response Spectrum}
 
 The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
@@ -625,7 +625,8 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
 \vspace{-5mm}
 
 \begin{figure}[H]
-\begin{minipage}{0.62\textwidth}
+\noindent
+\begin{minipage}{0.62\textwidth}\setlength{\parindent}{15pt}
 In the case of two systems which generate an output from a common input signal, as in figure \ref{tikz_two_sys_common_input}, then $y_2$ can be given as function of $y_1$, and we have the following relations:
     \begin{align}
         y_{2}(t) =& \, G_{2}(z)\, x(t) = G_{2}(z)\, G_{1}^{-1}(z) \, y_{1}(t) \\[3mm]
@@ -784,7 +785,8 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 
 \begin{figure}[H]
 \subsubsection{Combined Open- and Closed-Loop Control}
-\begin{minipage}{0.4\textwidth}
+\noindent
+\begin{minipage}{0.4\textwidth}\setlength{\parindent}{15pt}
     It is possible to combine open-loop and closed-loop control in a single control system. Figure \ref{tikz_Control_Systems_Combined_control} shows this configuration.
     
     In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
@@ -883,7 +885,8 @@ The proportional component outputs a control action proportional to the error. I
 
 \begin{figure}[H]
 \subsubsection{Full State Feedback Control}
-\begin{minipage}{0.7\textwidth}
+\noindent
+\begin{minipage}{0.7\textwidth}\setlength{\parindent}{15pt}
 In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}, which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
 \begin{equation}
     F(t) = k _1\cdot ( x_{ref}(t) - x(t))
@@ -919,7 +922,8 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
 \end{figure}
 \vspace{-8mm}
 \begin{figure}[H]
-    \begin{minipage}{0.52\textwidth}
+    \noindent
+    \begin{minipage}{0.52\textwidth}\setlength{\parindent}{15pt}
         If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action, we have the following control law:
         \begin{equation}
             F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
@@ -1015,6 +1019,7 @@ Usual performance indexes have a quadratic form to guarantee mathematical tracta
 \begin{equation} \label{eq_J_LQ}
     J \left( x(t) , u(t) \right)=\int_{0}^{t} x^\intercal Q x + u^\intercal R u \,dt
 \end{equation} 
+
 The first term in the integrand affects state response, while the second affects control action.
 
 Notice how the performance index integral in equation \ref{eq_LQR_performance_index} is defined for a finite time. The solution for the finite time control problem is optimal, however, it is a time-varying gain vector $k(t)$:
@@ -1262,22 +1267,15 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
 \subsection{Nonparametric Modelling by Spectral Analysis}\label{Nonparametric Modelling}
 \subsubsection{Why it works in open-loop}
-\vspace{-5mm}
+
+For our system, taking the spectral density $\Phi_{yu}$, we get:
+\begin{equation}
+    \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
+\end{equation}
+
+If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}:
+
 \begin{figure}[H]
-    \begin{minipage}{0.63\textwidth}
-        For our system, taking the spectral density $\Phi_{yu}$, we get:
-        \begin{equation}
-            \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
-        \end{equation}
-
-        If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}, where the output $y$ (which contains the disturbance $e$) was not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the spectral densities:
-        \begin{equation}
-            \widehat{G}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)} \label{eq_G_spectral_estimate_open_loop}
-        \end{equation}
-
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.33\textwidth}
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
 
@@ -1305,9 +1303,13 @@ The block diagram resulting from these reworked equations is shown in Figure \re
 
         \end{tikzpicture}
         \caption{Open-loop System}\label{tikz_general_open_loop_sys} 
-    \end{minipage}
-
 \end{figure}
+
+Where the output $y$ (which contains the disturbance $e$) was not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the spectral densities:
+\begin{equation}
+    \widehat{G}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)} \label{eq_G_spectral_estimate_open_loop}
+\end{equation}
+
 
 \subsubsection{The problem in closed-loop}
 Applying the same technique for our closed loop system (figure \ref{tikz_general_CL_sys}), from equations \eqref{eq_y_transformed_CL} and \eqref{eq_u_transformed_CL}, we find:
@@ -1461,7 +1463,7 @@ In \cite{oliveira2015} a complete schematic representation of the ST1D, with a c
 \end{figure}
 
 In \citet{tekeste2021} a model for the ST1D with a coupled 1DOF system %rigidly attached payload
-is devised from linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). 
+is devised by parametrizing linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). These parameters are presented in table \ref{tab:parameters}, and are the ones which will be used in all simulation studies.
 
 \begin{figure}[H]
     \centering
@@ -1470,20 +1472,17 @@ is devised from linearized analytical models for each of its components (control
     \label{fig_Tekeste_block_diagram}
 \end{figure}
 
-In the previously mentioned publication, the parameters in table \ref{tab:parameters} were determined for the model in figure \ref{fig_Tekeste_block_diagram}. 
-
-It's important to note that the servo valve and hydraulic actuators have since been updated.  Until a new identification of the updated system has been performed, the parameters determined in \cite{tekeste2021} are the ones which will be used in all simulation studies.
-
 \begin{table}[H]
 \centering
 \caption{ST1D model parameters \citep{tekeste2021}}
-\begin{tabular}{|c| l |c|}
+\begin{tabular}{c  l  l }
 \hline
-\textbf{Symbol} & \textbf{Description} & \textbf{Value (Units)} \\ \hline
+\textbf{Symbol} & \textbf{Description} & \textbf{Value} \\ \hline
 $k_p$ & Proportional gain of the controller & $1.2993 \, \text{V/cm}$ \\ \hline
-$k_{sv}$ & Servo-valve gain &  \\ \hline % 1934.50 \,
 $\tau_{sv}$ & Time-delay parameter of the servo-valve transfer function & $0.0246 \, \text{s}$ \\ \hline
-$k_{sv}k_q$ & Valve flow gain & $1934.50 \, \text{cm}^3/\text{s/V}$ \\ \hline % 
+$k_{sv}$ & Servo-valve gain &  \\ \hline % 1934.50 \,
+$k_q$ & Valve flow gain & \\ \hline % 
+$k_{sv}k_q$ & Total valve flow gain & $1934.50 \, \text{cm}^3/\text{s/V}$ \\ \hline % 
 $k_c$ & Valve pressure-flow gain &   \\ \hline %$\text{m}^3/\text{s/kPa}$
 $C_l$ & Total leakage coefficient of the piston &  \\ \hline %$ \text{m}^3/\text{s/kPa}$
 $ k_{Pl}$ & $ = k_c + C_l $ & $ 1.67401\cdot 10^{-7}   \text{m}^3/\text{s/kPa} $\\ \hline
@@ -1491,34 +1490,86 @@ $A$ & Area of the fluid under compression in the actuator & $0.012456 \, \text{m
 $V_t$ & Total volume of the fluid under compression in the actuator & $0.002659 \, \text{m}^3$ \\ \hline
 $\beta_e$ & Effective bulk modulus of the system & $193716.28 \, \text{kPa}$ \\ \hline
 $K_h$ & Oil-column frequency of the actuator & $4531.79 \, \text{kPa/m}$ \\ \hline
-$m_p$ & Mass of the platen & $1.9751 \, \text{ton}$ \\ \hline
-$c_t$ & Combined damping force of the actuator and the platen & $5.7800 \, \text{kNs/m}$ \\ \hline
+$m_{sp}$ & Mass  of the SDOF structure & -  \\ \hline
 $k_{sp}$ & Stiffness of the SDOF structure & - \\ \hline
 $c_{sp}$ & Damping of the SDOF structure & - \\ \hline
-$m_T$ & Total mass considering the payload (shaking table) & - \\ \hline
+$m_p$ & Mass of the platen & $1.9751 \, \text{ton}$ \\ \hline
+$c_t$ & Combined damping force of the actuator and the platen & $5.7800 \, \text{kNs/m}$ \\ \hline
+$m_T$ & Total mass $= m_p + m_{sp}$  & - \\ \hline
 %$H_{sp}$ & Transfer function relating platen and SDOF structure displacement & - \\ \hline
 \end{tabular}
 \label{tab:parameters}
 \end{table}
 
 
-A \textit{Simulink} model %(Figure \ref{fig_simulink_tekeste}) of the block diagram in Figure \ref{fig_Tekeste_block_diagram} 
-was built in order to simulate the ST1D dynamics, however, its implementation resulted in a build up of numerical errors leading to overflow, making this modelling approach unviable.
-
-% \begin{figure}[H]
-%     \centering
-%     \fbox{\includegraphics[width=0.98\linewidth]{simulink_1dof_model.png}}
-%     \caption{\textit{Simulink} model of the ST1D}
-%     \label{fig_simulink_tekeste}
-% \end{figure}
-
 \subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}
 
-Given the previous results, an alternative approach was found in order to simulate the system, which consisted on obtaining the transfer function relating the desired platen position, $x_{ref}$, as input, and the force applied to the platen, $F_P$, as output.
+In order to determine a model for the shaking table with a coupled 2DOF systems, firstly, the block diagram in figure \ref{fig_clean_block_force_output}, which contains only part of the system (controller, servo valve, hydraulic actuator), was built:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Modelling/ST1D_block_diagram.png}
+    \includegraphics[width=0.8\linewidth]{Modelling/ST1D_block_diagram.png}
+        % \begin{tikzpicture}[
+        %     block/.style = {draw, thick, rectangle, minimum height=2.2em, align=center},
+        %     sum/.style   = {draw, thick, circle, minimum size=2em, inner sep=0pt},
+        %     >=Stealth, thick, font=\small,
+        %     node distance=2.0cm and 1.6cm
+        %     ]
+
+        %     %--- Main signal path ---
+        %     \node (xref) {$X_{\mathrm{ref}}$};
+
+        %     \node[sum, right=2.0cm of xref] (s1) at (0,0) {};
+        %     \node[font=\tiny] at ($(s1)+(-0.30, 0.25)$) {$+$};
+        %     \node[font=\tiny] at ($(s1)+(-0.08,-0.33)$) {$-$};
+
+        %     \node[block, minimum width=1.6cm, right=of s1, label=above:{\footnotesize Controler}] (gc) {$G_c$};
+
+        %     \node[block, minimum width=3.6cm, right=of gc, label=above:{\footnotesize Servo-Valve}] (sv)
+        %         {$\dfrac{K_{sv}}{1+s\cdot\tau_{sv}}$};
+
+        %     \node[block, minimum width=1.6cm, right=of sv] (kq) {$K_q$};
+
+        %     \node[sum, right=of kq] (s2) {};
+        %     \node[font=\tiny] at ($(s2)+(-0.33, 0.25)$) {$+$};
+        %     \node[font=\tiny] at ($(s2)+(-0.33,-0.25)$) {$-$};
+
+        %     \node[block, minimum width=4.0cm, right=of s2] (hyd)
+        %         {$\dfrac{1}{C_\ell + s\cdot A^2/k_h}$};
+
+        %     \node[block, minimum width=1.6cm, right=of hyd] (Abl) {$A$};
+
+        %     \node[right=of Abl] (fp) {$F_P$};
+
+        %     %--- Feedback blocks ---
+        %     \node[block, minimum width=1.6cm, above=3.2cm of hyd] (kc) {$K_c$};
+        %     \node[block, minimum width=1.6cm, below=2.8cm of s2] (As) {$A\cdot s$};
+
+        %     %--- Forward path arrows ---
+        %     \draw[->] (xref) -- (s1);
+        %     \draw[->] (s1)   -- node[above]{$e$}        (gc);
+        %     \draw[->] (gc)   -- node[above]{$i_{sv}$}   (sv);
+        %     \draw[->] (sv)   -- node[above]{$x_{sv}$}   (kq);
+        %     \draw[->] (kq)   -- node[above]{$Q_L$}      (s2);
+        %     \draw[->] (s2)   -- node[above]{$Q$}        (hyd);
+        %     \draw[->] (hyd)  -- node[above]{$P_L$}      (Abl);
+        %     \draw[->] (Abl)  -- (fp);
+
+        %     %--- Kc feedback path ---
+        %     \coordinate (pl_tap) at ($(hyd.east)!0.5!(Abl.west)$);
+        %     \draw (pl_tap) -- ++(0,3.2) coordinate (kc_in);
+        %     \draw[->] (kc_in) -- (kc.east);
+        %     \draw[->] (kc.west) -- ++(-1.5,0) |- (s2.north);
+
+        %     %--- XT bottom feedback line ---
+        %     \draw (s1.south) -- ++(0,-1.4) coordinate (xt_left);
+        %     \draw (As.south) -- ++(0,-1.4) coordinate (xt_mid);
+        %     \draw[->] (xt_left) -- ++(18.0,0) node[right]{$X_T$};
+        %     \draw[->] (xt_left) -- (s1.south);   % into s1 (negative)
+        %     \draw[->] (xt_mid)  -- (As.north);   % into A·s
+        %     \draw[->] (As.north) -- (s2.south);  % A·s output into s2 (negative)
+
+        % \end{tikzpicture}
     \caption{Block diagram of the ST1D}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
     \label{fig_clean_block_force_output}
 \end{figure}
@@ -1542,9 +1593,9 @@ From the block diagram in figure \ref{fig_clean_block_force_output}, the followi
     \end{aligned}
 \end{align}
 % LTeX: enabled=true
-It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \eqref{eq_G_Fp_isv} \& \ref{G_xT_Fp}).
+It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \eqref{eq_G_Fp_isv} \& \eqref{G_xT_Fp}).
 
-To represent the dynamics of a typical structure on test (which has two vibration modes in the bandwidth of the seismic table), a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
+To represent the main dynamics of a usual test specimen, a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
 
 \begin{figure}[H]
 \centering
@@ -1615,7 +1666,7 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
 \Longleftrightarrow
 \end{align}
 
-\vspace{5mm}
+%\vspace{5mm}
 
 \begin{equation*} 
 \Longleftrightarrow
@@ -1711,8 +1762,9 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 \section{Control Strategies}
 \subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information. Another simple enhancement would be to add a filtered derivative term to the controller (making it a PIDF), since this should be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
+\noindent
+\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
+Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}). Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}

@@ -11,19 +11,20 @@ mass=2e3;
 
 % 1st mode
 m1 = mass; % kg
-f1 = 0.4; % Hz   % 1.5 < f1 < 4
-zeta1 = 0.1 ; % 2 < zeta1 < 10
+f1 = 4; % Hz   % 1.5 < f1 < 4
+zeta1 = 0.02 ; % 2 < zeta1 < 10
 %2nd mode
 m2 = mass; % kg
-f2 =3; % Hz % 6 < f2 < 10
-zeta2 = 0.06; % 5 < zeta2 < 25r
+f2 =10; % Hz % 6 < f2 < 10
+zeta2 = 0.05; % 5 < zeta2 < 25r
 
 % Controller
 k_p=1.2993/1e-2; %SI units %Pgain (kp=1.2993 V/cm) 
 G_c = tf(k_p,1);
 
 % s,G_T,G_1,G_2,G_T1 ,G_21 ,G_svq,G_csv,G_x2_x1,G_x1_xT,G_xT_Fp,G_Fp_xref,G_xT_xref,G_x1_xref,G_x2_xT , G_Fp_isv  ,c1,c2,k1,k2, ss_model 
-[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , ss_isv_xT  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+[s,~,~,~,~ ,~ ,~,~,~,~,G_xT_Fp,~,G_xT_xref,~,~ , G_Fp_isv  ,~,~,~,~ , AA , BB , CC , DD  ]=Compute_TFs(G_c, mT , cT , m1 , m2 , f1, zeta1 , f2 , zeta2); %_and_StateSpace
+ss_isv_xT = ss(AA,BB, CC,DD);
 ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
 
 %%  Load seismic signal and scale down if necessary
@@ -33,7 +34,7 @@ ss_xref_xT = feedback(ss_isv_xT*G_c ,1);
 % ddx_ref = dados(:,2);
 % ddx = [t_vector dados(:,2)];
 
-dados = load('LAquilaReducedScale_tgt.txt');%load('elcentro.txt');
+dados = load('elcentro.txt'); %load('LAquilaReducedScale_tgt.txt');
 t_vector = dados(:,1);
 t_step = t_vector(2);
 ddx_ref = dados(:,2);
@@ -143,7 +144,7 @@ f_i=0.1; %freq inicial
 f_n=30;  %freq final
 n_points = 5e2;
 f_vector = logspace( log10(f_i) , log10(f_n) , n_points);
-[picos_ddx_ground , picos_x_ground] = ResponseSpectrum( t_vector , ddx_ref, f_vector , 1);
+[picos_ddx_ground , picos_x_ground] = ResponseSpectrum(f_vector, ddx_ref, x_ref, f_vector);
 
 figure(fig8);
 subplot(121)
@@ -164,7 +165,7 @@ plot(f_vector, picos_x_ground(:, 1),'-', 'LineWidth' , 2, 'Color', color1, 'Disp
 axes(ax1); % Activate the existing axes
 bodeplot(G_xT_xref,opts1);
 hold on
-bodeplot(ss_xref_xT,opts1);
+
 
 % Third plot
 axes(ax3); % Activate the existing axes
@@ -208,7 +209,7 @@ plot(t_vector,F_p_isv/1e3,"DisplayName","Default") %/1e3 to display as kN
 
 %% Finding Response Spectre for table
 
-[picos_ddx_table , picos_x_table ] = ResponseSpectrum(  t_vector , ddx_T , f_vector, 1 );
+[picos_ddx_table , picos_x_table ] = ResponseSpectrum( f_vector, ddx_T, x_T, f_vector);
 
 figure(fig8);
 subplot(121)
@@ -232,7 +233,7 @@ G_c   = pidtune(G_Fp_isv*G_xT_Fp,'PIDF',20*2*pi,tuner_opts)
 % First plot
 axes(ax1); % Activate the existing axes
 bodeplot(G_xT_xref);
-legend( 'Default'  ,'Default(state space)', 'Tuned');
+legend( 'Default'  , 'Tuned');%,'Default(state space)'
 title('Bode of G\_xT\_xref'); 
 grid on;
 
@@ -275,7 +276,7 @@ plot(t_vector,F_p_isv*1e-3,"DisplayName","Tuned")
 
 %% Finding Response Spectre for table tuned
 
-[picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum( t_vector , ddx_T_tuned, f_vector , 1 );
+[picos_ddx_table_tuned , picos_x_table_tuned ] = ResponseSpectrum(  f_vector, ddx_T_tuned, x_T_tuned, f_vector);
 
 
 figure(fig8);

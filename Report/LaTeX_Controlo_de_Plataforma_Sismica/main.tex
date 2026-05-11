@@ -1504,7 +1504,7 @@ $m_T$ & Total mass $= m_p + m_{sp}$  & - \\ \hline
 
 \subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}
 
-In order to determine a model for the shaking table with a coupled 2DOF systems, firstly, the block diagram in figure \ref{fig_clean_block_force_output}, which contains only part of the system (controller, servo valve, hydraulic actuator), was built:
+In order to determine a model for the shaking table with a coupled 2DOF systems, which will represent the essential dynamics of usual test specimens, firstly, the block diagram (in figure \ref{fig_clean_block_force_output}) containing only part of the system, which includes the controller, servo valve, and hydraulic actuator, was built:
 
 \begin{figure}[H]
     \centering
@@ -1574,7 +1574,8 @@ In order to determine a model for the shaking table with a coupled 2DOF systems,
     \label{fig_clean_block_force_output}
 \end{figure}
 
-From the block diagram in figure \ref{fig_clean_block_force_output}, the following equations were derived:
+ And the relevant transfer functions were derived:
+
 % LTeX: enabled=false
 \begin{align}
 \left\{
@@ -1595,7 +1596,7 @@ From the block diagram in figure \ref{fig_clean_block_force_output}, the followi
 % LTeX: enabled=true
 It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \eqref{eq_G_Fp_isv} \& \eqref{G_xT_Fp}).
 
-To represent the main dynamics of a usual test specimen, a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
+To represent the main dynamics of usual test specimens, a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
 
 \begin{figure}[H]
 \centering
@@ -1680,7 +1681,7 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
 \Longleftrightarrow
 \end{equation*}
 
-\vspace{5mm}
+%\vspace{5mm}
 
 \begin{equation*}
 \Longleftrightarrow
@@ -1715,9 +1716,8 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
     F_p \\ 0 \\ 0
 \end{bmatrix}
 \end{equation*}
-
-    
-\vspace{5mm}
+  
+%\vspace{5mm}
 From the system of equations \eqref{eq_2dof_system}, the following transfer functions relating the displacements of each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
 \small
 \begin{minipage}{0.51\textwidth}
@@ -1776,10 +1776,11 @@ Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_
 \end{minipage}
 \end{figure}
 
-For a preliminary analysis of the mathematical model, some simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table. Table \ref{tab:modal_params} contains the parameters for the 2DOF coupled structure (Figure \ref{schematic_2dof}).
+For a preliminary analysis of how the shaking table performance could be changed with controller tuning, some simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table. Table \ref{tab:modal_params} contains the parameters for the 2DOF coupled structure (Figure \ref{schematic_2dof}).
 
 \begin{table}[H]
     \centering
+    \caption{Modal parameters for the system, and resulting stiffness and damping for each element}
     \renewcommand{\arraystretch}{1.3}
     \begin{tabular}{ c c c }
         \hline
@@ -1798,21 +1799,38 @@ For a preliminary analysis of the mathematical model, some simulations were run 
         Damping Coefficient ($c_i$) [N$\cdot$m/s] & $1.26\cdot 10^3$ & $1.26\cdot 10^4$ \\
         \hline
     \end{tabular}
-    \caption{Modal parameters for the system, and resulting stiffness and damping for each element}
     \label{tab:modal_params}
 \end{table}
 
-Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ as:
-\begin{equation}
-    G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1} \quad \text{ where: $Kp = 1540, Ki = 1670, Kd = 17.9 , Tf = 6.96\cdot10^{-5}$}
+Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ in the form of a PID-F, as in equation \eqref{eq_pidf_in_s}:
+\begin{equation} \label{eq_pidf_in_s}
+    G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
 \end{equation}
-Where the parameters $K_p, K_i, K_d$ and $T_f$ were obtained using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
+
+Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
+
+\begin{table}[H]
+    \centering
+    \caption{Tuned PID-F controller parameters}
+    \begin{tabular}{ccc}
+        \hline
+        Parameter & Value & Unit \\
+        \hline
+        $K_p$ & $1540$ & $V/m$ \\
+        $K_i$ & $1670$ & $V/(m \, s)$ \\
+        $K_d$ & $17.9$ & $V/(m/s)$ \\
+        $T_f$ & $6.96\cdot10^{-5}$ & $s$ \\
+        \hline
+    \end{tabular}
+    \label{tab:pidf_params}
+\end{table}
+
 
 The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Response_Spectra.png}
+    \includegraphics[width=\linewidth]{Sim_Res/Response_Spectra.jpg}
     \caption{Response spectrum for fault normal signals. The response spectrum was obtained by sampling 500 frequencies, logarithmically spaced between 0.1 and 30 Hz}
     \label{fig_response_spectrum_of_3}
 \end{figure}
@@ -1827,8 +1845,8 @@ The acceleration response spectrum mean squared error for the tuned platform is 
         \hline
         Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
         \hline
-        Baseline & 1.78          & $1.94 \cdot 10^{-6}$ \\
-        Tuned    & 0.0327        & $1.88 \cdot 10^{-6}$ \\
+        Baseline & $1.78$               & $1.94 \cdot 10^{-6}$ \\
+        Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
         \hline
     \end{tabular}
     \caption{Mean squared error for response spectrum of platen with ground response spectrum as baseline}

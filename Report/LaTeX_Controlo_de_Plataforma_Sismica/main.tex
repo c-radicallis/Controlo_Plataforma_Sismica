@@ -509,8 +509,62 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 
 \section{Seismic Table Control Strategies}
 
-The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies: i) Three-Variable Control (TVC), also known in control theory literature as state variable control [9], which combines the displacement, velocity and acceleration feedback [1]; ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); iii) Adaptive Inverse Control (AIC) [10], suitable for non-sinusoidal signals on linear systems; iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC’s ST3D.
-Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) ([1], [11]). This is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms [12]. Alternative control approaches have been proposed in the literature, including: i) Acceleration Trajectory Tracking Control (ATTC) [13]; ii) displacement feedforward-feedback controller using an optimal controller [14]; iii) Model-based feedforward-feedback controller for acceleration tracking [15]; iii) minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal [16].
+The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. 
+
+The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies:
+
+i) Three-Variable Control (TVC), also known in control theory literature as state variable control [9], which combines the displacement, velocity and acceleration feedback [1];
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{MTSsystems/tvc.png}
+    \caption{tvc}
+    \label{fig_tvc}
+\end{figure}
+
+ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); NEC’s ST3D.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{MTSsystems/AHC.png}
+    \caption{AHC}
+    \label{fig_AHC}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MTSsystems/AHC_detail.png}
+    \caption{AHC detail}
+    \label{fig_AHC_detail}
+\end{figure}
+
+iii) Adaptive Inverse Control (AIC) [10], suitable for non-sinusoidal signals on linear systems; 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{MTSsystems/AIC.png}
+    \caption{AIC}
+    \label{fig_AIC}
+\end{figure}
+
+iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MTSsystems/APC.png}
+    \caption{APC}
+    \label{fig_APC}
+\end{figure}
+
+v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at L
+Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) ([1], [11]). This is the basis of the OLI control strategy. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{MTSsystems/OLI.png}
+    \caption{OLI}
+    \label{fig_OLI}
+\end{figure}
+
+Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms [12]. Alternative control approaches have been proposed in the literature, including: i) Acceleration Trajectory Tracking Control (ATTC) [13]; ii) displacement feedforward-feedback controller using an optimal controller [14]; iii) Model-based feedforward-feedback controller for acceleration tracking [15]; iii) minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal [16].
 
 
 \subsection{Innovations in Recent Literature}
@@ -1446,7 +1500,7 @@ The figure on the left shows the results of the identification with some noise, 
 
 \chapter{Evaluating Controller Performance in Simulation Environment for LNEC's Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
-In this section a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
+In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
 \section{A Model of LNEC's Uniaxial Seismic Table}\label{Modelling Seismic Table Dynamics}
 %\chapter{Modelação Matemática}
@@ -1719,27 +1773,16 @@ For the system in figure \ref{schematic_2dof} the following equations of motion 
   
 %\vspace{5mm}
 From the system of equations \eqref{eq_2dof_system}, the following transfer functions relating the displacements of each mass to the displacements of an adjacent mass, or the force applied to the platen, are obtained:
-\small
-\begin{minipage}{0.51\textwidth}
+
 \begin{align}
     \frac{x_T}{F_P} &= \frac{G_1 G_2 - G_{21}^2}{G_T G_1 G_2 - G_T G_{21}^2 - G_2 G_{T1}^2} = G_{xT/Fp}(s) \label{G_xT_Fp}\\
     \frac{x_1}{x_T} &= \frac{G_{T1} G_2}{G_1 G_2 - G_{21}^2} = G_{x1/xT}(s) \\
-    \frac{x_2}{x_1} &= \frac{G_{21}}{G_2} = G_{x2/x1}(s)
-\end{align}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-\begin{align}
+    \frac{x_2}{x_1} &= \frac{G_{21}}{G_2} = G_{x2/x1}(s)\\
     G_T(s) &= m_T\cdot s^2 + (c_T + c_1)\cdot s + k_1 \\
     G_1(s) &= m_1\cdot s^2 + (c_1 + c_2)\cdot s + k_1 + k_2 \\
     G_2(s) &= m_2\cdot s^2 + c_2\cdot s + k_2 \\
     G_{T1}(s) &= c_1\cdot s + k_1 \\
-    G_{21}(s) &= c_2\cdot s + k_2 
-\end{align}
-\end{minipage}
-
-
-\begin{align}
+    G_{21}(s) &= c_2\cdot s + k_2 \\
     G_{Fp/x_{ref}}(s) &= \frac{G_{csv}}{\frac{k_{pl}}{A} + \frac{A}{k_h} s + G_{xT/Fp} (G_{csv} + A\cdot s)} \\
     G_{xT/x_{ref}}(s) &= G_{Fp/x_{ref}} \cdot G_{xT/Fp} 
     %\\
@@ -1747,7 +1790,6 @@ From the system of equations \eqref{eq_2dof_system}, the following transfer func
     % G_{x2/xT}(s) &= G_{x2/x1} \cdot G_{x1/xT}
 \end{align}
 
-\normalsize
 The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be determined such that the system's natural frequencies $f_i$ and damping ratios $\xi_i$ are similar to the structures in test. Equation \eqref{eq_modal_frequencies} relates the natural frequency of the two modes of the 2DoF system to it's spring and mass properties, and equation \eqref{eq_modal_damping} relates the damping coefficient and ratio to mass and natural frequency.
 
 \begin{equation}\label{eq_modal_frequencies}
@@ -1760,23 +1802,12 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 
 %\clearpage
 \section{Control Strategies}
-\subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
-\begin{figure}[H]
-\noindent
-\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
-Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}). Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
 
-    \centering
-    \includegraphics[width=\linewidth]{adaptive_diagram.jpg}
-    \caption{Adaptive control scheme}
-    \label{fig_adaptive_diagram}
-\end{minipage}
-\end{figure}
+In this section two new control strategies are proposed: a tuned PIDF controller, and an optimal controller. This control strategies are then evaluated against LNEC's iterative driver adaptation method, which is currently used.
 
-For a preliminary analysis of how the shaking table performance could be changed with controller tuning, some simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table. Table \ref{tab:modal_params} contains the parameters for the 2DOF coupled structure (Figure \ref{schematic_2dof}).
+In sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table.
+
+It was also considered throughout that the platen had a 2DOF coupled structure, as in figure \ref{schematic_2dof}, and the parameters of this 2DOF system, unless stated otherwise, are the ones shown in table \ref{tab:modal_params}:
 
 \begin{table}[H]
     \centering
@@ -1802,12 +1833,32 @@ For a preliminary analysis of how the shaking table performance could be changed
     \label{tab:modal_params}
 \end{table}
 
+In section \ref{sec_LNEC_method}, LNEC's control strategy is entirely explained, while showing the working of the software used in the iterative driver adaptation method. An application example is shown, and the method and results are discussed.
+
+In section \ref{sec_Comparing_Control_Strategies}, the performance of the three control strategies is compared for a set of benchmark seismic signals.
+ 
+\subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
+\begin{figure}[H]
+\noindent
+\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
+Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}). Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{adaptive_diagram.jpg}
+    \caption{Adaptive control scheme}
+    \label{fig_adaptive_diagram}
+\end{minipage}
+\end{figure}
+
 Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ in the form of a PID-F, as in equation \eqref{eq_pidf_in_s}:
 \begin{equation} \label{eq_pidf_in_s}
     G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
 \end{equation}
 
-Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}.
+Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
+
 
 \begin{table}[H]
     \centering
@@ -1825,19 +1876,11 @@ Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_par
     \label{tab:pidf_params}
 \end{table}
 
+%\pagebreak
 
-The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
+The mean squared error (MSE) of the platen response spectrum,  having the ground response spectrum as target, was used as a metric to evaluate the performance of the shaking table. The comparison was performed in terms of displacement and acceleration response spectrum, which was computed for 500 logarithmically spaced frequencies between 0.1 and 30 Hz (figure \ref{fig_response_spectrum_of_3}).
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{Sim_Res/Response_Spectra.jpg}
-    \caption{Response spectrum for fault normal signals. The response spectrum was obtained by sampling 500 frequencies, logarithmically spaced between 0.1 and 30 Hz}
-    \label{fig_response_spectrum_of_3}
-\end{figure}
-
-In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller.
-
-The acceleration response spectrum mean squared error for the tuned platform is significantly reduced compared to the standard tune (Table \ref{tab:mse_rs}), however, it exceeds the desired response spectrum for the entire frequency spectrum.
+The acceleration response spectrum mean squared error for the tuned platform is significantly reduced compared to the standard tune (Table \ref{tab:mse_rs}), however, it exceeds the desired response spectrum for the entire frequency spectrum (figure \ref{fig_response_spectrum_of_3}).
 
 \begin{table}[H]
     \centering
@@ -1849,10 +1892,21 @@ The acceleration response spectrum mean squared error for the tuned platform is 
         Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
         \hline
     \end{tabular}
-    \caption{Mean squared error for response spectrum of platen with ground response spectrum as baseline}
+    \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
     \label{tab:mse_rs}
 \end{table}
 
+In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller. All values are presented in SI units, in this case, $m/s^2$ for the acceleration response spectrum MSE, and $m$ for the displacement response spectrum MSE.
+
+The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Platen_Displacement_zoom} highlights the faster response of the tuned controller, and its improved tracking. It also highlights how the tuned controller now introduces some overshoot, which is also apparent in the response spectra of figure \ref{fig_response_spectrum_of_3}, and the bode plot in figure \ref{fig_Bode_of_G_xT_xref}.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\linewidth]{Sim_Res/Response_Spectra.jpg}
+    \caption{Response spectra for fault normal signals. The response spectrum was obtained by sampling 500 frequencies, logarithmically spaced between 0.1 and 30 Hz.}
+    \label{fig_response_spectrum_of_3}
+\end{figure}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -1919,11 +1973,11 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 \end{minipage}
 \end{figure}
 
-\subsubsection{Performance Sensitivity to Test Structure Parameters}%Analysis of Tuned PIDF 
+\subsubsection{Tuned PID-F Performance Sensitivity to Test Specimen Parameters} \label{Tuned PID-F Performance Sensitivity}%Analysis of Tuned PIDF 
 
-The mass, modal frequencies, and damping of the structures coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table with the tuned PIDF performs for different damping, modal frequencies, and mass of the test structure. 
+The mass, modal frequencies, and damping of the specimens coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table with the tuned PIDF performs for different damping, modal frequencies, and mass of the test specimen. The controller 
 
-The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, shows the modal properties of the structure on test, the maximum absolute values of the input to the servo-valve $i_{sv}$ (in volts) and force applied by the actuator (in kilo newtons), and the mean square error for the respective response spectrum.
+The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, shows the modal properties of the specimen on test, the maximum absolute values of the input to the servo-valve $i_{sv}$ (in volts) and force applied by the actuator (in kilo newtons), and the mean square error for the respective response spectrum.
 
 \begin{figure}[H]
     \centering
@@ -2093,33 +2147,24 @@ Controllability and observability matrices were built in MATLAB with \emph{ctrb}
 
 \subsubsection{LQR Servo Controller}
 
-\vspace{-4mm}
+For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}:
 
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}, the optimal state feedback control law which minimizes the cost function (equation \eqref{eq_LQI_cost_function}) was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices.
+    \centering
+    \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
+    \caption{Tracking loop with full state feedback control.}
+    \label{fig_LQI_loop}
+\end{figure}
+
+The optimal state feedback control law which minimizes the cost function, shown in equation \eqref{eq_LQI_cost_function}, was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices:
+
+\begin{equation}\label{eq_LQI_cost_function}
+     J(u) = \int ^{\infty}_0 (x^{T}(t) Q\,x(t) + u^{T}(t) R\, u(t))\, dt 
+\end{equation} 
 
 The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, because this increased the bandwidth, but, unlike the PIDF, did not result in amplification at low frequencies.(Figure \ref{fig_Bode_LQI_Qe9} to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
 
 The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
-
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQI/LQI_loop.png}
-    \caption{Tracking loop with full state feedback control.}
-    \label{fig_LQI_loop}
-
-    \begin{equation}
-     J(u) = \int ^{\infty}_0 (x^{T}(t) Q\,x(t) + u^{T}(t) R\, u(t))\, dt 
-     \label{eq_LQI_cost_function}
-    \end{equation} 
-    \end{minipage}
-\end{figure}
-
-
-
     
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -2309,27 +2354,16 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 
 
-\subsection{LNEC's seismic platform driver signal adaptation process}\label{sec_LNEC_method}
+\subsection{LNEC's Control Strategy: OLI method}\label{sec_LNEC_method}
 
 \subsubsection{The functioning of the driver adaptation software}
 
-\begin{minipage}{0.47\textwidth}
-    As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the seismic table in terms of response spectrum. 
+As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the seismic table in terms of response spectrum. 
 
-    An attempt to improve the seismic table performance at LNEC comes in the form of pseudo-open loop control, whereby, before every test run, a proprietary software %developed in LabVIEW 
-    called \emph{Adapt}, through a set of user-defined parameters and decisions, identifies the system transfer function, and then modifies the reference signal, creating what we will now refer to as \emph{driver signal}, which is then used as the reference in the closed-loop control of the seismic table position.
+An attempt to improve the seismic table performance at LNEC comes in the form of pseudo-open loop control, whereby, before every test run, a proprietary software %developed in LabVIEW 
+called \emph{Adapt}, through a set of user-defined parameters and decisions, identifies the system transfer function, and then modifies the reference signal, creating what we will now refer to as \emph{driver signal}, which is then used as the reference in the closed-loop control of the seismic table position.
 
-    In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal. Then the user can choose various options for the computation of the transfer function.
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=\linewidth]{Adapt/driver_signal_generation_loop.png}
-        \caption{A simplified block diagram of driver signal modification loop}
-        \label{driver_signal_generation_loop}
-    \end{figure}
-\end{minipage}
+In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal. Then the user can choose various options for the computation of the transfer function.
 
 
 
@@ -2377,13 +2411,13 @@ The driver and simulated acquired data files are then input to \emph{Adapt}, whe
 \end{figure}
 
 \subsubsection{Generating the target files (.tgt)}
-The acceleration signal of each seism was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
+The acceleration signal of each earthquake was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
 
 \subsubsection{Generating the adapted driver}
 
 The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used to generate driver 1  in \emph{Adapt.exe}. The process was repeated to generate subsequent drivers.
 
-\subsubsection{Performance Analysis}
+\subsubsection{Application Example: Discussion of Method \& Results}
 
 \begin{figure}[H]
     \centering
@@ -2392,7 +2426,7 @@ The first driver (driver zero) was generated using just the target file. This dr
     \label{Response_Spectra_2drivers}
 \end{figure}
 
-For the seismic signal tested in this section (L'Aquila reduced scale seism), the response spectra from adapted drivers underperforms compared to the PIDF controller, and even more so when compared to the optimal controller. 
+For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PIDF controller, and even more so when compared to the optimal controller. 
 
 In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PIDF controllers.
 
@@ -2420,6 +2454,7 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
     \label{Response_Spectra_better_id}
 \end{figure}
 
+\section{Comparing Control Strategy Performance for Benchmark Seismic Signals}\label{sec_Comparing_Control_Strategies}
 
 \begin{figure}[H]
     \centering
@@ -2459,15 +2494,7 @@ Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}
     \label{erzikan_4th_N}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{Adapt/Erzikan_Response_Spectra_P.png}
-    \caption{Erzikan fault parallel response spectra. In this case the adapted drivers perform very poorly for frequencies above 10Hz.}
-    \label{erzikan_4th_P}
-\end{figure}
-
-
-\section{ Conclusions: PIDF vs Optimal Control vs Driver Iteration}
+\section{ Conclusions: PIDF vs Optimal Control vs OLI Method}
 %The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
 Regarding the analysis in sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
 
@@ -2487,22 +2514,22 @@ displacement transducer (LVDT type) embedded used to measure the platform displa
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{experimental_validation/shaker_whole_system.png}
+    \includegraphics[width=0.7\linewidth]{experimental_validation/shaker_whole_system.png}
     \caption{measurement and control chain schematic}
     \label{measurement_and_control_chain_schematic}
 \end{figure}
 
-\subsection{ Calibration of Displacement Sensor}
-ver excel no computador da mesa sismica
+% \subsection{ Calibration of Displacement Sensor}
+% ver excel no computador da mesa sismica
 
-\subsection{ Calibration of Acceleration Sensor}
-\begin{enumerate}
-    \item In the acquisition/control software, set scaling to 1 and offset to zero
-    \item Place accelerometer vertically on a flat stationary surface (aligning the accelerometer measurement axis orthogonally to the acceleration of gravity) such that it will measure zero acceleration
-    \item Set the offset in the signal conditioner such that the output is zero
-    \item Place the accelerometer horizontally on a flat stationary surface, aligning accelerometer measurement axis with the acceleration of gravity, such that it will be sensing 1G
-    \item Set scaling in the conditioner and the software such that the output is 1G
-\end{enumerate}
+% \subsection{ Calibration of Acceleration Sensor}
+% \begin{enumerate}
+%     \item In the acquisition/control software, set scaling to 1 and offset to zero
+%     \item Place accelerometer vertically on a flat stationary surface (aligning the accelerometer measurement axis orthogonally to the acceleration of gravity) such that it will measure zero acceleration
+%     \item Set the offset in the signal conditioner such that the output is zero
+%     \item Place the accelerometer horizontally on a flat stationary surface, aligning accelerometer measurement axis with the acceleration of gravity, such that it will be sensing 1G
+%     \item Set scaling in the conditioner and the software such that the output is 1G
+% \end{enumerate}
 
 \section{Identification of Electrodynamic Shaker}
 
@@ -2518,10 +2545,7 @@ In order to identify a model of the shaker+mini table system, white noise signal
     \item \textbf{Robustness:} Consistent identification of $S_0$ is not a requirement for good plant identification; a high variance of the $S_0$ model is acceptable.
 \end{itemize}
 
-In order to tune the controller to the system parameters, it is necessary to identify the controlled system. For this purpose, an identification experiment was carried out using pink noise with frequency content up to 40\,Hz, and a controller with proportional gain. To address the particularities of closed-loop identification, the ``two-stage method'' was adopted.
-
-
-
+In order to tune the controller to the system parameters, it is necessary to identify the controlled system. For this purpose, an identification experiment was carried out using pink noise with frequency content up to 40\,Hz, and a controller with proportional gain. To address the particularities of closed-loop identification, the two-stage method was adopted.
 
 \subsection{Applying Two-Stage Identification Method}
 
@@ -2624,113 +2648,6 @@ Once the system was identified, the PIDF parameter tuning algorithm was run, def
 
 For this other seismic signal, it was found that all tuned controllers performed better than the third driver in the iterative process. However, the fifth driver already performed better. 
 In these two tests, acceleration data were not measured, so the displacement data were extrapolated to determine the acceleration response spectrum.
-
-\pagebreak
-
-\section{Further Simulation Studies (Robustness)}
-% LTeX: enabled=false
-
-$\Longrightarrow$ Avaliar robustez do método de indentificação e sintonização do controlador
-
-$\Longrightarrow$ Simular dados com o modelo da mesa uniaxial, desta vez introduzindo uma perturbação na saida
-
-\begin{figure}[H]
-    \centering
-        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
-        % sum_r2
-        \node[circ]  (sum_r2) at (0,   0) {};
-        \node[left=-1pt] at (sum_r2.center){\small $+$};
-        \node[below=-1pt] at (sum_r2.center){\small $-$};
-
-        % C
-        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_\text{default}$};
-
-        % G0
-        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C ] (G0) {$G_\text{ST1D}$};
-
-        % sum_v
-        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
-
-        % % H0
-        % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
-
-        %--- Input r2 ---
-        \draw[-latex] (-1.5, 0) -- node[above]{$x_{drv}$} (sum_r2);
-
-        %--- sum_r2 -> C -> G0 ---
-        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
-        \draw[-latex] (C) -- node[above]{$i_{sv}$}(G0);
-
-        %--- G0 -> sum_v ---
-        \draw[-latex] (G0) -- (sum_v);
-
-        %--- e -> H0 -> v -> sum_v ---
-        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e_0$} -- (H0);
-        \draw[-latex] ([yshift = 10mm] sum_v.north) -- node[right]{$v \; \text{(disturbance)}$} (sum_v);
-
-        %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$x_{acq}$} ([xshift=12mm] sum_v.east);
-
-        %--- Feedback: y branches back to sum_r2 bottom ---
-        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
-        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-        \draw[-latex] (0, -1.2) -- (sum_r2.south);
-
-        \end{tikzpicture}
-    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    %\label{tikz_general_CL_sys} 
-\end{figure}
-
-
-
-$\Longrightarrow$ Fazer identificação $\widehat{G}(z)$ a partir dos dados simulados
-
-$\Longrightarrow$ Sintonizar controladores para $\widehat{G}(z)$
-
-$\Longrightarrow$ Verificar desempenho dos controladores, fazendo novamente simulação para o modelo ST1D com perturbações na saida
-
-\begin{figure}[H]
-    \centering
-        \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
-        % sum_r2
-        \node[circ]  (sum_r2) at (0,   0) {};
-        \node[left=-1pt] at (sum_r2.center){\small $+$};
-        \node[below=-1pt] at (sum_r2.center){\small $-$};
-
-        % C
-        \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_\text{tuned}$};
-
-        % G0
-        \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=8mm of C ] (G0)    {$G_0$};
-
-        % sum_v
-        \node[circ, , right=8mm of G0 ]  (sum_v) {$+$};
-
-        %--- Input r2 ---
-        \draw[-latex] (-1.5, 0) -- node[above]{$x_{drv}$} (sum_r2);
-
-        %--- sum_r2 -> C -> G0 ---
-        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
-        \draw[-latex] (C) -- node[above]{$i_{sv}$}(G0);
-
-        %--- G0 -> sum_v ---
-        \draw[-latex] (G0) -- (sum_v);
-
-        %--- e -> H0 -> v -> sum_v ---
-        \draw[-latex] ([yshift = 10mm] sum_v.north) -- node[right]{$v$} (sum_v);
-
-        %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$x^{sim}_{acq}$} ([xshift=12mm] sum_v.east);
-
-        %--- Feedback: y branches back to sum_r2 bottom ---
-        \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
-        \draw (ybranch) --+(0, -1.2) -- (0, -1.2);
-        \draw[-latex] (0, -1.2) -- (sum_r2.south);
-
-        \end{tikzpicture}
-    \caption{Closed-loop System}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    %\label{tikz_general_CL_sys} 
-\end{figure}
 
 
 

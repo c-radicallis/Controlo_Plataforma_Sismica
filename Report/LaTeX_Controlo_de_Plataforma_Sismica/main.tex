@@ -68,8 +68,8 @@
   \fancyfoot[C]{\thepage}            % just the page number, centered
   \renewcommand{\headrulewidth}{0pt} % no header line
 }
-% \usepackage{setspace}
-% \renewcommand{\baselinestretch}{1.5}
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.5}
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -465,9 +465,22 @@ The objective of this work is to implement a controller, or strategy, to ensure 
 \end{itemize}
 
 \section{Outline of Dissertation}
-Taking into account the objectives 
 
-%\clearpage
+Taking into account the main objectives mentioned above, the thesis is structured around 5 chapters: 
+
+\textbf{Chapter 1} serves as an introduction to this work by explaining  the main concepts at play in the shaking table tests at LNEC, and lays out the goals of this work.
+
+\textbf{Chapter 2} highlights the purpose of experimental testing in seismic engineering and goes over the main experimental methods. It then introduces the control strategies which were/are available for use with LNEC's shaking table systems. The chapter closes with recent innovations in control for shaking table systems.
+
+\textbf{Chapter 3} introduces the essential concepts in control, and in identification in closed-loop systems. It also goes into more detail on the identification and control strategies applied in this work.
+
+\textbf{Chapter 4} introduces a model for LNEC's uniaxial shaking table, which is then used to evaluate in a simulation environment the performance of three control strategies: LNEC's iterative method, a tuned PID-F controller, and an optimal controller. 
+
+\textbf{Chapter 5} experimentally validates the proposed identification method for a uniaxial electrodynamic shaker, and the identified model is then control straties
+
+
+\clearpage
+
 \chapter{Literature Review on Experimental Testing in Seismic Engineering} %\chapter{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
@@ -501,6 +514,7 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 
 \section{Seismic Table Control Strategies}
 
+\subsection{LNEC's Shaking Tables Control Strategies}
 The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. 
 
 The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies:
@@ -513,7 +527,7 @@ i) Three-Variable Control (TVC), also known in control theory literature as stat
     \label{fig_tvc}
 \end{figure}
 
-ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); NEC's ST3D.
+ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{MTSsystems/AHC.png}

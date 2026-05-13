@@ -1,4 +1,4 @@
-\documentclass[  10pt, twoside]{report} %draft ,
+\documentclass[ draft , 10pt, twoside]{report} %
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -14,7 +14,7 @@
 \usepackage{wrapfig}
 \usepackage{subcaption}
 \usepackage{amsmath}
-\numberwithin{equation}{subsection}
+\numberwithin{equation}{chapter}
 \usepackage{physics}
 \usepackage{mathrsfs}
 \usepackage{tabularx}
@@ -38,8 +38,10 @@
 \usepackage{cases}
 
 \usepackage{titlesec}
-\setcounter{tocdepth}{6}
-\setcounter{secnumdepth}{6}
+% \titlespacing*{\chapter}{0pt}{-50pt}{0pt}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{5}
 \titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
 \titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
@@ -70,6 +72,9 @@
 }
 \usepackage{setspace}
 \renewcommand{\baselinestretch}{1.5}
+
+\AtBeginEnvironment{minipage}{\renewcommand{\baselinestretch}{1.5}\normalsize}
+
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -238,11 +243,12 @@ The results indicate that both the PID-F and LQI controller offer superior perfo
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\clearpage
 \section*{Nomenclature}
 \addcontentsline{toc}{section}{Nomenclature}% Add entry in the table of contents as section
 
 
-
+\clearpage
 \section*{Glossary}
 \addcontentsline{toc}{section}{Glossary}% Add entry in the table of contents as section
 
@@ -275,7 +281,7 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 \end{minipage}
 \end{figure}
 
-\clearpage
+%\clearpage
 \section{Seismic Platform  Tests at LNEC}
 
 The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
@@ -290,9 +296,7 @@ Figure \ref{fig_lnec_test_process_diagram} shows the work flow of a usual seismi
 During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
 
 Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
-This function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.\par
-
-At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.\par
+This transfer function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.\par
 
 \end{minipage}
 \hfill
@@ -305,6 +309,8 @@ At the end of each test, the system's performance is evaluated by comparing the 
 \end{minipage}
 \end{figure}
 
+
+At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.\par
 
 However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
 
@@ -373,9 +379,6 @@ In addition, the system faces physical limitations inherent to the equipment, na
 % \label{tikz_LNEC_control} 
 % \end{figure}
 
-\begin{figure}[H]
-\noindent
-\begin{minipage}{0.58\textwidth}\setlength{\parindent}{15pt}
 
 \subsection{Response Spectrum}% in Civil Engineering %\section{Key Aspects of Response Spectrum}
 
@@ -383,12 +386,16 @@ The response spectrum is a fundamental concept in earthquake engineering and str
 
 It's relevance for this work lies in the fact that the performance of the seismic table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
-\vspace{5mm}
+% \vspace{5mm}
 
 % \hspace*{\parindent} 
 Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 
-\vspace{5mm}
+\noindent
+\begin{minipage}{0.58\textwidth}\setlength{\parindent}{15pt}
+
+
+% \vspace{5mm}
 
 % \hspace*{\parindent} 
 Some fundamental concepts on response spectrum are:
@@ -414,7 +421,7 @@ Some fundamental concepts on response spectrum are:
     \end{itemize}
 \end{itemize}
 
-\vspace{5mm}
+% \vspace{-5mm}
 %\section{Applications in Civil Engineering}
 % \hspace*{\parindent} 
 Some of its applications in Civil Engineering are:
@@ -427,12 +434,13 @@ Some of its applications in Civil Engineering are:
 \end{minipage}
 \hfill
 \begin{minipage}{0.39\textwidth}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
     \caption{ Schematized process of determining a response spectrum }
     \label{fig_response_spectrum_schematic}
-\end{minipage}
 \end{figure}
+\end{minipage}
 
 \pagebreak
 \section{Objectives}
@@ -508,18 +516,39 @@ According to \cite{williams2001}, the most widely used experimental methods in t
     \item \textbf{Explosive Charges:} Arrays of explosive charges used to simulate earthquake ground motions at large scale (very uncommon method) \citep{williams2001}.
 \end{itemize}
 
+\section{Seismic Table Control Strategies}
+
+Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}, however, alternative control approaches have been proposed in the literature, including:
+\begin{itemize}
+    \item Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010};
+    \item Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012};
+    \item Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014};
+    \item Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
+\end{itemize} 
 
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-\section{Seismic Table Control Strategies}
+In more recent literature, advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators \citep{Lei2023Disturbance}, and nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. %619 
+In \cite{Tian2021Offline}, offline iterative control and frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing very rigid structures like dams and nuclear facilities (which have high fundamental frequencies). %14
+Proportional-derivative (PD) Brushed DC Motor control and affordable hardware have made seismic table testing more accessible in resource-limited settings \citep{Parajuli2024Development}. %18
+
+% Can adaptive control improve shaking table test accuracy?
+
+Adaptive control has been shown to significantly improve the accuracy of shaking table tests for dynamic structural evaluation:
+\begin{itemize}
+    \item Enhanced Tracking and Stability: Adaptive control methods, such as adaptive-model-based state estimators, model reference adaptive control, and adaptive sliding mode control, have been shown to improve both the stability and tracking accuracy of shaking tables, especially under varying test conditions and nonlinear system behaviours %1456891415+2 MORE.
+    \item Compensation for Uncertainties: Adaptive controllers can dynamically adjust to compensate for amplitude and phase deviations, system nonlinearities, and parameter uncertainties, leading to more precise seismic waveform reproduction and better handling of control-structure interaction effects %161418.
+    \item Superior Performance over Conventional Methods: Comparative studies demonstrate that adaptive control strategies outperform traditional fixed-parameter controllers (such as PID or three-variable controllers) in both time and frequency domains, providing better acceleration tracking and robustness to specimen uncertainties %4561314.
+    \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
+\end{itemize}
 
 \subsection{LNEC's Shaking Tables Control Strategies}
-The reproduction of earthquakes on a shaking table depends strongly on: i) the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and; ii) the control system, whose performance is highly sensitive to the adopted control strategy and tuning. 
+The reproduction of earthquakes on a shaking table depends strongly on the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and the control system, whose performance is highly sensitive to the adopted control strategy and tuning. 
 
-The hydraulic and control system supplier, MTS Systems Corporation (MTS), provided several control strategies:
-
-i) Three-Variable Control (TVC), also known in control theory literature as state variable control \citep{ogata2010}, which combines the displacement, velocity and acceleration feedback \citep{williams2001};
+The hydraulic and control system supplier at LNEC, MTS Systems Corporation (MTS), provided several control strategies:
+\begin{itemize}
+    \item Three-Variable Control (TVC), also known in control theory literature as state variable control \citep{ogata2010}, which combines the displacement, velocity and acceleration feedback \citep{williams2001};
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{MTSsystems/tvc.png}
@@ -527,7 +556,7 @@ i) Three-Variable Control (TVC), also known in control theory literature as stat
     \label{fig_tvc}
 \end{figure}
 
-ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); 
+\item Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{MTSsystems/AHC.png}
@@ -542,8 +571,7 @@ ii) Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed
     \label{fig_AHC_detail}
 \end{figure}
 
-iii) Adaptive Inverse Control (AIC) \citep{widrow2007}, suitable for non-sinusoidal signals on linear systems; 
-
+\item Adaptive Inverse Control (AIC) \citep{widrow2007}, suitable for non-sinusoidal signals on linear systems; 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{MTSsystems/AIC.png}
@@ -551,7 +579,8 @@ iii) Adaptive Inverse Control (AIC) \citep{widrow2007}, suitable for non-sinusoi
     \label{fig_AIC}
 \end{figure}
 
-iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; 
+
+\item Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; 
 
 \begin{figure}[H]
     \centering
@@ -560,8 +589,7 @@ iv) Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed freque
     \label{fig_APC}
 \end{figure}
 
-v) Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at L
-Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001,henrique2026}. This is the basis of the OLI control strategy. 
+\item Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC's ST3D.
 
 \begin{figure}[H]
     \centering
@@ -570,21 +598,11 @@ Shaking-table control strategies typically begin with the offline generation of 
     \label{fig_OLI}
 \end{figure}
 
-Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}. Alternative control approaches have been proposed in the literature, including: i) Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010}; ii) displacement feedforward-feedback controller using an optimal controller \citep{phillips2012}; iii) Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014}; iii) minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
-
-
-\subsection{Innovations in Recent Literature}
-Advanced control methods, such as active disturbance rejection control (ADRC), adaptive model-based state estimators, and nonlinear signal-based control, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. %619
-Offline iterative control and frequency-splitting techniques enable double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing rigid structures like dams and nuclear facilities. %14
-Proportional-derivative (PD) control and affordable hardware have made seismic table testing more accessible in resource-limited settings. %18
-
-Adaptive control has been shown to significantly improve the accuracy of shaking table tests for dynamic structural evaluation:
-\begin{itemize}
-    \item Enhanced Tracking and Stability: Adaptive control methods, such as adaptive-model-based state estimators, model reference adaptive control, and adaptive sliding mode control, have been shown to improve both the stability and tracking accuracy of shaking tables, especially under varying test conditions and nonlinear system behaviours %1456891415+2 MORE.
-    \item Compensation for Uncertainties: Adaptive controllers can dynamically adjust to compensate for amplitude and phase deviations, system nonlinearities, and parameter uncertainties, leading to more precise seismic waveform reproduction and better handling of control-structure interaction effects %161418.
-    \item Superior Performance over Conventional Methods: Comparative studies demonstrate that adaptive control strategies outperform traditional fixed-parameter controllers (such as PID or three-variable controllers) in both time and frequency domains, providing better acceleration tracking and robustness to specimen uncertainties %4561314.
-    \item Practical Validation: Experimental and simulation results across multiple studies confirm that adaptive control approaches—such as online adaptive compensation, adaptive inverse control, and functional link adaptive controllers—consistently yield higher fidelity in replicating target motions and structural responses during shaking table tests %15789101113+5 MORE.
 \end{itemize}
+
+
+
+
 
 \chapter{ System Identification \& Control}
 
@@ -621,27 +639,23 @@ And the power spectral density:
     \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
 \end{align} 
 
-
 For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $x$ and $y$ quasi-stationary signals, we have the following properties:
-\vspace{-5mm}
-\begin{figure}[H]
-\begin{minipage}{0.45\textwidth}
-    \begin{align}
-        R_{yx}(\tau) =& \, G(z) \,  R_{x}(\tau)  \\
-                     =& \, g(\tau) \star  R_{x}(\tau) \nonumber \\[2mm]
-        R_{xy}(\tau) =& \, G^{*}(z) \,  R_{x}(\tau)   \\
-                     =& \, g(-\tau) \star  R_{x}(\tau) \nonumber \\[2mm]
-        R_{yy}(\tau) =& \, G^{*}(z) \, G(z) \, R_{x}(\tau)   \\
-                     =& \, g(-\tau) \star g(\tau) \star R_{x}(\tau) \\[2mm]
-        \Phi_{yx}(\omega) =& \, G(e^{i\omega}) \,  \Phi_{x}(\omega) \\[2mm]
-        \Phi_{xy}(\omega) =& \, G^{*}(e^{i\omega}) \,  \Phi_{x}(\omega) \\[2mm]
-        \Phi_{y}(\omega)  =& \, G(e^{i\omega}) \, G^{*}(e^{i\omega}) \,\Phi_{x}(\omega)\\
-                          =& \, \left|G(e^{i\omega})\right|^2 \Phi_{x}(\omega) \nonumber 
-    \end{align}
+\begin{align}
+    R_{yx}(\tau) =& \, G(z) \,  R_{x}(\tau)  \\
+                    =& \, g(\tau) \star  R_{x}(\tau) \nonumber \\[2mm]
+    R_{xy}(\tau) =& \, G^{*}(z) \,  R_{x}(\tau)   \\
+                    =& \, g(-\tau) \star  R_{x}(\tau) \nonumber \\[2mm]
+    R_{yy}(\tau) =& \, G^{*}(z) \, G(z) \, R_{x}(\tau)   \\
+                    =& \, g(-\tau) \star g(\tau) \star R_{x}(\tau) \\[2mm]
+    \Phi_{yx}(\omega) =& \, G(e^{i\omega}) \,  \Phi_{x}(\omega) \\[2mm]
+    \Phi_{xy}(\omega) =& \, G^{*}(e^{i\omega}) \,  \Phi_{x}(\omega) \\[2mm]
+    \Phi_{y}(\omega)  =& \, G(e^{i\omega}) \, G^{*}(e^{i\omega}) \,\Phi_{x}(\omega)\\
+                        =& \, \left|G(e^{i\omega})\right|^2 \Phi_{x}(\omega) \nonumber 
+\end{align}
 
-\end{minipage}
-\hfill
-\begin{minipage}{0.415\textwidth}
+The way in which LTI systems process correlation is also illustrated in figure \ref{tikz_correlation}:
+\begin{figure}[H]
+\begin{minipage}{0.47\textwidth}
     \centering
     \begin{tikzpicture}
         \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
@@ -652,11 +666,12 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
 
         % \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
         % \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east); %w
-    \end{tikzpicture}\vspace{-2mm}
-    \caption{System}\label{tikz_LTI_sys} 
-
-    \vspace{8mm}
-
+    \end{tikzpicture}
+    \caption{LTI system}\label{tikz_LTI_sys} 
+\end{minipage}
+\hfill
+\begin{minipage}{0.51\textwidth}
+    \centering
     \begin{tikzpicture}
         \node[draw, fill=Cyan!30, minimum width=12mm, minimum height=9mm  ] (G) at (0,0)   {$G(z)$};
         \node[draw, fill=Green!30, minimum width=12mm, minimum height=9mm, right= 10mm  of G] (G*)  {$G^{*}(z)$};
@@ -677,7 +692,7 @@ For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)
         \draw[-latex](branch_right) -- node[ above, at end, xshift=-2mm]{$R_y$} ([xshift=8mm]branch_right);
         \draw  (G*.east)       -- ([xshift=6mm]G*.east)       -- (branch_right) ;
         \draw  (G_bottom.east) -- ([xshift=6mm]G_bottom.east) -- (branch_right) ;
-    \end{tikzpicture} \vspace{-2mm}
+    \end{tikzpicture}
     \caption{Illustration of how linear systems transform correlation signals}\label{tikz_correlation} %correlation signals, which is also entirely analogous to the way they transform spectral density signals. 
 \end{minipage}
 \end{figure}
@@ -704,7 +719,7 @@ In the case of two systems which generate an output from a common input signal, 
     \caption{Two systems with a common input signal}\label{tikz_two_sys_common_input} 
 \end{figure}
 
-\clearpage
+%\clearpage
 
 
 % \begin{figure}[H]
@@ -837,16 +852,16 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 \end{minipage}
 \end{figure}
 
-\begin{figure}[H]
+% \begin{figure}[H]
 \subsubsection{Combined Open- and Closed-Loop Control}
-\noindent
-\begin{minipage}{0.4\textwidth}\setlength{\parindent}{15pt}
-    It is possible to combine open-loop and closed-loop control in a single control system. Figure \ref{tikz_Control_Systems_Combined_control} shows this configuration.
+% \noindent
+% \begin{minipage}{0.4\textwidth}\setlength{\parindent}{15pt}
+It is possible to combine open-loop and closed-loop control in a single control system. Figure \ref{tikz_Control_Systems_Combined_control} shows this configuration:
     
-    In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
-\end{minipage}
-\hfill
-\begin{minipage}{0.58\textwidth}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.58\textwidth}
+\begin{figure}[H]
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
         % sum_r2
@@ -907,8 +922,11 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
     \end{tikzpicture}
 \caption{Combined Open- and Closed-Loop Control}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
 \label{tikz_Control_Systems_Combined_control} 
-\end{minipage}
+% \end{minipage}
 \end{figure}
+
+In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
+
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -937,25 +955,12 @@ Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$
 
 The proportional component outputs a control action proportional to the error. If the proportional control results in steady-state error, the integral action will grow over time and correct for it. Additional integrators may be added to correct for steady-state error. The reasoning behind the derivative term is that, if there is a large variation of the error, the control action will immediately increase to counter it, rather than waiting for a large error (where the proportional action will kick in), or, even worse, for an accumulation of the error (where the integral action will kick in).
 
-\begin{figure}[H]
+
 \subsubsection{Full State Feedback Control}
-\noindent
-\begin{minipage}{0.7\textwidth}\setlength{\parindent}{15pt}
-In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}, which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
-\begin{equation}
-    F(t) = k _1\cdot ( x_{ref}(t) - x(t))
-\end{equation}
-
-Where the transfer function relating output to the reference is:
-\begin{equation}
-    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_1}
-\end{equation}
-
-From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$), the system will always oscillate, and it is not possible to stabilise the system using just output feedback control.
-
-\end{minipage}
-\hfill
-\begin{minipage}{0.26\textwidth}
+% \noindent
+% \begin{minipage}{0.7\textwidth}\setlength{\parindent}{15pt}
+In order to introduce the concept of state feedback control we'll start with a simple example. Consider the system in figure \ref{tikz_StateFeedbackControl_intro}:
+\begin{figure}[H]
     \centering
     \begin{tikzpicture}[
         every node/.style={outer sep=0pt}, thick, % Set default node style and line thickness
@@ -972,34 +977,51 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
         \draw[thick] (g'T.north east) -- (g'T.south east); 
     \end{tikzpicture}
     \caption{Mass with a force acting on it. The force is the manipulated input, and the mass position is the output.} \label{tikz_StateFeedbackControl_intro}
-\end{minipage}
 \end{figure}
-\vspace{-8mm}
+
+Which we'll attempt to stabilise using output feedback control with a proportional gain $k$ (shown in figure \ref{tikz_StateFeedbackControl_intro_outputControl}):
+\begin{equation}
+    F(t) = k _1\cdot ( x_{ref}(t) - x(t))
+\end{equation}
+
+Where the transfer function relating output to the reference is:
+\begin{equation}
+    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_1}
+\end{equation}
+
+From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$), the system will always oscillate, and it is not possible to stabilise the system using just output feedback control.
+
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.26\textwidth}
+%     \centering
+%     \begin{tikzpicture}[
+%         every node/.style={outer sep=0pt}, thick, % Set default node style and line thickness
+%         mass/.style={draw, thick}, % Define style for masses (rectangles)
+%         ground/.style={fill, pattern=north east lines, draw=none}] % Define style for ground
+
+%         \node[mass, minimum width=20mm, minimum height=20mm , fill=SkyBlue] (mT) {$M$}; % First mass 
+%         \draw[latex-] (mT.west) -- ++ (-10mm,0) node[midway, above]{$F(t)$}; % Force applied to mT
+%         \node[ground, minimum width=40mm, minimum height=5mm , below=0mm of mT ] (ground) {}; 
+%         \draw (ground.north west) -- (ground.north east); 
+
+%         %\draw[thin, dashed] (mT.south) -- (mT.south |- disp_line); % Align displacement lines
+%         \draw[latex-] ([yshift=2.5mm] mT.east |- mT.north) -- ++ (-1,0) node[above,midway]{$x(t)$} node[left, minimum height=5mm, minimum width=1mm ] (g'T){};
+%         \draw[thick] (g'T.north east) -- (g'T.south east); 
+%     \end{tikzpicture}
+%     \caption{Mass with a force acting on it. The force is the manipulated input, and the mass position is the output.} \label{tikz_StateFeedbackControl_intro}
+% \end{minipage}
+% \end{figure}
+% \vspace{-8mm}
+% \begin{figure}[H]
+    % \noindent
+    % \begin{minipage}{0.52\textwidth}\setlength{\parindent}{15pt}
+
+If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action:
+
 \begin{figure}[H]
-    \noindent
-    \begin{minipage}{0.52\textwidth}\setlength{\parindent}{15pt}
-        If, instead of using just the system output (position $x(t)$) as feedback, we use an additional state (in this case the velocity $\dot{x}$, shown in figure \ref{tikz_StateFeedbackControl_intro_stateControl}) for computing the control action, we have the following control law:
-        \begin{equation}
-            F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
-        \end{equation}
-
-        And the closed-loop transfer function:
-        \begin{equation}
-            \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_2 s + k_1}
-        \end{equation}
-
-        From which we can now see that the gains $k_1$ and $k_2$ may be chosen freely to place the closed-loop poles, $p_1$ and $p_2$, anywhere in the s-plane:
-        % \begin{equation}
-        %     s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
-        % \end{equation}
-        \begin{align}
-            & s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow \nonumber \\ 
-            & \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
-        \end{align}
-
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.44\textwidth}\centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
 
         \node[circ]  (sum_r2) at (0,   0) {};
@@ -1021,9 +1043,10 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
 
         \end{tikzpicture}
         \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with output feedback} \label{tikz_StateFeedbackControl_intro_outputControl} 
-
-        \vspace{5mm}
-
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+        \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
         \node[circ]  (sum1) at (0,   0) {};
         \node[left=-1mm] at (sum1.center){\small $+$};
@@ -1056,6 +1079,28 @@ From which we find that the poles are on the imaginary axis ($s=\pm\sqrt{k_1}i$)
         \caption{System from figure \ref{tikz_StateFeedbackControl_intro} with state feedback, where the states are position and velocity of the mass} \label{tikz_StateFeedbackControl_intro_stateControl} 
     \end{minipage}
 \end{figure}
+
+We have the following control law:
+\begin{equation}
+    F(t) = k_1 \cdot \left[ x_{ref}(t) - x(t)\right] - k_2 \dot{x}(t)
+\end{equation}
+
+And the closed-loop transfer function:
+\begin{equation}
+    \frac{x(t)}{x_{ref}(t)} = \frac{k_1}{s^2 + k_2 s + k_1}
+\end{equation}
+
+From which we can now see that the gains $k_1$ and $k_2$ may be chosen freely to place the closed-loop poles, $p_1$ and $p_2$, anywhere in the s-plane:
+% \begin{equation}
+%     s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+% \end{equation}
+\begin{align}
+    & s^2 + k_2 s + k_1 = (s-p_1)(s-p_2) \Longrightarrow \nonumber \\ 
+    & \Longrightarrow  k_1 = p_1 p_2  \land k_2 = -p_1 - p_2
+\end{align}
+
+    % \end{minipage}
+    % \hfill
 
 \paragraph{Optimal Control}
 Optimal control is precisely about designing the optimal state feedback controller gains. This is done by defining some performance index which is a function of the control action:
@@ -1838,19 +1883,22 @@ In section \ref{sec_LNEC_method}, LNEC's control strategy is entirely explained,
 In section \ref{sec_Comparing_Control_Strategies}, the performance of the three control strategies is compared for a set of benchmark seismic signals.
  
 \subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
+% \begin{figure}[H]
+% \noindent
+% \begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
+Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}):
 \begin{figure}[H]
-\noindent
-\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
-Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}). Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{adaptive_diagram.jpg}
+    \includegraphics[width=0.5\linewidth]{adaptive_diagram.jpg}
     \caption{Adaptive control scheme}
     \label{fig_adaptive_diagram}
-\end{minipage}
 \end{figure}
+
+Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
+% \end{minipage}
+% \hfill
+% % \begin{minipage}{0.49\textwidth}
+% \end{minipage}
 
 Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ in the form of a PID-F, as in equation \eqref{eq_pidf_in_s}:
 \begin{equation} \label{eq_pidf_in_s}
@@ -1903,7 +1951,7 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\linewidth]{Sim_Res/Response_Spectra.jpg}
+    \includegraphics[width=\linewidth]{Sim_Res/Response_Spectra.jpg}
     \caption{Response spectra for fault normal signals. The response spectrum was obtained by sampling 500 frequencies, logarithmically spaced between 0.1 and 30 Hz.}
     \label{fig_response_spectrum_of_3}
 \end{figure}
@@ -2151,7 +2199,52 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
+    % \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
+    \begin{tikzpicture}[
+  block/.style = {draw, thick, rectangle,
+                  minimum height=2em, align=center},
+  sum/.style   = {draw, thick, circle,
+                  minimum size=1.8em, inner sep=0pt},
+  >=Stealth, thick, font=\small
+]
+
+%─── Nodes (sum at origin; all others relative) ───────────────────────────
+\node[sum]                               (s)   at (0,0) {};
+\node[block, minimum width=3.0cm,
+      right=1.8cm of s]                  (int)          {Integrator};
+\node[block, minimum width=1.8cm,
+      right=2.0cm of int]                (K)             {$-K$};
+\node[block, minimum width=2.2cm,
+      right=2.0cm of K]                  (sys)           {sys};
+\node[left=1.0cm of s]                   (r)             {$r$};
+
+%─── Summing-junction sign labels ─────────────────────────────────────────
+\node[font=\scriptsize] at ($(s)+(-0.28,  0.22)$) {$+$};
+\node[font=\scriptsize] at ($(s)+( 0.00, -0.30)$) {$-$};
+
+%─── Key coordinates ──────────────────────────────────────────────────────
+\coordinate (outTip) at ($(sys.east)  + (1.4,  0  )$); % tip of output arrow
+\coordinate (topSys) at ($(sys.north) + (0,    1.3)$); % above sys
+\coordinate (topKw)  at (topSys       -| K.west);      % same height, above K.west
+\coordinate (botOut) at ($(outTip)    + (0,   -1.8)$); % below output
+\coordinate (botS)   at (s.south      |- botOut);      % below sum, same y
+
+%─── Forward path ─────────────────────────────────────────────────────────
+\draw[->] (r)   --                          (s);
+\draw[->] (s)   -- node[above]{$e = r-y$}  (int);
+\draw[->] (int) -- node[below]{$x_i$}       (K);
+\draw[->] (K)   -- node[below]{$u$}          (sys);
+\draw[->] (sys) -- node[above]{$y$}          (outTip);
+
+%─── State feedback (top): sys.north → up → left → down into K.north ──────
+\draw[->] (sys.north) -- (topSys) -- (topKw) -- (K.north);
+% "x" labels at both ends of the horizontal segment
+\node[above, font=\scriptsize] at ($(topKw)  !0.15!(topSys)$) {$x$};
+\node[above, font=\scriptsize] at ($(topSys)!0.07!(topKw)  $) {$x$};
+
+%─── Output feedback (bottom): outTip → down → left → up into s.south ─────
+\draw[->] (outTip) -- (botOut) -- (botS) -- (s.south);
+\end{tikzpicture}
     \caption{Tracking loop with full state feedback control.}
     \label{fig_LQI_loop}
 \end{figure}
@@ -2260,7 +2353,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
-Given how state feedback controllers requires some knowledge of the system states, either by measurement or estimation, to compute the control action, and that on the shaking platform the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_loop}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
+Given how state feedback controllers require knowledge of the system states, either by measurement or estimation, to compute the control action, and, on the shaking platform, the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_loop}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
 
 \end{minipage}
 \hfill
@@ -2504,6 +2597,8 @@ The results indicate that the tuned controllers (PIDF \& Optimal) offer superior
 
 \chapter{Experimental Validation}
 % In order to experimentally validate the performance of the control strategies studied in \ref{Evaluating Controller Performance in Simulation Environment}, the two controllers were implemented in the LabVIEW software running in real time on 
+
+Due to 
 
 
 \section{ Measurement and Control Chain}

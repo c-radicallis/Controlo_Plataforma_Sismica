@@ -1,4 +1,4 @@
-\begin{thebibliography}{41}
+\begin{thebibliography}{44}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -81,16 +81,17 @@ T.~Em{\'i}lio, R.~T. Duarte, F.~Carvalhal, C.~O. Costa, C.~T. Vaz, and M.~R. Cor
 \newblock The new {LNEC} shaking table for earthquake resistance testing.
 \newblock Technical Report Mem{\'o}ria 757, LNEC, Lisboa, 1989.
 
+\bibitem[Enokida and Kajiwara(2019)]{Enokida2019Nonlinear}
+R.~Enokida and K.~Kajiwara.
+\newblock Nonlinear signal‐based control for single‐axis shake tables supporting nonlinear structural systems.
+\newblock \emph{Structural Control and Health Monitoring}, 26, 2019.
+\newblock \doi{10.1002/stc.2376}.
+
 \bibitem[Fiorino et~al.(2016)Fiorino, Terracciano, and Landolfo]{Fiorino2016Experimental}
 L.~Fiorino, M.~Terracciano, and R.~Landolfo.
 \newblock Experimental investigation of seismic behaviour of low dissipative cfs strap-braced stud walls.
 \newblock \emph{Journal of Constructional Steel Research}, 127:\penalty0 92--107, 2016.
 \newblock \doi{10.1016/J.JCSR.2016.07.027}.
-
-\bibitem[Henrique et~al.(2026)Henrique, {Ayala Botto}, and Oliveira]{henrique2026}
-A.~Henrique, M.~{Ayala Botto}, and F.~Oliveira.
-\newblock Development of control strategies for earthquake reproduction on uniaxial shaking table.
-\newblock In \emph{13{\textordmasculine} Congresso Nacional de Mec{\^a}nica Experimental -- CNME2026}, Porto, 2026. Universidade do Porto.
 
 \bibitem[Ji et~al.(2022)Ji, Hofmann, Duan, and Zang]{Ji2022Laboratory}
 Y.~Ji, H.~Hofmann, K.~Duan, and A.~Zang.
@@ -103,6 +104,12 @@ J.~C. Lagarias, J.~A. Reeds, M.~H. Wright, and P.~E. Wright.
 \newblock Convergence properties of the {Nelder--Mead} simplex method in low dimensions.
 \newblock \emph{SIAM Journal on Optimization}, 9\penalty0 (1):\penalty0 112--147, 1998.
 \newblock \doi{10.1137/S1052623496303470}.
+
+\bibitem[Lei et~al.(2023)Lei, Li, and Guo]{Lei2023Disturbance}
+Q.~Lei, J.~Li, and W.~Guo.
+\newblock Disturbance rejection control of shaking table based on adaptive-model-based state estimator.
+\newblock \emph{Control Engineering Practice}, 2023.
+\newblock \doi{10.1016/j.conengprac.2023.105667}.
 
 \bibitem[Liu et~al.(2020)Liu, Li, Zhang, and Lu]{Liu2020Experimental}
 S.~Liu, P.~Li, W.~Zhang, and Z.~Lu.
@@ -149,6 +156,12 @@ F.~Oliveira.
 \newblock \emph{Semi-active systems for structural vibration mitigation}.
 \newblock Phd thesis, Técnico, 2015.
 
+\bibitem[Parajuli et~al.(2024)Parajuli, Bhatt, and Kawan]{Parajuli2024Development}
+B.~Parajuli, B.~Bhatt, and C.~K. Kawan.
+\newblock Development of economical shake table with brushed dc motor and proportional-derivative control.
+\newblock \emph{Experimental Techniques}, 49:\penalty0 635 -- 654, 2024.
+\newblock \doi{10.1007/s40799-024-00768-z}.
+
 \bibitem[Phillips and Spencer(2012)]{phillips2012}
 B.~M. Phillips and B.~F. Spencer.
 \newblock Model-based feedforward-feedback actuator control for real-time hybrid simulation.
@@ -187,6 +200,12 @@ J.~{Sá da Costa}.
 G.~G. Tekeste.
 \newblock \emph{Real-time hybrid simulation including a shaking table: development and application to soil-structure interaction}.
 \newblock Phd thesis, Universidade de Aveiro, 2021.
+
+\bibitem[Tian et~al.(2021)Tian, Wang, Shi, Han, and Pan]{Tian2021Offline}
+Y.~Tian, T.~Wang, Y.~Shi, Q.~Han, and P.~Pan.
+\newblock Offline iterative control method using frequency-splitting to drive double-layer shaking tables.
+\newblock \emph{Mechanical Systems and Signal Processing}, 152:\penalty0 107443, 2021.
+\newblock \doi{10.1016/j.ymssp.2020.107443}.
 
 \bibitem[Tsinidis et~al.(2020)Tsinidis, Silva, Anastasopoulos, Bilotta, Bobet, Hashash, He, Kampas, Knappett, Madabhushi, Nikitas, Pitilakis, Silvestri, Viggiani, and Fuentes]{Tsinidis2020Seismic}
 G.~Tsinidis, F.~D. Silva, I.~Anastasopoulos, E.~Bilotta, A.~Bobet, Y.~Hashash, C.~He, G.~Kampas, J.~Knappett, G.~Madabhushi, N.~Nikitas, K.~Pitilakis, F.~Silvestri, G.~Viggiani, and R.~Fuentes.

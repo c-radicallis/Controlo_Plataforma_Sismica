@@ -1,4 +1,4 @@
-\documentclass[ draft , 10pt, twoside]{report} %
+\documentclass[  10pt, twoside]{report} %draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -516,6 +516,16 @@ According to \cite{williams2001}, the most widely used experimental methods in t
     \item \textbf{Explosive Charges:} Arrays of explosive charges used to simulate earthquake ground motions at large scale (very uncommon method) \citep{williams2001}.
 \end{itemize}
 
+Real-time hybrid simulation (RTHS) and substructural shake table testing (illustrated in figure \ref{fig_hybrid})are of special interest since they allow for the evaluation of large and/or complex structures by combining physical and numerical models of substructures, which enhances testing flexibility, enabling improved studies of high-frequency and/or nonlinear behaviours, while also reducing experimental costs.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Lit_Review/stc2611-fig-0001-m.jpg}
+    \caption{Shaking table-based real-time dynamic hybrid testing systems: (a) upper, (b) middle and (c) lower portion tested physically. Abbreviations: NS, numerical substructure; PS, physical substructure \citep{Tang2020Performance}}
+    \label{fig_hybrid}
+\end{figure}
+
+
+
 \section{Seismic Table Control Strategies}
 
 Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}, however, alternative control approaches have been proposed in the literature, including:
@@ -529,9 +539,17 @@ Shaking-table control strategies typically begin with the offline generation of 
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-In more recent literature, advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators \citep{Lei2023Disturbance}, and nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. %619 
-In \cite{Tian2021Offline}, offline iterative control and frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing very rigid structures like dams and nuclear facilities (which have high fundamental frequencies). %14
-Proportional-derivative (PD) Brushed DC Motor control and affordable hardware have made seismic table testing more accessible in resource-limited settings \citep{Parajuli2024Development}. %18
+In more recent literature, advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied by \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Lit_Review/ADRC_AMSE.jpg}
+    \caption{Structure diagram of AMSE-ADRC \citep{Lei2023Disturbance}}
+    \label{fig_ADRC-AMSE}
+\end{figure}
+
+
+In \cite{Tian2021Offline}, offline iterative control and frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing very rigid structures like dams and nuclear facilities, which have high fundamental frequencies.  Meanwhile, \cite{Parajuli2024Development} used a proportional-derivative (PD) controller in the development of a budget-focused testing facility based on a brushed DC motor.
 
 % Can adaptive control improve shaking table test accuracy?
 

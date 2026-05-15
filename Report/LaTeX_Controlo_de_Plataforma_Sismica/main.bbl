@@ -1,4 +1,4 @@
-\begin{thebibliography}{46}
+\begin{thebibliography}{51}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -93,6 +93,12 @@ L.~Fiorino, M.~Terracciano, and R.~Landolfo.
 \newblock \emph{Journal of Constructional Steel Research}, 127:\penalty0 92--107, 2016.
 \newblock \doi{10.1016/J.JCSR.2016.07.027}.
 
+\bibitem[Gang et~al.(2013)Gang, Zhencai, Lei, Yu, Chifu, Jin-song, Guang-da, and Jun-wei]{Gang2013Adaptive}
+S.~Gang, Z.~Zhencai, Z.~Lei, T.~Yu, Y.~Chifu, Z.~Jin-song, L.~Guang-da, and H.~Jun-wei.
+\newblock Adaptive feed-forward compensation for hybrid control with acceleration time waveform replication on electro-hydraulic shaking table.
+\newblock \emph{Control Engineering Practice}, 21:\penalty0 1128--1142, 2013.
+\newblock \doi{10.1016/j.conengprac.2013.03.007}.
+
 \bibitem[Ji et~al.(2022)Ji, Hofmann, Duan, and Zang]{Ji2022Laboratory}
 Y.~Ji, H.~Hofmann, K.~Duan, and A.~Zang.
 \newblock Laboratory experiments on fault behavior towards better understanding of injection-induced seismicity in geoenergy systems.
@@ -186,6 +192,24 @@ Z.~Qiu and A.~Elgamal.
 \newblock \emph{Soil Dynamics and Earthquake Engineering}, 2024.
 \newblock \doi{10.1016/j.soildyn.2023.108330}.
 
+\bibitem[Ryu and Reinhorn(2017)]{Ryu2017Real-time}
+K.~P. Ryu and A.~Reinhorn.
+\newblock Real-time control of shake tables for nonlinear hysteretic systems.
+\newblock \emph{Structural Control and Health Monitoring}, 24:\penalty0 e1871, 2017.
+\newblock \doi{10.1002/stc.1871}.
+
+\bibitem[Seki et~al.(2009)Seki, Iwasaki, Kawafuku, Hirai, and Yasuda]{Seki2009Adaptive}
+K.~Seki, M.~Iwasaki, M.~Kawafuku, H.~Hirai, and K.~Yasuda.
+\newblock Adaptive compensation for reaction force with frequency variation in shaking table systems.
+\newblock \emph{IEEE Transactions on Industrial Electronics}, 56:\penalty0 3864--3871, 2009.
+\newblock \doi{10.1109/tie.2009.2022519}.
+
+\bibitem[Shen et~al.(2017)Shen, Li, Zhu, Tang, dong Zhu, and Liu]{Shen2017Acceleration}
+G.~Shen, X.~Li, Z.~Zhu, Y.~Tang, W.~dong Zhu, and S.~Liu.
+\newblock Acceleration tracking control combining adaptive control and off-line compensators for six-degree-of-freedom electro-hydraulic shaking tables.
+\newblock \emph{ISA transactions}, 70:\penalty0 322--337, 2017.
+\newblock \doi{10.1016/j.isatra.2017.07.018}.
+
 \bibitem[S{\"o}derstr{\"o}m and Stoica(1989)]{Soderstrom_Stoica}
 T.~S{\"o}derstr{\"o}m and P.~Stoica.
 \newblock \emph{System Identification}.
@@ -254,6 +278,12 @@ M.~S. Williams and A.~Blakeborough.
 \newblock \emph{Philosophical Transactions of the Royal Society A}, 359:\penalty0 1651--1669, 2001.
 \newblock \doi{10.1098/rsta.2001.0860}.
 \newblock URL \url{http://doi.org/10.1098/rsta.2001.0860}.
+
+\bibitem[Yachun et~al.(2018)Yachun, Dongbin, and Yi]{Yachun2018A}
+T.~Yachun, Z.~Dongbin, and Z.~Yi.
+\newblock A two-loop control method for shaking table tests combining model reference adaptive control and three-variable control.
+\newblock \emph{Frontiers in Built Environment}, 2018.
+\newblock \doi{10.3389/fbuil.2018.00054}.
 
 \bibitem[Yavas et~al.(2023)Yavas, Gao, Mekaoui, and Saito]{Yavas2023A}
 M.~S. Yavas, Z.~Gao, N.~Mekaoui, and T.~Saito.

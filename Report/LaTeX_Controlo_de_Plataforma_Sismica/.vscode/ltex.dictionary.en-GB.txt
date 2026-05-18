@@ -13,3 +13,4 @@ feedthrough
 Riccati
 LQI
 OLI
+inoperability

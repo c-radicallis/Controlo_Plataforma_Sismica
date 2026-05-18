@@ -1,4 +1,4 @@
-\begin{thebibliography}{51}
+\begin{thebibliography}{52}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -296,5 +296,11 @@ D.-Y. Zhang and J.-Y. Wu.
 \newblock Experimentally validated numerical analyses on the seismic responses of extra-large lng storage structures.
 \newblock \emph{Thin-Walled Structures}, 2023.
 \newblock \doi{10.1016/j.tws.2023.111407}.
+
+\bibitem[Zhang et~al.(2016)Zhang, Cong, Yang, Zhang, and Han]{Zhang2016Robust}
+L.~Zhang, D.~Cong, Z.~Yang, Y.~Zhang, and J.~Han.
+\newblock Robust tracking and synchronization of double shaking tables based on adaptive sliding mode control with novel reaching law.
+\newblock \emph{IEEE Access}, 4:\penalty0 8686--8702, 2016.
+\newblock \doi{10.1109/access.2016.2631662}.
 
 \end{thebibliography}

@@ -38,7 +38,12 @@
 \usepackage{cases}
 
 \usepackage{titlesec}
-% \titlespacing*{\chapter}{0pt}{-50pt}{0pt}
+\titleformat{\chapter}[display]
+ {\normalfont\huge\bfseries\linespread{0.85}\selectfont} %\hyphenpenalty=10000\exhyphenpenalty=10000
+  {\chaptertitlename\ \thechapter}
+  {10pt}
+  {\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{10pt}
 
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{5}
@@ -70,9 +75,9 @@
   \fancyfoot[C]{\thepage}            % just the page number, centered
   \renewcommand{\headrulewidth}{0pt} % no header line
 }
+
 \usepackage{setspace}
 \renewcommand{\baselinestretch}{1.5}
-
 \AtBeginEnvironment{minipage}{\renewcommand{\baselinestretch}{1.5}\normalsize}
 
 
@@ -258,12 +263,13 @@ The results indicate that both the PID-F and LQI controller offer superior perfo
 \clearpage
 \pagestyle{plain}% Apply the general page style to all pages by default
 \pagenumbering{arabic}
-
 \chapter{Introduction}
 
 Shaking-table tests consist of mounting a physical model on a stiff platform that is driven so as to reproduce the desired ground-motion time history (reference signal). This experimental technique was introduced in the 1940s and became widespread during the 1960s. Early systems relied on mechanical profiled cams to generate the excitation, but servo-hydraulic systems soon became the standard solution \citep{williams2001,carvalho1998,candeias2023}. 
 
 At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 electrodynamic shaker attached to a movable table was installed in the 60s to perform seismic tests \citep{emilio1989}. A uniaxial shaking table (ST1D), shown in figure \ref{fig_3D_render_uniaxial}, was developed and installed, consisting of a 3 m x 2 m horizontal steel platform and a vertical platform body driven by a hydraulic actuator supplied by a dedicated oil-hydraulic circuit \citep{bairao1998,castro1978}. During this period, adaptive control strategies were developed, implemented, and validated both on a small scale shaking table and on the ST1D, for tracking reference earthquake spectrum (frequency domain), iteratively \citep{carvalhal1974,carvalhal1979}. Increasingly demanding requirements for reproducing seismic excitation along all three directions motivated the development of the triaxial shaking table (ST3D), shown in figure \ref{fig_3D_render_triaxial}, which has been installed and operational at LNEC since the mid-1990s \citep{emilio1989}.
+
+%\vspace{-10mm}
 
 \begin{figure}[H]
 \begin{minipage}{0.48\textwidth}
@@ -489,7 +495,9 @@ Taking into account the main objectives mentioned above, the thesis is structure
 
 \clearpage
 
-\chapter{Literature Review on Experimental Testing in Seismic Engineering} %\chapter{Revisão do Estado da Arte}\label{sec:sota}
+\chapter[Literature Review on Experimental Testing in Seismic Engineering]
+{Literature Review on Experimental\\
+Testing in Seismic Engineering} %\chapter{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
 \section{The Purpose of Experimental Testing} %Simulation and Reality: 
@@ -532,17 +540,9 @@ Real-time hybrid simulation (RTHS) and substructural shake table testing are of 
     \label{fig_onboard_actuators}
 \end{figure}
 
-
-
 \section{Seismic Table Control Strategies}
 
-Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}, however, alternative control approaches have been proposed in the literature, including:
-\begin{itemize}
-    \item Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010};
-    \item Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012};
-    \item Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014};
-    \item Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
-\end{itemize} 
+Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}, however, alternative control approaches have been proposed in the literature, including: Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010}; Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012}; Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014}; Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
 
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
@@ -571,65 +571,45 @@ In more recent literature, advanced control methods such as active disturbance r
 % \end{itemize}
 
 %% Only the most important papers
-In \cite{Gang2013Adaptive}, a hybrid controller combining offline feed-forward inverse modelling and online adaptive inverse control (AIC) was used to improve acceleration waveform replication on electro-hydraulic tables, extending frequency bandwidth and achieving higher fidelity than conventional approaches.%2
-Another paper from the same author combined offline zero-phase-error compensators with an online LMS-based adaptive controller to improve convergence and tracking accuracy versus three-variable and adaptive controllers alone \citep{Shen2017Acceleration}. %1
+%H ybrid and adaptive control for waveform replication
+Among the most impactful publications on shaking table control, \cite{Gang2013Adaptive} proposed a hybrid controller combining offline feed-forward inverse modelling with online adaptive inverse control (AIC) to improve acceleration waveform replication on electro-hydraulic shaking tables, extending the frequency bandwidth and achieving higher fidelity than conventional approaches %2
+Another paper from the same author builds on the previous work by adding a delay compensator, an internal model controller, and an offline inverse model compensator (OIMC), resulting in improved tracking accuracy versus the three-variable and adaptive controllers alone \citep{Shen2017Acceleration}  (This control system is shown in figures \ref{fig_shen2017_control} and \ref{fig_shen2017_servo}). %1
+% Adaptive / robust feedback control
+In  \cite{Yachun2018A}, a two-loop controller combining model reference adaptive control with three-variable control adapts drive signals to different payloads, improving tracking in both time and frequency domains over standard three-variable control. %3 
+In \cite{Seki2009Adaptive}, an adaptive notch-filter-based feedback compensator is used to identify and suppresses frequency-varying reaction forces from rotating machinery, improving motion accuracy. %6
+In \cite{Zhang2016Robust}, for a double shaking table, an adaptive sliding mode controller with a reaching law achieves fast response, high precision, and robust tracking/synchronization under uncertainties and disturbances. %4
+In \cite{Ryu2017Real-time}, a nonlinear tracking controller using feedback linearization plus an extended Kalman filter enables real-time control of tables when attached structures show nonlinear hysteretic behaviour, maintaining motion fidelity at specific structural locations. %5
 
-Adaptive / robust feedback control
+\begin{figure}[H]
+\begin{minipage}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Lit_Review/1-s2.0-S0019057817305037-gr6_lrg.jpg}
+    \caption{The complete control system in \cite{Shen2017Acceleration}}
+    \label{fig_shen2017_control}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Lit_Review/1-s2.0-S0019057817305037-gr5_lrg.jpg}
+    \caption{The servo controller in \cite{Shen2017Acceleration}}
+    \label{fig_shen2017_servo}
+\end{minipage}
+\end{figure}
 
-A two-loop control combining model reference adaptive control with three-variable control adapts drive signals to different payloads, improving tracking in both time and frequency domains over standard three-variable control \citep{Yachun2018A}.%3
-An adaptive notch-filter-based feedback compensator identifies and suppresses frequency-varying reaction forces from rotating machinery, improving motion accuracy in earthquake simulators \citep{Seki2009Adaptive}.%6
-For double shaking tables, an adaptive sliding mode controller with a novel reaching law achieves fast response, high precision, and robust tracking/synchronization under uncertainties and disturbances 4.
-A nonlinear tracking control using feedback linearization plus an extended Kalman filter enables real-time control of tables when attached structures show nonlinear hysteretic behaviour, maintaining motion fidelity at specific structural locations \citep{Ryu2017Real-time}. %5
 
-In summary the trend is toward hybrid (offline + online) adaptive control, robust/disturbance-rejecting designs, and nonlinear model-based methods to keep seismic tables accurate under realistic, changing structural conditions.
+In summary, the recent developments are toward hybrid control (offline + online), with robust, and adaptive, and nonlinear model-based methods to keep seismic tables accurate under the changing conditions of test specimens.
 
 \subsection{LNEC's Shaking Tables Control Strategies}
-The reproduction of earthquakes on a shaking table depends strongly on the hardware (mechanical and electrical system), which usually has limitations and therefore can distort the reference signal and the control system, whose performance is highly sensitive to the adopted control strategy and tuning. 
 
-The hydraulic and control system supplier at LNEC, MTS Systems Corporation (MTS), provided several control strategies:
+The hydraulic and control system supplier at LNEC, MTS Systems Corporation (MTS), provided several control strategies for use under different test conditions, each with its own advantages and drawbacks:
+
 \begin{itemize}
-    \item Three-Variable Control (TVC), also known in control theory literature as state variable control \citep{ogata2010}, which combines the displacement, velocity and acceleration feedback \citep{williams2001};
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{MTSsystems/tvc.png}
-    \caption{Three-Variable Control (TVC)}
-    \label{fig_tvc}
-\end{figure}
-
-\item Adaptive Harmonic Cancellation (AHC), suitable for sinusoidal signals (fixed frequency or sweep); 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{MTSsystems/AHC.png}
-    \caption{ Adaptive Harmonic Cancellation (AHC)}
-    \label{fig_AHC}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{MTSsystems/AHC_detail.png}
-    \caption{ Adaptive Harmonic Cancellation (AHC) detail}
-    \label{fig_AHC_detail}
-\end{figure}
-
-\item Adaptive Inverse Control (AIC) \citep{widrow2007}, suitable for non-sinusoidal signals on linear systems; 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{MTSsystems/AIC.png}
-    \caption{Adaptive Inverse Control (AIC)}
-    \label{fig_AIC}
-\end{figure}
-
-
-\item Amplitude/Phase Control (APC), suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems; 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{MTSsystems/APC.png}
-    \caption{Amplitude/Phase Control (APC)}
-    \label{fig_APC}
-\end{figure}
-
-\item Online Iteration (OLI), suitable for nonlinear systems and non-sinusoidal waveforms. This last strategy is the most appropriate for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing. OLI is currently the control method implemented at LNEC's ST3D.
+    \item Three-Variable Control (TVC), in figure \ref{fig_TVC}, also known in control theory literature as state variable control \citep{ogata2010}, which combines the displacement, velocity and acceleration feedback \citep{williams2001}. In this implementation only one state variable is the primary control variable, with the others serving only as compensation signals to improve damping and stability;
+    \item Adaptive Harmonic Cancellation (AHC), in figure \ref{fig_AHC}, suitable for sinusoidal signals (fixed frequency or sweep). This method greatly reduces harmonic distortion of the response of a control system driven by a sinusoidal command. It measures the harmonic distortion directly and adapts in realtime the cancelling waveform that it applies to the control system input; 
+    \item Adaptive Inverse Control (AIC), in figure \ref{fig_AIC}, \citep{widrow2007}, suitable for non-sinusoidal signals on linear systems. This method consists on a control compensation technique that augments a fixed-gain controller to correct for closed-loop gain and phase irregularities in order to improve control fidelity. In addition, in multichannel control systems with cross-coupled dynamics, it greatly reduces cross-coupling disturbances between control channels. It measures control system dynamics directly and modifies the control compensation accordingly in realtime, making it possible to adapt to changing system dynamics.; 
+    \item Amplitude/Phase Control (APC), in figure \ref{fig_APC}, suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems. This is a control compensation technique that augments a fixed-gain controller to correct for closed-loop amplitude and phase irregularities in order to improve control fidelity. It measures control system dynamics directly and modifies the control compensation accordingly in realtime, making it possible to adapt to changing system dynamics; 
+    \item Online Iteration (OLI), in figure \ref{fig_OLI}, suitable for nonlinear systems and non-sinusoidal waveforms. This is a control technique that repeatedly modifies the command input to a control system on an individual sample-by-sample basis until the control system response is almost a perfect replica of the original desired command. This last strategy was deemed the most appropriate and versatile for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing, and is the control method currently implemented at LNEC's ST3D.
+\end{itemize}
 
 \begin{figure}[H]
     \centering
@@ -637,9 +617,6 @@ The hydraulic and control system supplier at LNEC, MTS Systems Corporation (MTS)
     \caption{Online Iteration (OLI)}
     \label{fig_OLI}
 \end{figure}
-
-\end{itemize}
-
 
 
 
@@ -1583,7 +1560,9 @@ For this section, consider the following:
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
 
 
-\chapter{Evaluating Controller Performance in Simulation Environment for LNEC's Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
+\chapter[Evaluating Controller Performance in Simulation]
+{Evaluating Controller Performance in Simulation Environment for LNEC's \\
+Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
 In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
@@ -1923,22 +1902,22 @@ In section \ref{sec_LNEC_method}, LNEC's control strategy is entirely explained,
 In section \ref{sec_Comparing_Control_Strategies}, the performance of the three control strategies is compared for a set of benchmark seismic signals.
  
 \subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
-% \begin{figure}[H]
-% \noindent
-% \begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
-Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}):
+
+Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}).
+
 \begin{figure}[H]
+\noindent
+\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
+    Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
     \centering
-    \includegraphics[width=0.5\linewidth]{adaptive_diagram.jpg}
+    \includegraphics[width=\linewidth]{adaptive_diagram.jpg} %0.5
     \caption{Adaptive control scheme \citep{DuarteValerio}}
     \label{fig_adaptive_diagram}
+\end{minipage}
 \end{figure}
-
-Another simple enhancement would be to add a filtered derivative term to the controller (making it a PID-F), since this would allow more tuning flexibility, should improve the tracking for the typical fast changing seismic displacement reference signal, and be of simple implementation in the existing version of the control software due to the fact that it's just an extension of the existing controller structure. 
-% \end{minipage}
-% \hfill
-% % \begin{minipage}{0.49\textwidth}
-% \end{minipage}
 
 Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ in the form of a PID-F, as in equation \eqref{eq_pidf_in_s}:
 \begin{equation} \label{eq_pidf_in_s}
@@ -1972,6 +1951,8 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 
 \begin{table}[H]
     \centering
+    \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
+    \label{tab:mse_rs}
     \begin{tabular}{ c c c }
         \hline
         Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
@@ -1980,8 +1961,6 @@ The acceleration response spectrum mean squared error for the tuned platform is 
         Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
         \hline
     \end{tabular}
-    \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
-    \label{tab:mse_rs}
 \end{table}
 
 In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller. All values are presented in SI units, in this case, $m/s^2$ for the acceleration response spectrum MSE, and $m$ for the displacement response spectrum MSE.
@@ -2239,52 +2218,52 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
 
 \begin{figure}[H]
     \centering
-    % \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
-    \begin{tikzpicture}[
-  block/.style = {draw, thick, rectangle,
-                  minimum height=2em, align=center},
-  sum/.style   = {draw, thick, circle,
-                  minimum size=1.8em, inner sep=0pt},
-  >=Stealth, thick, font=\small
-]
+     \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
+    % \begin{tikzpicture}[
+    %     block/.style = {draw, thick, rectangle,
+    %                     minimum height=2em, align=center},
+    %     sum/.style   = {draw, thick, circle,
+    %                     minimum size=1.8em, inner sep=0pt},
+    %     >=Stealth, thick, font=\small
+    %     ]
 
-%─── Nodes (sum at origin; all others relative) ───────────────────────────
-\node[sum]                               (s)   at (0,0) {};
-\node[block, minimum width=3.0cm,
-      right=1.8cm of s]                  (int)          {Integrator};
-\node[block, minimum width=1.8cm,
-      right=2.0cm of int]                (K)             {$-K$};
-\node[block, minimum width=2.2cm,
-      right=2.0cm of K]                  (sys)           {sys};
-\node[left=1.0cm of s]                   (r)             {$r$};
+    %     %─── Nodes (sum at origin; all others relative) ───────────────────────────
+    %     \node[sum]                               (s)   at (0,0) {};
+    %     \node[block, minimum width=3.0cm,
+    %         right=1.8cm of s]                  (int)          {Integrator};
+    %     \node[block, minimum width=1.8cm,
+    %         right=2.0cm of int]                (K)             {$-K$};
+    %     \node[block, minimum width=2.2cm,
+    %         right=2.0cm of K]                  (sys)           {sys};
+    %     \node[left=1.0cm of s]                   (r)             {$r$};
 
-%─── Summing-junction sign labels ─────────────────────────────────────────
-\node[font=\scriptsize] at ($(s)+(-0.28,  0.22)$) {$+$};
-\node[font=\scriptsize] at ($(s)+( 0.00, -0.30)$) {$-$};
+    %     %─── Summing-junction sign labels ─────────────────────────────────────────
+    %     \node[font=\scriptsize] at ($(s)+(-0.28,  0.22)$) {$+$};
+    %     \node[font=\scriptsize] at ($(s)+( 0.00, -0.30)$) {$-$};
 
-%─── Key coordinates ──────────────────────────────────────────────────────
-\coordinate (outTip) at ($(sys.east)  + (1.4,  0  )$); % tip of output arrow
-\coordinate (topSys) at ($(sys.north) + (0,    1.3)$); % above sys
-\coordinate (topKw)  at (topSys       -| K.west);      % same height, above K.west
-\coordinate (botOut) at ($(outTip)    + (0,   -1.8)$); % below output
-\coordinate (botS)   at (s.south      |- botOut);      % below sum, same y
+    %     %─── Key coordinates ──────────────────────────────────────────────────────
+    %     \coordinate (outTip) at ($(sys.east)  + (1.4,  0  )$); % tip of output arrow
+    %     \coordinate (topSys) at ($(sys.north) + (0,    1.3)$); % above sys
+    %     \coordinate (topKw)  at (topSys       -| K.west);      % same height, above K.west
+    %     \coordinate (botOut) at ($(outTip)    + (0,   -1.8)$); % below output
+    %     \coordinate (botS)   at (s.south      |- botOut);      % below sum, same y
 
-%─── Forward path ─────────────────────────────────────────────────────────
-\draw[->] (r)   --                          (s);
-\draw[->] (s)   -- node[above]{$e = r-y$}  (int);
-\draw[->] (int) -- node[below]{$x_i$}       (K);
-\draw[->] (K)   -- node[below]{$u$}          (sys);
-\draw[->] (sys) -- node[above]{$y$}          (outTip);
+    %     %─── Forward path ─────────────────────────────────────────────────────────
+    %     \draw[->] (r)   --                          (s);
+    %     \draw[->] (s)   -- node[above]{$e = r-y$}  (int);
+    %     \draw[->] (int) -- node[below]{$x_i$}       (K);
+    %     \draw[->] (K)   -- node[below]{$u$}          (sys);
+    %     \draw[->] (sys) -- node[above]{$y$}          (outTip);
 
-%─── State feedback (top): sys.north → up → left → down into K.north ──────
-\draw[->] (sys.north) -- (topSys) -- (topKw) -- (K.north);
-% "x" labels at both ends of the horizontal segment
-\node[above, font=\scriptsize] at ($(topKw)  !0.15!(topSys)$) {$x$};
-\node[above, font=\scriptsize] at ($(topSys)!0.07!(topKw)  $) {$x$};
+    %     %─── State feedback (top): sys.north → up → left → down into K.north ──────
+    %     \draw[->] (sys.north) -- (topSys) -- (topKw) -- (K.north);
+    %     % "x" labels at both ends of the horizontal segment
+    %     \node[above, font=\scriptsize] at ($(topKw)  !0.15!(topSys)$) {$x$};
+    %     \node[above, font=\scriptsize] at ($(topSys)!0.07!(topKw)  $) {$x$};
 
-%─── Output feedback (bottom): outTip → down → left → up into s.south ─────
-\draw[->] (outTip) -- (botOut) -- (botS) -- (s.south);
-\end{tikzpicture}
+    %     %─── Output feedback (bottom): outTip → down → left → up into s.south ─────
+    %     \draw[->] (outTip) -- (botOut) -- (botS) -- (s.south);
+    % \end{tikzpicture}
     \caption{Tracking loop with full state feedback control.}
     \label{fig_LQI_loop}
 \end{figure}
@@ -2391,21 +2370,19 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 \subsubsection{LQG Servo Controller}\label{sec_LQG Servo Controller}
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
 Given how state feedback controllers require knowledge of the system states, either by measurement or estimation, to compute the control action, and, on the shaking platform, the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_loop}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
 
+\begin{figure}[H]
+\begin{minipage}{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/lqgtrack1.png}
+    \caption{LQG loop} \label{fig_LQG_loop}
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-
-    \includegraphics[width=0.95\linewidth]{LQG/lqgtrack1.png}
-    \caption{LQG loop} \label{fig_LQG_loop}
-
+\begin{minipage}{0.58\textwidth}
     \includegraphics[width=\linewidth]{LQG/LQG_loop.png}
     \caption{Controller Block Diagram} \label{fig_LQG_inside_controller}
-    \end{minipage}
+\end{minipage}
 \end{figure}
 
 The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}.
@@ -2525,23 +2502,12 @@ In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user c
 
 For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
-\begin{figure}[H]
-\begin{minipage}{0.55\textwidth}
 \subsubsection{System Identification}
 The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the seismic table is run for 3 minutes with a pink noise signal as input. 
 
 This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, seismic table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
 
 The driver and simulated acquired data files are then input to \emph{Adapt}, where the system frequency response function is determined.
-\end{minipage}
-\hfill
-\begin{minipage}{0.4\textwidth}
-     \centering
-    \includegraphics[width=\linewidth]{Adapt/bode_compare.png}
-    \caption{Identified frequency response function from \emph{Adapt} (using "bad" settings) versus the model from Section \ref{Modelling Seismic Table Dynamics}}
-    \label{bode_compare}
-\end{minipage}
-\end{figure}
 
 \subsubsection{Generating the target files (.tgt)}
 The acceleration signal of each earthquake was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
@@ -2552,18 +2518,22 @@ The first driver (driver zero) was generated using just the target file. This dr
 
 \subsubsection{Application Example: Discussion of Method \& Results}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{Adapt/Response_Spectra.png}
-    \caption{Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare}.}
-    \label{Response_Spectra_2drivers}
-\end{figure}
-
 For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PIDF controller, and even more so when compared to the optimal controller. 
 
 In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PIDF controllers.
 
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
 In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_compare}) used for adapting the drivers isn't as good as in the other case (figure \ref{bode_compare_better_id}), due to the settings defined by the user in \emph{Adapt}, and the resulting response spectrum after three iterations isn't very satisfactory. This shows the one of limitations of this method: It depends on the user to make the right decisions, but the user isn't perfect and there is no guarantee he'll opt for the best settings. Another limitation is the fact that the user does not have exact knowledge of the best settings, because unlike in this example, where the system is known and the FRF is made to match it (Figure \ref{bode_compare_better_id}), in reality this is not possible, leaving the user to make an informed guess based on the information displayed in \emph{Adapt} and past experience.
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+     \centering
+    \includegraphics[width=\linewidth]{Adapt/bode_compare.png}
+    \caption{Identified frequency response function from \emph{Adapt} (using "bad" settings) versus the model from Section \ref{Modelling Seismic Table Dynamics}}
+    \label{bode_compare}
+\end{minipage}
+\end{figure}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -2579,6 +2549,13 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 \end{minipage}
 \end{figure}
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Adapt/Response_Spectra.png}
+    \caption{Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare}.}
+    \label{Response_Spectra_2drivers}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -2638,11 +2615,10 @@ The results indicate that the tuned controllers (PIDF \& Optimal) offer superior
 \chapter{Experimental Validation}
 % In order to experimentally validate the performance of the control strategies studied in \ref{Evaluating Controller Performance in Simulation Environment}, the two controllers were implemented in the LabVIEW software running in real time on 
 
-Due to 
-
+As an alternative to testing on LNEC's uniaxial shaking table, as a result of its inoperability due to ongoing works in hydraulic and electrical system, an experimental facility consisting on an electrodynamic shaker was used to implement and test the necessary changes in the control software, and the proposed identification and control methods.
 
 \section{ Measurement and Control Chain}
-An experimental facility comprising a small-scale shaking table with dedicated hardware and software is used to validate the methodology. The measurement and control chain is depicted on figure \ref{fig_Experimental facility} and, consists of:
+An experimental facility comprising a small-scale shaking table with dedicated hardware and software is used to validate the methodology. The measurement and control chain is depicted on figure \ref{fig_Experimental_facility} and, consists of:
 \begin{itemize}
     \item Shaking Table, including a small-scale shaking table installed on a fixed base, along which it rolls over, driven by a Goodmans model 390A electrodynamic shaker, and a Linear Variable Differential Transformer (LVDT) measures the relative displacement of the platform;
     \item Conditioning and Control unit, with a hardware rack comprising all required signal conditioning and control components, including sensor signal conditioners and a National Instruments PXI Real-Time Controller integrated with a CompactRIO system featuring a Virtex-5 FPGA, enabling autonomous real-time execution of control and acquisition tasks;
@@ -2653,7 +2629,7 @@ An experimental facility comprising a small-scale shaking table with dedicated h
     \centering
     \includegraphics[width=0.6\linewidth]{experimental_validation/shaker_whole_system.png}
     \caption{Experimental facility}
-    \label{fig_Experimental facility}
+    \label{fig_Experimental_facility}
 \end{figure}
 
 % \clearpage
@@ -2889,7 +2865,7 @@ The results obtained for the remaining earthquakes exhibit the same trend, as sh
 
 This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
 
-Given the nature of seismic table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behavior which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
+Given the nature of seismic table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
 
 The final step of the proposed methodology consists in implementing the optimized controllers on the physical system (small-scale shaking table). Completing this step will close the loop of the methodology and will enable the verification and confirmation of the results and the achieved performance. Subsequently, the methodology is intended to be implemented on LNEC's uniaxial shaking table, where the same analysis will be conducted to assess its effectiveness on larger-scale systems. This future stage aims to evaluate the scalability, robustness, and practical applicability of the proposed control strategy under more demanding testing conditions. After demonstrating their superior performance, the proposed methodology will be applied on future shaking table tests.
 
@@ -2902,9 +2878,43 @@ The final step of the proposed methodology consists in implementing the optimize
 
 \appendix
 
-\chapter{Vector calculus}\label{chapter:appendixVectors}
+\chapter{MTS Systems Control Strategies}\label{section:MTS_strategies}
 
-\section{Vector identities}\label{section:vectorIdentities}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MTSsystems/tvc.png}
+    \caption{Three-Variable Control (TVC)}
+    \label{fig_TVC}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{MTSsystems/AHC.png}
+    \caption{ Adaptive Harmonic Cancellation (AHC)}
+    \label{fig_AHC}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MTSsystems/AHC_detail.png}
+    \caption{ Adaptive Harmonic Cancellation (AHC) detail}
+    \label{fig_AHC_detail}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{MTSsystems/AIC.png}
+    \caption{Adaptive Inverse Control (AIC)}
+    \label{fig_AIC}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{MTSsystems/APC.png}
+    \caption{Amplitude/Phase Control (APC)}
+    \label{fig_APC}
+\end{figure}
+
 
 \end{document}
 

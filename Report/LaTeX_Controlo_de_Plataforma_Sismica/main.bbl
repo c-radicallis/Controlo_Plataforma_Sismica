@@ -93,12 +93,6 @@ L.~Fiorino, M.~Terracciano, and R.~Landolfo.
 \newblock \emph{Journal of Constructional Steel Research}, 127:\penalty0 92--107, 2016.
 \newblock \doi{10.1016/J.JCSR.2016.07.027}.
 
-\bibitem[Gang et~al.(2013)Gang, Zhencai, Lei, Yu, Chifu, Jin-song, Guang-da, and Jun-wei]{Gang2013Adaptive}
-S.~Gang, Z.~Zhencai, Z.~Lei, T.~Yu, Y.~Chifu, Z.~Jin-song, L.~Guang-da, and H.~Jun-wei.
-\newblock Adaptive feed-forward compensation for hybrid control with acceleration time waveform replication on electro-hydraulic shaking table.
-\newblock \emph{Control Engineering Practice}, 21:\penalty0 1128--1142, 2013.
-\newblock \doi{10.1016/j.conengprac.2013.03.007}.
-
 \bibitem[Ji et~al.(2022)Ji, Hofmann, Duan, and Zang]{Ji2022Laboratory}
 Y.~Ji, H.~Hofmann, K.~Duan, and A.~Zang.
 \newblock Laboratory experiments on fault behavior towards better understanding of injection-induced seismicity in geoenergy systems.
@@ -203,6 +197,12 @@ K.~Seki, M.~Iwasaki, M.~Kawafuku, H.~Hirai, and K.~Yasuda.
 \newblock Adaptive compensation for reaction force with frequency variation in shaking table systems.
 \newblock \emph{IEEE Transactions on Industrial Electronics}, 56:\penalty0 3864--3871, 2009.
 \newblock \doi{10.1109/tie.2009.2022519}.
+
+\bibitem[Shen et~al.(2013)Shen, Zhencai, Lei, Yu, Chifu, Jin-song, Guang-da, and Jun-wei]{Gang2013Adaptive}
+G.~Shen, Z.~Zhencai, Z.~Lei, T.~Yu, Y.~Chifu, Z.~Jin-song, L.~Guang-da, and H.~Jun-wei.
+\newblock Adaptive feed-forward compensation for hybrid control with acceleration time waveform replication on electro-hydraulic shaking table.
+\newblock \emph{Control Engineering Practice}, 21:\penalty0 1128--1142, 2013.
+\newblock \doi{10.1016/j.conengprac.2013.03.007}.
 
 \bibitem[Shen et~al.(2017)Shen, Li, Zhu, Tang, dong Zhu, and Liu]{Shen2017Acceleration}
 G.~Shen, X.~Li, Z.~Zhu, Y.~Tang, W.~dong Zhu, and S.~Liu.

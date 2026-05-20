@@ -392,7 +392,7 @@ In addition, the system faces physical limitations inherent to the equipment, na
 
 The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
-It's relevance for this work lies in the fact that the performance of the seismic table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
+It's relevance for this work lies in the fact that the performance of the shaking table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
 % \vspace{5mm}
 
@@ -413,13 +413,11 @@ Some fundamental concepts on response spectrum are:
         \item It is derived from an earthquake acceleration time history.
         \item Different earthquakes produce different response spectra.
     \end{itemize}
-    
     \item Structures Dynamic Properties
     \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
         \item The response depends on the structure's natural frequency and damping ratio.
         \item Structures with different natural periods respond differently to the same ground motion.
     \end{itemize}
-
     \item Spectral Parameters
     The response spectrum can show maximum values of:
     \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
@@ -441,7 +439,7 @@ Some of its applications in Civil Engineering are:
 
 \end{minipage}
 \hfill
-\begin{minipage}{0.46\textwidth}
+\begin{minipage}{0.4\textwidth}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
@@ -486,7 +484,7 @@ Taking into account the main objectives mentioned above, the thesis is structure
 
 \textbf{Chapter 1} serves as an introduction to this work by explaining  the main concepts at play in the shaking table tests at LNEC, and lays out the goals of this work.
 
-\textbf{Chapter 2} highlights the purpose of experimental testing in seismic engineering and goes over the main experimental methods. It then introduces the control strategies which were/are available for use with LNEC's shaking table systems. The chapter closes with recent innovations in control for shaking table systems.
+\textbf{Chapter 2} highlights the purpose of experimental testing in earthquake engineering and goes over the main experimental methods. It then introduces the control strategies which were/are available for use with LNEC's shaking table systems. The chapter closes with recent innovations in control for shaking table systems.
 
 \textbf{Chapter 3} introduces the essential concepts in control, and in identification in closed-loop systems. It also goes into more detail on the identification and control strategies applied in this work.
 
@@ -497,9 +495,8 @@ Taking into account the main objectives mentioned above, the thesis is structure
 
 \clearpage
 
-\chapter[Literature Review on Experimental Testing in Seismic Engineering]
-{Literature Review on Experimental\\
-Testing in Seismic Engineering} %\chapter{Revisão do Estado da Arte}\label{sec:sota}
+\chapter[Literature Review on Experimental Testing in Earthquake Engineering]{Literature Review on Experimental\\Testing in Earthquake Engineering}
+ %\chapter{Revisão do Estado da Arte}\label{sec:sota}
 %Realizar uma pesquisa abrangente sobre técnicas para ensaios sísmicos, com foco em ensaios em plataforma sísmica. Incluir uma análise dos métodos de ensaio, configurações de montagem, bem como da instrumentação utilizada para medição e controlo dos equipamentos.
 
 \section{The Purpose of Experimental Testing} %Simulation and Reality: 
@@ -511,22 +508,22 @@ Studies show that numerical simulations, even with advanced methods, require exp
 In summary, seismic experimental testing remains indispensable for validating models, understanding complex behaviours, and ensuring structural safety. The trend is toward integrated approaches using both experimental and computational tools to achieve the most reliable seismic performance assessments.\citep{williams2001, Zhang2023Experimentally, Liu2020Experimental, Bahraq2021Numerical, Malomo2022M-DEM, Qiu2024Seismic, Yavas2023A, Mokhtari2023A}
 
 \section{An Overview of Experimental Methods}
-% IN THE FIELD OF SEISMIC ENGINEERING, WHAT ARE THE MOST WIDELY USED EXPERIMENTAL METHODS?
+% IN THE FIELD OF earthquake engineering, WHAT ARE THE MOST WIDELY USED EXPERIMENTAL METHODS?
 % https://consensus.app/search/in-the-field-of-seismic-engineering-what-are-the-m/QdpmhhJsS76N_XJJZcAGgA/
-According to \cite{williams2001}, the most widely used experimental methods in the field of seismic engineering are:
+According to \cite{williams2001}, the most widely used experimental methods in the field of earthquake engineering are:
 \begin{itemize}
-    \item \textbf{Shaking Table Tests:} Shaking tables simulate real earthquake ground motions on structural or soil models, allowing direct observation of dynamic response and failure mechanisms. They are considered the gold standard for dynamic testing of buildings, bridges, tunnels, and other infrastructure. 
+    \item \textbf{Shaking Table Tests:} Shaking tables simulate real earthquake ground motions on structural or soil models, allowing direct observation of dynamic response and failure mechanisms. They are considered the gold standard for dynamic testing of buildings, bridges, tunnels, and other infrastructures. 
     They are used for both full-scale and scaled models, including innovative in-situ testing with mobile shaking tables \citep{williams2001,Bousias2017Experimental,Abovyan2024Method,Tsinidis2020Seismic,DeFelice2016Methods,El-Emam2018Experimental}. 
-    \item \textbf{Pseudo-Dynamic Testing} and \textbf{Hybrid Simulation:} In pseudo-dynamic testing, loads are applied over a greatly expanded timescale with the dynamic behaviour of the structure accounted for computationally. In hybrid simulation, just like pseudo-dynamic testing, a combination of physical testing and numerical modelling is used, but the experimental part of the process is performed at the correct rate so that the test specimen can respond dynamically. These methods are widely used for complex or large structures where full dynamic testing is impractical \citep{williams2001,Bousias2017Experimental}.
-    \item \textbf{Static and Cyclic Loading Tests:} These tests apply static or cyclic loads to materials, structural elements, or systems to study their properties under earthquake-like conditions \citep{williams2001,Bousias2017Experimental,Fiorino2016Experimental}.
-    \item \textbf{Centrifuge Modelling:} Centrifuge tests use scaled soil-structure models spun at high speeds to replicate gravitational stresses, enabling realistic simulation of soil-structure interaction during earthquakes, especially for underground structures such as tunnels. This method is mostly focused on testing soil properties, not structures \citep{williams2001,Tsinidis2020Seismic}.
-    \item \textbf{Surface Based Seismic Methods:} Used for site characterization, through passive-source (microtremor) and active-source techniques, to determine ground shear-wave velocity profiles \citep{Luke2008Characterizing}.
-    \item \textbf{Laboratory Fault Slip Experiments:} Used to study fault mechanics and induced seismicity, employing shear-flow, triaxial, and injection-driven tests \citep{Ji2022Laboratory,Dong2022Investigations}.
-    \item \textbf{Vibration Machines:} Employed for simulating seismic impacts on buildings and models, offering a cost-effective alternative for certain applications \citep{Abovyan2024Method}.
-    \item \textbf{Explosive Charges:} Arrays of explosive charges used to simulate earthquake ground motions at large scale (very uncommon method) \citep{williams2001}.
+    \item \textbf{Pseudo-Dynamic Testing} and \textbf{Hybrid Simulation:} In pseudo-dynamic testing, loads are applied over a greatly expanded timescale with the dynamic behaviour of the structure accounted for computationally, from the measured reaction forces and the calculated inertia, damping and loading force. In hybrid simulation, just like pseudo-dynamic testing, a combination of physical testing and numerical modelling is used, but the experimental part of the process is performed at higher rates (than pseudo-dynamic testing) to have time to perform the numerical simulations and execute the time step on the experiment, allowing the test specimen to be 'almost' under the dynamic regime (would be the full dynamic regime for a unitary time scale). These methods are widely used for complex or large structures where full dynamic testing is impractical \citep{williams2001,Bousias2017Experimental}.
+    \item \textbf{Static and Cyclic Loading Tests:} These tests apply static or cyclic loads to materials, structural elements, or systems to evaluate their properties for specific studies, such as earthquake engineering. Testing protocols using static and/or cyclic loads are common standard protocols considered to determine component's properties such as concrete anchors, piers or beam to column assemblies \citep{williams2001,Bousias2017Experimental,Fiorino2016Experimental}.
+    \item \textbf{Centrifuge Modelling:} Centrifuge tests use scaled soil-structure models spun at high speeds to replicate in situ stress conditions (i.e. gravitational stresses), enabling realistic simulation of soil-structure interaction during earthquakes, especially for underground structures such as tunnels. This method is mostly focused on testing geotechnical models, not structures, to evaluate their stress-strain behaviour and failure mechanisms, namely the strength, stiffness and capacity of foundations for bridges and buildings, settlement of embankments, stability of slopes, earth retaining structures tunnel stability and seawalls. \citep{williams2001,Tsinidis2020Seismic}.
+    \item \textbf{Surface Based Seismic Methods:} This method is used for site characterization, through passive-source (microtremor) and active-source techniques, to determine ground shear-wave velocity profiles \citep{Luke2008Characterizing}.
+    \item \textbf{Laboratory Fault Slip Experiments:} This method is used to study fault mechanics and induced seismicity, employing shear-flow, triaxial, and injection-driven tests \citep{Ji2022Laboratory,Dong2022Investigations}.
+    \item \textbf{Vibration Machines:} The testing equipment is installed on site, and employed for simulating seismic impacts on buildings and models, offering a cost-effective alternative for certain applications \citep{Abovyan2024Method}.
+    \item \textbf{Explosive Charges:} Arrays of explosive charges are used to simulate earthquake ground motions at large scale (very uncommon method) \citep{williams2001}.
 \end{itemize}
 
-Real-time hybrid simulation (RTHS) and substructural shake table testing are of special interest since they allow for the evaluation of large and/or complex structures by combining physical and numerical models of substructures, which enhances testing flexibility, enabling improved studies of high-frequency and/or nonlinear behaviours, while also reducing experimental costs. Real-time hybrid simulation method is illustrated in figure \ref{fig_hybrid} \citep{Tang2020Performance}. In \cite{Lin2024Implementation} a different configuration is implemented, resorting to onboard actuators, as shown in figure \ref{fig_onboard_actuators}, in order to circumvent the additional stroke length, velocity, and acceleration requirements for ground-based actuators, and the control challenges they pose.
+Real-time hybrid simulation (RTHS) and substructural shake table testing are of special interest since they allow for the evaluation of large and/or complex structures by combining physical and numerical models of substructures, which enhances testing flexibility, enabling improved studies of high-frequency and/or nonlinear behaviours, while also reducing experimental costs. Real-time hybrid simulation method is illustrated in figure \ref{fig_hybrid} for 3 different configurations \citep{Tang2020Performance}. In \cite{Lin2024Implementation} a different configuration is implemented, resorting to onboard actuators, as shown in figure \ref{fig_onboard_actuators}, in order to circumvent the additional stroke length, velocity, and acceleration requirements for ground-based actuators, and the control challenges they pose.
 
 \begin{figure}[H]
     \centering
@@ -542,14 +539,14 @@ Real-time hybrid simulation (RTHS) and substructural shake table testing are of 
     \label{fig_onboard_actuators}
 \end{figure}
 
-\section{Seismic Table Control Strategies}
+\section{Shaking Table Control Strategies}
 
-Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}, however, alternative control approaches have been proposed in the literature, including: Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010}; Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012}; Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014}; Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
+Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}. However, alternative control approaches have been proposed in the literature, including: Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010}; Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012}; Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014}; Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
 
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-In more recent literature, advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied by \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, offline iterative control and frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload and wide frequency range, addressing the needs of testing very rigid structures like dams and nuclear facilities, which have high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility based on a brushed DC motor as the actuator of the shaking table, \cite{Parajuli2024Development} used a proportional-derivative (PD) controller.
+Recent works developed in this field show that advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied in \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and also nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, the use of offline iterative control combined with frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload capacity and a wide frequency bandwidth. This advancement allows for the effective testing of high-rigidity structures — such as dams and nuclear power plant facilities - which are characterized by high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility, \cite{Parajuli2024Development} adopted a brushed DC motor as the shaking table actuator and applied a proportional-derivative (PD) controller to achieve motion control, offering a cost-effective alternative to more complex systems.
 
 \begin{figure}[H]
     \centering
@@ -574,8 +571,8 @@ In more recent literature, advanced control methods such as active disturbance r
 
 %% Only the most important papers
 %H ybrid and adaptive control for waveform replication
-Among the most impactful publications on shaking table control, \cite{Gang2013Adaptive} proposed a hybrid controller combining offline feed-forward inverse modelling with online adaptive inverse control (AIC) to improve acceleration waveform replication on electro-hydraulic shaking tables, extending the frequency bandwidth and achieving higher fidelity than conventional approaches %2
-Another paper from the same author builds on the previous work by adding a delay compensator, an internal model controller, and an offline inverse model compensator (OIMC), resulting in improved tracking accuracy versus the three-variable and adaptive controllers alone \citep{Shen2017Acceleration}  (This control system is shown in figures \ref{fig_shen2017_control} and \ref{fig_shen2017_servo}). %1
+Among the most impactful publications on shaking table control, \cite{Gang2013Adaptive} proposed a hybrid controller combining offline feed-forward inverse modelling with online adaptive inverse control (AIC) to improve acceleration waveform replication on electro-hydraulic shaking tables, extending the frequency bandwidth and achieving higher fidelity than conventional approaches. %2
+Another paper from the same author builds on the previous work by adding a delay compensator, an internal model controller, and an offline inverse model compensator (OIMC), resulting in improved tracking accuracy versus the three-variable and adaptive controllers alone \citep{Shen2017Acceleration}. This control system block diagram is shown in figures \ref{fig_shen2017_control} and \ref{fig_shen2017_servo}. %1
 % Adaptive / robust feedback control
 In  \cite{Yachun2018A}, a two-loop controller combining model reference adaptive control with three-variable control adapts drive signals to different payloads, improving tracking in both time and frequency domains over standard three-variable control. %3 
 In \cite{Seki2009Adaptive}, an adaptive notch-filter-based feedback compensator is used to identify and suppresses frequency-varying reaction forces from rotating machinery, improving motion accuracy. %6
@@ -599,7 +596,7 @@ In \cite{Ryu2017Real-time}, a nonlinear tracking controller using feedback linea
 \end{figure}
 
 
-In summary, the recent developments are toward hybrid control (offline + online), with robust, and adaptive, and nonlinear model-based methods to keep seismic tables accurate under the changing conditions of test specimens.
+In summary, the recent developments are toward hybrid control (offline + online), with robust, and adaptive, and nonlinear model-based methods to keep shaking tables accurate under the changing conditions of test specimens.
 
 \subsection{LNEC's Shaking Tables Control Strategies}
 
@@ -1566,9 +1563,9 @@ The figure on the left shows the results of the identification with some noise, 
 {Evaluating Controller Performance in Simulation Environment for LNEC's \\
 Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
-In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Seismic Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
+In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Shaking Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
-\section{A Model of LNEC's Uniaxial Seismic Table}\label{Modelling Seismic Table Dynamics}
+\section{A Model of LNEC's Uniaxial Shaking Table}\label{Modelling Shaking Table Dynamics}
 %\chapter{Modelação Matemática}
 %Os modelos devem ser implementados em Matlab/Simulink e complementados com funções, scripts e interfaces que facilitem a parametrização, cálculo de propriedades (como modos de vibração), análise e simulação com diferentes tipos de entradas (sinais sinusoidais, ondas quadradas e inputs externos como sinais sísmicos).
 
@@ -1622,7 +1619,7 @@ $m_T$ & Total mass $= m_p + m_{sp}$  & - \\ \hline
 \end{table}
 
 
-\subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DOF System}
+\subsection{Mathematical Model for LNEC Uniaxial Shaking Table with a Coupled 2DOF System}
 
 In order to determine a model for the shaking table with a coupled 2DOF systems, which will represent the essential dynamics of usual test specimens, firstly, the block diagram (in figure \ref{fig_clean_block_force_output}) containing only part of the system, which includes the controller, servo valve, and hydraulic actuator, was built:
 
@@ -1871,7 +1868,7 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 
 In this section two new control strategies are proposed: a tuned PIDF controller, and an optimal controller. This control strategies are then evaluated against LNEC's iterative driver adaptation method, which is currently used.
 
-In sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the seismic table.
+In sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the shaking table.
 
 It was also considered throughout that the platen had a 2DOF coupled structure, as in figure \ref{schematic_2dof}, and the parameters of this 2DOF system, unless stated otherwise, are the ones shown in table \ref{tab:modal_params}:
 
@@ -2060,7 +2057,7 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 
 \subsubsection{Tuned PID-F Performance Sensitivity to Test Specimen Parameters} \label{Tuned PID-F Performance Sensitivity}%Analysis of Tuned PIDF 
 
-The mass, modal frequencies, and damping of the specimens coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table performs for different damping, modal frequencies, and mass of the test specimen with the tuned PID-F controller (which is tuned for each case).
+The mass, modal frequencies, and damping of the specimens coupled to the shaking table have an impact on how well it is able to track the reference. In this section, we will analyse how the shaking table performs for different damping, modal frequencies, and mass of the test specimen with the tuned PID-F controller (which is tuned for each case).
 
 Specimens with % higher modal frequencies ($f_1=4$ Hz \& $f_2=10$ Hz) and 
 lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra which exceeds the desired one over the entire frequency spectrum, while structures with higher damping ($\zeta_1=0.1$ \& $\zeta_2=0.25$) result in response spectra which fall short of the desired one (figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}), and this translates to trend observed in figure \ref{fig_MSE_vs_damping}.
@@ -2083,7 +2080,7 @@ lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra whic
 \label{fig_MSE_vs_damping}
 \end{figure}
 
-The effect of modal frequencies on the performance of the seismic table (shown in figure \ref{fig_MSE_vs_modal_freqs}) is unclear in this analysis , most likely because the analysis was performed for a single seismic signal, and it depends heavily on the specific combination of frequency content of the seismic signal, and the closed-loop response of the system. It is expected that seismic signals with more power in frequencies close to the modal frequencies will result in an over-shoot of the target response spectra (especially if damping is low), if the closed-loop gain is close to unitary in that range, but if none of these conditions are met, for example, when the modal frequencies of the specimen are mismatched with the frequency content of the seismic signal, or they are beyond the bandwidth of the closed-loop, than it is expected that the response spectra will closely match the target, or, in the second case, undershoot.
+The effect of modal frequencies on the performance of the shaking table (shown in figure \ref{fig_MSE_vs_modal_freqs}) is unclear in this analysis , most likely because the analysis was performed for a single seismic signal, and it depends heavily on the specific combination of frequency content of the seismic signal, and the closed-loop response of the system. It is expected that seismic signals with more power in frequencies close to the modal frequencies will result in an over-shoot of the target response spectra (especially if damping is low), if the closed-loop gain is close to unitary in that range, but if none of these conditions are met, for example, when the modal frequencies of the specimen are mismatched with the frequency content of the seismic signal, or they are beyond the bandwidth of the closed-loop, than it is expected that the response spectra will closely match the target, or, in the second case, undershoot.
 
 \begin{figure}[H]
     \centering
@@ -2154,7 +2151,7 @@ In figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectr
 \subsection{Optimal Control}  \label{sec_Optimal_Control}
 
 \subsubsection{ State Space Model} \label{section_ss_model}
-For the seismic table with a coupled 2-DoF system, the following state space model was derived, where:
+For the shaking table with a coupled 2-DoF system, the following state space model was derived, where:
 \begin{align}
 \dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
 y(t) &= C\cdot x(t) + D\cdot u(t)
@@ -2476,10 +2473,10 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 \subsubsection{The functioning of the driver adaptation software}
 
-As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the seismic table in terms of response spectrum. 
+As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the shaking table in terms of response spectrum. 
 
-An attempt to improve the seismic table performance at LNEC comes in the form of pseudo-open loop control, whereby, before every test run, a proprietary software %developed in LabVIEW 
-called \emph{Adapt}, through a set of user-defined parameters and decisions, identifies the system transfer function, and then modifies the reference signal, creating what we will now refer to as \emph{driver signal}, which is then used as the reference in the closed-loop control of the seismic table position.
+An attempt to improve the shaking table performance at LNEC comes in the form of pseudo-open loop control, whereby, before every test run, a proprietary software %developed in LabVIEW 
+called \emph{Adapt}, through a set of user-defined parameters and decisions, identifies the system transfer function, and then modifies the reference signal, creating what we will now refer to as \emph{driver signal}, which is then used as the reference in the closed-loop control of the shaking table position.
 
 In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal. Then the user can choose various options for the computation of the transfer function.
 
@@ -2502,7 +2499,7 @@ In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user c
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Adapt/Adapt_INV_Panel.png}
-    \caption{Adapt INV Panel menu - This menu is used to generate new driver signals, and takes as inputs the original reference (referred to as \emph{target}), the driver signal used in the test run, it's measured output at the seismic table, and user defined parameters which affect which parts of the signal are modified, and by how much they're modified.}
+    \caption{Adapt INV Panel menu - This menu is used to generate new driver signals, and takes as inputs the original reference (referred to as \emph{target}), the driver signal used in the test run, it's measured output at the shaking table, and user defined parameters which affect which parts of the signal are modified, and by how much they're modified.}
     \label{Adapt_INV_Panel}
 \end{figure}
 
@@ -2511,14 +2508,14 @@ In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user c
 For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
 \subsubsection{System Identification}
-The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the seismic table is run for 3 minutes with a pink noise signal as input. 
+The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the shaking table is run for 3 minutes with a pink noise signal as input. 
 
-This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, seismic table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
+This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, shaking table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
 
 The driver and simulated acquired data files are then input to \emph{Adapt}, where the system frequency response function is determined.
 
 \subsubsection{Generating the target files (.tgt)}
-The acceleration signal of each earthquake was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of seismic table (and the mathematical model).
+The acceleration signal of each earthquake was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of shaking table (and the mathematical model).
 
 \subsubsection{Generating the adapted driver}
 
@@ -2538,7 +2535,7 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 \begin{minipage}{0.49\textwidth}
      \centering
     \includegraphics[width=\linewidth]{Adapt/bode_compare.png}
-    \caption{Identified frequency response function from \emph{Adapt} (using "bad" settings) versus the model from Section \ref{Modelling Seismic Table Dynamics}}
+    \caption{Identified frequency response function from \emph{Adapt} (using "bad" settings) versus the model from Section \ref{Modelling Shaking Table Dynamics}}
     \label{bode_compare}
 \end{minipage}
 \end{figure}
@@ -2873,7 +2870,7 @@ The results obtained for the remaining earthquakes exhibit the same trend, as sh
 
 This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
 
-Given the nature of seismic table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
+Given the nature of shaking table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
 
 The final step of the proposed methodology consists in implementing the optimized controllers on the physical system (small-scale shaking table). Completing this step will close the loop of the methodology and will enable the verification and confirmation of the results and the achieved performance. Subsequently, the methodology is intended to be implemented on LNEC's uniaxial shaking table, where the same analysis will be conducted to assess its effectiveness on larger-scale systems. This future stage aims to evaluate the scalability, robustness, and practical applicability of the proposed control strategy under more demanding testing conditions. After demonstrating their superior performance, the proposed methodology will be applied on future shaking table tests.
 
@@ -3020,7 +3017,7 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
 % \end{itemize}
 
 % \chapter{Possible modal frequencies for experimental setup on ST1D}
-% The existing cart, with a mass of 1790 kg, and coil springs with stiffness of 17 kN/m (2 units) and 200 kN/m (4 units), allow coupling to the seismic table a 1-dof system with frequencies as high as 3.44 Hz, and as low as 0.41 Hz (with three 1100 kg masses added to the cart). Adding three 1100 kg masses to the cart setup with highest spring stiffness configuration results in a natural frequency of 2 Hz.
+% The existing cart, with a mass of 1790 kg, and coil springs with stiffness of 17 kN/m (2 units) and 200 kN/m (4 units), allow coupling to the shaking table a 1-dof system with frequencies as high as 3.44 Hz, and as low as 0.41 Hz (with three 1100 kg masses added to the cart). Adding three 1100 kg masses to the cart setup with highest spring stiffness configuration results in a natural frequency of 2 Hz.
  
 % \begin{align*}
 % m &= 1790 kg \\

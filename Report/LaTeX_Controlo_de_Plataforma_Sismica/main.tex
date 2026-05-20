@@ -826,21 +826,21 @@ Since we want the output to match the reference:
 
 Thus, the controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller isn't, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealized controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Open-loop control example: Reference \& Output}
-    \label{fig_open_ref_y}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Open-loop control example: Control action}
-    \label{fig_open_u}
-\end{minipage}
-\end{figure}
+% \begin{figure}[H]
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Open-loop control example: Reference \& Output}
+%     \label{fig_open_ref_y}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Open-loop control example: Control action}
+%     \label{fig_open_u}
+% \end{minipage}
+% \end{figure}
 
 \subsection{Closed-Loop Control}
 Closed-loop control uses feedback, meaning the output is being measured and compared with the reference. The difference between the reference and the measured output is the tracking error $e(t)$. In closed-loop control, the tracking error is the input to the controller:
@@ -857,19 +857,19 @@ Thanks to output feedback, closed-loop control can mitigate the effects of distu
 
 Closed-loop control can also be used to stabilise unstable plants, and the opposite is also true: Badly designed closed-loop control can destabilise stable plants.
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Close-loop control example: Reference \& Output} \label{fig_closed_ref_y}    
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Close-loop control example: Control action} \label{fig_closed_u}
-\end{minipage}
-\end{figure}
+% \begin{figure}[H]
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Close-loop control example: Reference \& Output} \label{fig_closed_ref_y}    
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Close-loop control example: Control action} \label{fig_closed_u}
+% \end{minipage}
+% \end{figure}
 
 % \begin{figure}[H]
 \subsubsection{Combined Open- and Closed-Loop Control}
@@ -947,19 +947,19 @@ It is possible to combine open-loop and closed-loop control in a single control 
 In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
 
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Combined open- and close-loop control example: Reference \& Output} \label{fig_Combined_ref_y}    
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-    \caption{Combined open- and close-loop control example: Control action} \label{fig_Combined_u}
-\end{minipage}
-\end{figure}
+% \begin{figure}[H]
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Combined open- and close-loop control example: Reference \& Output} \label{fig_Combined_ref_y}    
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
+%     \caption{Combined open- and close-loop control example: Control action} \label{fig_Combined_u}
+% \end{minipage}
+% \end{figure}
 
 
 \subsubsection{PIDF Controller}

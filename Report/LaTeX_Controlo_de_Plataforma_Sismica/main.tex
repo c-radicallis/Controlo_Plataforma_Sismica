@@ -80,6 +80,8 @@
 \renewcommand{\baselinestretch}{1.5}
 \AtBeginEnvironment{minipage}{\renewcommand{\baselinestretch}{1.5}\normalsize}
 
+\AtBeginEnvironment{itemize}{\singlespacing}
+\AtEndEnvironment{itemize}{\onehalfspacing}
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -241,7 +243,7 @@ The results indicate that both the PID-F and LQI controller offer superior perfo
 \addcontentsline{toc}{section}{List of Tables}
 \listoftables % Tabelas
 
-\cleardoublepage 
+%\cleardoublepage 
 \phantomsection
 \addcontentsline{toc}{section}{List of Figures}
 \listoffigures %Figuras
@@ -398,7 +400,7 @@ It's relevance for this work lies in the fact that the performance of the seismi
 Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 
 \noindent
-\begin{minipage}{0.58\textwidth}\setlength{\parindent}{15pt}
+\begin{minipage}{0.5\textwidth}\setlength{\parindent}{15pt}
 
 
 % \vspace{5mm}
@@ -439,7 +441,7 @@ Some of its applications in Civil Engineering are:
 
 \end{minipage}
 \hfill
-\begin{minipage}{0.39\textwidth}
+\begin{minipage}{0.46\textwidth}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
@@ -613,7 +615,7 @@ The hydraulic and control system supplier at LNEC, MTS Systems Corporation (MTS)
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{MTSsystems/OLI.png}
+    \includegraphics[width=\textwidth]{MTSsystems/OLI.png}
     \caption{Online Iteration (OLI)}
     \label{fig_OLI}
 \end{figure}
@@ -1620,7 +1622,7 @@ $m_T$ & Total mass $= m_p + m_{sp}$  & - \\ \hline
 \end{table}
 
 
-\subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DoF System}
+\subsection{Mathematical Model for LNEC Uniaxial Seismic Table with a Coupled 2DOF System}
 
 In order to determine a model for the shaking table with a coupled 2DOF systems, which will represent the essential dynamics of usual test specimens, firstly, the block diagram (in figure \ref{fig_clean_block_force_output}) containing only part of the system, which includes the controller, servo valve, and hydraulic actuator, was built:
 
@@ -1919,20 +1921,20 @@ Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_
 \end{minipage}
 \end{figure}
 
-Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with $G_c(s)$ in the form of a PID-F, as in equation \eqref{eq_pidf_in_s}:
-\begin{equation} \label{eq_pidf_in_s}
-    G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
-\end{equation}
-
-Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
-
+Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with controller in the form of a PID-F : $G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}$ ,
+% \begin{equation} \label{eq_pidf_in_s}
+%     G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
+% \end{equation}
+where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
 
 \begin{table}[H]
     \centering
+\begin{minipage}{0.48\textwidth} %0.37
+        \centering
     \caption{Tuned PID-F controller parameters}
     \begin{tabular}{ccc}
         \hline
-        Parameter & Value & Unit \\
+        Parameter & Value & Units \\
         \hline
         $K_p$ & $1540$ & $V/m$ \\
         $K_i$ & $1670$ & $V/(m \, s)$ \\
@@ -1941,6 +1943,22 @@ Where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_par
         \hline
     \end{tabular}
     \label{tab:pidf_params}
+\end{minipage}
+\hspace{5mm}
+\begin{minipage}{0.46\textwidth} 
+    \centering
+    \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
+    \label{tab:mse_rs}
+    \begin{tabular}{ccc}
+        \hline
+        Controller & Acceleration  & Displacement \\[-2mm]
+                   & MSE ($m/s^2$) & MSE ($m$)    \\
+        \hline
+        Baseline & $1.78$               & $1.94 \cdot 10^{-6}$ \\
+        Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
+        \hline
+    \end{tabular}
+\end{minipage}
 \end{table}
 
 %\pagebreak
@@ -1949,19 +1967,19 @@ The mean squared error (MSE) of the platen response spectrum,  having the ground
 
 The acceleration response spectrum mean squared error for the tuned platform is significantly reduced compared to the standard tune (Table \ref{tab:mse_rs}), however, it exceeds the desired response spectrum for the entire frequency spectrum (figure \ref{fig_response_spectrum_of_3}).
 
-\begin{table}[H]
-    \centering
-    \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
-    \label{tab:mse_rs}
-    \begin{tabular}{ c c c }
-        \hline
-        Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
-        \hline
-        Baseline & $1.78$               & $1.94 \cdot 10^{-6}$ \\
-        Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
-        \hline
-    \end{tabular}
-\end{table}
+% \begin{table}[H]
+%     \centering
+%     \caption{Mean squared error for response spectra of platen, with the seismic signal ground response spectra as target.}
+%     \label{tab:mse_rs}
+%     \begin{tabular}{ c c c }
+%         \hline
+%         Controller & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$) \\
+%         \hline
+%         Baseline & $1.78$               & $1.94 \cdot 10^{-6}$ \\
+%         Tuned    & $3.27 \cdot 10^{-2}$ & $1.88 \cdot 10^{-6}$ \\
+%         \hline
+%     \end{tabular}
+% \end{table}
 
 In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller. All values are presented in SI units, in this case, $m/s^2$ for the acceleration response spectrum MSE, and $m$ for the displacement response spectrum MSE.
 
@@ -2042,104 +2060,94 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 
 \subsubsection{Tuned PID-F Performance Sensitivity to Test Specimen Parameters} \label{Tuned PID-F Performance Sensitivity}%Analysis of Tuned PIDF 
 
-The mass, modal frequencies, and damping of the specimens coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table with the tuned PIDF performs for different damping, modal frequencies, and mass of the test specimen. The controller 
+The mass, modal frequencies, and damping of the specimens coupled to the seismic table have an impact on how well it is able to track the reference. In this section, we will analyse how the seismic table performs for different damping, modal frequencies, and mass of the test specimen with the tuned PID-F controller (which is tuned for each case).
 
-The legend of figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, shows the modal properties of the specimen on test, the maximum absolute values of the input to the servo-valve $i_{sv}$ (in volts) and force applied by the actuator (in kilo newtons), and the mean square error for the respective response spectrum.
+Specimens with % higher modal frequencies ($f_1=4$ Hz \& $f_2=10$ Hz) and 
+lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra which exceeds the desired one over the entire frequency spectrum, while structures with higher damping ($\zeta_1=0.1$ \& $\zeta_2=0.25$) result in response spectra which fall short of the desired one (figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}), and this translates to trend observed in figure \ref{fig_MSE_vs_damping}.
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png}
-    \caption{Response spectra for $m_1=m_2=2 \text{ ton}$, and different modal frequencies and damping}
-    \label{Resp_Spectre_low_high_freq_and_damp}
+\centering
+    \begin{subfigure}{0.64\textwidth}
+        \includegraphics[width=\textwidth]{MSE_Zeta/Surf_Zeta_LowFreq_iso_cut.jpg}
+        \caption{Isometric view}
+        \label{fig:first}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{MSE_Zeta/Surf_Zeta_LowFreq_TopView_cut.png}
+        \caption{Top view}
+        \label{fig:second}
+    \end{subfigure}
+\caption{Acceleration response spectra MSE ($m/s^2$) vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=1.5 Hz, f_2=6 Hz$}
+\label{fig_MSE_vs_damping}
 \end{figure}
 
+The effect of modal frequencies on the performance of the seismic table (shown in figure \ref{fig_MSE_vs_modal_freqs}) is unclear in this analysis , most likely because the analysis was performed for a single seismic signal, and it depends heavily on the specific combination of frequency content of the seismic signal, and the closed-loop response of the system. It is expected that seismic signals with more power in frequencies close to the modal frequencies will result in an over-shoot of the target response spectra (especially if damping is low), if the closed-loop gain is close to unitary in that range, but if none of these conditions are met, for example, when the modal frequencies of the specimen are mismatched with the frequency content of the seismic signal, or they are beyond the bandwidth of the closed-loop, than it is expected that the response spectra will closely match the target, or, in the second case, undershoot.
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png}
-    \caption{Response spectra for $m_1=m_2=2\text{ ton}$, with $f_2=10$ Hz}
-    %\label{}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{PID_MSE/PID_MSE_Surface_frequency_lowDamp_iso_cut.jpg}
+        \caption{Low damping: $\zeta_1=0.02, \zeta_2=0.05$ }
+        %\label{}
+    \end{subfigure}
+    \\
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{PID_MSE/PID_MSE_Surface_frequency_lowDamp_cut.jpg}
+        \caption{Low damping: $\zeta_1=0.02, \zeta_2=0.05$ }
+        %\label{}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{PID_MSE/PID_MSE_Surface_frequency_highDamp_top.jpg}
+        \caption{High damping: $\zeta_1=0.1, \zeta_2=0.25$ }
+        %\label{}
+\end{subfigure}
+\caption{Acceleration response spectra MSE vs modal frequencies ($f_1$ and $f_2$), with $m_1=m_2=2\text{ ton }$}
+\label{fig_MSE_vs_modal_freqs}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png}
-    \caption{Response spectra for $m_1=m_2=2\text{ ton}$, and modal frequencies which are close together ($f_2 \approx2.415\cdot f_1$) (see figure \ref{fig_close_modal_freqs})}
-    \label{Resp_Spectre_f1_2415}
-\end{figure}
-
+In figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415} the response spectra are shown, and the same trends are observed. The legend shows the modal properties of the specimen under analysis, the maximum absolute values of the input to the servo-valve $i_{sv}$ (in volts) and force applied by the actuator (in kilo newtons), and the mean square error for the respective response spectrum (in their respective SI units).
 
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{MSE_Zeta/Surf_Zeta_LowFreq_IsoView.png}
-    \caption{Response Spectra MSE vs $\zeta_1$ and $\zeta_2$, with $m_1=m_2=2\text{ ton, }f_1=1.5 Hz, f_2=6 Hz$}
-    %\label{}
-\end{figure}
+\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
+    In figure \ref{fig_close_modal_freqs}, where the modal frequencies are as tightly spaced as possible, for the acceleration spectra MSE a trend reversal is observed, where for $\zeta_2 \approx 0.1$ the MSE is lowest, and then increases for both lower and higher damping. This consistent with what is observed in figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, as it results from under-shooting and over-shooting the target response spectra from low and high damping, respectively.
 
-
-\begin{figure}[H]
-\begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{MSE_Zeta/Surf_Zeta_LowFreq_TopView.png}
-    \caption{Response Spectra MSE vs $\zeta_1$ and $\zeta_2$, with $m_1=m_2=2\text{ ton, }f_1=1.5 Hz, f_2=6 Hz$}
-    %\label{}
+    For the high modal frequencies in figure \ref{fig_high_modal_freqs}, the response spectrum MSE increases abruptly for $\zeta_2 < 0.14 - 0.8\cdot \zeta_1 $, but remains mostly unchanged inside the two regions separated by that line. This shows that tiny differences in the damping of the specimen can translate to significant differences in the response spectra.
 \end{minipage}
 \hfill
-\begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{PID_MSE/stiffness_solutions.png}
-    \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \eqref{eq_modal_frequencies})}
-    \label{fig_close_modal_freqs}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\begin{minipage}{0.45\textwidth}
+\begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png}
-    \caption{Response Spectra MSE vs $\zeta_1$ and $\zeta_2$, with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. For high modal frequencies, the response spectrum MSE increases abruptly for $\zeta_2 > 0.14 - 0.8\cdot \zeta_1 $, but remains mostly unchanged otherwise.}
-    %\label{fig:enter-label}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png}
-    \caption{Response Spectra MSE vs $\zeta_1$ and $\zeta_2$, with $m_1=m_2=2\text{ ton, }f_1=3 Hz, f_2=7.2 Hz$ (modal frequencies close together)}
-    %\label{fig:enter-label}
+    \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. }
+    \label{fig_high_modal_freqs}
 \end{minipage}
 \end{figure}
-
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{PID_MSE/PID_MSE_Surface_frequency_blue_red_isoview_lowDamp.png}
-    \caption{Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text{ ton, } \zeta_1=0.02, \zeta_2=0.05$ (low damping)}
-    %\label{}
+\centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{PID_MSE/stiffness_solutions.png}
+        \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \eqref{eq_modal_frequencies})}
+        \label{fig_k_for_close_modal_freqs}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=1\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png}
+        \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=3 Hz, f_2=7.2 Hz$}
+        %\label{fig:enter-label}
+    \end{subfigure}
+\caption{Analysis for modal frequencies which are close together}
+\label{fig_close_modal_freqs}
 \end{figure}
 
-
-\begin{figure}[H]
-\begin{minipage}{0.44\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{PID_MSE/PID_MSE_Surface_frequency_blue_red_topview_lowDamp.png}
-    \caption{Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text{ ton, } \zeta_1=0.02, \zeta_2=0.05$ (low damping)}
-    %\label{}
-\end{minipage}
-\hfill
-\begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=1\linewidth]{MSE_Freq/MSE vs Freq (m_i=2.0,zeta1=0.10,zeta2=0.25)_topview.png}
-    \caption{Response Spectra MSE vs $f_1$ and $f_2$, with $m_1=m_2=2\text{ ton, } \zeta_1=0.1, \zeta_2=0.25$ (high damping)}
-    %\label{}
-\end{minipage}
-\end{figure}
-
-
-
-Structures with % higher modal frequencies ($f_1=4$ Hz \& $f_2=10$ Hz) and 
-lower damping ($\zeta_1=0.02$ \& $\zeta_2=0.05$) result in response spectra which exceeds the desired one over the entire frequency spectrum, while structures with higher damping ($\zeta_1=0.1$ \& $\zeta_2=0.25$) result in response spectra which fall short of the desired one.
-
-The effect of modal frequencies on the performance of the seismic table is unclear, and likely depends heavily on the frequency content of the seismic signal.
 
 
 %\clearpage
@@ -2871,12 +2879,89 @@ The final step of the proposed methodology consists in implementing the optimize
 
 
 \clearpage
-% BIBLIOGRAFIA
+%% BIBLIOGRAFIA
 \bibliographystyle{abbrvnat}
 \setcitestyle{authoryear} %Citation-related commands open={((},close={))}
 \bibliography{bibfile}
 
+%%  APPENDIX
 \appendix
+
+\chapter{Tuned PID-F Performance Sensitivity to Test Specimen Parameters}\label{appendix:Tuned PID-F Performance Sensitivity to Test Specimen Parameters}
+
+\begin{table}[H]
+\centering
+\caption{Parameter combinations and corresponding MSE values in figure \ref{Resp_Spectre_low_high_freq_and_damp}}
+\begin{tabular}{cccccccc}
+\hline
+$f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accel. MSE ($m/s^2$) & Disp. MSE ($m$)\\ 
+\hline
+1.5 & 6.0  & 0.02 & 0.05 & 1.7 & 27 & $5.5\times10^{-2}$ &  $2.2\times10^{-6}$  \\
+1.5 & 6.0  & 0.10 & 0.25 & 1.6 & 18 & $4.5\times10^{-3}$ &  $2.0\times10^{-6}$  \\
+4.0 & 10.0 & 0.02 & 0.05 & 1.6 & 29 & $3.3\times10^{-2}$ &  $1.9\times10^{-6}$  \\
+4.0 & 10.0 & 0.10 & 0.25 & 1.6 & 19 & $1.5\times10^{-2}$ &  $2.0\times10^{-6}$  \\
+\hline
+\end{tabular}
+\label{tab:Resp_Spectre_low_high_freq_and_damp}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_low_high_freq_and_damp_cut.png}
+    \caption{Response spectra for $m_1=m_2=2 \text{ ton}$, and different modal frequencies and damping}
+    \label{Resp_Spectre_low_high_freq_and_damp}
+\end{figure}
+
+\pagebreak
+
+\begin{table}[H]
+\centering
+\caption{Parameter combinations and corresponding MSE values in figure \ref{Resp_Spectre_f2_10}}
+\begin{tabular}{cccccccc}
+\hline
+$f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$)\\ 
+\hline
+1.5 & 10.0 & 0.02 & 0.05 & 1.7 & 28 & $6.0\times10^{-2}$ & $2.2\times10^{-6}$ \\
+1.5 & 10.0 & 0.10 & 0.25 & 1.6 & 18 & $4.5\times10^{-3}$ & $2.0\times10^{-6}$ \\
+4.0 & 10.0 & 0.02 & 0.05 & 1.6 & 29 & $3.3\times10^{-2}$ & $1.9\times10^{-6}$ \\
+4.0 & 10.0 & 0.10 & 0.25 & 1.6 & 19 & $1.5\times10^{-2}$ & $2.0\times10^{-6}$ \\
+\hline
+\end{tabular}
+\label{tab:Resp_Spectre_f2_10}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_f2=10_cut.png}
+    \caption{Response spectra for $m_1=m_2=2\text{ ton}$, with $f_2=10$ Hz}
+    \label{Resp_Spectre_f2_10}
+\end{figure}
+
+\pagebreak
+
+\begin{table}[H]
+\centering
+\caption{Parameter combinations and corresponding MSE values in figure \ref{Resp_Spectre_f1_2415}}
+\begin{tabular}{cccccccc}
+\hline
+$f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Acceleration MSE ($m/s^2$) & Displacement MSE ($m$)\\ 
+\hline
+2.5 & 6.0  & 0.02 & 0.05 & 1.6 & 19 & $4.7\times10^{-3}$ & $2.0\times10^{-6}$ \\
+2.5 & 6.0  & 0.10 & 0.25 & 1.6 & 16 & $1.1\times10^{-2}$ & $2.0\times10^{-6}$ \\
+4.1 & 10.0 & 0.02 & 0.05 & 1.6 & 24 & $3.6\times10^{-2}$ & $1.8\times10^{-6}$ \\
+4.1 & 10.0 & 0.10 & 0.25 & 1.6 & 16 & $1.5\times10^{-2}$ & $2.0\times10^{-6}$ \\
+\hline
+\end{tabular}
+\label{tab:Resp_Spectre_f1_2415}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png}
+    \caption{Response spectra for $m_1=m_2=2\text{ ton}$, and modal frequencies which are close together ($f_2 \approx2.415\cdot f_1$) (see figure \ref{fig_close_modal_freqs})}
+    \label{Resp_Spectre_f1_2415}
+\end{figure}
+
 
 \chapter{MTS Systems Control Strategies}\label{section:MTS_strategies}
 

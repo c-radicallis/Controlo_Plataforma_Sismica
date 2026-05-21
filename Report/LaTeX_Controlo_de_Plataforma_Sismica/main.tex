@@ -80,7 +80,7 @@
 \onehalfspacing
 \AtBeginEnvironment{minipage}{\renewcommand{\baselinestretch}{1.5}\normalsize}
 
-\AtBeginEnvironment{itemize}{\singlespacing}
+\AtBeginEnvironment{itemize}{\onehalfspacing}
 \AtEndEnvironment{itemize}{\onehalfspacing}
 
 \raggedbottom
@@ -297,25 +297,26 @@ Figure \ref{fig_lnec_test_process_diagram} shows the work flow of a usual seismi
 
 % \vspace{-5mm}
 
-\begin{figure}[H]
-\noindent
-\begin{minipage}{0.47\textwidth}\setlength{\parindent}{15pt}
+% \begin{figure}[H]
+% \noindent
+% \begin{minipage}{0.47\textwidth}\setlength{\parindent}{15pt}
 
 During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
 
 Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
 This transfer function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.\par
 
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.49\textwidth}
+% \begin{figure}%[H]
 
-    \centering
-    \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
-    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
-    \label{fig_lnec_test_process_diagram}
-\end{minipage}
-\end{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
+%     \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
+%     \label{fig_lnec_test_process_diagram}
+% % \end{minipage}
+% \end{figure}
 
 
 At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.\par
@@ -399,13 +400,6 @@ It's relevance for this work lies in the fact that the performance of the shakin
 % \hspace*{\parindent} 
 Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 
-\noindent
-\begin{minipage}{0.5\textwidth}\setlength{\parindent}{15pt}
-
-
-% \vspace{5mm}
-
-% \hspace*{\parindent} 
 Some fundamental concepts on response spectrum are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Ground Motion Dependency
@@ -437,16 +431,25 @@ Some of its applications in Civil Engineering are:
     \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behaviour.
 \end{itemize}
 
+
+%\noindent
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}%\setlength{\parindent}{15pt}
+    \centering
+    \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
+    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
+    \label{fig_lnec_test_process_diagram}
+    \vfill
 \end{minipage}
 \hfill
-\begin{minipage}{0.4\textwidth}
-\begin{figure}[H]
+\begin{minipage}{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
     \caption{ Schematized process of determining a response spectrum }
     \label{fig_response_spectrum_schematic}
-\end{figure}
 \end{minipage}
+\end{figure}
+
 
 \pagebreak
 \section{Objectives}
@@ -1574,7 +1577,7 @@ In \cite{oliveira2015} a complete schematic representation of the ST1D, with a c
 \end{figure}
 
 In \citet{tekeste2021} a model for the ST1D with a coupled 1DOF system %rigidly attached payload
-is devised by parametrizing linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). These parameters are presented in table \ref{tab:parameters}, and are the ones which will be used in all simulation studies.
+is devised by parametrizing linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). This model is shown in figure \ref{fig_Tekeste_block_diagram}, and the parameters are presented in table \ref{tab:parameters}, and are the ones which will be used in all simulation studies.
 
 \begin{figure}[H]
     \centering

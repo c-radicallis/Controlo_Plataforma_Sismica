@@ -77,7 +77,7 @@
 }
 
 \usepackage{setspace}
-\renewcommand{\baselinestretch}{1.5}
+\onehalfspacing
 \AtBeginEnvironment{minipage}{\renewcommand{\baselinestretch}{1.5}\normalsize}
 
 \AtBeginEnvironment{itemize}{\singlespacing}
@@ -274,14 +274,14 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 %\vspace{-10mm}
 
 \begin{figure}[H]
-\begin{minipage}{0.48\textwidth}
+\begin{minipage}{0.49\textwidth}
     \centering
     \fbox{\includegraphics[width=0.97\textwidth]{Figures/capa.png}}
     \caption{A 3D rendering of LNEC's uniaxial shaking table with a coupled 2DOF system (red and orange carts). The platen is shown in light green, and the actuators in blue.}
     \label{fig_3D_render_uniaxial}
 \end{minipage}
 \hfill
-\begin{minipage}{0.48\textwidth}
+\begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{Intro/Triaxial_with_2floor.jpg}
     \caption{A 3D rendering of LNEC's triaxial shaking table with a scaled test specimen of a two-story building. The rigid elements (platen and linkages) are shown in red, and the actuators in black and silver.}
@@ -289,7 +289,7 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 \end{minipage}
 \end{figure}
 
-%\clearpage
+\clearpage
 \section{Seismic Platform  Tests at LNEC}
 
 The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
@@ -525,14 +525,14 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 
 Real-time hybrid simulation (RTHS) and substructural shake table testing are of special interest since they allow for the evaluation of large and/or complex structures by combining physical and numerical models of substructures, which enhances testing flexibility, enabling improved studies of high-frequency and/or nonlinear behaviours, while also reducing experimental costs. Real-time hybrid simulation method is illustrated in figure \ref{fig_hybrid} for 3 different configurations \citep{Tang2020Performance}. In \cite{Lin2024Implementation} a different configuration is implemented, resorting to onboard actuators, as shown in figure \ref{fig_onboard_actuators}, in order to circumvent the additional stroke length, velocity, and acceleration requirements for ground-based actuators, and the control challenges they pose.
 
-\begin{figure}[H]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Lit_Review/stc2611-fig-0001-m.jpg}
     \caption{Shaking table-based real-time dynamic hybrid testing systems: (a) upper, (b) middle and (c) lower portion tested physically. Abbreviations: NS, numerical substructure; PS, physical substructure \citep{Tang2020Performance}}
     \label{fig_hybrid}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Lit_Review/onboard_actuators.jpg}
     \caption{Shake table RTHS with (a) ground-based actuators and (b) onboard actuators. \citep{Lin2024Implementation}}
@@ -548,7 +548,7 @@ Shaking-table control strategies typically begin with the offline generation of 
 
 Recent works developed in this field show that advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied in \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and also nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, the use of offline iterative control combined with frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload capacity and a wide frequency bandwidth. This advancement allows for the effective testing of high-rigidity structures — such as dams and nuclear power plant facilities - which are characterized by high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility, \cite{Parajuli2024Development} adopted a brushed DC motor as the shaking table actuator and applied a proportional-derivative (PD) controller to achieve motion control, offering a cost-effective alternative to more complex systems.
 
-\begin{figure}[H]
+\begin{figure}
     \centering
     \includegraphics[width=0.7\linewidth]{Lit_Review/ADRC_AMSE.jpg}
     \caption{Structure diagram of AMSE-ADRC \citep{Lei2023Disturbance}}
@@ -582,7 +582,7 @@ In \cite{Zhang2016Robust}, an adaptive sliding mode controller with a reaching l
 
 In \cite{Ryu2017Real-time}, a nonlinear tracking controller based on feedback linearization combined with an extended Kalman filter enabled real-time control of shaking tables subjected to nonlinear hysteretic structural behaviour, maintaining motion fidelity at specific structural locations. %5
 
-\begin{figure}[H]
+\begin{figure}%[H]
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{Lit_Review/1-s2.0-S0019057817305037-gr6_lrg.jpg}
@@ -613,9 +613,9 @@ The hydraulic and control system original supplier for LNEC's shaking tables, MT
     \item Online Iteration (OLI), whose block diagram is depicted in figure \ref{fig_OLI}, is suitable for nonlinear systems and non-sinusoidal waveforms. This is a control technique that repeatedly modifies the command input to a control system on an individual sample-by-sample basis until the control system response is almost a perfect replica of the original desired command. This last strategy was deemed the most appropriate and versatile for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing, and is the control method currently implemented at LNEC's ST3D.
 \end{itemize}
 
-\begin{figure}[H]
+\begin{figure}%[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{MTSsystems/OLI.png}
+    \includegraphics[width=0.9\textwidth]{MTSsystems/OLI.png}
     \caption{Online Iteration (OLI)}
     \label{fig_OLI}
 \end{figure}
@@ -749,9 +749,6 @@ In the case of two systems which generate an output from a common input signal, 
 % \end{figure}
 
 
-
-
-
 \section{Control Systems}
 
 There are two generic configurations for control systems: open-loop control (figure \ref{tikz_Control_Systems_open_loop}) and closed-loop control (figure \ref{tikz_Control_Systems_closed_loop}).
@@ -823,24 +820,21 @@ Since we want the output to match the reference:
 \begin{equation}
     r(s) = y(s) = G(s)C(s) \, r(s) \Longrightarrow C(s) = \frac{1}{G(s)}
 \end{equation}  
-
 Thus, the controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller isn't, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealized controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
 
-% \begin{figure}[H]
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Open-loop control example: Reference \& Output}
-%     \label{fig_open_ref_y}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Open-loop control example: Control action}
-%     \label{fig_open_u}
-% \end{minipage}
-% \end{figure}
+In figure \ref{fig_open}, an example of the reference tracking resulting from open loop control, as in figure \ref{tikz_Control_Systems_open_loop}, with $C = \frac{10 s}{s+1}$, for three cases is shown: 
+\begin{itemize}
+    \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$, for which the controller was designed (denoted as "nominal" in the legend);
+    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$ ;
+    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \, t)$ (as in figure \ref{tikz_general_open_loop_sys});
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{fig_control_configs/open.jpg}
+    \caption{Open-loop control example: Reference \& Outputs}
+    \label{fig_open}
+\end{figure}
 
 \subsection{Closed-Loop Control}
 Closed-loop control uses feedback, meaning the output is being measured and compared with the reference. The difference between the reference and the measured output is the tracking error $e(t)$. In closed-loop control, the tracking error is the input to the controller:
@@ -857,19 +851,18 @@ Thanks to output feedback, closed-loop control can mitigate the effects of distu
 
 Closed-loop control can also be used to stabilise unstable plants, and the opposite is also true: Badly designed closed-loop control can destabilise stable plants.
 
-% \begin{figure}[H]
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Close-loop control example: Reference \& Output} \label{fig_closed_ref_y}    
-% \end{minipage}
-% \hfill
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Close-loop control example: Control action} \label{fig_closed_u}
-% \end{minipage}
-% \end{figure}
+In figure \ref{fig_closed}, an example of the reference tracking  resulting from closed loop control, as in figure \ref{tikz_Control_Systems_closed_loop}, with $C = 10 + \frac{50}{s} +  \frac{50 s}{s+1} $, for three cases is shown: 
+\begin{itemize}
+    \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$ (denoted as "nominal" in the legend);
+    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$ ;
+    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \,t)$ (as in figure \ref{tikz_general_CL_sys});
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{fig_control_configs/closed.jpg}
+    \caption{Close-loop control example: Reference \& Output} \label{fig_closed}    
+\end{figure}
 
 % \begin{figure}[H]
 \subsubsection{Combined Open- and Closed-Loop Control}
@@ -944,22 +937,20 @@ It is possible to combine open-loop and closed-loop control in a single control 
 % \end{minipage}
 \end{figure}
 
-In figures \ref{fig_Combined_ref_y} and \ref{fig_Combined_u}, the result of this configuration is shown for the same system and controllers used in the previous examples (figures \ref{fig_open_ref_y} through to \ref{fig_closed_u}). In this example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
+In figure \ref{fig_Combined}, an example of the reference tracking  resulting from combined open- and closed-loop control, as in figure \ref{tikz_Control_Systems_Combined_control}, with $C_{open} = \frac{10 s}{s+1}$ and $C_{closed} = 10 + \frac{50}{s} +  \frac{50 s}{s+1} $, for three cases is shown: 
+\begin{itemize}
+    \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$ (denoted as "nominal" in the legend);
+    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$ ;
+    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \, t)$ (as in figure \ref{tikz_general_CL_sys});
+\end{itemize}
+% The result of this configuration is shown for the same systems and controllers used in the previous examples (figure \ref{fig_open} and \ref{fig_closed}). 
+In the example with the sinusoidal disturbance, it can be clearly seen that the combination of both control strategies improves the results compared to using just open-loop (which cannot adjust for the disturbance), or just closed-loop (which was slower).
 
-
-% \begin{figure}[H]
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Combined open- and close-loop control example: Reference \& Output} \label{fig_Combined_ref_y}    
-% \end{minipage}
-% \hfill
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{Figures/Tecnico_ID_Principal_RBG-COR.png}
-%     \caption{Combined open- and close-loop control example: Control action} \label{fig_Combined_u}
-% \end{minipage}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{fig_control_configs/combined.jpg}
+    \caption{Combined open- and close-loop control example: Reference \& Output} \label{fig_Combined}    
+\end{figure}
 
 
 \subsubsection{PIDF Controller}

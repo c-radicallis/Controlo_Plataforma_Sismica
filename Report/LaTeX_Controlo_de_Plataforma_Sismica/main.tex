@@ -1,4 +1,4 @@
-\documentclass[  10pt, twoside]{report} %draft ,
+\documentclass[ draft , 10pt, twoside]{report} %
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -204,13 +204,13 @@ A few words about the university, financial support, research advisor, dissertat
 \section*{Resumo}
 \addcontentsline{toc}{section}{Resumo}% Add entry in the table of contents as section
 
-Na área científica da engenharia sísmica, apesar dos desenvolvimentos em simulação computacional, ainda se enfrentam limitações na modelação precisa de comportamentos estruturais complexos, não lineares, ou outras dinâmicas pouco estudadas. As simulações numéricas, mesmo com métodos avançados, requerem modelos experimentais para garantir uma boa precisão. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para treinar e atualizar modelos. Os ensaios experimentais permitem por isso a validação e calibração desses modelos. Em resumo, os ensaios experimentais sísmicos continuam a ser indispensáveis para validar modelos, compreender comportamentos complexos e garantir a segurança estrutural.
+No domínio científico da engenharia sísmica, não obstante os avanços verificados em simulação computacional, persistem limitações na modelação precisa de comportamentos estruturais complexos, não lineares, ou de outras dinâmicas insuficientemente estudadas. As simulações numéricas, mesmo quando baseadas em métodos avançados, requerem dados experimentais para validar os modelos matemáticos e garantir uma precisão adequada. Além disso, as abordagens de aprendizagem automática também dependem de dados experimentais para o treino e atualização de modelos. Os ensaios experimentais constituem assim um meio indispensável à validação e calibração desses modelos. Nessa linha, os ensaios experimentais em engenharia sísmica continuam a ser indispensáveis para validar modelos, compreender comportamentos estruturais complexos e garantir a segurança estrutural.
 
-Nesta tese, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: o método iterativo atualmente utilizado, chamado de OLI, que consiste num controlo pseudo-adaptativo offline em anel aberto e com o ensaio a decorrer em anel fechado com um controlador PI (proporcional-integral) , um controlador sintonizado PID-F (proporcional-integral-derivativo-filtrado), e um controlador ótimo de formulação linear-quadrática-integral (LQI). 
+Nesta tese, um modelo computacional da plataforma sísmica uniaxial do LNEC é utilizado para comparar o desempenho, em termos de espetro de resposta, de três estratégias de controlo distintas: 1) o método iterativo atualmente utilizado, designado por OLI, que consiste num controlo pseudo-adaptativo offline em anel aberto com o ensaio a decorrer em anel fechado com um controlador PI (proporcional-integral); 2) um controlador sintonizado PID-F (proporcional-integral-derivativo-filtrado); 3) um controlador ótimo de formulação linear-quadrática-integral (LQI).
 
-Adicionalmente, para a finalidade de se sintonizar os controladores, é proposto um método de idêntificação próprio para sistemas que operam apenas em anel fechado, como é o caso das mesas sismicas do LNEC. Este método é aplicado na identificação de um agitador eletrodinâmico, sendo o modelo identificado usado para comparar, novamente, as três estratégias de controlo. Adicionalmente, é implementado um processo de otimização dos parametros da função de custo para o LQI.
+Adicionalmente, para a sintonização dos controladores, é proposto um método de identificação adequado para sistemas que operam exclusivamente em anel fechado, como é o caso das mesas sísmicas do LNEC. Este método é aplicado na identificação de um agitador eletrodinâmico, sendo o modelo identificado posteriormente utilizado numa avaliação e comparação do desempenho das três estratégias de controlo. Adicionalmente, para o controlador LQI, é implementado um processo de otimização dos parâmetros da função de custo.
 
-Os resultados indicam que ambos os controladores PID-F e o LQI oferecem desempenho superior quando comparados com o método OLI, sendo o controlador LQI aquele com melhor desempenho em todas as simulações. No entanto, o desempenho de cada método depende da identificação do sistema, e deve ser avaliada a sensibilidade de cada método a este fator.
+Os resultados indicam que ambos os controladores, PID-F e LQI, oferecem desempenho superior comparativamente ao método OLI, sendo o controlador LQI aquele que apresenta melhor desempenho em todas as simulações, revelando-se assim o mais promissor para aplicação no controlo das plataformas sísmicas avaliadas.
 
 \vfill
 
@@ -222,13 +222,13 @@ Os resultados indicam que ambos os controladores PID-F e o LQI oferecem desempen
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}% Add entry in the table of contents as section
 
-Despite computational models used in earthquake simulations becoming highly sophisticated and reliable, they still face limitations when complex, nonlinear, or poorly understood structural behaviours are considered.  Moreover, numerical simulations, even with advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches also rely on experimental data for training and updating models. Experimental testing provides critical validation and calibration for these models. In summary, earthquake experimental testing remains indispensable for model validation, understanding structural complex behaviours, and ensuring structural safety.
+Despite computational models employed in earthquake simulations having attained a high degree of sophistication and reliability, they continue to face significant limitations when complex, nonlinear, or insufficiently understood structural behaviours are considered. Moreover, numerical simulations, even when based on advanced methods, require experimental benchmarks to ensure accuracy, and machine learning approaches equally rely on experimental data for training and updating models. Experimental testing thus provides critical validation and calibration for these models. To this end, experimental testing in earthquake engineering remains indispensable for model validation, the understanding of complex structural behaviours, and the assurance of structural safety.
 
-This thesis analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at Laboratório Nacional de Engenharia Civil, through a computational model of the system. The objective of the controller is to ensure the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: the currently used OLI method consisting on pseudo-open loop offline adaptive control with an iterative process of generating drive signals and running the tests in closed loop with a PI controller, a tuned PID-F controller (proportional, integral, and filtered derivative), and a LQI controller. 
+This thesis analyses control strategies for reproducing earthquake ground motion on the uniaxial shaking table located at the Laboratório Nacional de Engenharia Civil, by means of a computational model of the system. The objective of the controller is to ensure that the shaking table reproduces the target earthquake ground motion as accurately as possible. The overall performance is evaluated in terms of response spectra for three distinct control strategies: 1) the currently employed OLI method, consisting of a pseudo-open-loop offline adaptive control with an iterative process of generating drive signals and conducting the tests in closed loop with a PI controller; 2) a tuned PID-F controller (proportional, integral, and filtered derivative); and 3) an LQI controller.
 
-Additionally, in order to tune the controllers, an identification method more appropriate for systems operating only under closed-loop, such as LNEC's shaking tables, is proposed. This method is then applied on the identification of an electrodynamic shaker, whose identified model is then used to, once again, compared the performance of the three control strategies. 
+Additionally, in order to tune the controllers, an identification method more appropriate for systems operating exclusively under closed-loop conditions, such as LNEC's shaking tables, is proposed. This method is subsequently applied to the identification of an electrodynamic shaker, whose identified model is then used to compare the performance of the three control strategies.
 
-The results indicate that both the PID-F and LQI controller offer superior performance compared to the OLI method, whereas the optimal controller performed the best. The performance of the controllers depends on system identification, and the sensitivity of each method to the quality of the identification requires further investigation.
+The results indicate that both the PID-F and the LQI controllers offer superior performance compared to the OLI method, with the optimal controller yielding the best overall performance and being considered the most promising solution for the control of the studied shaking tables.
 
 \vfill
 
@@ -301,10 +301,10 @@ Figure \ref{fig_lnec_test_process_diagram} shows the work flow of a usual seismi
 % \noindent
 % \begin{minipage}{0.47\textwidth}\setlength{\parindent}{15pt}
 
-During the seismic test, the structure is subjected to a series of tests with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
+Controller settings (proportional and integral gains) are set beforehand. During the test, the structure is subjected to a series of tests steps with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
 
-Before each test, an identification of the system's transfer function is carried out, using a limited-band pink noise signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
-This transfer function is then used in the command signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests.\par
+Before each test, an identification of the system's transfer function is carried out, driving the system with a limited-band pink noise displacement signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
+This transfer function is then used in the drive signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated over the test steps carried out. Additional system identifications may be performed—particularly before increasing the target motion intensity—whenever it is verified that the adapted drivers are overcompensating specific frequency bands, a behaviour typically associated with poor identification.\par
 
 % \end{minipage}
 % \hfill
@@ -319,7 +319,7 @@ This transfer function is then used in the command signal generation algorithm. 
 % \end{figure}
 
 
-At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal measured on the platform.\par
+At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal recorded at the platform.\par
 
 However, it is not always possible to achieve satisfactory performance with the command signal synthesized initially, and it may be necessary to generate more than one command signal and carry out additional tests at the same amplitude. This procedure, although necessary in some situations, should be avoided as it induces additional damage to the structure.
 
@@ -393,7 +393,7 @@ In addition, the system faces physical limitations inherent to the equipment, na
 
 The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
 
-It's relevance for this work lies in the fact that the performance of the shaking table, will be assessed mostly based on its ability to reproduce seismic ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
+It's relevance for this work lies in the fact that the performance of the shaking table, will be assessed mostly based on its ability to reproduce earthquake ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
 % \vspace{5mm}
 
@@ -431,19 +431,17 @@ Some of its applications in Civil Engineering are:
     \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behaviour.
 \end{itemize}
 
-
 %\noindent
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}%\setlength{\parindent}{15pt}
-    \centering
+\begin{minipage}[t]{0.54\textwidth}%\setlength{\parindent}{15pt}
+    \vspace{0pt}
     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
-    \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
+    \caption{Work flow diagram of the seismic testing process at LNEC. }
     \label{fig_lnec_test_process_diagram}
-    \vfill
 \end{minipage}
 \hfill
-\begin{minipage}{0.46\textwidth}
-    \centering
+\begin{minipage}[t]{0.42\textwidth}
+    \vspace{0pt}
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
     \caption{ Schematized process of determining a response spectrum }
     \label{fig_response_spectrum_schematic}

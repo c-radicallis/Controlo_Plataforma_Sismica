@@ -1,4 +1,4 @@
-\documentclass[ draft , 10pt, twoside]{report} %
+\documentclass[  10pt, twoside]{report} %draft ,
 % LTeX: enabled=false
 \usepackage{natbib}
 \usepackage[nottoc, notlot, notlof]{tocbibind}
@@ -274,14 +274,14 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 %\vspace{-10mm}
 
 \begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}[t]{0.49\textwidth}
     \centering
     \fbox{\includegraphics[width=0.97\textwidth]{Figures/capa.png}}
     \caption{A 3D rendering of LNEC's uniaxial shaking table with a coupled 2DOF system (red and orange carts). The platen is shown in light green, and the actuators in blue.}
     \label{fig_3D_render_uniaxial}
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}[t]{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{Intro/Triaxial_with_2floor.jpg}
     \caption{A 3D rendering of LNEC's triaxial shaking table with a scaled test specimen of a two-story building. The rigid elements (platen and linkages) are shown in red, and the actuators in black and silver.}
@@ -289,7 +289,7 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 \end{minipage}
 \end{figure}
 
-\clearpage
+%\clearpage
 \section{Seismic Platform  Tests at LNEC}
 
 The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
@@ -391,47 +391,31 @@ In addition, the system faces physical limitations inherent to the equipment, na
 
 \subsection{Response Spectrum}% in Civil Engineering %\section{Key Aspects of Response Spectrum}
 
-The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. 
+The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. In earthquake engineering it is useful for analysing the performance of structures and equipment subjected to earthquake ground motions and today is the basis for structural design. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}. 
 
-It's relevance for this work lies in the fact that the performance of the shaking table, will be assessed mostly based on its ability to reproduce earthquake ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
-
-% \vspace{5mm}
-
-% \hspace*{\parindent} 
-Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
+It's relevance for this work lies in the fact that the performance of the shaking table will be assessed mostly based on its ability to reproduce earthquake ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
 
 Some fundamental concepts on response spectrum are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-    \item Ground Motion Dependency
-    \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-        \item It is derived from an earthquake acceleration time history.
-        \item Different earthquakes produce different response spectra.
-    \end{itemize}
-    \item Structures Dynamic Properties
-    \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-        \item The response depends on the structure's natural frequency and damping ratio.
-        \item Structures with different natural periods respond differently to the same ground motion.
-    \end{itemize}
-    \item Spectral Parameters
-    The response spectrum can show maximum values of:
+    \item Ground Motion Dependency: It is derived from an earthquake acceleration time history, but in some applications the displacement and velocity response spectra can also be considered. Different earthquakes produce different response spectra. However, different time signals can have the same response spectrum, namely in earthquake structural design when different artificial accelerograms are required according to building codes, which must be generated for a specific response spectrum. 
+    \item Structures Dynamic Properties:The response depends on the structure's natural frequency and damping ratio. Structures with different dynamic properties will output different response for the same ground motion.
+    \item Depending on the analysis, the response spectrum can be obtained from the acceleration, velocity, or displacement time signals, whose spectra, among others, are applicable for:
     \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
         \item Spectral Acceleration: Used for force-based design.
-        \item Spectral Velocity: Important for energy-based considerations.
+        \item Spectral Velocity: Important for energy-based design.
         \item Spectral Displacement: Relevant for displacement-based design.
     \end{itemize}
 \end{itemize}
 
-% \vspace{-5mm}
-%\section{Applications in Civil Engineering}
-% \hspace*{\parindent} 
 Some of its applications in Civil Engineering are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
     \item Seismic Design of Buildings and Bridges: Response spectra help in defining design forces.
-    \item Code Based Seismic Analysis: Building codes (e.g., \textit{ASCE 7, Eurocode 8, IS 1893}) provide standard response spectra.
+    \item Code Based Seismic Analysis: Building codes, such as \textit{ASCE 7, Eurocode 8, IS 1893}, provide standard response spectra and specific rules for designing structures in seismic regions.
     \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behaviour.
+    \item Experimental testing: Response spectrum can be either for evaluating the performance of the testing equipment, p.e. shaking table, in reproducing the ground motion, or even to use the spectrum to generate artificial accelerograms for use as input on the testing equipment. 
 \end{itemize}
 
-%\noindent
+
 \begin{figure}[H]
 \begin{minipage}[t]{0.54\textwidth}%\setlength{\parindent}{15pt}
     \vspace{0pt}
@@ -440,7 +424,7 @@ Some of its applications in Civil Engineering are:
     \label{fig_lnec_test_process_diagram}
 \end{minipage}
 \hfill
-\begin{minipage}[t]{0.42\textwidth}
+\begin{minipage}[t]{0.40\textwidth}
     \vspace{0pt}
     \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
     \caption{ Schematized process of determining a response spectrum }

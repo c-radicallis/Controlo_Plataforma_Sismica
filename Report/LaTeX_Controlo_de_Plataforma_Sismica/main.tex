@@ -289,35 +289,22 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
 \end{minipage}
 \end{figure}
 
-%\clearpage
+\clearpage
 \section{Seismic Platform  Tests at LNEC}
 
 The current seismic platform testing process at Laboratório Nacional de Engenharia Civil (LNEC) consists of iteratively synthesizing a drive signal, distinct from the reference signal, so that the platform replicates the response spectra of the reference signal, i.e. the earthquake. %The system comprising the seismic platform and the structure to be tested uses a proportional controller with fixed parameters.
 Figure \ref{fig_lnec_test_process_diagram} shows the work flow of a usual seismic test.\par
-
-% \vspace{-5mm}
-
-% \begin{figure}[H]
-% \noindent
-% \begin{minipage}{0.47\textwidth}\setlength{\parindent}{15pt}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.51\linewidth]{Intro/lnec_test_process_diagram.jpg}
+    \caption{Work flow diagram of the seismic testing process at LNEC. }
+    \label{fig_lnec_test_process_diagram}
+\end{figure}
 
 Controller settings (proportional and integral gains) are set beforehand. During the test, the structure is subjected to a series of tests steps with different earthquake amplitudes. Initially, the test is carried out with the earthquake at a reduced amplitude, assessing the subsequent damage. The procedure is then repeated with the same earthquake, but at a higher amplitude, again assessing the damage, and so on until a defined amplitude is reached, which usually corresponds to the original amplitude of the earthquake.\par
 
 Before each test, an identification of the system's transfer function is carried out, driving the system with a limited-band pink noise displacement signal (pink noise has a slope of -10dB/decade). %, always with the same amplitude, to determine the system's transfer function.
-This transfer function is then used in the drive signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated over the test steps carried out. Additional system identifications may be performed—particularly before increasing the target motion intensity—whenever it is verified that the adapted drivers are overcompensating specific frequency bands, a behaviour typically associated with poor identification.\par
-
-% \end{minipage}
-% \hfill
-% \begin{minipage}{0.49\textwidth}
-% \begin{figure}%[H]
-
-%     \centering
-%     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
-%     \caption{Work flow diagram of the seismic testing process at LNEC. Controller settings (proportional and integral gains) are set beforehand. Additional identifications (before target motion intensity is increased) may be done, particularly when it's verified that the adapted drivers are overcompensating certain frequency bands, and this behaviour is suspected to result from poor Identification. }
-%     \label{fig_lnec_test_process_diagram}
-% % \end{minipage}
-% \end{figure}
-
+This transfer function is then used in the drive signal generation algorithm. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated over the test steps carried out. Additional system identifications may be performed—particularly before increasing the target motion intensity—whenever it is verified that the adapted drivers are overcompensating specific frequency bands, a behaviour typically associated with poor identification.
 
 At the end of each test, the system's performance is evaluated by comparing the response spectrum of the reference signal with that of the signal recorded at the platform.\par
 
@@ -388,49 +375,54 @@ In addition, the system faces physical limitations inherent to the equipment, na
 % \label{tikz_LNEC_control} 
 % \end{figure}
 
+\subsection{Response Spectrum}
 
-\subsection{Response Spectrum}% in Civil Engineering %\section{Key Aspects of Response Spectrum}
+The response spectrum constitutes a fundamental analytical tool in earthquake engineering and structural dynamics, providing the basis for contemporary seismic design methodologies. It characterises the maximum response (in terms of displacement, velocity, or acceleration) of a structure idealised as a single-degree-of-freedom (SDOF) system when subjected to a ground motion. The procedure by which a response spectrum is determined is illustrated schematically in Figure \ref{fig_response_spectrum_schematic}: the peak response amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, obtained from a suite of 1-DoF mass-spring-damper oscillators with 5\% critical damping and varying natural frequencies {\textcircled{\raisebox{-.9pt}{2}}} subjected to a seismic excitation {\textcircled{\raisebox{-.9pt}{1}}}, are plotted as a function of natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
+\begin{figure}[H]
+        \centering
+    \includegraphics[width=0.42\textwidth]{response_spectrum_schematic.png}
+    \caption{ Schematized process of determining a response spectrum }
+    \label{fig_response_spectrum_schematic}
+\end{figure}
 
-The response spectrum is a fundamental concept in earthquake engineering and structural dynamics. In earthquake engineering it is useful for analysing the performance of structures and equipment subjected to earthquake ground motions and today is the basis for structural design. It represents the maximum response (such as displacement, velocity, or acceleration) of a structure modelled as a single-degree-of-freedom (SDOF) system subjected to a ground motion. Figure \ref{fig_response_spectrum_schematic} helps us easily comprehend how a response spectrum is determined.  The peak amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, from the response of  1-DoF mass-spring-damper systems with 5\% damping and different natural frequencies {\textcircled{\raisebox{-.9pt}{2}}}, to the seismic signal {\textcircled{\raisebox{-.9pt}{1}}}, are plotted for each natural frequency {\textcircled{\raisebox{-.9pt}{4}}}. 
+The relevance of this concept to the present work stems from the fact that the performance of the shaking table is assessed primarily on the basis of its capacity to reproduce earthquake ground motion response spectra, evaluated over a frequency range of 0.1 to 30Hz.
 
-It's relevance for this work lies in the fact that the performance of the shaking table will be assessed mostly based on its ability to reproduce earthquake ground motion response spectra, which will be evaluated for frequencies between 0.1 and 30 Hz.
-
-Some fundamental concepts on response spectrum are:
+The key aspects of the response spectrum are:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-    \item Ground Motion Dependency: It is derived from an earthquake acceleration time history, but in some applications the displacement and velocity response spectra can also be considered. Different earthquakes produce different response spectra. However, different time signals can have the same response spectrum, namely in earthquake structural design when different artificial accelerograms are required according to building codes, which must be generated for a specific response spectrum. 
-    \item Structures Dynamic Properties:The response depends on the structure's natural frequency and damping ratio. Structures with different dynamic properties will output different response for the same ground motion.
-    \item Depending on the analysis, the response spectrum can be obtained from the acceleration, velocity, or displacement time signals, whose spectra, among others, are applicable for:
+    \item Ground Motion Dependency: The response spectrum is derived from an earthquake acceleration time history, though displacement and velocity response spectra may also be employed depending on the application. Distinct seismic records yield distinct response spectra; however, the inverse is not necessarily true, as multiple time-domain signals can produce an equivalent response spectrum. This property is particularly relevant in seismic structural design, where building codes require the generation of artificial accelerograms spectrum-compatible with a prescribed target response spectrum.
+    \item Structural Dynamic Properties: The spectral response is governed by the dynamic characteristics of the structure, namely its natural frequency and damping ratio. Structures with differing dynamic properties will exhibit distinct response profiles under identical ground motion excitation.
+    \item Spectral Quantity: Depending on the nature of the analysis, the response spectrum may be derived from the acceleration, velocity, or displacement time histories. The principal spectral quantities and their respective applications include:
     \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-        \item Spectral Acceleration: Used for force-based design.
-        \item Spectral Velocity: Important for energy-based design.
-        \item Spectral Displacement: Relevant for displacement-based design.
+        \item Spectral Acceleration: Employed in force-based design procedures.
+        \item Spectral Velocity: Employed in energy-based design.
+        \item Spectral Displacement: Employed in displacement-based design.
     \end{itemize}
 \end{itemize}
 
-Some of its applications in Civil Engineering are:
+The main applications of the response spectrum in Civil Engineering include:
 \begin{itemize}[noitemsep, topsep=0pt, leftmargin=*]
-    \item Seismic Design of Buildings and Bridges: Response spectra help in defining design forces.
-    \item Code Based Seismic Analysis: Building codes, such as \textit{ASCE 7, Eurocode 8, IS 1893}, provide standard response spectra and specific rules for designing structures in seismic regions.
-    \item Performance Based Seismic Design (PBSD): Uses response spectra to predict structural behaviour.
-    \item Experimental testing: Response spectrum can be either for evaluating the performance of the testing equipment, p.e. shaking table, in reproducing the ground motion, or even to use the spectrum to generate artificial accelerograms for use as input on the testing equipment. 
+    \item Seismic Design of Buildings and Bridges: Response spectra provide the basis for the determination of equivalent seismic design forces.
+    \item Code-Based Seismic Analysis: Established design standards, such as \textit{ASCE 7}, \textit{Eurocode 8}, and \textit{IS 1893}, prescribe standard response spectra and associated design rules for structures located in seismically active regions.
+    \item Performance-Based Seismic Design (PBSD): Response spectra are employed to predict and quantify structural behaviour across a range of seismic hazard levels.
+    \item Experimental Testing: Response spectra serve a dual role in experimental contexts, both as a metric for evaluating the fidelity of testing equipment, such as shaking tables, in reproducing target ground motions, and as the basis for generating spectrum-compatible artificial accelerograms for use as input excitations.
 \end{itemize}
 
-
-\begin{figure}[H]
-\begin{minipage}[t]{0.54\textwidth}%\setlength{\parindent}{15pt}
-    \vspace{0pt}
-    \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
-    \caption{Work flow diagram of the seismic testing process at LNEC. }
-    \label{fig_lnec_test_process_diagram}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.40\textwidth}
-    \vspace{0pt}
-    \includegraphics[width=\textwidth]{response_spectrum_schematic.png}
-    \caption{ Schematized process of determining a response spectrum }
-    \label{fig_response_spectrum_schematic}
-\end{minipage}
-\end{figure}
+% \begin{figure}[H]
+% % \begin{minipage}[t]{0.54\textwidth}%\setlength{\parindent}{15pt}
+% %     \vspace{0pt}
+% %     \includegraphics[width=\linewidth]{Intro/lnec_test_process_diagram.jpg}
+% %     \caption{Work flow diagram of the seismic testing process at LNEC. }
+% %     \label{fig_lnec_test_process_diagram}
+% % \end{minipage}
+% % \hfill
+% % \begin{minipage}[t]{0.40\textwidth}
+%     % \vspace{0pt}
+%     \centering
+%     \includegraphics[width=0.45\textwidth]{response_spectrum_schematic.png}
+%     \caption{ Schematized process of determining a response spectrum }
+%     \label{fig_response_spectrum_schematic}
+% % \end{minipage}
+% \end{figure}
 
 
 \pagebreak
@@ -463,9 +455,9 @@ The objective of this work is to implement a controller, or strategy, to ensure 
     \item Performance will be evaluated by comparing the response spectrum of the measured signal with that of the reference signal.
 \end{itemize}
 
+\clearpage
 \section{Outline of Dissertation}
-
-Taking into account the main objectives mentioned above, the thesis is structured around 5 chapters: 
+Taking into account the main objectives mentioned above, a comprehensive numerical and experimental study was carried out to identify suitable control strategies capable of improving system performance, evaluated in terms of response spectrum, when compared with the current LNEC control strategy. The work carried out in this study is the embodies the thesis structured into six chapters, including the current one, while the final chapter outlines the main conclusions and directions for future work: 
 
 \textbf{Chapter 1} serves as an introduction to this work by explaining  the main concepts at play in the shaking table tests at LNEC, and lays out the goals of this work.
 

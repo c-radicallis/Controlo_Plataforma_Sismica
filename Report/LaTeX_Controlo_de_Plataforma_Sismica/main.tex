@@ -2051,14 +2051,14 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Platen_Acceleration.png}
-    \caption{Accelerations before and after tuning}
+    \caption{Platen acceleration before and after tuning}
     \label{fig_Platen_Acceleration}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Platen_Displacement.png}
-    \caption{Displacements before and after tuning}
+    \caption{Platen displacements before and after tuning}
     \label{fig_Platen_Displacement}
 \end{minipage}
 \end{figure}
@@ -2067,14 +2067,14 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Platen_Acceleration_zoom.png}
-    \caption{Accelerations before and after tuning - Detailed view of the signals covering the period between 1.5 and 2.7 seconds}
+    \caption{Platen acceleration before and after tuning - Detailed view of the signals covering the period between 1.5 and 2.7 seconds}
     \label{fig_Platen_Acceleration_zoom}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{Sim_Res/Platen_Displacement_zoom.png}
-    \caption{Displacements before and after tuning - Detailed view of the signals covering the period between 14.1 and 15.7 seconds}
+    \caption{Platen displacements before and after tuning - Detailed view of the signals covering the period between 14.1 and 15.7 seconds}
     \label{fig_Platen_Displacement_zoom}
 \end{minipage}
 \end{figure}
@@ -2156,14 +2156,14 @@ For the high modal frequencies in figure \ref{fig_high_modal_freqs}, the respons
 
 \begin{figure}[H]
 \centering
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.46\textwidth}
         \centering
         \includegraphics[width=\linewidth]{PID_MSE/stiffness_solutions.png}
         \caption{For the 2DOF model (fig. \ref{schematic_2dof}), the modal frequency $f_2$ must be greater than $2.415 \times f_1$  (Equation \eqref{eq_modal_frequencies})}
         \label{fig_k_for_close_modal_freqs}
     \end{subfigure}
     \hfill
-    \begin{subfigure}{0.49\textwidth}
+    \begin{subfigure}{0.52\textwidth}
         \centering
         \includegraphics[width=1\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png}
         \caption{Acceleration response spectra MSE $(m/s^2)$ vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=3 Hz, f_2=7.2 Hz$}
@@ -2184,12 +2184,10 @@ For the shaking table with a coupled 2-DoF system, the following state space mod
 \dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
 y(t) &= C\cdot x(t) + D\cdot u(t)
 \end{align}
-
 With $x(t)$ being the state vector:
 \begin{equation}
 x = [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T}
 \end{equation}
-
 And the control action $u(t)$ (which is the signal to the servo-valve $i_{sv}$), the state equations are:
 \begin{align}
     \begin{bmatrix} 
@@ -2234,7 +2232,6 @@ And the control action $u(t)$ (which is the signal to the servo-valve $i_{sv}$),
     \end{bmatrix}
     \cdot i_{sv}
 \end{align}
-
 And the output equation for the platen position $x_T$, it results:
 \begin{equation}
 y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
@@ -2301,10 +2298,7 @@ The optimal state feedback control law $u(t) = K \cdot x_{aug}(t)$ which minimiz
 \begin{equation}\label{eq_LQI_cost_function}
      J(u) = \int ^{\infty}_0 (x_{aug}^{T}(t) Q\,x_{aug}(t) + u^{T}(t) R\, u(t))\, dt 
 \end{equation} 
-was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices, for the augmented system, where the state vector $x_{aug}(t) = \left[x(t)  x_i(t) \right]^\intercal$ incorporates the state $x_i(t)$, which is defined as the integral of the tracking.
-
-The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, for increased bandwidth, but, unlike with the PID-F
-controller, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was highly smoothed, resulting in unitary gain at low frequencies (shown in figure \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
+was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices, for the augmented system, where the state vector $x_{aug}(t) = \left[x(t) \, x_i(t) \right]^\intercal$ incorporates the state $x_i(t)$, which is defined as the integral of the tracking. The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$ (figure \ref{fig_Bode_LQI_Qe9}), for increased bandwidth, which, unlike with the large bandwidth PID-F controllers, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was still highly smoothed, resulting in unitary gain at low frequencies, shown in figures \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}.
 
 The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
     
@@ -2351,14 +2345,14 @@ The code implementation can be found at the following GitHub repository \href{ht
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9_tight/Platen_Acceleration.png}
-    \caption{Accelerations}
+    \caption{Platen acceleration}
     \label{fig_Platen_Acceleration_LQI_Qe9}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9_tight/Platen_Displacement.png}
-    \caption{Displacements}
+    \caption{Platen displacements}
     \label{fig_Platen_Displacement_LQI_Qe9}
 \end{minipage}
 \end{figure}
@@ -2367,14 +2361,14 @@ The code implementation can be found at the following GitHub repository \href{ht
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png}
-    \caption{Accelerations - Detailed view of the signals covering the period between 1.6 and 2.8 seconds}
+    \caption{Platen acceleration - Detailed view of the signals covering the period between 1.6 and 2.8 seconds}
     \label{fig_Platen_Acceleration_zoom_LQI_Qe9}
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png}
-    \caption{Displacements - Detailed view of the signals covering the period between 14.2 and 15.7 seconds}
+    \caption{Platen displacements - Detailed view of the signals covering the period between 14.2 and 15.7 seconds}
     \label{fig_Platen_Displacement_zoom_LQI_Qe9}
 \end{minipage}
 \end{figure}
@@ -2397,7 +2391,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 \subsubsection{LQG Servo Controller}\label{sec_LQG Servo Controller}
 
-Given how state feedback controllers require knowledge of the system states, either by measurement or estimation, to compute the control action, and, on the shaking platform, the only measurable states are platen displacement and/or acceleration, it is clear that an implementation of an optimal controller requires also the implementation of an observer. To this end, a stationary Kalman filter was used to reconstruct the states. Implemented in MATLAB using the function \emph{kalman} to compute the state estimator (\emph{kest} in figure \ref{fig_LQG_inside_controller}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The state feedback control law k was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
+The implementation of the optimal control law requires the availability of all the systems states. For the system under analysis only the pltaform displacement and acceleration measurements are available, meaning that the whole state vector has to be estimated using an observer. To this end, the necessary software was developed in MATLAB using the function \emph{kalman} to compute the stationary Kalman state estimator (\emph{kest} in figure \ref{fig_LQG_inside_controller}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The optimal controller $k$ was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
 
 \begin{figure}[H]
 \begin{subfigure}{0.41\textwidth}
@@ -2409,84 +2403,11 @@ Given how state feedback controllers require knowledge of the system states, eit
 \begin{subfigure}{0.58\textwidth}
     \includegraphics[width=\linewidth]{LQG/LQG_loop.png}
     \caption{Controller block diagram} \label{fig_LQG_inside_controller}
-\end{subfigure}
-\caption{LQG control loop block diagram} \label{fig_LQG_loop}
+\end{subfigure} 
+\caption{LQG control loop block diagram \citep{mathworks_lqgtrack}} \label{fig_LQG_loop}
 \end{figure}
 
-The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_full_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}.
-
-The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQG_servo.m}{location}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Response_Spectra.png}
-    \caption{Response spectrum for fault normal. The response spectrum was obtained by sampling 500 frequencies logarithmically spaced between 0.1 and 30 Hz}%, and then applying a moving average filter with a window size of 25 points.}
-    \label{fig_resp_spectrum_LQG_Qe9}
-\end{figure}
-
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Input_to_Servo.png}
-    \caption{Input to servo}
-    \label{fig_Input_to_Servo_LQG_Qe9}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Force_to_Platen.png}
-    \caption{Force to Platen}
-    \label{fig_Force_LQG_Qe9} 
-\end{minipage}
-\end{figure}
-   
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png}
-    \caption{Accelerations}
-    \label{fig_Platen_Acceleration_LQG_Qe9}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement.png}
-    \caption{Displacements}
-    \label{fig_Platen_Displacement_LQG_Qe9}
-\end{minipage}
-\end{figure}
-
-% \begin{figure}[H]
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png}
-%     \caption{Accelerations - Detailed view of the signals covering the period between 1.6 and 2.8 seconds}
-%     \label{fig_Platen_Acceleration_zoom_LQG_Qe9}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{0.49\textwidth}
-%     \centering
-%     \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png}
-%     \caption{Displacements - Detailed view of the signals covering the period between 14.2 and 15.7 seconds}
-%     \label{fig_Platen_Displacement_zoom_LQG_Qe9}
-% \end{minipage}
-% \end{figure}
-
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png}
-    \caption{Acceleration tracking error}
-    \label{fig_Platen_Acceleration_Tracking_Error_LQG_Qe9}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png}
-    \caption{Displacement tracking error}
-    \label{fig_Platen_Displacement_Tracking_Error_LQG_Qe9}
-\end{minipage}
-\end{figure}
+The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_full_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQG_servo.m}{location}. Simulations were run to verify the developed software was in working order for implementation in the real control system, or for use in improved Simulations when data of process and sensor noise covariance were to become available. The results shown in \ref{appendix:LQG Servo_Controller_Simulation_Results}, on  figures \ref{fig_resp_spectrum_LQG_Qe9} through to \ref{fig_Platen_Displacement_LQG_Qe9}, were very much identical to the ones obtained with the LQI controller, due to the fact that the state estimator output converged very fast.
 
 \subsection{LNEC's Control Strategy: OLI method}\label{sec_LNEC_method}
 
@@ -2895,7 +2816,7 @@ The final step of the proposed methodology consists in implementing the optimize
 \clearpage
 %% BIBLIOGRAFIA
 \bibliographystyle{abbrvnat}
-\setcitestyle{authoryear} 
+\setcitestyle{authoryear}
 \bibliography{bibfile}
 
 %%  APPENDIX
@@ -3025,6 +2946,79 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \includegraphics[width=0.6\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png}
     \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. }
     \label{fig_high_modal_freqs}
+\end{figure}
+
+\chapter{LQG Servo Controller Simulation Results}\label{appendix:LQG Servo_Controller_Simulation_Results}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Response_Spectra.png}
+    \caption{Response spectrum for fault normal. The response spectrum was obtained by sampling 500 frequencies logarithmically spaced between 0.1 and 30 Hz}%, and then applying a moving average filter with a window size of 25 points.}
+    \label{fig_resp_spectrum_LQG_Qe9}
+\end{figure}
+
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Input_to_Servo.png}
+    \caption{Input to servo}
+    \label{fig_Input_to_Servo_LQG_Qe9}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Force_to_Platen.png}
+    \caption{Force to Platen}
+    \label{fig_Force_LQG_Qe9} 
+\end{minipage}
+\end{figure}
+   
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration.png}
+    \caption{Platen acceleration}
+    \label{fig_Platen_Acceleration_LQG_Qe9}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement.png}
+    \caption{Platen displacements}
+    \label{fig_Platen_Displacement_LQG_Qe9}
+\end{minipage}
+\end{figure}
+
+% \begin{figure}[H]
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration_zoom.png}
+%     \caption{Platen acceleration - Detailed view of the signals covering the period between 1.6 and 2.8 seconds}
+%     \label{fig_Platen_Acceleration_zoom_LQG_Qe9}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{0.49\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement_zoom.png}
+%     \caption{Platen displacements - Detailed view of the signals covering the period between 14.2 and 15.7 seconds}
+%     \label{fig_Platen_Displacement_zoom_LQG_Qe9}
+% \end{minipage}
+% \end{figure}
+
+\begin{figure}[H]
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Acceleration_Tracking_Error.png}
+    \caption{Acceleration tracking error}
+    \label{fig_Platen_Acceleration_Tracking_Error_LQG_Qe9}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{LQG/Sim_Res_Qe9_tight/Platen_Displacement_Tracking_Error.png}
+    \caption{Displacement tracking error}
+    \label{fig_Platen_Displacement_Tracking_Error_LQG_Qe9}
+\end{minipage}
 \end{figure}
 
 

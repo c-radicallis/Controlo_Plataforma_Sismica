@@ -1,4 +1,4 @@
-\begin{thebibliography}{53}
+\begin{thebibliography}{54}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -135,9 +135,14 @@ D.~Malomo and M.~DeJong.
 \newblock \emph{Bulletin of Earthquake Engineering}, 2022.
 \newblock \doi{10.1007/s10518-022-01545-2}.
 
-\bibitem[MathWorks(2024)]{mathworks_lqi}
+\bibitem[MathWorks(2026{\natexlab{a}})]{mathworks_lqgtrack}
 MathWorks.
-\newblock Linear-quadratic-integral control, 2024.
+\newblock Form linear-quadratic-gaussian (lqg) servo controller, 2026{\natexlab{a}}.
+\newblock URL \url{https://www.mathworks.com/help/control/ref/ss.lqgtrack.html}.
+
+\bibitem[MathWorks(2026{\natexlab{b}})]{mathworks_lqi}
+MathWorks.
+\newblock Linear-quadratic-integral control, 2026{\natexlab{b}}.
 \newblock URL \url{https://www.mathworks.com/help/control/ref/lqi.html}.
 
 \bibitem[Mokhtari and Imanpour(2023)]{Mokhtari2023A}

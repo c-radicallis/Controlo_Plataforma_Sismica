@@ -28,6 +28,11 @@
         "args": ["-interaction=nonstopmode", "-synctex=1", "%DOC%"]
     },
     {
+        "name": "bibtex",
+        "command": "bibtex",
+        "args": ["%DOCFILE%"]
+    },
+    {
         "name": "makeindex-nomencl",
         "command": "makeindex",
         "args": ["%DOCFILE%.nlo", "-s", "nomencl.ist", "-o", "%DOCFILE%.nls"]
@@ -40,8 +45,8 @@
 ],
 "latex-workshop.latex.recipes": [
     {
-        "name": "pdflatex → nomencl → glossaries → pdflatex",
-        "tools": ["pdflatex", "makeindex-nomencl", "makeglossaries", "pdflatex"]
+        "name": "pdflatex → bibtex → nomencl → glossaries → pdflatex",
+        "tools": ["pdflatex", "bibtex", "makeindex-nomencl", "makeglossaries", "pdflatex"]
     }
 ]}
 

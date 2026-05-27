@@ -1600,9 +1600,7 @@ For this section, consider the following:
 The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results.
 
 
-\chapter[Evaluating Controller Performance in Simulation]
-{Evaluating Controller Performance in Simulation Environment for LNEC's \\
-Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
+\chapter[Evaluating Controller Performance in Simulation]{Evaluating Controller Performance in Simulation Environment for LNEC's \\ Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
 In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Shaking Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PID-F}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
@@ -1620,8 +1618,7 @@ In \cite{oliveira2015} a complete schematic representation of the ST1D, with a c
     \label{fig_schematic_st1d_Fernando}
 \end{figure}
 
-In \citet{tekeste2021} a model for the ST1D with a coupled 1DOF system %rigidly attached payload
-is devised by parametrizing linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). This model is shown in figure \ref{fig_Tekeste_block_diagram}, and the parameters are presented in table \ref{tab:parameters}, and are the ones which will be used in all simulation studies.
+In \citet{tekeste2021}, through a dedicated  experimental campaign to characterise the dynamic behaviour of the shaking table, a model for the ST1D with a coupled 1DOF system is devised by parametrizing linearized analytical models for each of its components (controller, servo valve, hydraulic actuator, platen mass, and total damping). This model is shown in figure \ref{fig_Tekeste_block_diagram}, and the parameters are presented in table \ref{tab:parameters}, and are the ones which will be used in all simulation studies.
 
 \begin{figure}[H]
     \centering
@@ -1909,7 +1906,7 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 
 In this section two new control strategies are proposed: a tuned PID-F controller, and an optimal controller. This control strategies are then evaluated against LNEC's iterative driver adaptation method, which is currently used.
 
-In sections \ref{sec_Tuned_PID-F} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the shaking table.
+In sections \ref{sec_Tuned_PID-F} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the shaking table ($\pm 100mm$).
 
 It was also considered throughout that the platen had a 2DOF coupled structure, as in figure \ref{schematic_2dof}, and the parameters of this 2DOF system, unless stated otherwise, are the ones shown in table \ref{tab:modal_params}:
 
@@ -1961,7 +1958,7 @@ Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_
 % \end{minipage}
 
 
-Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, which is the tune typically used at LNEC. Afterwards, a simulation was run with controller in the form of a PID-F : $G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}$ ,
+Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/m, as in \cite{tekeste2021}. Afterwards, a simulation was run with controller in the form of a PID-F : $G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}$ ,
 % \begin{equation} \label{eq_pidf_in_s}
 %     G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
 % \end{equation}
@@ -2153,21 +2150,9 @@ The effect of modal frequencies on the performance of the shaking table (shown i
 
 In figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415} the response spectra are shown, and the same trends are observed. The legend shows the modal properties of the specimen under analysis, the maximum absolute values of the input to the servo-valve $i_{sv}$ (in volts) and force applied by the actuator (in kilo newtons), and the mean square error for the respective response spectrum (in their respective SI units).
 
+In figure \ref{fig_close_modal_freqs}, where the modal frequencies are as tightly spaced as possible, for the acceleration spectra MSE a trend reversal is observed, where for $\zeta_2 \approx 0.1$ the MSE is lowest, and then increases for both lower and higher damping. This consistent with what is observed in figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, as it results from under-shooting and over-shooting the target response spectra from low and high damping, respectively.
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}\setlength{\parindent}{15pt}
-    In figure \ref{fig_close_modal_freqs}, where the modal frequencies are as tightly spaced as possible, for the acceleration spectra MSE a trend reversal is observed, where for $\zeta_2 \approx 0.1$ the MSE is lowest, and then increases for both lower and higher damping. This consistent with what is observed in figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectre_f1_2415}, as it results from under-shooting and over-shooting the target response spectra from low and high damping, respectively.
-
-    For the high modal frequencies in figure \ref{fig_high_modal_freqs}, the response spectrum MSE increases abruptly for $\zeta_2 < 0.14 - 0.8\cdot \zeta_1 $, but remains mostly unchanged inside the two regions separated by that line. This shows that tiny differences in the damping of the specimen can translate to significant differences in the response spectra.
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png}
-    \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. }
-    \label{fig_high_modal_freqs}
-\end{minipage}
-\end{figure}
+For the high modal frequencies in figure \ref{fig_high_modal_freqs}, the response spectrum MSE increases abruptly for $\zeta_2 < 0.14 - 0.8\cdot \zeta_1 $, but remains mostly unchanged inside the two regions separated by that line. This shows that tiny differences in the damping of the specimen can translate to significant differences in the response spectra.
 
 \begin{figure}[H]
 \centering
@@ -2181,7 +2166,7 @@ In figures \ref{Resp_Spectre_low_high_freq_and_damp} through to \ref{Resp_Spectr
     \begin{subfigure}{0.49\textwidth}
         \centering
         \includegraphics[width=1\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=3.0, f_2=7.2).png}
-        \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=3 Hz, f_2=7.2 Hz$}
+        \caption{Acceleration response spectra MSE $(m/s^2)$ vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=3 Hz, f_2=7.2 Hz$}
         %\label{fig:enter-label}
     \end{subfigure}
 \caption{Analysis for modal frequencies which are close together}
@@ -2205,7 +2190,7 @@ With $x(t)$ being the state vector:
 x = [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T}
 \end{equation}
 
-And the control action $u(t)$, which is the signal to the servo-valve $i_{sv}$, the state equations are:
+And the control action $u(t)$ (which is the signal to the servo-valve $i_{sv}$), the state equations are:
 \begin{align}
     \begin{bmatrix} 
         \dot{Q}_{sv} \\[6pt]
@@ -2250,7 +2235,7 @@ And the control action $u(t)$, which is the signal to the servo-valve $i_{sv}$, 
     \cdot i_{sv}
 \end{align}
 
-With the system output being the platen position $x_T$, and without input feedthrough, it results:
+And the output equation for the platen position $x_T$, it results:
 \begin{equation}
 y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
 \end{equation}
@@ -2308,14 +2293,15 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
     %     %─── Output feedback (bottom): outTip → down → left → up into s.south ─────
     %     \draw[->] (outTip) -- (botOut) -- (botS) -- (s.south);
     % \end{tikzpicture}
-    \caption{Tracking loop with full state feedback control.}
+    \caption{Tracking loop with full state feedback control \citep{mathworks_lqi}.}
     \label{fig_LQI_loop}
 \end{figure}
 
-The optimal state feedback control law which minimizes the cost function, shown in equation \eqref{eq_LQI_cost_function}, was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices:
+The optimal state feedback control law $u(t) = K \cdot x_{aug}(t)$ which minimizes the cost function, shown in equation \eqref{eq_LQI_cost_function}:
 \begin{equation}\label{eq_LQI_cost_function}
-     J(u) = \int ^{\infty}_0 (x^{T}(t) Q\,x(t) + u^{T}(t) R\, u(t))\, dt 
+     J(u) = \int ^{\infty}_0 (x_{aug}^{T}(t) Q\,x_{aug}(t) + u^{T}(t) R\, u(t))\, dt 
 \end{equation} 
+was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices, for the augmented system, where the state vector $x_{aug}(t) = \left[x(t)  x_i(t) \right]^\intercal$ incorporates the state $x_i(t)$, which is defined as the integral of the tracking.
 
 The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, for increased bandwidth, but, unlike with the PID-F
 controller, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was highly smoothed, resulting in unitary gain at low frequencies (shown in figure \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
@@ -2960,6 +2946,7 @@ The final step of the proposed methodology consists in implementing the optimize
 
 \chapter{Tuned PID-F Performance Sensitivity to Test Specimen Parameters}\label{appendix:Tuned PID-F Performance Sensitivity to Test Specimen Parameters}
 
+
 \begin{table}[H]
 \centering
 \caption{Parameter combinations and corresponding MSE values in figure \ref{Resp_Spectre_low_high_freq_and_damp}}
@@ -3031,6 +3018,13 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \includegraphics[width=1\linewidth]{MSE_Resp_Spectre/Resp_Spectre_f1_2415_cut.png}
     \caption{Response spectra for $m_1=m_2=2\text{ ton}$, and modal frequencies which are close together ($f_2 \approx2.415\cdot f_1$) (see figure \ref{fig_close_modal_freqs})}
     \label{Resp_Spectre_f1_2415}
+\end{figure}
+
+\begin{figure}
+        \centering
+    \includegraphics[width=0.6\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png}
+    \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. }
+    \label{fig_high_modal_freqs}
 \end{figure}
 
 

@@ -884,7 +884,7 @@ It is possible to combine open-loop and closed-loop control in a single control 
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm, right=8mm of sum_r2 ] (C) {$C_{closed}$};
 
         % another S0 
-        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=3mm of C ] (C_open) {$C_{open} = \frac{1}{\widehat{G}}$};
+        \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm , above=3mm of C ] (C_open) {$C_{open}$}; % = \frac{1}{\widehat{G}}
 
 
         % sum_r1
@@ -1456,11 +1456,11 @@ Parametric modelling via direct identification, as shown in \cite{VanDenHof2020}
 
 The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. This approach works on the principle that it is possible to decompose the control action, $u$, in two components: the noise free control action, $u_r$ which results from the reference, $r$; and the corrupted control action, $u_v$ which results from the disturbance $v$ on the output being fed back to the control.
 \begin{align}
-    u(t) =& u_r + u_v  \\
-         =& S_0 \left[ r_{1}(t) + C r_{2}(t) \right] - S_0 C v(t) 
+    u(t) =& \, u_r + u_v  \\
+         =& \, S_0 \left[ r_{1}(t) + C r_{2}(t) \right] - S_0 C v(t) 
 \end{align}
 
-It is then possible to estimate $G_0$, not from $u$ (which is corrupted), but from $y$ and $u_r$, since $u_r$ is uncorrelated to $v$ and $u_v$:
+If this holds, it is then possible to estimate $G_0$, not from $u$ (which is corrupted), but from $y$ and $u_r$, since $u_r$ is uncorrelated to $v$ and $u_v$:
 \begin{align}
     y(t) =& \, G_0 u(t) + v(t) \nonumber \\ 
          =& \, G_0 \left[u_{r}(t) + u_{v}(t) \right] + v(t)  \nonumber\\ 
@@ -1470,7 +1470,7 @@ It is then possible to estimate $G_0$, not from $u$ (which is corrupted), but fr
 \subsubsection{The Method} 
 \paragraph{Estimating the sensitivity function}
 
-If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable:
+If we mind equation \ref{eq_u_transformed_CL}, condensing the external reference signals in a single variable, it  results:
 \begin{equation}
     r(t) = r_1(t) + C(z) \cdot r_2(t)
 \end{equation} 
@@ -1482,16 +1482,16 @@ And, rewriting the equation, we get:
 
 Now the reason for formulating the problem using the sensitivity function becomes apparent, due to the fact that $r(t)$ and $v(t)$ are uncorrelated, $S_0$ can be estimated in a usual open-loop way from the measured $u(t)$ signal, and the known reference signal $r(t)$. This is the first step:
 \begin{equation}
-    \widehat{S}(z) = \frac{u(t)}{r(t)}
+    \widehat{S_{0}}(z) = \frac{u(t)}{r(t)}
 \end{equation}
 
 \paragraph{Reconstructing the noise-free control action}
-From the known reference signal $r(t)$, the identified sensitivity function can be used to compute the noise-free control action $\widehat{u}_{r}(t)$:
+From the known reference signal $r(t)$, the estimated sensitivity function can be used to reconstruct the noise-free control action $\widehat{u}_{r}(t)$:
 \begin{equation}
-    \widehat{u}_{r}(t) = \widehat{S}(z) \cdot r(t)
+    \widehat{u}_{r}(t) = \widehat{S_{0}}(z) \cdot r(t)
 \end{equation}
 
-Since the sole purpose of the sensitivity function is computing a noise-free control action, to this end, the model can be of arbitrarily high order, but restricting variance, and thus reducing the number of parameters, may still be of interest.
+Since the sensitivity function is used here solely to reconstruct the noise-free control action, the model for the sensitivity function may be of arbitrarily high order. However, restricting variance, and thus reducing the number of parameters, may still be of interest.
 
 \paragraph{Estimating the plant}
 From the computed noise-free control action, $\widehat{u}_{r}$, and measured system output $y$, it is now possible to estimate the plant: % (which is uncorrelated with $v$)
@@ -1502,52 +1502,50 @@ From the computed noise-free control action, $\widehat{u}_{r}$, and measured sys
 
 \subsection{Example: Comparing Closed-Loop Identification Methods}
 
-The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling} and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second, to a weighted sum of two delays. For each controller, two scenarios are shown: One where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
+The following examples display the identification results obtained with the methods discussed in sections \ref{Nonparametric Modelling} and \ref{Two-Stage Method}. To illustrate the effects of the controller in the identification results, in the first example the controller was set to a proportional gain, and in the second example, to a weighted sum of two delays. For each controller, two scenarios are shown: one where the ratio of disturbance to external excitation (reference signal) is moderate, and another where the disturbance is more severe. 
 
 For this section, consider the following:
 \begin{itemize}
-    \item A data sequence containing 32768 points was used
-    \item  $r_1(t) = 0$, where the tracking error ($e_y = r_2 - y$) is what is input to the controller, as this mimics the setup at LNEC
-    \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$
-    \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$
-    \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$
+    \item A data sequence containing 32768 points was used;
+    \item  $r_1(t) = 0$, where the tracking error ($e_y = r_2 - y$) is what is input to the controller, as this mimics the setup at LNEC;
+    \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$;
+    \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$;
+    \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ .
 \end{itemize}  
 
 %\subsubsection[Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}]{Controller set as \texorpdfstring{$C(z) = 5$}{C(z) = 5}}
 \begin{figure}[H]
-\begin{minipage}{0.47\textwidth}
+\begin{subfigure}{0.47\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise01.png}
-    \caption{Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=0.1 \cdot e_0(t)$}
+    \caption{$C(z)=5$ and $e(t)=0.1 \cdot e_0(t)$}
     \label{fig_two_stage/example/K5_noise01}    
-\end{minipage}
+\end{subfigure}
 \hfill
-\begin{minipage}{0.52\textwidth}
+\begin{subfigure}{0.52\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/K5_noise1.png}
-    \caption{Bode plot of identification results with controller $C(z)=5$ and disturbance set as $e(t)=1 \cdot e_0(t)$}
+    \caption{$C(z)=5$ and $e(t)=1 \cdot e_0(t)$}
     \label{fig_two_stage/example/K5_noise1}
-\end{minipage}
-\end{figure}
-
-%\subsubsection[Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}]{Controller set as \texorpdfstring{$C(z) = 0.5(z^{-1} + 0.8z^{-2})$}{C(z) = 0.5(z\^{}-1 + 0.8z\^{}-2)}}
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
+\end{subfigure}
+\\[5mm]
+\begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise005.png}
-    \caption{Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.05 \cdot e_0(t)$}
+    \caption{$C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and $e(t)=0.05 \cdot e_0(t)$}
     \label{fig_two_stage/example/noise005}    
-\end{minipage}
+\end{subfigure}
 \hfill
-\begin{minipage}{0.49\textwidth}
+\begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{two_stage/example/noise08.png}
-    \caption{Bode plot of identification results with controller $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and disturbance set as $e(t)=0.8 \cdot e_0(t)$}
+    \caption{$C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ and $e(t)=0.8 \cdot e_0(t)$}
     \label{fig_two_stage/example/noise08}
-\end{minipage}
+\end{subfigure}
+\caption{Bode plot of identification results with different controllers $C(z)$ and output disturbances $e(t)$}
 \end{figure}
 
-The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results, despite everything.
+The figure on the left shows the results of the identification with some noise, but not too severe, and here we can see that the results of the non-parametric models are very sensitive to windowing. On the one hand, a smaller window (pink dots) results in a model that is less sensitive to variations in the data, but with a high bias. A larger window (light blue dots) captures the dynamics of the system well, but suffers from high variance. As for parametric methods, we see that the two-stage method achieves excellent identification (green line, completely superimposed on the ideal model, in red), while the direct method fails. In the figure on the right, we see an example with extreme noise, such that the models obtained by non-parametric methods and the direct method are approaching the inverse of the controller. Here, the two-stage method shines by giving still acceptable results.
 
 
 \chapter[Evaluating Controller Performance in Simulation]

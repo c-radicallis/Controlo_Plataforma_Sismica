@@ -82,9 +82,75 @@
 
 \AtBeginEnvironment{itemize}{\onehalfspacing}
 \AtEndEnvironment{itemize}{\onehalfspacing}
-
-\usepackage{nomencl}
+ 
+\usepackage{nomencl} %%%%%%%%    NOMENCLATURE  %%%%%%%%     NOMENCLATURE     %%%%%%%%   NOMENCLATURE  %%%%%%%% 
 \makenomenclature
+\nomenclature{$\star$}{Convolution} 
+\nomenclature{$(\cdot)^{*}$}{Complex Conjugate}
+\nomenclature{$(\cdot)^{\intercal}$}{Transpose}
+\nomenclature{$f_i$}{Frequency of mode \textit{i}}
+\nomenclature{$\xi_i$}{Damping coefficient of mode \textit{i}}
+\nomenclature{$E$}{Expected value} 
+\nomenclature{$R_x$}{Auto covariance of signal $x$} 
+\nomenclature{$R_{yx}$}{Cross covariance of signals $y$ }
+\nomenclature{$\Phi_x$}{Auto spectral density of signal $x$} 
+\nomenclature{$\Phi_{yx}$}{Cross spectral density of signals $y$ and $x$} 
+\nomenclature{$C$}{Controller} 
+\nomenclature{$G_0$}{Input-Output system} 
+\nomenclature{$S_0$}{Sensitivity function} 
+\nomenclature{$H_0$}{Noise filter in system} 
+\nomenclature{$\omega$}{Frequency} 
+\nomenclature{$T_s$}{Sampling time} 
+\nomenclature{$u$}{Input signal} 
+\nomenclature{$v$}{Additive output disturbance} 
+\nomenclature{$y$}{Output signal}
+
+
+
+
+\usepackage[acronym,nonumberlist,nopostdot,nogroupskip]{glossaries}
+\setglossarystyle{list}
+\renewcommand{\glsnamefont}[1]{\textbf{#1}}  %%%%%%%%   GLOSSARY  %%%%%%%%     
+\makeglossaries
+\newacronym{LNEC}{LNEC}{Laboratório Nacional de Engenharia Civil}
+\newacronym{MSE}{MSE}{Mean squared error}
+\newacronym{ST1D}{ST1D}{Uniaxial shaking table}
+\newacronym{ST3D}{ST3D}{Triaxial shaking table}
+\newacronym{1DOF}{1DOF}{One degree-of-freedom}
+\newacronym{2DOF}{2DOF}{Two degree-of-freedom}
+\newacronym{PBSD}{PBSD}{Performance-Based Seismic Design}
+\newacronym{RTHS}{RTHS}{Real-time hybrid simulation}
+\newacronym{PID}{PID}{Proportional-Integral-Derivative}
+\newacronym{ATTC}{ATTC}{Acceleration Trajectory Tracking Control}
+\newacronym{ADRC}{ADRC}{Active disturbance rejection control}
+\newacronym{AMSE}{AMSE}{Adaptive model-based state estimators }
+\newacronym{ESO}{ESO}{Extended state observer}
+\newacronym{PD}{PD}{Proportional-derivative}
+\newacronym{AIC}{AIC}{Adaptive inverse control}
+\newacronym{OIC}{OIC}{offline inverse model compensator}
+\newacronym{TVC}{TVC}{Three-Variable Control}
+\newacronym{AHC}{AHC}{Adaptive Harmonic Cancellation}
+\newacronym{APC}{APC}{Amplitude/Phase Control}
+\newacronym{OLI}{OLI}{Online Iteration}
+\newacronym{LTI}{LTI}{Linear time-invariant}
+\newacronym{PID-F}{PID-F}{Proportional integral filtered derivative}
+\newacronym{LQI}{LQI}{Linear quadratic integral}
+\newacronym{LQR}{LQR}{Linear quadratic regulator}
+\newacronym{LQG}{LQG}{Linear quadratic guassian}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+% \newacronym{OLI}{OLI}{Online}
+
+
+
+
+
+
 
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -254,27 +320,16 @@ The results indicate that both the PID-F and the LQI controllers offer superior 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-
 \phantomsection
 \addcontentsline{toc}{section}{Nomenclature}
-% The \nomenclature command has the following syntax:
-% \nomenclature[<prefix>]{<symbol>}{<description>}
-%
-% where <prefix> is used for fine tuning the sort order,
-% <symbol> is the symbol to be described, and <description> is
-% the actual description.
-% The first letter in <prefix> indicates the group, while the next
-% (if included) help sorting if the <symbol> is not a plain character
-\nomenclature{$\star$}{Convolution} %[Convolution]
-\nomenclature{$(\cdot)^{*}$}{Complex Conjugate} %[Complex Conjugate]
-
 \printnomenclature
 
 
 \clearpage
-\section*{Glossary}
-\addcontentsline{toc}{section}{Glossary}% Add entry in the table of contents as section
-
+\phantomsection
+%\addcontentsline{toc}{section}{Glossary}% Add entry in the table of contents as section
+\glsaddall
+\printglossary[type=\acronymtype,title=\acronymname, toctitle=\acronymname]
 
 
 
@@ -393,7 +448,7 @@ In addition, the system faces physical limitations inherent to the equipment, na
 
 \subsection{Response Spectrum}
 
-The response spectrum constitutes a fundamental analytical tool in earthquake engineering and structural dynamics, providing the basis for contemporary seismic design methodologies. It characterises the maximum response (in terms of displacement, velocity, or acceleration) of a structure idealised as a single-degree-of-freedom (SDOF) system when subjected to a ground motion. The procedure by which a response spectrum is determined is illustrated schematically in Figure \ref{fig_response_spectrum_schematic}: the peak response amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, obtained from a suite of 1-DoF mass-spring-damper oscillators with 5\% critical damping and varying natural frequencies {\textcircled{\raisebox{-.9pt}{2}}} subjected to a seismic excitation {\textcircled{\raisebox{-.9pt}{1}}}, are plotted as a function of natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
+The response spectrum constitutes a fundamental analytical tool in earthquake engineering and structural dynamics, providing the basis for contemporary seismic design methodologies. It characterises the maximum response (in terms of displacement, velocity, or acceleration) of a structure idealised as a single-degree-of-freedom (1DOF) system when subjected to a ground motion. The procedure by which a response spectrum is determined is illustrated schematically in Figure \ref{fig_response_spectrum_schematic}: the peak response amplitudes {\textcircled{\raisebox{-.9pt}{3}}}, obtained from a suite of 1DOF mass-spring-damper oscillators with 5\% critical damping and varying natural frequencies {\textcircled{\raisebox{-.9pt}{2}}} subjected to a seismic excitation {\textcircled{\raisebox{-.9pt}{1}}}, are plotted as a function of natural frequency {\textcircled{\raisebox{-.9pt}{4}}}.
 \begin{figure}[H]
         \centering
     \includegraphics[width=0.42\textwidth]{response_spectrum_schematic.png}
@@ -541,7 +596,7 @@ Shaking-table control strategies typically begin with the offline generation of 
 % SEISMIC TABLE CONTROL FOR DYNAMIC TESTING OF STRUCTURES & CAN ADAPTIVE CONTROL IMPROVE SHAKING TABLE TEST ACCURACY?
 % https://consensus.app/search/adaptive-control-shaking-tables/P-JOknr3Slax_foG1eKOKg/?utm_source=share&utm_medium=clipboard
 
-Recent works developed in this field show that advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied in \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and also nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, the use of offline iterative control combined with frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload capacity and a wide frequency bandwidth. This advancement allows for the effective testing of high-rigidity structures — such as dams and nuclear power plant facilities - which are characterized by high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility, \cite{Parajuli2024Development} adopted a brushed DC motor as the shaking table actuator and applied a proportional-derivative (PD) controller to achieve motion control, offering a cost-effective alternative to more complex systems.
+Recent works developed in this field show that advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied in \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and also nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, the use of offline iterative control combined with frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload capacity and a wide frequency bandwidth. This advancement allows for the effective testing of high-rigidity structures — such as dams and nuclear power plant facilities - which are characterised by high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility, \cite{Parajuli2024Development} adopted a brushed DC motor as the shaking table actuator and applied a proportional-derivative (PD) controller to achieve motion control, offering a cost-effective alternative to more complex systems.
 
 \begin{figure}
     \centering
@@ -614,9 +669,6 @@ The hydraulic and control system original supplier for LNEC's shaking tables, MT
     \caption{Online Iteration (OLI)}
     \label{fig_OLI}
 \end{figure}
-
-
-
 
 \chapter{ System Identification \& Control}
 
@@ -794,7 +846,7 @@ There are two generic configurations for control systems: open-loop control (fig
 
 Every control system is a variation and/or a combination of these two configurations. Both add, to the system we want to control, another system called controller which outputs a control action $u(t)$, which is the controlled system's input intended to make the controlled system's output $y(t)$ follow some specified reference $r(t)$ (which is just the desired output).  In a perfectly controlled system the output will match the reference, $y(t) = r(t)$. 
 
-This section aims to give the reader an overview of the essential control configurations, their advantages and limitations, as well as controller structures and design methods. Open-loop and closed-loop architectures are addressed, with the latter including classical output feedback control with a PIDF, and then full state feedback with optimal control and the underlying concepts of controllability, observability, and state estimation. This segment is specially influenced by the work in \cite{DuarteValerio} and \cite{Botto}.
+This section aims to give the reader an overview of the essential control configurations, their advantages and limitations, as well as controller structures and design methods. Open-loop and closed-loop architectures are addressed, with the latter including classical output feedback control with a PID-F, and then full state feedback with optimal control and the underlying concepts of controllability, observability, and state estimation. This segment is specially influenced by the work in \cite{DuarteValerio} and \cite{Botto}.
 
 \subsection{Open-Loop Control}
 In open-loop control the controller receives the reference that the system should follow and computes a control action.  It is not checked whether the system's output then follows the reference, and the control action is not modified to account for any deviations that occur.
@@ -952,10 +1004,10 @@ In the example with the sinusoidal disturbance, it can be clearly seen that the 
 \end{figure}
 
 
-\subsubsection{PIDF Controller}
+\subsubsection{PID-F Controller}
 Proportional-integral-derivative filtered controllers apply a control action which is the sum of three components: One proportional to the tracking error, another proportional to the integral of the error, and another proportional to a filtered derivative of the error. 
 
-A discrete PIDF controller can be formulated as in the following equation:
+A discrete PID-F controller can be formulated as in the following equation:
 \begin{equation}
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
@@ -1552,7 +1604,7 @@ The figure on the left shows the results of the identification with some noise, 
 {Evaluating Controller Performance in Simulation Environment for LNEC's \\
 Uniaxial Shaking Table}\label{Evaluating Controller Performance in Simulation Environment}
 
-In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Shaking Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PIDF}), and optimal controllers (in section \ref{sec_Optimal_Control}).
+In this chapter a model of LNEC's uniaxial shaking table (section \ref{Modelling Shaking Table Dynamics}) is used to evaluate the performance of three control strategies: the OLI method currently in use at LNEC (in section \ref{sec_LNEC_method}), tuned PID-F controllers (in section \ref{sec_Tuned_PID-F}), and optimal controllers (in section \ref{sec_Optimal_Control}).
 
 \section{A Model of LNEC's Uniaxial Shaking Table}\label{Modelling Shaking Table Dynamics}
 %\chapter{Modelação Matemática}
@@ -1700,7 +1752,7 @@ In order to determine a model for the shaking table with a coupled 2DOF systems,
     \end{aligned}
 \end{align}
 % LTeX: enabled=true
-It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see equations \eqref{eq_G_Fp_isv} \& \eqref{G_xT_Fp}).
+It's important to note that the transfer function $G_{Fp/i_{sv}}(s)$  is also a function of the model coupled to the platform (see Eq.\eqref{eq_G_Fp_isv} and  Eq.\eqref{G_xT_Fp}).
 
 To represent the main dynamics of usual test specimens, a 2 degree of freedom mass-spring-damper system is coupled to the platen, as depicted in figure \ref{schematic_2dof}:
 
@@ -1855,9 +1907,9 @@ The mass $m_i$, stiffness $k_i$, and damping $c_i$, of each element will be dete
 %\clearpage
 \section{Control Strategies}
 
-In this section two new control strategies are proposed: a tuned PIDF controller, and an optimal controller. This control strategies are then evaluated against LNEC's iterative driver adaptation method, which is currently used.
+In this section two new control strategies are proposed: a tuned PID-F controller, and an optimal controller. This control strategies are then evaluated against LNEC's iterative driver adaptation method, which is currently used.
 
-In sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the shaking table.
+In sections \ref{sec_Tuned_PID-F} and \ref{sec_Optimal_Control}, for a preliminary analysis of how the shaking table performance could be affected by controller tuning, simulations were run using the seismic data from the 1979  Imperial Valley Earthquake, El Centro (Described in \cite{narasimhan2006} \& available \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica}{here}), fault normal direction, which was scaled down to $73.51\%$, in order to comply with the displacement range of the shaking table.
 
 It was also considered throughout that the platen had a 2DOF coupled structure, as in figure \ref{schematic_2dof}, and the parameters of this 2DOF system, unless stated otherwise, are the ones shown in table \ref{tab:modal_params}:
 
@@ -1889,7 +1941,7 @@ In section \ref{sec_LNEC_method}, LNEC's control strategy is entirely explained,
 
 In section \ref{sec_Comparing_Control_Strategies}, the performance of the three control strategies is compared for a set of benchmark seismic signals.
  
-\subsection{Tuned PIDF} \label{sec_Tuned_PIDF}
+\subsection{Tuned PID-F} \label{sec_Tuned_PID-F}
 
 Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, or even additional times for various other reasons, one possible straightforward improvement would be to update the PI controller tune using this information, as in an adaptive control strategy (figure \ref{fig_adaptive_diagram}).
 
@@ -1902,7 +1954,7 @@ Taking into consideration the test procedure at LNEC (figure \ref{fig_lnec_test_
 % \begin{minipage}{0.49\textwidth}
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{adaptive_diagram.jpg} %0.5
+\includegraphics[width=0.5\linewidth]{adaptive_diagram.jpg} %0.5
 \caption{Adaptive control scheme \citep{DuarteValerio}}
 \label{fig_adaptive_diagram}
 \end{figure}
@@ -1969,7 +2021,7 @@ The acceleration response spectrum mean squared error for the tuned platform is 
 %     \end{tabular}
 % \end{table}
 
-In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PIDF controller. All values are presented in SI units, in this case, $m/s^2$ for the acceleration response spectrum MSE, and $m$ for the displacement response spectrum MSE.
+In figures \ref{fig_Platen_Acceleration} to \ref{fig_Platen_Displacement_zoom}, label "MSE" refers to the  respective mean squared error when using the standard controller, and "Tuned MSE" refers to the respective mean squared error when using the tuned PID-F controller. All values are presented in SI units, in this case, $m/s^2$ for the acceleration response spectrum MSE, and $m$ for the displacement response spectrum MSE.
 
 The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Platen_Displacement_zoom} highlights the faster response of the tuned controller, and its improved tracking. It also highlights how the tuned controller now introduces some overshoot, which is also apparent in the response spectra of figure \ref{fig_response_spectrum_of_3}, and the bode plot in figure \ref{fig_Bode_of_G_xT_xref}.
 
@@ -2046,7 +2098,7 @@ The detailed view in figures \ref{fig_Platen_Acceleration_zoom} and \ref{fig_Pla
 \end{minipage}
 \end{figure}
 
-\subsubsection{Tuned PID-F Performance Sensitivity to Test Specimen Parameters} \label{Tuned PID-F Performance Sensitivity}%Analysis of Tuned PIDF 
+\subsubsection{Tuned PID-F Performance Sensitivity to Test Specimen Parameters} \label{Tuned PID-F Performance Sensitivity}%Analysis of Tuned PID-F 
 
 The mass, modal frequencies, and damping of the specimens coupled to the shaking table have an impact on how well it is able to track the reference. In this section, we will analyse how the shaking table performs for different damping, modal frequencies, and mass of the test specimen with the tuned PID-F controller (which is tuned for each case).
 
@@ -2265,7 +2317,7 @@ The optimal state feedback control law which minimizes the cost function, shown 
      J(u) = \int ^{\infty}_0 (x^{T}(t) Q\,x(t) + u^{T}(t) R\, u(t))\, dt 
 \end{equation} 
 
-The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PIDF (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, for increased bandwidth, but, unlike with the PID-F
+The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$, for increased bandwidth, but, unlike with the PID-F
 controller, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was highly smoothed, resulting in unitary gain at low frequencies (shown in figure \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}).
 
 The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
@@ -2274,14 +2326,14 @@ The code implementation can be found at the following GitHub repository \href{ht
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PIDF, and optimal state-feedback controller with $Q=10^3$ (which results in a similar bandwidth to the tuned PIDF).}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q=10^3$ (which results in a similar bandwidth to the tuned PID-F).}
     \label{fig_Bode_LQI_Qe3} 
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PIDF, and optimal state-feedback controller with $Q=10^9$.}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q=10^9$.}
     \label{fig_Bode_LQI_Qe9}
 \end{minipage}
 \end{figure}
@@ -2502,9 +2554,9 @@ The first driver (driver zero) was generated using just the target file. This dr
 
 \subsubsection{Application Example: Discussion of Method \& Results}
 
-For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PIDF controller, and even more so when compared to the optimal controller. 
+For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PID-F controller, and even more so when compared to the optimal controller. 
 
-In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PIDF controllers.
+In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PID-F controllers.
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -2537,14 +2589,14 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Response_Spectra.png}
-    \caption{Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare}.}
+    \caption{Target response spectrum and the resulting response spectrum from tuned PID-F, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare}.}
     \label{Response_Spectra_2drivers}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Response_Spectra_better_id.png}
-    \caption{Target response spectrum and the resulting response spectrum from tuned PIDF, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare_better_id}.}
+    \caption{Target response spectrum and the resulting response spectrum from tuned PID-F, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare_better_id}.}
     \label{Response_Spectra_better_id}
 \end{figure}
 
@@ -2568,7 +2620,7 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 \centering
 \begin{tabular}{cccc}
 \hline
-Control Strategy  & PIDF & Optimal Control & Adapted Driver (3rd)\\
+Control Strategy  & PID-F & Optimal Control & Adapted Driver (3rd)\\
 \hline
 Mean Acceleration MSE ($m/s^2$)    & \(8.27 \times 10^{-2}\) & \(2.09 \times 10^{-2}\) & \(4.17 \times 10^{-1}\) \\
 Median Acceleration MSE ($m/s^2$) & \(3.20 \times 10^{-2}\) & \(4.39 \times 10^{-4}\) & \(9.48 \times 10^{-2}\) \\
@@ -2584,15 +2636,15 @@ Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Erzikan_Response_Spectra_N.png}
-    \caption{Erzikan fault normal response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PIDF (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}
+    \caption{Erzikan fault normal response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PID-F (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}
     \label{erzikan_4th_N}
 \end{figure}
 
-\section{ Conclusions: PIDF vs Optimal Control vs OLI Method}
+\section{ Conclusions: PID-F vs Optimal Control vs OLI Method}
 %The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
-Regarding the analysis in sections \ref{sec_Tuned_PIDF} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PIDF which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PIDF, but the results of this is practice may differ from the simulation studies preformed using the current model.
+Regarding the analysis in sections \ref{sec_Tuned_PID-F} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PID-F which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PID-F, but the results of this is practice may differ from the simulation studies preformed using the current model.
 
-The results indicate that the tuned controllers (PIDF \& Optimal) offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
+The results indicate that the tuned controllers (PID-F \& Optimal) offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
@@ -2794,7 +2846,7 @@ The performance of each control method is evaluated through the acceleration and
 
 % Everything was reassembled together, and new data was collected for another system identification, however, a nonlinearity was still found.
 
-% \section{ Implementar PIDF e controlo ótimo na aplicação de LabView de controlo das mesas}
+% \section{ Implementar PID-F e controlo ótimo na aplicação de LabView de controlo das mesas}
 
 % \begin{equation}
 %     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
@@ -2857,12 +2909,12 @@ The final step of the proposed methodology consists in implementing the optimize
 \clearpage
 %% BIBLIOGRAFIA
 \bibliographystyle{abbrvnat}
-\setcitestyle{authoryear} %Citation-related commands open={((},close={))}
+\setcitestyle{authoryear} 
 \bibliography{bibfile}
 
 %%  APPENDIX
 \appendix
-
+\let\cleardoublepage\clearpage
 
 \chapter{MTS Systems Control Strategies}\label{section:MTS_strategies}
 
@@ -2986,7 +3038,7 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
 
 % \chapter{Preliminary Conclusions \& Future Developments}
 % \begin{itemize}
-%     \item Both the displacement and acceleration tracking errors were significantly improved with the simple PIDF tune (Figures \ref{fig_response_spectrum_of_3}  to \ref{fig_Platen_Displacement_Tracking_Error}, table \ref{tab:mse_rs}).
+%     \item Both the displacement and acceleration tracking errors were significantly improved with the simple PID-F tune (Figures \ref{fig_response_spectrum_of_3}  to \ref{fig_Platen_Displacement_Tracking_Error}, table \ref{tab:mse_rs}).
 %     \begin{itemize}
 %     \item The cutoff frequency was increased from approximately 5 Hz to 18 Hz (Figure \ref{fig_Bode_of_G_xT_xref}) and response spectrum greatly improved (Figure \ref{fig_response_spectrum_of_3}).
 %     \item A similar method could be simple to implement on the digital controller running on National Instruments hardware used at LNEC, and this may be an option worth exploring. In future work, different control strategies will also be explored.

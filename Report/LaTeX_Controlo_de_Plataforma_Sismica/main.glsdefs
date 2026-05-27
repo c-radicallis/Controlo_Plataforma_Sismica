@@ -1,0 +1,28 @@
+\glsdefs@newdocentry{LNEC}%
+{%
+name={\acronymfont {\glsentryshort {LNEC}}},%
+sort={Laboratório Nacional de Engenharia Civil},%
+type={acronym},%
+first={Laboratório Nacional de Engenharia Civil},%
+firstplural={Laboratório Nacional de Engenharia Civils},%
+text={Laboratório Nacional de Engenharia Civil},%
+plural={Laboratório Nacional de Engenharia Civils},%
+description={\newacronym },%
+descriptionplural={\newacronym },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={\protect \newacronym },%
+longplural={\protect \newacronym s},%
+short={Laboratório Nacional de Engenharia Civil},%
+shortplural={Laboratório Nacional de Engenharia Civils},%
+counter={page},%
+parent={},%
+%
+}%
+

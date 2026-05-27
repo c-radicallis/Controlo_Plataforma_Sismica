@@ -1,7 +1,24 @@
 
 \begin{thenomenclature} 
 \nomgroup{A}
-  \item [{$(\cdot)^{*}$}]\begingroup Complex Conjugate\nomeqref {0.0}\nompageref{XVI}
-  \item [{$\star$}]\begingroup Convolution\nomeqref {0.0}\nompageref{XVI}
+  \item [{$(\cdot)^{*}$}]\begingroup Complex Conjugate\nomeqref {0.0}\nompageref{1}
+  \item [{$(\cdot)^{\intercal}$}]\begingroup Transpose\nomeqref {0.0}\nompageref{1}
+  \item [{$\omega$}]\begingroup Frequency\nomeqref {0.0}\nompageref{1}
+  \item [{$\Phi_x$}]\begingroup Auto spectral density of signal $x$\nomeqref {0.0}\nompageref{1}
+  \item [{$\Phi_{yx}$}]\begingroup Cross spectral density of signals $y$ and $x$\nomeqref {0.0}\nompageref{1}
+  \item [{$\star$}]\begingroup Convolution\nomeqref {0.0}\nompageref{1}
+  \item [{$\xi_i$}]\begingroup Damping coefficient of mode \textit{i}\nomeqref {0.0}\nompageref{1}
+  \item [{$C$}]\begingroup Controller\nomeqref {0.0}\nompageref{1}
+  \item [{$E$}]\begingroup Expected value\nomeqref {0.0}\nompageref{1}
+  \item [{$f_i$}]\begingroup Frequency of mode \textit{i}\nomeqref {0.0}\nompageref{1}
+  \item [{$G_0$}]\begingroup Input-Output system\nomeqref {0.0}\nompageref{1}
+  \item [{$H_0$}]\begingroup Noise filter in system\nomeqref {0.0}\nompageref{1}
+  \item [{$R_x$}]\begingroup Auto covariance of signal $x$\nomeqref {0.0}\nompageref{1}
+  \item [{$R_{yx}$}]\begingroup Cross covariance of signals $y$ \nomeqref {0.0}\nompageref{1}
+  \item [{$S_0$}]\begingroup Sensitivity function\nomeqref {0.0}\nompageref{1}
+  \item [{$T_s$}]\begingroup Sampling time\nomeqref {0.0}\nompageref{1}
+  \item [{$u$}]\begingroup Input signal\nomeqref {0.0}\nompageref{1}
+  \item [{$v$}]\begingroup Additive output disturbance\nomeqref {0.0}\nompageref{1}
+  \item [{$y$}]\begingroup Output signal\nomeqref {0.0}\nompageref{1}
 
 \end{thenomenclature}

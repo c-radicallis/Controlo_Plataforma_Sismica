@@ -21,7 +21,7 @@
     "subparagraph"
   ],
 
-  "latex-workshop.latex.tools": [
+"latex-workshop.latex.tools": [
     {
         "name": "pdflatex",
         "command": "pdflatex",
@@ -31,13 +31,17 @@
         "name": "makeindex-nomencl",
         "command": "makeindex",
         "args": ["%DOCFILE%.nlo", "-s", "nomencl.ist", "-o", "%DOCFILE%.nls"]
+    },
+    {
+        "name": "makeglossaries",
+        "command": "makeglossaries",
+        "args": ["%DOCFILE%"]
     }
 ],
 "latex-workshop.latex.recipes": [
     {
-        "name": "pdflatex → nomencl → pdflatex",
-        "tools": ["pdflatex", "makeindex-nomencl", "pdflatex"]
+        "name": "pdflatex → nomencl → glossaries → pdflatex",
+        "tools": ["pdflatex", "makeindex-nomencl", "makeglossaries", "pdflatex"]
     }
-]
-}
+]}
 

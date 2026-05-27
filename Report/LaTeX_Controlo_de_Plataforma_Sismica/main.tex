@@ -83,6 +83,9 @@
 \AtBeginEnvironment{itemize}{\onehalfspacing}
 \AtEndEnvironment{itemize}{\onehalfspacing}
 
+\usepackage{nomencl}
+\makenomenclature
+
 \raggedbottom
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -251,8 +254,21 @@ The results indicate that both the PID-F and the LQI controllers offer superior 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \clearpage
-\section*{Nomenclature}
-\addcontentsline{toc}{section}{Nomenclature}% Add entry in the table of contents as section
+
+\phantomsection
+\addcontentsline{toc}{section}{Nomenclature}
+% The \nomenclature command has the following syntax:
+% \nomenclature[<prefix>]{<symbol>}{<description>}
+%
+% where <prefix> is used for fine tuning the sort order,
+% <symbol> is the symbol to be described, and <description> is
+% the actual description.
+% The first letter in <prefix> indicates the group, while the next
+% (if included) help sorting if the <symbol> is not a plain character
+\nomenclature{$\star$}{Convolution} %[Convolution]
+\nomenclature{$(\cdot)^{*}$}{Complex Conjugate} %[Complex Conjugate]
+
+\printnomenclature
 
 
 \clearpage
@@ -340,10 +356,10 @@ In addition, the system faces physical limitations inherent to the equipment, na
 %         % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
 %         %--- Input r2 ---
-%         \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+%         \draw[-latex] (-2, 0) -- node[above,at start,xshift=2mm]{$r(t)$} (sum_r2);
 
 %         %--- sum_r2 -> C -> sum_r1 ---
-%         \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+%         \draw[-latex] (sum_r2) -- node[above]{$e(t)$} (C);
 %         \draw[-latex] (C) -- (sum_r1);
 
 %         %--- r1 drops into sum_r1 from above ---
@@ -354,16 +370,16 @@ In addition, the system faces physical limitations inherent to the equipment, na
 %         \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
 
 %         %--- sum_r1 -> G0 ---
-%         \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+%         \draw[-latex] (sum_r1) -- node[above]{$u(t)$} (G0);
 
 %         % %--- G0 -> sum_v ---
-%         \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
+%         \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y(t)$}      ([xshift=12mm] G0.east);
 %         %--- e -> H0 -> v -> sum_v ---
-%         % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+%         % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e(t)$} -- (H0);
 %         % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);S
 
 %         %--- sum_v -> y output ---
-%         % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+%         % \draw[-latex] (sum_v) -- node[above]{$y(t)$} ([xshift=12mm] sum_v.east);
 
 %         %--- Feedback: y branches back to sum_r2 bottom ---
 %         \coordinate (ybranch) at ([xshift=5mm] G0.east);
@@ -604,38 +620,42 @@ The hydraulic and control system original supplier for LNEC's shaking tables, MT
 
 \chapter{ System Identification \& Control}
 
-This chapter presents the theoretical foundations underlying the system identification and control strategies employed in this work. It is organized into three main parts. The first part, Section 3.1, establishes the signal and system analysis framework, covering the definitions, notation, and properties of signals processed by discrete linear time-invariant (LTI) systems. The second part, Section 3.2, addresses control system design, progressing from open-loop to closed-loop architectures, and introducing the specific controllers considered in this work: a PIDF controller, and full state feedback control with optimal control formulation, including the concepts of controllability, observability, and state estimation. The third part, Section 3.3, tackles the problem of system identification in closed-loop settings, discussing the limitations of classical spectral analysis methods and presenting the Two-Stage Method as a suitable approach for closed-loop identification.
+This chapter presents the theoretical foundations underlying the system identification and control strategies employed in this work. It is organized into three main parts. The first part, Section 3.1, establishes the signal and system analysis framework, covering the definitions, notation, and properties of signals processed by discrete linear time-invariant (LTI) systems. The second part, Section 3.2, addresses control system design, progressing from open-loop to closed-loop architectures, and introducing the specific controllers considered in this work: a PID-F controller, and full state feedback control with optimal control formulation, including the concepts of controllability, observability, and state estimation. The third part, Section 3.3, tackles the problem of system identification in closed-loop settings, discussing the limitations of classical spectral analysis methods and presenting the Two-Stage Method as a suitable approach for closed-loop identification.
 
 \section{Signals \& System Analysis}
 \subsection{General Definitions \& Notation}
 For a signal discretized with sampling time $T_s$:
 \begin{itemize}
-    \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time
-    \item The forward operator $z$ corresponds to a forward time shift of one sampling time
-    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{-k}$ or $z^k$, respectively
-    \item $G(z)$, in upper case, designates a transfer function, while the lower case $g(k)$ is the corresponding pulse response at time instant $t = k T_s$, and both are related by:
+    \item The delay operator $z^{-1}$ corresponds to a delay of one sampling time;
+    \item The forward operator $z$ corresponds to a forward time shift of one sampling time;
+    \item A delay/forward shift of $k$ sampling times $T_s$ corresponds to $z^{-k}$ or $z^k$, respectively;
+    \item $G(z)$, in upper case, designates a transfer function, while the lower case $g(k)$ is the corresponding pulse response computed at time instant $t = k T_s$, and both are related by:
         \begin{equation}
             G(z) = \sum_{k=-\infty}^{\infty} g(k)\, z^{-k}
         \end{equation}
-    \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$.
-    \item Various equations will have the notation eased by omitting the function variables to improve readability
-    \item The circumflex denotes an estimated model or property from some data (ex. $\widehat{G}(z)$ or $\widehat{\Phi}_{u}(\omega)$)
+    \item The complex-valued function $G(e^{i\omega})$ is the evaluation of the transfer function $G(z)$ on the unit circle $z=e^{i\omega}$ in the complex plain, and is referred to as the frequency response of a discrete time system. This differs from continuos time systems where a frequency response $G(i\omega)$ of a given continuous transfer function $G(s)$ is given by its evaluation on the imaginary axis $s = i\omega$;
+    \item Various equations will have the notation eased by omitting the function variables to improve readability;
+    \item The circumflex denotes an estimated model or property from some data (ex. $\widehat{G}(z)$).
 \end{itemize}
 
 
-\subsection{Properties of signals processed by discrete LTI systems}
+\subsection{Properties of stationary stochastic signals processed by discrete LTI systems}
 
-For time signals $x(t)$ and $y(t)$ the correlation  is given by:
+The autocorrelation of signal $x(t)$, and the cross correlation between signals $x(t)$ and $y(t)$, for a time delay $\tau$ is given, respectively, by:
 \begin{align}
     R_{x}(\tau)  =& \, E\left[ \, x(t)\, x(t-\tau) \, \right] \\[2mm]
     R_{yx}(\tau) =& \, E\left[ \, y(t)\, x(t-\tau) \, \right] 
 \end{align} 
 
-And the power spectral density:
-\begin{align}
-    \Phi_{x}(\omega)  =& \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}  \\[2mm]
-    \Phi_{yx}(\omega) =& \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
-\end{align} 
+And the power spectral density of signal $x(t)$:
+\begin{equation}
+    \Phi_{x}(\omega)  = \sum_{\tau= -\infty}^{\infty} R_{x}(\tau) e^{-i \omega \tau}
+\end{equation}
+
+And the power cross-spectral density of signals $x(t)$ and $y(t)$:
+\begin{equation}
+    \Phi_{yx}(\omega) = \sum_{\tau= -\infty}^{\infty} R_{yx}(\tau)e^{-i \omega \tau} 
+\end{equation} 
 
 For an LTI system as in figure \ref{tikz_LTI_sys}, where $y(t) = G(z) \cdot x(t)$, with $x$ and $y$ quasi-stationary signals, we have the following properties:
 \begin{align}
@@ -659,8 +679,8 @@ The way in which LTI systems process correlation is also illustrated in figure \
         \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G(z)$};
         % \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
 
-        \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=3mm]{$x$} (G); % x
-        \draw[-latex] (G) -- node[above,at end, xshift=-3mm]{$y$} ([xshift=15mm] G.east); % y
+        \draw[-latex] ([xshift=-15mm]G.west) -- node[above,at start, xshift=3mm]{$x(t)$} (G); % x
+        \draw[-latex] (G) -- node[above,at end, xshift=-3mm]{$y(t)$} ([xshift=15mm] G.east); % y
 
         % \draw [-latex] ([xshift=-7mm]G.west) -- ([xshift=-7mm]G_2.west) -- (G_2.west); %branch
         % \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$w$} ([xshift=15mm] G_2.east); %w
@@ -708,11 +728,11 @@ In the case of two systems which generate an output from a common input signal, 
         \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm  ] (G) at (0,0)   {$G_{1}(z)$};
         \node[draw, fill=Cyan!30, minimum width=15mm, minimum height=8mm , below= 4mm of G ] (G_2)  {$G_{2}(z)$};
 
-        \draw[-latex] ([xshift=-12mm]G.west) -- node[above,at start, xshift=2mm]{$x$} (G); % x
-        \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y_1$} ([xshift=10mm] G.east); % y_1
+        \draw[-latex] ([xshift=-12mm]G.west) -- node[above,at start, xshift=2mm]{$x(t)$} (G); % x
+        \draw[-latex] (G) -- node[above,at end, xshift=-2mm]{$y_1(t)$} ([xshift=10mm] G.east); % y_1
 
         \draw [-latex] ([xshift=-5mm]G.west) -- ([xshift=-5mm]G_2.west) -- (G_2.west); %branch
-        \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$y_2$} ([xshift=10mm] G_2.east); %y_2
+        \draw[-latex] (G_2) -- node[above,at end, xshift=-2mm]{$y_2(t)$} ([xshift=10mm] G_2.east); %y_2
     \end{tikzpicture}\vspace{-2mm}
     \caption{Two systems with a common input signal}\label{tikz_two_sys_common_input} 
 \end{figure}
@@ -737,9 +757,9 @@ There are two generic configurations for control systems: open-loop control (fig
     \begin{tikzpicture}
     \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm              ] at (0,0) (C) {$C(z)$}; % , label=below:{ Open-loop Controller}
     \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm, right=10mm of C ] (G0)    {$G(z)$};      % , label=below:{System to control}    
-    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r$} (C);                    % node[below]{reference}     
-    \draw[-latex] (C) -- node[above]{$u$}       (G0);                   % node[below]{control action}
-    \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);% node[below]{output}        
+    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r(t)$} (C);                    % node[below]{reference}     
+    \draw[-latex] (C) -- node[above]{$u(t)$}       (G0);                   % node[below]{control action}
+    \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y(t)$}      ([xshift=12mm] G0.east);% node[below]{output}        
 
     \end{tikzpicture}\vspace{-2mm} 
     \caption{Control in open-loop}\label{tikz_Control_Systems_open_loop} 
@@ -756,10 +776,10 @@ There are two generic configurations for control systems: open-loop control (fig
     \node[draw, fill=Cyan!50, minimum width=15mm, minimum height=10mm , right=10mm of C       ] (G0){$G(z)$};% , label=above:{\parbox{15mm}{\centering system to control}}     
 
     %--- Input r2 ---
-    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r$}(sum_r2); %node[below]{reference} 
-    \draw[-latex] (sum_r2) --  node[above]{$e$}  (C); % node[above]{\parbox{12mm}{\centering tracking error}}
-    \draw[-latex] (C) --       node[above]{$u$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
-    \draw[-latex] (G0) --      node[above,at end, xshift=-3mm]{$y$} ([xshift=12mm] G0.east); % node[above]{output}                                  
+    \draw[-latex] (-15mm, 0) -- node[above,at start, xshift=3mm]{$r(t)$}(sum_r2); %node[below]{reference} 
+    \draw[-latex] (sum_r2) --  node[above]{$e(t)$}  (C); % node[above]{\parbox{12mm}{\centering tracking error}}
+    \draw[-latex] (C) --       node[above]{$u(t)$} (G0); % node[above]{\parbox{12mm}{\centering control action}}
+    \draw[-latex] (G0) --      node[above,at end, xshift=-3mm]{$y(t)$} ([xshift=12mm] G0.east); % node[above]{output}                                  
 
     %--- Feedback: y branches back to sum_r2 bottom ---
     \coordinate (ybranch) at ([xshift=5mm] G0.east);
@@ -791,7 +811,7 @@ The main advantages of open-loop control are:
     \item If the reference is known in advance, the control action can be computed a priori
 \end{itemize}  
 
-Open-loop control works well if two conditions are simultaneously met: A perfect model of the plant exists and there are no unknown disturbances of either the control action or the output. In practice, open-loop control does not work well due to imperfect modelling of the plants, the existence of process and measurement disturbances, and the fact that it cannot control unstable plants.
+Open-loop control works well if two conditions are simultaneously met: A perfect model of the plant exists and there are no unknown disturbances of either the control action or the output. In practice, open-loop control does not work well due to imperfect modelling of the plant, and the existence of process and measurement disturbances, and, more fundamentally, even with a perfect model, open-loop control cannot handle non-minimum phase plants, since inverting their dynamics would require an unstable controller.
 
 \subsubsection{Design of Open-Loop Controllers}
 
@@ -799,13 +819,13 @@ Since we want the output to match the reference:
 \begin{equation}
     r(s) = y(s) = G(s)C(s) \, r(s) \Longrightarrow C(s) = \frac{1}{G(s)}
 \end{equation}  
-Thus, the controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller isn't, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealized controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
+The controller should be an inverse model of the system to control. This is problematic if the model of the system is proper, because then the controller is not proper, resulting that additional poles must be added to make the controller proper. These additional poles should be of very high frequency as to preserve the dynamics of the idealised controller (which is just the inverse of the plant) such that it cancels out the dynamics of the plant, and the output matches the reference.
 
 In figure \ref{fig_open}, an example of the reference tracking resulting from open loop control, as in figure \ref{tikz_Control_Systems_open_loop}, with $C = \frac{10 s}{s+1}$, for three cases is shown: 
 \begin{itemize}
-    \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$, for which the controller was designed (denoted as "nominal" in the legend);
-    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$ ;
-    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \, t)$ (as in figure \ref{tikz_general_open_loop_sys});
+    \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$, for which the controller was designed (denoted as "nominal" in the legend), highlighting its effectiveness when the plant model is perfect;
+    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$, highlighting how this control strategy cannot account for a modelling error of the plant;
+    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \, t)$ (as in figure \ref{tikz_general_open_loop_sys}), highlighting how this control strategy cannot account for disturbances in the system;
 \end{itemize}
 
 \begin{figure}[H]
@@ -833,8 +853,8 @@ Closed-loop control can also be used to stabilise unstable plants, and the oppos
 In figure \ref{fig_closed}, an example of the reference tracking  resulting from closed loop control, as in figure \ref{tikz_Control_Systems_closed_loop}, with $C = 10 + \frac{50}{s} +  \frac{50 s}{s+1} $, for three cases is shown: 
 \begin{itemize}
     \item A perfect identification of the plant: $G_0 = \frac{s+1}{s (s+10)}$ (denoted as "nominal" in the legend);
-    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$ ;
-    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \,t)$ (as in figure \ref{tikz_general_CL_sys});
+    \item A plant with a modelling error: $G_{err} = 1.1 \cdot G_0$,  highlighting how this control strategy can compensate for modelling errors of the plant;
+    \item The perfect plant with an additive disturbance in the output: $v(t) = sin(2\pi \,t)$ (as in figure \ref{tikz_general_CL_sys}), ,  highlighting how this control strategy can compensate for disturbances in the system;
 \end{itemize}
 
 \begin{figure}[H]
@@ -880,10 +900,10 @@ It is possible to combine open-loop and closed-loop control in a single control 
         % \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_v ] (H0)  {$H_0$};
 
         %--- Input r2 ---
-        \draw[-latex] (-1.5, 0) -- node[above,at start,xshift=2mm]{$r$} (sum_r2);
+        \draw[-latex] (-1.5, 0) -- node[above,at start,xshift=2mm]{$r(t)$} (sum_r2);
 
         %--- sum_r2 -> C -> sum_r1 ---
-        \draw[-latex] (sum_r2) -- node[above]{$e$} (C);
+        \draw[-latex] (sum_r2) -- node[above]{$e(t)$} (C);
         \draw[-latex] (C) -- (sum_r1);
 
         %--- r1 drops into sum_r1 from above ---
@@ -894,16 +914,16 @@ It is possible to combine open-loop and closed-loop control in a single control 
         \draw[-latex] ([xshift=-5mm] sum_r2.west) -- ([xshift=-5mm] sum_r2.west |- C_open.west) -- (C_open.west);
 
         %--- sum_r1 -> G0 ---
-        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+        \draw[-latex] (sum_r1) -- node[above]{$u(t)$} (G0);
 
         % %--- G0 -> sum_v ---
-        \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y$}      ([xshift=12mm] G0.east);
+        \draw[-latex] (G0) -- node[above,at end, xshift=-3mm]{$y(t)$}      ([xshift=12mm] G0.east);
         %--- e -> H0 -> v -> sum_v ---
-        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        % \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e(t)$} -- (H0);
         % \draw[-latex] ([yshift=10mm] sum_v.north) -- node[right]{$v$} (sum_v);
 
         %--- sum_v -> y output ---
-        % \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        % \draw[-latex] (sum_v) -- node[above]{$y(t)$} ([xshift=12mm] sum_v.east);
 
         %--- Feedback: y branches back to sum_r2 bottom ---
         \coordinate (ybranch) at ([xshift=5mm] G0.east);
@@ -940,7 +960,7 @@ A discrete PIDF controller can be formulated as in the following equation:
     C(z) =  K_p + K_i \frac{T_s}{z-1} + K_d \frac{1}{T_f + \frac{T_s}{z-1}} 
 \end{equation}
 
-Where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
+where $K_p$ is the proportional error gain, $K_i$ the integral error gain, $K_d$ the derivative error gain, $T_f$ the filter constant, and $T_s$ the sampling time.
 
 The proportional component outputs a control action proportional to the error. If the proportional control results in steady-state error, the integral action will grow over time and correct for it. Additional integrators may be added to correct for steady-state error. The reasoning behind the derivative term is that, if there is a large variation of the error, the control action will immediately increase to counter it, rather than waiting for a large error (where the proportional action will kick in), or, even worse, for an accumulation of the error (where the integral action will kick in).
 
@@ -1023,7 +1043,7 @@ If, instead of using just the system output (position $x(t)$) as feedback, we us
         \draw[-latex] (-10mm, 0) -- node[above]{$x_{ref}$}(sum_r2); %node[below]{reference} 
         \draw[-latex] (sum_r2) --  (k); % node[above]{\parbox{12mm}{\centering tracking error}}
         \draw[-latex] (k) --       node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
-        \draw[-latex] (M) --      node[above,at end, xshift=-3mm]{$x$} ([xshift=12mm] M.east); % node[above]{output}                                  
+        \draw[-latex] (M) --      node[above,at end, xshift=-3mm]{$x(t)$} ([xshift=12mm] M.east); % node[above]{output}                                  
 
         %--- Feedback: y branches back to sum_r2 bottom ---
         \coordinate (ybranch) at ([xshift=5mm] M.east);
@@ -1053,7 +1073,7 @@ If, instead of using just the system output (position $x(t)$) as feedback, we us
         \node[draw, fill=Cyan!50, minimum width=8mm, minimum height=8mm , right=15mm of sum2 ] (M){$M$};
 
         \draw[-latex] (sum2) --   node[above]{$F$} (M); % node[above]{\parbox{12mm}{\centering control action}}
-        \draw[-latex] (M) --      node[above,midway]{$x$} ([xshift=8mm] M.east); % node[above]{output}                                  
+        \draw[-latex] (M) --      node[above,midway]{$x(t)$} ([xshift=8mm] M.east); % node[above]{output}                                  
 
         %--- Feedback: y branches back to sum_r2 bottom ---
         \coordinate (ybranch) at ([xshift=4mm] M.east);
@@ -1097,20 +1117,19 @@ Optimal control is precisely about designing the optimal state feedback controll
     J \left( x(t) , u(t) \right) = \int_{t_0}^{T} g\left( x(t) , u(t) \right) \, dt
 \end{equation}
 
-Where $x(t)$ is the states, and $u(t)$ the control action, of a given LTI system:
-\begin{equation} \label{eq_LQR_performance_index}
-    \dot{x}(t) = f\left( x(t) , u(t)\right) = A \, x(t) + B \, u(t)
-\end{equation} 
+Where $x(t)$ represents the system states, and $u(t)$ the control action, of a given LTI system:
+\begin{align} %\label{eq_LQR_performance_index}
+    \dot{x}(t) =& A \, x(t) + B \, u(t) \\  %= f\left( x(t) , u(t)\right)
+    y(t)       =&   C \, x(t)
+\end{align} 
 
-Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find the optimal gains $k$ for reference tracking with LQR servo controller. An advantage of the linear quadratic optimal control method, over a pole-placement method, is that it provides a systematic way of computing the state feedback control gain matrix, guaranteeing a viable solution in terms of control action feasibility. To ensure the controller minimizes the tracking error we'll define the performance index (equation \ref{eq_J_LQ}), by specifying matrices $Q$ and $R$, such that the minimization of the index mostly minimizes the state, or states, which somehow represent tracking error. In the case of the LQI controller in section \ref{sec_Optimal_Control}, the system will be augmented with a stated which is the integral of the tracking error, and this is the state that will be weighted by matrix Q:
-
+Usual performance indexes have a quadratic form to guarantee mathematical tractability. In section \ref{sec_Optimal_Control}, we'll want to find the optimal gains $k$ for reference tracking with LQR servo controller. An advantage of the linear quadratic optimal control method, over a pole-placement method, is that it provides a systematic way of computing the state feedback control gain matrix, guaranteeing a viable solution in terms of control action feasibility. To ensure the controller minimizes the tracking error we'll define the performance index:
 \begin{equation} \label{eq_J_LQ}
-    J \left( x(t) , u(t) \right)=\int_{0}^{t} x^\intercal Q x + u^\intercal R u \,dt
+    J \left( x(t) , u(t) \right)=\int_{0}^{t} \left( x^\intercal Q x + u^\intercal R u \right) \,dt 
 \end{equation} 
+by specifying matrices $Q$ and $R$, such that the minimization of the index mostly minimizes the state, or states, which somehow represent tracking error. In the case of the LQI controller in section \ref{sec_Optimal_Control}, the system will be augmented with a state which is the integral of the tracking error, and this is the state that will be weighted by matrix Q. In equation \eqref{eq_J_LQ}, the first term in the integrand affects state response, while the second affects control action.
 
-The first term in the integrand affects state response, while the second affects control action.
-
-Notice how the performance index integral in equation \ref{eq_LQR_performance_index} is defined for a finite time. The solution for the finite time control problem is optimal, however, it is a time-varying gain vector $k(t)$:
+Notice how the performance index integral in equation \ref{eq_J_LQ} is defined for a finite time. The optimal solution for the finite time control problem is $u(t)= k(t) x(t)$, with the gain vector $k(t)$ varying in time:
 \begin{equation}
     k(t) = R^{-1} B^\intercal P(t)
 \end{equation}
@@ -1120,7 +1139,7 @@ Which is computed by first solving $P(t)$ from the matrix differential Riccati e
     -\dot{P}(t) = A^\intercal P(t) + P(t) A - P(t) B R^{-1} B^\intercal P(t) + Q
 \end{equation}
 
-Alternatively, for the sake of simplicity, the performance index is defined for infinite time, and, in this case, as $t \rightarrow \infty$, the optimal control solution becomes the steady-state solution, with the gain vector $k$ and matrix $P$ becoming constant, making computation much faster and easier:
+Alternatively, for the sake of simplicity, the performance index is defined for infinite time, and, in this case, as $t \rightarrow \infty$, the optimal control solution becomes the steady-state solution $u(t)= k x(t)$, with the gain vector $k$ and matrix $P$ becoming constant, making computation much faster and easier:
 \begin{align}
     0 =& A^\intercal P + P A - P B R^{-1} B^\intercal P + Q \\
     k =& R^{-1} B^\intercal P
@@ -1128,7 +1147,7 @@ Alternatively, for the sake of simplicity, the performance index is defined for 
 This solution is suboptimal, however.
 
 \paragraph{Controllability}
-For the existence of an optimal control vector, a system must be completely state controllable. A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable \citep{Sa_da_Costa}. 
+For the existence of an optimal control vector, the system must be completely state controllable. A system is said to be state controllable if it is possible to construct a finite control action that will transfer an initial state to any final state in a finite time interval. If every state is controllable, then the system is said to be completely state controllable \citep{Sa_da_Costa}. 
 
 It is important to note that controllability is not a property of the system, but, instead, a property of the state space representation, and is affected only by the state and input matrices, $A$ and $B$, respectively \citep{Botto}.
 
@@ -1138,7 +1157,8 @@ In order to implement state feedback control one must, obviously, know the state
 It is important to note that observability, like controllability, is not a property of the system, but a property of the state space representation, and is affected only by the state and output matrices, $A$ and $C$, respectively \citep{Botto}.
 
 \paragraph{State Observers}
-A state observer estimates system states from measurements of inputs and outputs of a system. This is done such that state feedback control can be applied to systems with unmeasurable states. In section \ref{sec_LQG Servo Controller} a stationary Kalman filter (isn't recursively updated) is implemented to estimate the systems states, mixing a priori information from the identified system model with the measured output to compute an estimate of the states.
+A state observer estimates system states from measurements of inputs and outputs of a system. This is done such that state feedback control can be applied to systems with unmeasurable states. In section \ref{sec_LQG Servo Controller} a stationary Kalman filter %(isn't recursively updated)
+is implemented to estimate the systems states, mixing a priori information from the identified system model with the measured output to compute an estimate of the states.
 
 For a given plant:
 \begin{align}   
@@ -1158,7 +1178,7 @@ The Kalman estimator:
     \widehat{y} =& C \widehat{x} 
 \end{align}
 
-Computes state estimate $\widehat{x}(t)$ that minimize steady-state error covariance:
+Computes state estimate $\widehat{x}(t)$ that minimizes the steady-state error covariance:
 \begin{equation}
     P = \lim_{t \rightarrow \infty} E \left( (x - \widehat{x}) (x - \widehat{x})^\intercal \right)
 \end{equation}
@@ -1173,7 +1193,7 @@ Where $P$ is the solution of the algebraic Riccati equation:
     A P + P A^\intercal + B Q_n B^\intercal - P C^\intercal R^{-1}_n C P = 0
 \end{equation}
 
-Matrices $Q_n$ and $R_n$ can be used to tune the observer, biasing the states estimates towards what our model of system expects (done when the measurements are unreliable), or what the sensors are reading (done when the model isn't good).
+Matrices $Q_n$ and $R_n$ can be used to tune the observer, biasing the states estimates towards what our model of system expects (done when the measurements are unreliable), or what the sensors are reading (done when the model is not exact).
 
 \section{Identification in Closed-Loop Systems} \label{Identification in Closed-Loop Systems}
 %\hspace{\parindent} 
@@ -1183,7 +1203,7 @@ In section \ref{Nonparametric Modelling} it will be shown that the identificatio
 
 %\pagebreak
 \subsection{ Closed Loop System Setup} %(Section \ref{Identification in Closed-Loop Systems})
-In this section we'll consider the closed loop system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
+In this section we'll consider the closed-loop discrete-time system represented in figure \ref{tikz_general_CL_sys}, and restrict ourselves to the case of SISO systems (single-input single-output):
 
 \begin{figure}[H]
     \centering
@@ -1219,17 +1239,17 @@ In this section we'll consider the closed loop system represented in figure \ref
         \draw[-latex] ([yshift=10mm]sum_r1.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_r1);
 
         %--- sum_r1 -> G0 ---
-        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+        \draw[-latex] (sum_r1) -- node[above]{$u(t)$} (G0);
 
         %--- G0 -> sum_v ---
         \draw[-latex] (G0) -- (sum_v);
 
         %--- e -> H0 -> v -> sum_v ---
-        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e(t)$} -- (H0);
         \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
         %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        \draw[-latex] (sum_v) -- node[above]{$y(t)$} ([xshift=12mm] sum_v.east);
 
         %--- Feedback: y branches back to sum_r2 bottom ---
         \coordinate (ybranch) at ([xshift=5mm] sum_v.east);
@@ -1255,17 +1275,17 @@ In the whole of section \ref{Identification in Closed-Loop Systems}, for the exa
     \item $H_{0}(z) = \frac{1 - 1.56z^{-1} + 1.045z^{-2} -0.3338z^{-3}}{1 - 2.35z^{-1} + 2.09z^{-2} -0.6675z^{-3}}$ is the noise model
 \end{itemize}
 
-We'll start by transforming the system equations. The reasons why this is of interest we'll become apparent soon. Firstly, for simplicity's sake, we'll substitute $e(t)$  in equation \eqref{eq_y_original_CL}:
+We'll start by transforming the system equations. The reasons why this is of interest will become apparent soon. Firstly, for simplicity's sake, we'll substitute $e(t)$  in equation \eqref{eq_y_original_CL}:
 \begin{equation}
     v(t) = H_{0}(z) \cdot e(t) \Longrightarrow y(t) = G_0 \cdot u(t) + v(t) \label{eq_v_H0e}
 \end{equation}
 
-And introducing the sensitivity transfer function:
+By introducing the sensitivity transfer function:
 \begin{equation}
     S_0 = \frac{1}{1 + G_0 \cdot C} \label{eq_S0}
 \end{equation}
 
-And rewriting equations \eqref{eq_y_original_CL} and \eqref{eq_u_original_CL} using relations \eqref{eq_v_H0e} and \eqref{eq_S0}, we get:
+Rewriting equations \eqref{eq_y_original_CL} and \eqref{eq_u_original_CL} using relations \eqref{eq_v_H0e} and \eqref{eq_S0}, we get:
 \begin{align}
     y(t) &= S_0 G_0 \cdot r_1(t) + S_0 G_0 C \cdot r_2(t)  + S_0 \cdot v(t) \label{eq_y_transformed_CL} \\  
          &= H_{yr_{1}} \cdot r_1(t) + H_{yr_{2}} \cdot r_2(t) + H_{yv} \cdot v(t) \nonumber \\[2mm]
@@ -1310,8 +1330,8 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         \draw[-latex] (C) -- (sum_r);
 
         %--- r -> S0
-        % \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r$} (S0);
-        \draw[-latex] (sum_r.east) -- node[above]{$r$} (S0);
+        % \draw[-latex] ([xshift=-10mm]S0.west) -- node[left, yshift=2mm]{$r(t)$} (S0);
+        \draw[-latex] (sum_r.east) -- node[above]{$r(t)$} (S0);
 
         %--- S0 -> u_r
         \draw[-latex] (S0) -- node[above] {$u_r$} (sum_u);
@@ -1319,20 +1339,20 @@ The block diagram resulting from these reworked equations is shown in Figure \re
         % \draw[-latex] ([yshift=10mm]sum_u.north) node[left ,yshift=-2mm]{$r_1$} -- (sum_u);
 
         %--- sum_u -> G0 ---
-        \draw[-latex] (sum_u) -- node[above]{$u$} (G0);
+        \draw[-latex] (sum_u) -- node[above]{$u(t)$} (G0);
 
         %--- G0 -> sum_y ---
         \draw[-latex] (G0) -- (sum_y);
 
         %--- sum_y -> y output ---
-        \draw[-latex] (sum_y) -- node[above]{$y$} ([xshift=12mm] sum_y.east);
+        \draw[-latex] (sum_y) -- node[above]{$y(t)$} ([xshift=12mm] sum_y.east);
 
         % H0
         \coordinate (ybranch) at ([yshift=6mm] C_v.north);
         \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm] (H0) at (sum_r.west |- ybranch) {$H_0$};
 
         % %--- Input e ---
-        \draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e$} (H0);
+        \draw[-latex] ([xshift=-10mm]H0.west) -- node[above,at start, xshift=2mm]{$e(t)$} (H0);
 
         % another S0 
         \node[draw, fill=Green!50,, minimum width=15mm, minimum height=10mm ] (S0_v) at (H0 -| S0) {$S_0$};
@@ -1361,8 +1381,7 @@ For our system, taking the spectral density $\Phi_{yu}$, we get:
     \Phi_{yu}(\omega) =  G_{0}(e^{i\omega}) \, \Phi_{u}(\omega) + H_{0}(e^{i\omega}) \, \Phi_{eu}(\omega)
 \end{equation}
 
-If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}:
-
+However, if we consider an open loop system as in figure \ref{tikz_general_open_loop_sys}:
 \begin{figure}[H]
     \centering
         \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=6mm, inner sep=0pt}, thick ]
@@ -1380,20 +1399,19 @@ If we had an open loop system as in figure \ref{tikz_general_open_loop_sys}:
         \draw[-latex] (G0) -- (sum_v);
 
         %--- e -> H0 -> v -> sum_v ---
-        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e(t)$} -- (H0);
         \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
         %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        \draw[-latex] (sum_v) -- node[above]{$y(t)$} ([xshift=12mm] sum_v.east);
 
         %--- sum_r1 -> G0 ---
-        \draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u$} (G0);
+        \draw[-latex] ([xshift=-10mm]G0.west) -- node[above,at start, xshift=2mm]{$u(t)$} (G0);
 
         \end{tikzpicture}
         \caption{Open-loop System}\label{tikz_general_open_loop_sys} 
 \end{figure}
-
-Where the output $y$ (which contains the disturbance $e$) was not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the spectral densities:
+where the output $y$ (which contains the disturbance $e$) is not being fed back into the plant, then, given the fact that $e$ and $u$ are uncorrelated (meaning $\Phi_{eu}(\omega) = 0$), our plant can be estimated directly by estimating the spectral densities:
 \begin{equation}
     \widehat{G}(e^{i\omega}) = \frac{\widehat{\Phi}_{yu}(\omega)}{\widehat{\Phi}_{u}(\omega)} \label{eq_G_spectral_estimate_open_loop}
 \end{equation}
@@ -1430,13 +1448,13 @@ But if the disturbance $v$ is very large compared to the reference signals $r_1$
 So it's clear that the spectral analysis method in closed-loop always results in biased estimates of the plant, with the identified model $\widehat{G}$ being somewhere between $G_0$ and $\frac{-1}{C}$, as weighed by the spectral density of each signal and the controller.
 
 \subsubsection{Remark on parametric modelling}
-As to complete this section, I want to touch on the subject of parametric models. As demonstrated in \cite{VanDenHof2020} parametric modelling by direct identification can result in consistent identification of the plant, but only if one is willing to have full order models, and while simultaneously modelling the noise accurately, also while using sufficiently exciting external signal $r$ or with noise when having a sufficiently high order controller, or one that switches settings during the experiment. Other methods require complex parametrized models, more steps, solving additional equations, etc. All these conditions often make those approaches undesirable, however, the parametric identification method introduced in section \ref{Two-Stage Method} is able to address the closed-loop identification issues while being of simple implementation.
+Parametric modelling via direct identification, as shown in \cite{VanDenHof2020}, can yield consistent plant estimates, but only under restrictive conditions: full-order models must be used, the noise structure must be accurately modelled, and either a sufficiently exciting external signal $r$ must be present, or a sufficiently high-order controller must be employed, or the controller must switch settings during the experiment. Indirect and joint input-output methods, while theoretically sound, require more complex parameterisations and additional estimation steps, making them less practical in many settings. The parametric identification method introduced in Section \ref{Two-Stage Method} addresses these closed-loop identification challenges while remaining straightforward to implement.
 
 \subsection{Two-Stage Method for Closed Loop Identification}\label{Two-Stage Method}
 \subsubsection{Introduction}
-\hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It's of special interest compared to others parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order, nonlinear, of the variable structure (as in sliding mode control), etc., nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired.
+\hspace{\parindent}The two-stage method is introduced in Van den Hof and Schrama (1993). It is of special interest compared to other parametric modelling approaches since it deals with the consistency problem of identifying $G_0$ without having to accurately model $H_0$, but also due to its simplicity and flexibility. It does not impose restrictions on the controller, which can be of any order, nonlinear, and even of variable structure (as in sliding mode control), etc., nor does it require prior knowledge of its dynamics. It also does not require complex parametrized models or solving additional equations when reduced order models are desired.
 
-The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. This approach works on the principle that, by decomposing the control action, $u$, in two components: the noise free control action, $u_r$ which results from the reference, $r$; and the corrupted control action, $u_v$ which results from the disturbance $v$ on the output being fed back to the control.
+The simplicity results from the fact that the procedure comes down to two standard open-loop identification steps. This approach works on the principle that it is possible to decompose the control action, $u$, in two components: the noise free control action, $u_r$ which results from the reference, $r$; and the corrupted control action, $u_v$ which results from the disturbance $v$ on the output being fed back to the control.
 \begin{align}
     u(t) =& u_r + u_v  \\
          =& S_0 \left[ r_{1}(t) + C r_{2}(t) \right] - S_0 C v(t) 
@@ -1637,7 +1655,7 @@ In order to determine a model for the shaking table with a coupled 2DOF systems,
 
         %     %--- Forward path arrows ---
         %     \draw[->] (xref) -- (s1);
-        %     \draw[->] (s1)   -- node[above]{$e$}        (gc);
+        %     \draw[->] (s1)   -- node[above]{$e(t)$}        (gc);
         %     \draw[->] (gc)   -- node[above]{$i_{sv}$}   (sv);
         %     \draw[->] (sv)   -- node[above]{$x_{sv}$}   (kq);
         %     \draw[->] (kq)   -- node[above]{$Q_L$}      (s2);
@@ -2211,7 +2229,7 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
     %         right=2.0cm of int]                (K)             {$-K$};
     %     \node[block, minimum width=2.2cm,
     %         right=2.0cm of K]                  (sys)           {sys};
-    %     \node[left=1.0cm of s]                   (r)             {$r$};
+    %     \node[left=1.0cm of s]                   (r)             {$r(t)$};
 
     %     %─── Summing-junction sign labels ─────────────────────────────────────────
     %     \node[font=\scriptsize] at ($(s)+(-0.28,  0.22)$) {$+$};
@@ -2228,14 +2246,14 @@ For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is th
     %     \draw[->] (r)   --                          (s);
     %     \draw[->] (s)   -- node[above]{$e = r-y$}  (int);
     %     \draw[->] (int) -- node[below]{$x_i$}       (K);
-    %     \draw[->] (K)   -- node[below]{$u$}          (sys);
-    %     \draw[->] (sys) -- node[above]{$y$}          (outTip);
+    %     \draw[->] (K)   -- node[below]{$u(t)$}          (sys);
+    %     \draw[->] (sys) -- node[above]{$y(t)$}          (outTip);
 
     %     %─── State feedback (top): sys.north → up → left → down into K.north ──────
     %     \draw[->] (sys.north) -- (topSys) -- (topKw) -- (K.north);
     %     % "x" labels at both ends of the horizontal segment
-    %     \node[above, font=\scriptsize] at ($(topKw)  !0.15!(topSys)$) {$x$};
-    %     \node[above, font=\scriptsize] at ($(topSys)!0.07!(topKw)  $) {$x$};
+    %     \node[above, font=\scriptsize] at ($(topKw)  !0.15!(topSys)$) {$x(t)$};
+    %     \node[above, font=\scriptsize] at ($(topSys)!0.07!(topKw)  $) {$x(t)$};
 
     %     %─── Output feedback (bottom): outTip → down → left → up into s.south ─────
     %     \draw[->] (outTip) -- (botOut) -- (botS) -- (s.south);
@@ -2649,7 +2667,7 @@ The dynamic model identification of the plant is needed for tuning the controlle
         % S0C
         \node[draw, fill=SkyBlue!50, minimum width=15mm, minimum height=10mm ] (S0C) at (0,0) {$S_0 C$};
         %--- G0 -> sum_v ---
-        \draw[-latex] ([xshift=-10mm]S0C.west) -- node[above, at start , xshift=2mm]{$r$} (S0C.west);
+        \draw[-latex] ([xshift=-10mm]S0C.west) -- node[above, at start , xshift=2mm]{$r(t)$} (S0C.west);
 
         % sum_r1
         \node[circ , right=8mm of S0C ]  (sum_r1) {};
@@ -2669,21 +2687,21 @@ The dynamic model identification of the plant is needed for tuning the controlle
 
         %--- e -> H0 -> v -> sum_v --- % H0
         \node[draw, fill=Yellow!50, minimum width=15mm, minimum height=10mm, above=8mm of sum_r1 ] (S0CH0)  {$S_0 C H_0$};
-        \draw[-latex] ([yshift=8mm]S0CH0.north) node[left,yshift=-2mm]{$e$} -- (S0CH0);
+        \draw[-latex] ([yshift=8mm]S0CH0.north) node[left,yshift=-2mm]{$e(t)$} -- (S0CH0);
         \draw[-latex] (S0CH0) -- node[right]{} (sum_r1);
 
         %--- sum_r1 -> G0 ---
-        \draw[-latex] (sum_r1) -- node[above]{$u$} (G0);
+        \draw[-latex] (sum_r1) -- node[above]{$u(t)$} (G0);
 
         %--- G0 -> sum_v ---
         \draw[-latex] (G0) -- (sum_v);
 
         %--- e -> H0 -> v -> sum_v ---
-        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e$} -- (H0);
+        \draw[-latex] ([yshift=8mm]H0.north) node[left,yshift=-2mm]{$e(t)$} -- (H0);
         \draw[-latex] (H0) -- node[right]{$v$} (sum_v);
 
         %--- sum_v -> y output ---
-        \draw[-latex] (sum_v) -- node[above]{$y$} ([xshift=12mm] sum_v.east);
+        \draw[-latex] (sum_v) -- node[above]{$y(t)$} ([xshift=12mm] sum_v.east);
 
 
         \end{tikzpicture}

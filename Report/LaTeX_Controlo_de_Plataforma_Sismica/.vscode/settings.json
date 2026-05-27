@@ -19,5 +19,25 @@
     "subsubsection",
     "paragraph",
     "subparagraph"
-  ]
+  ],
+
+  "latex-workshop.latex.tools": [
+    {
+        "name": "pdflatex",
+        "command": "pdflatex",
+        "args": ["-interaction=nonstopmode", "-synctex=1", "%DOC%"]
+    },
+    {
+        "name": "makeindex-nomencl",
+        "command": "makeindex",
+        "args": ["%DOCFILE%.nlo", "-s", "nomencl.ist", "-o", "%DOCFILE%.nls"]
+    }
+],
+"latex-workshop.latex.recipes": [
+    {
+        "name": "pdflatex → nomencl → pdflatex",
+        "tools": ["pdflatex", "makeindex-nomencl", "pdflatex"]
+    }
+]
 }
+

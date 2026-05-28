@@ -2506,7 +2506,7 @@ A set of recorded earthquake ground-motion time histories covering a wide range 
 
 The 2DOF system coupled to the platen had the modal properties described in Section \ref{sec_Simulating_OLI}. 
 
-For the OLI method, the identification settings were 0.5 window overlap for 20 Hanning windows, with FRF mode set to H3, no filtering, and displacement/acceleration cross-over frequency turned off, and the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}.
+For the OLI method, the identification settings were 0.5 window overlap for 20 Hanning windows, with FRF mode set to H3, no filtering, and displacement/acceleration cross-over frequency turned off, and the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}. For each earthquake 3 driver iterations were performed.
 
 The PID-F controller was tuned with the settings described in Section \ref{sec_Tuned_PID-F}.
 
@@ -2550,7 +2550,7 @@ Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Erzikan_Response_Spectra_N.png}
-    \caption{Erzikan fault normal response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PID-F (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}
+    \caption{Erzikan fault North-South response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PID-F (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}
     \label{erzikan_4th_N}
 \end{figure}
 

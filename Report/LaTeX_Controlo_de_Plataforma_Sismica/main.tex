@@ -2504,7 +2504,17 @@ The identified FRF (Figure \ref{bode_compare}) is of lower quality due to the se
 
 A set of recorded earthquake ground-motion time histories covering a wide range of seismic characteristics are considered in this study, namely \citep{narasimhan2006}: i) 1940 Imperial Valley earthquake, El Centro Fault Normal (FN) and Fault Parallel (FP) records; ii) 1992 Erzikan earthquake, Erzikan North-South (NS) and East-West (EW) record; iii) 1995 Kobe earthquake, Kobe NS and EW records; iv) 2009 L'Aquila earthquake; v) 1994 Northridge earthquake, Newhall FN and FP records; vi) 1994 Northridge earthquake, Rinaldi FN and FP records; vii) 1994 Northridge earthquake, Sylmar FN and FP records; viii) 1976 Friuli earthquake, Tolmezzo record.
 
-The 2DOF system coupled to the platen had the modal properties described in Section \ref{sec_Simulating_OLI}. For the OLI method the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}. The PID-F controller was tuned with the settings described in Section \ref{sec_Tuned_PID-F}. For the LQI controller, the performance index (Eq. \eqref{eq_LQI_cost_function}) had $R=10^{-9}$, and $Q$ with every entry set to zero, except $Q_{x_i}=10^3$, as to have a similar bandwidth to the PID-F controller for the sake of comparing both (see figure \ref{fig_Bode_LQI_Qe3}). The code implementation, along with the developed Python and MATLAB functions for format conversion between LNEC test files (\emph{.ltf / .tgt / .drv / .acq}) and standard text files, can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
+The 2DOF system coupled to the platen had the modal properties described in Section \ref{sec_Simulating_OLI}. 
+
+For the OLI method, the identification settings were 0.5 window overlap for 20 Hanning windows, with FRF mode set to H3, no filtering, and displacement/acceleration cross-over frequency turned off, and the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}.
+
+The PID-F controller was tuned with the settings described in Section \ref{sec_Tuned_PID-F}.
+
+For the LQI controller, the performance index (Eq. \eqref{eq_LQI_cost_function}) had $R=10^{-9}$, and $Q$ with every entry set to zero, except $Q_{x_i}=10^3$, as to have a similar bandwidth to the PID-F controller for the sake of comparing both (see figure \ref{fig_Bode_LQI_Qe3}). 
+
+The code implementation, along with the developed Python and MATLAB functions for format conversion between LNEC test files (\emph{.ltf / .tgt / .drv / .acq}) and standard text files, can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
+
+The shaking table acceleration and displacement response spectrum MSE for each earthquake, for each control strategy is shown in figure \ref{excel_accel_resp_spectrum} and \ref{excel_disp_resp_spectrum}. The mean and median acceleration and displacement response spectrum MSE are shown in table \ref{tab:metrics_comparison}. To highlight how the platen response spectra obtained for each control strategy (and iteration, in the case of OLI method) varies across the frequency range, the results for the Erzikan earthquake in the fault normal direction are shown in figure \ref{erzikan_4th_N}. The response spectra for all other earthquakes are presented in appendix \ref{appendix:1DST_benchmark}.
 
 \begin{figure}[H]
     \centering
@@ -2522,6 +2532,7 @@ The 2DOF system coupled to the platen had the modal properties described in Sect
 
 \begin{table}[ht]
 \centering
+\caption{Comparison of mean and median response spectrum MSE for various seismic signals.}
 \begin{tabular}{cccc}
 \hline
 Control Strategy  & PID-F & Optimal Control & Adapted Driver (3rd)\\
@@ -2532,7 +2543,6 @@ Mean Displacement MSE ($m$) & \(5.97 \times 10^{-7}\) & \(3.01 \times 10^{-11}\)
 Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}\) & \(1.73 \times 10^{-5}\) \\
 \hline
 \end{tabular}
-\caption{Comparison of mean and median response spectrum MSE for various seismic signals.}
 \label{tab:metrics_comparison}
 \end{table}
 
@@ -2545,15 +2555,16 @@ Median Displacement MSE ($m$) & \(2.51 \times 10^{-7}\) & \(9.42 \times 10^{-12}
 \end{figure}
 
 \section{ Conclusions: PID-F vs Optimal Control vs OLI Method}
-%The first results indicate that the controllers previously studied offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
-Regarding the analysis in sections \ref{sec_Tuned_PID-F} and \ref{sec_Optimal_Control}, optimal control results in a much more precise replication of the ground response spectra at low frequencies, unlike the tuned PID-F which exceeds the desired response spectra in the same band. However, the trade-off for this accuracy at lower frequencies is a response spectrum that falls short at higher ones.  The optimal controller can be tuned for increasingly larger cut off frequencies without undesired amplification at low frequency, unlike the PID-F, but the results of this is practice may differ from the simulation studies preformed using the current model.
+The LQI controller achieves considerably more accurate replication of the target ground response spectra at low frequencies compared to the tuned PID-F, which exhibits undesired amplification in the same frequency band. Both tuned controllers outperform the OLI method. The trade-off of the LQI controller, compared to the PID-F, is a response spectrum that falls short of the target faster at higher frequencies.
 
-The results indicate that the tuned controllers (PID-F \& Optimal) offer superior performance in terms of response spectra compared to the adapted drivers, while also requiring less user intervention doing so, with optimal control providing the best results in every instance. However, both the performance of the controllers and the adapted drivers depends on identifying the system, and the sensitivity of each method to quality of the identification is still unknown.
+The simulations suggest that the LQI controller can be tuned for very high cut-off frequencies without inducing low-frequency amplification, a limitation observed in the PID-F. However, the performance of a high-bandwidth LQI controller in practice may deviate from the simulation results, given the limitations of the model usend in the simulations.
+
+Overall, the tuned controllers (PID-F and LQI) offer superior response spectrum replication compared to the OLI method currently employed at LNEC, while requiring less user intervention. The LQI controller yields the best performance in all cases. Furthermore, the proposed control strategies provide a systematic and automated approach to the control problem, and they may also be used in conjunction with the OLI method, which, being a combined open- and closed-loop strategy with no restrictions on the closed-loop controller, can incorporate the benefits of improved closed-loop control alongside open-loop adaptation.
+
+Finally, the performance of all three approaches is dependent on accurate system identification, and the sensitivity of each method to identification accuracy warrants further investigation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-
-\chapter{Experimental Validation}
-% In order to experimentally validate the performance of the control strategies studied in \ref{Evaluating Controller Performance in Simulation Environment}, the two controllers were implemented in the LabVIEW software running in real time on 
+\chapter{Experimental Validation} 
 
 As an alternative to testing on LNEC's uniaxial shaking table, as a result of its inoperability due to ongoing works in hydraulic and electrical system, an experimental facility consisting on an electrodynamic shaker was used to implement and test the necessary changes in the control software, and the proposed identification and control methods.
 
@@ -2803,7 +2814,7 @@ The results obtained for the remaining earthquakes exhibit the same trend, as sh
 
 \chapter{Conclusions \& Outlook}
 
-This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
+This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and, moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
 
 Given the nature of shaking table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
 
@@ -2938,7 +2949,7 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \label{Resp_Spectre_f1_2415}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
         \centering
     \includegraphics[width=0.6\linewidth]{MSE_Zeta/MSE vs Zeta (m_i=2.0,f_1=4.0, f_2=10.0)_old.png}
     \caption{Acceleration response spectra MSE vs damping ($\zeta_1$ and $\zeta_2$), with $m_1=m_2=2\text{ ton, }f_1=4 Hz, f_2=10 Hz$. }
@@ -3017,6 +3028,88 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \label{fig_Platen_Displacement_Tracking_Error_LQG_Qe9}
 \end{minipage}
 \end{figure}
+
+\chapter{Control Strategy Performance Evaluation for Benchmark Earthquakes with 1DST Model}\label{appendix:1DST_benchmark}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/elcentro_20250716_1639/Response_Spectra_N.png}
+    \caption{Response spectra for El Centro fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/elcentro_20250716_1639/Response_Spectra_P.png}
+    \caption{Response spectra for El Centro fault parallel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/erzikan_20250715_1123/Erzikan_Response_Spectra_N.png}
+    \caption{Response spectra for Erzikan North-South}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/erzikan_20250715_1123/Erzikan_Response_Spectra_P.png}
+    \caption{Response spectra for Erzikan East-West}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/kobe_20250715_1229/Response_Spectra_N.png}
+    \caption{Response spectra for Kobe North-South}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/kobe_20250715_1229/Response_Spectra_P.png}
+    \caption{Response spectra for Kobe East-West}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/laquila_20250709_1652/Response_Spectra_N.png}
+    \caption{Response spectra for L'Aquila}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/tolmezzo_Response_Spectra_N.png}
+    \caption{Response spectra for Tolmezzo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/rinaldi_20250715_1517/Response_Spectra_N.png}
+    \caption{Response spectra for Rinaldi fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/rinaldi_20250715_1517/Response_Spectra_P.png}
+    \caption{Response spectra for Rinaldi fault parallel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/newhall_20250715_1236/Response_Spectra_N.png}
+    \caption{Response spectra for Newhall fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/newhall_20250715_1236/Response_Spectra_P.png}
+    \caption{Response spectra for Newhall fault parallel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/sylmar_20250722_1937/Response_Spectra_N.png}
+    \caption{Response spectra for Sylmar fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{1DST_benchmark/sylmar_20250722_1937/Response_Spectra_P.png}
+    \caption{Response spectra for Sylmar fault parallel}
+\end{figure}
+
+
 
 
 \end{document}

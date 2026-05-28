@@ -63,7 +63,7 @@
 \usepackage{tikz}
 \usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
 %% ----- FONT SELECTION -----
-\usepackage{microtype}   % fine-tunes spacing to avoid overflows
+\usepackage[nopatch=footnote]{microtype}   % fine-tunes spacing to avoid overflows
 % \usepackage{lmodern}     % improved CM Roman
 \renewcommand{\rmdefault}{phv}
 \renewcommand{\sfdefault}{phv}
@@ -333,7 +333,7 @@ The results indicate that both the PID-F and the LQI controllers offer superior 
 
 
 
-\clearpage
+%\clearpage
 \pagestyle{plain}% Apply the general page style to all pages by default
 \pagenumbering{arabic}
 \chapter{Introduction}
@@ -2407,60 +2407,59 @@ The implementation of the optimal control law requires the availability of all t
 \caption{LQG control loop block diagram \citep{mathworks_lqgtrack}} \label{fig_LQG_loop}
 \end{figure}
 
-The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_full_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQG_servo.m}{location}. Simulations were run to verify the developed software was in working order for implementation in the real control system, or for use in improved Simulations when data of process and sensor noise covariance were to become available. The results shown in \ref{appendix:LQG Servo_Controller_Simulation_Results}, on  figures \ref{fig_resp_spectrum_LQG_Qe9} through to \ref{fig_Platen_Displacement_LQG_Qe9}, were very much identical to the ones obtained with the LQI controller, due to the fact that the state estimator output converged very fast.
+The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedom LQG servo controller C (as shown in figure \ref{fig_full_LQG_loop}, with its internal structure shown in figure \ref{fig_LQG_inside_controller}) by connecting the Kalman estimator \emph{kest} and the state-feedback gain \emph{k}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQG_servo.m}{location}. 
 
+Simulations were run to verify the developed software was in working order for implementation in the real control system, or for use in improved Simulations when data of process and sensor noise covariance were to become available. The results shown in \ref{appendix:LQG Servo_Controller_Simulation_Results}, on  figures \ref{fig_resp_spectrum_LQG_Qe9} through to \ref{fig_Platen_Displacement_LQG_Qe9}, were very much identical to the ones obtained with the LQI controller, due to the fact that the state estimator output converged very fast.
+
+\pagebreak
 \subsection{LNEC's Control Strategy: OLI method}\label{sec_LNEC_method}
+In this section the method used at LNEC for controlling the shaking table is described, and the results of numerical simulations from this method are used for comparison with the proposed controllers (PID-F and LQI).  
 
-\subsubsection{The functioning of the driver adaptation software}
+\subsubsection{The functioning of LNEC's \textit{Adapt} software}
+As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance on the shaking table in terms of response spectrum. The method considered at LNEC to improve the shaking table performance comes in the form of combined open and closed loop control (Fig. \ref{fig_OLI}), whereby, before every test run, the proprietary software \emph{Adapt}, developed in LabVIEW, through a set of user-defined parameters, identifies the system transfer function, and then computes a modified reference signal, denoted as \emph{driver signal}, which is then used as the reference in the closed-loop control of the shaking table position.
 
-As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance from the shaking table in terms of response spectrum. 
-
-An attempt to improve the shaking table performance at LNEC comes in the form of pseudo-open loop control, whereby, before every test run, a proprietary software %developed in LabVIEW 
-called \emph{Adapt}, through a set of user-defined parameters and decisions, identifies the system transfer function, and then modifies the reference signal, creating what we will now refer to as \emph{driver signal}, which is then used as the reference in the closed-loop control of the shaking table position.
-
-In the system identification menu (figure \ref{Adapt_FRF_Parameters}) the user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal. Then the user can choose various options for the computation of the transfer function.
-
+The adaptation process starts with the definition of the input files on the project menu, shown in figure \ref{fig_Adapt_Project_Parameters}:
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Adapt_Project_Parameters.png}
-    \caption{Adapt Project Parameters menu - In this menu the user configures which files were used for determining the system's FRF, and the reference (or target) signal.}
+    \caption{Adapt Project Parameters menu - In this menu the user configures which files are used for determining the system's FRF, and the reference (or target) signal.}
     \label{fig_Adapt_Project_Parameters}
 \end{figure}
 
-\begin{figure}[H]
+Then, as the modification of the driver signal requires the identification of the frequency response function of the system, the user goes to the system identification menu, shown in figure \ref{Adapt_FRF_Parameters}. In this menu the user sets parameters which are used in the composition of a displacement signal from acceleration and displacement data acquired, usually, from a test run where 3 minutes of pink noise are used as input. The user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal across the whole frequency spectrum.  The user also defines the settings for the computation of the FRF. 
+
+The driver generation menu, shown in figure \ref{fig_Adapt_INV_Panel}, is used to generate new driver signals. It takes as inputs the original reference (referred to as \emph{target}), the driver signal used in the previous test run, it's measured displacements and acceleration at the shaking table, and user-defined parameters which affect which parts of the signal are modified, and by how much they're modified, it then outputs the driver to be used in following test run.
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Adapt/Adapt_FRF_Parameters.png}
-    \caption{Adapt FRF Parameters menu - The modification of the driver signal requires the identification of the frequency response function of the system. In this menu the user sets parameters which are used in the composition of a displacement signal from acceleration and displacement data acquired from a test run where 3 minutes of pink noise are used as input. The user also defines the settings for the computation of the FRF.}
+    \caption{Adapt FRF Parameters menu}
     \label{Adapt_FRF_Parameters}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Adapt/Adapt_INV_Panel.png}
-    \caption{Adapt INV Panel menu - This menu is used to generate new driver signals, and takes as inputs the original reference (referred to as \emph{target}), the driver signal used in the test run, it's measured output at the shaking table, and user defined parameters which affect which parts of the signal are modified, and by how much they're modified.}
-    \label{Adapt_INV_Panel}
+    \caption{Adapt INV Panel menu}
+    \label{fig_Adapt_INV_Panel}
 \end{figure}
+
 
 \subsubsection{Simulating the driver adaptation process}
 
-For this section the coupled 2-dof system had both it's masses set to 2000 kg, $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
+For the simulations in this section, the 2DOF system coupled to the platen with both masses set to 2000 kg, and the modal properties: $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, was used to compute the results and evaluate the performance of the system with the LNEC's method
 
-\subsubsection{System Identification}
-The first step in the driver adaptation process is identifying the system transfer function (seismic platform + model). To this end, the shaking table is run for 3 minutes with a pink noise signal as input. 
+\paragraph{System Identification}
+The first step in the driver adaptation process is the identification of the system (shaking platform and test specimen). A pink noise signal of 3 minutes duration was used as the identification input.
 
-This was simulated by converting a pink noise \emph{.drv} file (a proprietary file format meant for use with LNEC proprietary software tools: \emph{LNEC SPA} and \emph{Adapt}) used in one of LNEC's seismic tests, through the use of a Python library which replicates the functioning of LNEC SPA, which allows the conversion to standard text file, and then providing this signal as input to the MATLAB model previously developed. The simulation output, shaking table position and acceleration over time, is then written to a \emph{.acq} file, again using \emph{LNEC SPA} Python library functions.
+The input signal was obtained by converting a pink noise \emph{.drv} file (a proprietary format used with the LNEC software tools \emph{LNEC SPA} and \emph{Adapt}) into a format compatible with the MATLAB model, using a Python library that replicates core \emph{LNEC SPA} functionality. This library was also used to convert the simulation outputs (shaking table position and acceleration time histories) into \emph{.acq} files. The resulting driver and acquired data files were then provided as inputs to \emph{Adapt}, where the system FRF was estimated.
 
-The driver and simulated acquired data files are then input to \emph{Adapt}, where the system frequency response function is determined.
+\paragraph{Generating the target files (.tgt)}
+The \emph{Adapt} target file (.tgt) contains displacement and acceleration signals. In order to generate the target files, the original acceleration data of each earthquake was integrated twice using a trapezoidal rule, then, from the obtained displacement signal, the initial and final displacement values were used to compute the average drift velocity, which was then subtracted from the displacement signal, such that start and end position are at zero. Then, the signal was scaled to fit within the displacement range of shaking table (and the mathematical model).
 
-\subsubsection{Generating the target files (.tgt)}
-The acceleration signal of each earthquake was integrated twice using a simple trapezoidal rule. From the obtained displacement signal, the initial and final displacement values were used to compute the average velocity, which was then used to subtract the drift from displacement signal, and have it begin and end at zero. Then the signal was scaled to fit the displacement range of shaking table (and the mathematical model).
+\paragraph{Generating the adapted driver}
+The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the simulation displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used, along with the target file, to generate driver 1  in \emph{Adapt.exe}. The same process was repeated to generate subsequent driver until the output response spectra was deemed to be sufficiently close to the target response spectra.
 
-\subsubsection{Generating the adapted driver}
-
-The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used to generate driver 1  in \emph{Adapt.exe}. The process was repeated to generate subsequent drivers.
-
-\subsubsection{Application Example: Discussion of Method \& Results}
-
+\paragraph{Discussion of Method \& Results}
 For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PID-F controller, and even more so when compared to the optimal controller. 
 
 In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PID-F controllers.
@@ -2508,6 +2507,8 @@ In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_
 \end{figure}
 
 \section{Comparing Control Strategy Performance for Benchmark Seismic Signals}\label{sec_Comparing_Control_Strategies}
+
+and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
 \begin{figure}[H]
     \centering

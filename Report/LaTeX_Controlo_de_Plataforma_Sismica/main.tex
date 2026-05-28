@@ -575,20 +575,21 @@ According to \cite{williams2001}, the most widely used experimental methods in t
 
 Real-time hybrid simulation (RTHS) and substructural shake table testing are of special interest since they allow for the evaluation of large and/or complex structures by combining physical and numerical models of substructures, which enhances testing flexibility, enabling improved studies of high-frequency and/or nonlinear behaviours, while also reducing experimental costs. Real-time hybrid simulation method is illustrated in figure \ref{fig_hybrid} for 3 different configurations \citep{Tang2020Performance}. In \cite{Lin2024Implementation} a different configuration is implemented, resorting to onboard actuators, as shown in figure \ref{fig_onboard_actuators}, in order to circumvent the additional stroke length, velocity, and acceleration requirements for ground-based actuators, and the control challenges they pose.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{Lit_Review/stc2611-fig-0001-m.jpg}
-    \caption{Shaking table-based real-time dynamic hybrid testing systems: (a) upper, (b) middle and (c) lower portion tested physically. Abbreviations: NS, numerical substructure; PS, physical substructure \citep{Tang2020Performance}}
-    \label{fig_hybrid}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Lit_Review/onboard_actuators.jpg}
     \caption{Shake table RTHS with (a) ground-based actuators and (b) onboard actuators. \citep{Lin2024Implementation}}
     \label{fig_onboard_actuators}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Lit_Review/stc2611-fig-0001-m.jpg}
+    \caption{Shaking table-based real-time dynamic hybrid testing systems: (a) upper, (b) middle and (c) lower portion tested physically. Abbreviations: NS, numerical substructure; PS, physical substructure \citep{Tang2020Performance}}
+    \label{fig_hybrid}
+\end{figure}
+
+%\pagebreak
 \section{Shaking Table Control Strategies}
 
 Shaking-table control strategies typically begin with the offline generation of a drive signal using the inverse model of the system and the desired reference motion. This drive signal is then applied to the system, which usually incorporates a linear controller, most commonly a Proportional-Integral-Derivative (PID) controller, using actuator feedback signals (displacement, velocity, or acceleration) \citep{williams2001}, and that is the basis of the OLI control strategy. Indeed, PID controllers remain widely used in most test systems, including shaking-table and hybrid testing platforms \citep{tekeste2021}. However, alternative control approaches have been proposed in the literature, including: Acceleration Trajectory Tracking Control (ATTC) \citep{nakata2010}; Displacement feedforward-feedback controller using an optimal controller \citep{phillips2012}; Model-based feedforward-feedback controller for acceleration tracking \citep{phillips2014}; Minimal control synthesis (MCS) strategy, which is feedback-feedforward adaptive control strategy including the inverse model in line with the reference signal \citep{stoten2001}.
@@ -598,9 +599,9 @@ Shaking-table control strategies typically begin with the offline generation of 
 
 Recent works developed in this field show that advanced control methods such as active disturbance rejection control (ADRC) with adaptive model-based state estimators (AMSE) and extended state observer (ESO), as applied in \cite{Lei2023Disturbance} and illustrated in figure \ref{fig_ADRC-AMSE}, and also nonlinear signal-based control \citep{Enokida2019Nonlinear}, have significantly improved the accuracy and stability of shaking table operations, especially for reproducing complex seismic waveforms and handling nonlinear structural responses. In \cite{Tian2021Offline}, the use of offline iterative control combined with frequency-splitting techniques enabled double-layer shaking tables to achieve both high payload capacity and a wide frequency bandwidth. This advancement allows for the effective testing of high-rigidity structures — such as dams and nuclear power plant facilities - which are characterised by high fundamental frequencies.  Meanwhile, in the development of a budget-focused testing facility, \cite{Parajuli2024Development} adopted a brushed DC motor as the shaking table actuator and applied a proportional-derivative (PD) controller to achieve motion control, offering a cost-effective alternative to more complex systems.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{Lit_Review/ADRC_AMSE.jpg}
+    \includegraphics[width=\linewidth]{Lit_Review/ADRC_AMSE.jpg}
     \caption{Structure diagram of AMSE-ADRC \citep{Lei2023Disturbance}}
     \label{fig_ADRC-AMSE}
 \end{figure}
@@ -632,14 +633,14 @@ In \cite{Zhang2016Robust}, an adaptive sliding mode controller with a reaching l
 
 In \cite{Ryu2017Real-time}, a nonlinear tracking controller based on feedback linearization combined with an extended Kalman filter enabled real-time control of shaking tables subjected to nonlinear hysteretic structural behaviour, maintaining motion fidelity at specific structural locations. %5
 
-\begin{figure}%[H]
-\begin{subfigure}{0.48\textwidth}
+\begin{figure}[H]
+\begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{Lit_Review/1-s2.0-S0019057817305037-gr6_lrg.jpg}
     \caption{Complete control system}
 \end{subfigure}
 \hfill
-\begin{subfigure}{0.49\textwidth}
+\begin{subfigure}{0.50\textwidth}
     \centering
     \includegraphics[width=\textwidth]{Lit_Review/1-s2.0-S0019057817305037-gr5_lrg.jpg}
     \caption{Servo controller}
@@ -659,11 +660,12 @@ The hydraulic and control system original supplier for LNEC's shaking tables, MT
     \item Three-Variable Control (TVC), whose block diagram is depicted in figure \ref{fig_TVC}, also known in control theory literature as state variable control \citep{ogata2010}, which combines the displacement, velocity and acceleration feedback \citep{williams2001}. In this implementation only one state variable is the primary control variable, with the others serving only as compensation signals to improve damping and stability;
     \item Adaptive Harmonic Cancellation (AHC), whose block diagram is depicted in figure \ref{fig_AHC}, is suitable for sinusoidal signals (fixed frequency or sweep). This method greatly reduces harmonic distortion of the response of a control system driven by a sinusoidal command. It measures the harmonic distortion directly and adapts in real time the cancelling waveform applied directly to the control system input; 
     \item Adaptive Inverse Control (AIC), whose block diagram is depicted in Figure \ref{fig_AIC}, was presented in \cite{widrow2007} as a control strategy suitable for non-sinusoidal signals in linear systems. This method consists of a control compensation technique that augments a fixed-gain controller to correct closed-loop gain and phase irregularities, thereby improving control fidelity. In addition, in multichannel control systems with cross-coupled dynamics, it significantly reduces cross-coupling disturbances between control channels. The method measures the control system dynamics directly and modifies the control compensation accordingly in real time, making it possible to adapt to changing system dynamics; 
+\pagebreak
     \item Amplitude/Phase Control (APC), whose block diagram is depicted in figure \ref{fig_APC}, is suitable for sinusoidal signals (fixed frequency and sweep) and predominantly linear systems, and often used in conjunction with AHC to reduce distortions in nonlinear systems. This is a control compensation technique that augments a fixed-gain controller to correct for closed-loop amplitude and phase irregularities in order to improve control fidelity. It measures control system dynamics directly and modifies the control compensation accordingly in real time, making it possible to adapt to changing system dynamics; 
     \item Online Iteration (OLI), whose block diagram is depicted in figure \ref{fig_OLI}, is suitable for nonlinear systems and non-sinusoidal waveforms. This is a control technique that repeatedly modifies the command input to a control system on an individual sample-by-sample basis until the control system response is almost a perfect replica of the original desired command. This last strategy was deemed the most appropriate and versatile for earthquake engineering applications, as structures may exhibit nonlinear behaviour or sustain damage during testing, and is the control method currently implemented at LNEC's ST3D.
 \end{itemize}
 
-\begin{figure}%[H]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{MTSsystems/OLI.png}
     \caption{Online Iteration (OLI)}
@@ -1962,7 +1964,7 @@ Initially the simulations were run with the controller set as $G_c(s)=129.93$ V/
 % \begin{equation} \label{eq_pidf_in_s}
 %     G_c(s) = K_p +  \frac{K_i}{s} +  \frac{K_d\cdot s}{T_f\cdot s + 1}
 % \end{equation}
-where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
+where the parameters $K_p, K_i, K_d$, and $T_f$, seen in table \ref{tab:pidf_params}, were computed using MATLAB's \textit{pidtune} function, with the tuning option \textit{'DesignFocus'} set to \textit{'reference-tracking'}, and target cutoff frequency set to 20Hz. These results are labelled as "tuned" in figures \ref{fig_response_spectrum_of_3} through to \ref{fig_Platen_Displacement_Tracking_Error}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/simulation_and_plotting.m}{location}.
 
 \begin{table}[H]
     \centering
@@ -2179,17 +2181,14 @@ For the high modal frequencies in figure \ref{fig_high_modal_freqs}, the respons
 \subsection{Optimal Control}  \label{sec_Optimal_Control}
 
 \subsubsection{ State Space Model} \label{section_ss_model}
-For the shaking table with a coupled 2-DoF system, the following state space model representation was adopted:
+For the shaking table with a coupled 2DOF system, the following state space representation was adopted, with the state vector $x(t) = [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T}$, and the control action being the signal to the servo-valve $u(t) = i_{sv}$: 
+% \begin{align}
+% \dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
+% y(t) &= C\cdot x(t) + D\cdot u(t)
+% \end{align} 
+
 \begin{align}
-\dot{x}(t)  &=  A \cdot x(t) + B \cdot u(t) \\
-y(t) &= C\cdot x(t) + D\cdot u(t)
-\end{align}
-With $x(t)$ being the state vector:
-\begin{equation}
-x = [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T}
-\end{equation}
-And the control action $u(t)$ (which is the signal to the servo-valve $i_{sv}$), the state equations are:
-\begin{align}
+    \hspace{-3mm}
     \begin{bmatrix} 
         \dot{Q}_{sv} \\[6pt]
         \dot{F}_p \\[6pt]
@@ -2232,16 +2231,16 @@ And the control action $u(t)$ (which is the signal to the servo-valve $i_{sv}$),
     \end{bmatrix}
     \cdot i_{sv}
 \end{align}
-And the output equation for the platen position $x_T$, it results:
+With the output equation:  
 \begin{equation}
-y(t) = C\cdot x(t) + D\cdot u(t) = x_T \Longrightarrow C = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \, ,  D = 0
+y(t) = [0\, 0\, 1\, 0\, 0\, 0\, 0\, 0] \cdot [Q_{sv} ,\, F_p ,\, x_T ,\, x_1 ,\, x_2 ,\, \dot{x}_T ,\, \dot{x}_1 ,\, \dot{x}_2 ]^{T} = x_T
 \end{equation}
 
 \subsubsection{Evaluating Controllability \& Observability}
 For the above system, controllability and observability matrices were built in MATLAB with \emph{ctrb} and \emph{obsv} commands while using variable precision arithmetic (\emph{vpa}) to evaluate each element to ten thousand significant digits, and were verified to be full rank, thereby implying the existence of an optimal control law.
 
 \subsubsection{LQI Controller}
-For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}:
+For the tracking loop shown in figure \ref{fig_LQI_loop}, where \emph{sys} is the state space model presented in section \ref{section_ss_model}: \vspace{-5mm}
 \begin{figure}[H]
     \centering
      \includegraphics[width=0.5\linewidth]{LQI/LQI_loop.png}
@@ -2298,22 +2297,20 @@ The optimal state feedback control law $u(t) = K \cdot x_{aug}(t)$ which minimiz
 \begin{equation}\label{eq_LQI_cost_function}
      J(u) = \int ^{\infty}_0 (x_{aug}^{T}(t) Q\,x_{aug}(t) + u^{T}(t) R\, u(t))\, dt 
 \end{equation} 
-was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices, for the augmented system, where the state vector $x_{aug}(t) = \left[x(t) \, x_i(t) \right]^\intercal$ incorporates the state $x_i(t)$, which is defined as the integral of the tracking. The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$ (figure \ref{fig_Bode_LQI_Qe9}), for increased bandwidth, which, unlike with the large bandwidth PID-F controllers, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was still highly smoothed, resulting in unitary gain at low frequencies, shown in figures \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}.
-
-The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
+was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices, for the augmented system, where the state vector $x_{aug}(t) = \left[x(t) \, x_i(t) \right]^\intercal$ incorporates the state $x_i(t)$, which is defined as the integral of the tracking. The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$ (designated $Q_{x_i}$), which was initially set to $10^3$, which resulted in a similar bandwidth to the tuned PID-F (figure \ref{fig_Bode_LQI_Qe3}), and then increased to $10^9$ (figure \ref{fig_Bode_LQI_Qe9}), for increased bandwidth, which, unlike with the large bandwidth PID-F controllers, the effect of the pole and zero (resonance and anti-resonance) observed on the low frequency was still highly smoothed, resulting in unitary gain at low frequencies, shown in figures \ref{fig_Bode_LQI_Qe9} through to \ref{fig_Platen_Displacement_Tracking_Error_LQI_Qe9}. The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/LQR%20Servo/LQI_servo.m}{location}.
     
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe3/Bode_of_G_xT_xref.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q=10^3$ (which results in a similar bandwidth to the tuned PID-F).}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q_{x_i}=10^3$ (which results in a similar bandwidth to the tuned PID-F).}
     \label{fig_Bode_LQI_Qe3} 
 \end{minipage}
 \hfill
 \begin{minipage}{0.49\textwidth}
     \centering
     \includegraphics[width=\linewidth]{LQI/Sim_Res_Qe9/Bode_of_G_xT_xref.png}
-    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q=10^9$.}
+    \caption{Bode plots of $G_ {xT/x_{\text{ref}}}(s)$ for the default controller, tuned PID-F, and optimal state-feedback controller with $Q_{x_i}=10^9$.}
     \label{fig_Bode_LQI_Qe9}
 \end{minipage}
 \end{figure}
@@ -2391,7 +2388,7 @@ The code implementation can be found at the following GitHub repository \href{ht
 
 \subsubsection{LQG Servo Controller}\label{sec_LQG Servo Controller}
 
-The implementation of the optimal control law requires the availability of all the systems states. For the system under analysis only the pltaform displacement and acceleration measurements are available, meaning that the whole state vector has to be estimated using an observer. To this end, the necessary software was developed in MATLAB using the function \emph{kalman} to compute the stationary Kalman state estimator (\emph{kest} in figure \ref{fig_LQG_inside_controller}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The optimal controller $k$ was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which as initially set to $10^3$).
+The implementation of the optimal control law requires the availability of all the systems states. For the system under analysis only the pltaform displacement and acceleration measurements are available, meaning that the whole state vector has to be estimated using an observer. To this end, the necessary software was developed in MATLAB using the function \emph{kalman} to compute the stationary Kalman state estimator (\emph{kest} in figure \ref{fig_LQG_inside_controller}) from the augmented system and the process and sensor noise covariance matrices, $Q_n$ and $R_n$ (set as identity matrices).  The optimal controller $k$ was computed using MATLAB \emph{lqi} function, for $R=10^{-9}$ and different $Q$ matrices (The state weight matrix $Q$ had every element set to zero, except the entry corresponding to the integrated tracking error $x_i$, which was set to $10^9$).
 
 \begin{figure}[H]
 \begin{subfigure}{0.41\textwidth}
@@ -2412,40 +2409,39 @@ The MATLAB function \emph{lqgtrack} was used to compute the two-degree-of-freedo
 Simulations were run to verify the developed software was in working order for implementation in the real control system, or for use in improved Simulations when data of process and sensor noise covariance were to become available. The results shown in \ref{appendix:LQG Servo_Controller_Simulation_Results}, on  figures \ref{fig_resp_spectrum_LQG_Qe9} through to \ref{fig_Platen_Displacement_LQG_Qe9}, were very much identical to the ones obtained with the LQI controller, due to the fact that the state estimator output converged very fast.
 
 \pagebreak
-\subsection{LNEC's Control Strategy: OLI method}\label{sec_LNEC_method}
+\subsection{LNEC's Control Strategy: OLI method}\label{sec_LNEC_method} \vspace{-2mm}
 In this section the method used at LNEC for controlling the shaking table is described, and the results of numerical simulations from this method are used for comparison with the proposed controllers (PID-F and LQI).  
+\vspace{-5mm}
 
-\subsubsection{The functioning of LNEC's \textit{Adapt} software}
+\subsubsection{The functioning of LNEC's \textit{Adapt} software} \vspace{-2mm}
 As seen in the previous chapters, the use of a proportional controller for tracking the position reference signal does not produce the desired performance on the shaking table in terms of response spectrum. The method considered at LNEC to improve the shaking table performance comes in the form of combined open and closed loop control (Fig. \ref{fig_OLI}), whereby, before every test run, the proprietary software \emph{Adapt}, developed in LabVIEW, through a set of user-defined parameters, identifies the system transfer function, and then computes a modified reference signal, denoted as \emph{driver signal}, which is then used as the reference in the closed-loop control of the shaking table position.
 
-The adaptation process starts with the definition of the input files on the project menu, shown in figure \ref{fig_Adapt_Project_Parameters}:
+The process starts with the definition of the input files on the project menu, shown in figure \ref{fig_Adapt_Project_Parameters}: \vspace{-2mm}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Adapt_Project_Parameters.png}
     \caption{Adapt Project Parameters menu - In this menu the user configures which files are used for determining the system's FRF, and the reference (or target) signal.}
     \label{fig_Adapt_Project_Parameters}
-\end{figure}
-
+\end{figure} \vspace{-5mm}
 Then, as the modification of the driver signal requires the identification of the frequency response function of the system, the user goes to the system identification menu, shown in figure \ref{Adapt_FRF_Parameters}. In this menu the user sets parameters which are used in the composition of a displacement signal from acceleration and displacement data acquired, usually, from a test run where 3 minutes of pink noise are used as input. The user can apply various filters to the acquired displacement and acceleration signals, and then choose how to synthesize both into a displacement signal. This is done to reject the inaccurate readings of position sensors at high frequencies, and of acceleration sensors at low frequencies, and combine the information of both to generate a more accurate displacement signal across the whole frequency spectrum.  The user also defines the settings for the computation of the FRF. 
 
 The driver generation menu, shown in figure \ref{fig_Adapt_INV_Panel}, is used to generate new driver signals. It takes as inputs the original reference (referred to as \emph{target}), the driver signal used in the previous test run, it's measured displacements and acceleration at the shaking table, and user-defined parameters which affect which parts of the signal are modified, and by how much they're modified, it then outputs the driver to be used in following test run.
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Adapt/Adapt_FRF_Parameters.png}
     \caption{Adapt FRF Parameters menu}
     \label{Adapt_FRF_Parameters}
 \end{figure}
-
-\begin{figure}
+%\vspace{-15mm}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Adapt/Adapt_INV_Panel.png}
     \caption{Adapt INV Panel menu}
     \label{fig_Adapt_INV_Panel}
 \end{figure}
 
-
-\subsubsection{Simulating the driver adaptation process}
-
+\clearpage
+\subsubsection{Simulating the driver adaptation process}\label{sec_Simulating_OLI}
 For the simulations in this section, the 2DOF system coupled to the platen with both masses set to 2000 kg, and the modal properties: $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$, was used to compute the results and evaluate the performance of the system with the LNEC's method
 
 \paragraph{System Identification}
@@ -2459,68 +2455,68 @@ The \emph{Adapt} target file (.tgt) contains displacement and acceleration signa
 \paragraph{Generating the adapted driver}
 The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the simulation displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used, along with the target file, to generate driver 1  in \emph{Adapt.exe}. The same process was repeated to generate subsequent driver until the output response spectra was deemed to be sufficiently close to the target response spectra.
 
-\paragraph{Discussion of Method \& Results}
-For the seismic signal tested in this section (L'Aquila reduced scale earthquake), the response spectra from adapted drivers underperforms compared to the PID-F controller, and even more so when compared to the optimal controller. 
+\paragraph{Application example: Discussion of Method \& Results} \label{sec_OLI_Application_example}
+In this application example of the OLI method, the target signal is the L'Aquila reduced-scale earthquake, and the test specimen modal properties are those described in Section~\ref{sec_Simulating_OLI}. For the driver generation settings, which were kept throughout, coherence threshold was set to 0.9, maximum frequency compensation was set to 25Hz, and the correction factor was set to 0.65. For the identification, various settings were used, while window overlap was set to 0.5 and preserved as such, and the results are shown in figure \ref{bode_compare}, where a large number of windows results in a poor identification; in figure \ref{bode_compare_better_id}, where using 1024 Low Sidelobe windows results in an improved approximation of the transfer function, but identification still is unable to capture the resonance/anti-resonance at 1.5 Hz; and in figure \ref{FRFvsModelTF}, where the increasedg the width of the windows, in this case, using 20 Hanning windows results in a much better identification, now capturing the resonance/anti-resonance at around 1.5 Hz (however, the use of so few windows likely wouldn't work if the identification was being done with noisy experimental data).
 
-In figure \ref{Response_Spectra_better_id}, the identified FRF (figure \ref{bode_compare_better_id}) used for adapting the drivers  is closer to the model, resulting in a better adaptation of the driver signal, but it still requires 3 iterations to somewhat achieve the target response spectrum, and still doesn't perform as well as the optimal and PID-F controllers.
+The identified FRF which largely matches the model, shown in figure \ref{bode_compare_better_id}, yields adapted drivers which mostly converge to the target response spectra. Nevertheless, three iterations are still required to approximate the target, and the method does not perform as well as the LQI and PID-F controllers.
 
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-In figure \ref{Response_Spectra_2drivers}, the identified FRF (figure \ref{bode_compare}) used for adapting the drivers isn't as good as in the other case (figure \ref{bode_compare_better_id}), due to the settings defined by the user in \emph{Adapt}, and the resulting response spectrum after three iterations isn't very satisfactory. This shows the one of limitations of this method: It depends on the user to make the right decisions, but the user isn't perfect and there is no guarantee he'll opt for the best settings. Another limitation is the fact that the user does not have exact knowledge of the best settings, because unlike in this example, where the system is known and the FRF is made to match it (Figure \ref{bode_compare_better_id}), in reality this is not possible, leaving the user to make an informed guess based on the information displayed in \emph{Adapt} and past experience.
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\textwidth}
-     \centering
-    \includegraphics[width=\linewidth]{Adapt/bode_compare.png}
-    \caption{Identified frequency response function from \emph{Adapt} (using "bad" settings) versus the model from Section \ref{Modelling Shaking Table Dynamics}}
-    \label{bode_compare}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\begin{minipage}{0.49\textwidth}
-    \includegraphics[width=\linewidth]{Adapt/bode_compare_better_id.png}
-    \caption{Frequency response function of identified system using 1024 Low Sidelobe windows results in a rougher approximation of the transfer function, but handles noisy data better.}
-    \label{bode_compare_better_id}
-\end{minipage}
-\hfill
-\begin{minipage}{0.48\textwidth}
-    \includegraphics[width=\linewidth]{Adapt/FRFvsModelTF.png}
-    \caption{Frequency response function of identified system using 20 Hanning windows results in a much better approximation of the transfer function, but likely wouldn't work as well if using noisy sensor data.}
-    \label{FRFvsModelTF}
-\end{minipage}
-\end{figure}
-
+The identified FRF (Figure \ref{bode_compare}) is of lower quality due to the settings selected in \emph{Adapt}, and the resulting response spectrum, shown in figure \ref{Response_Spectra_2drivers}, after three iterations is unsatisfactory. This highlights two key limitations of the method. First, the outcome depends on the user selecting appropriate settings, yet no automatized and systematic procedure exists to guarantee an optimal choice of settings. Second, unlike in this simulation study where the true system is known and the FRF can be verified against it (Figure \ref{bode_compare_better_id}), in practice the user has no such reference, and must instead rely on an informed judgement based on the information available in \emph{Adapt} and other knowledge of the shaking table and test specimen dynamics.
 
 \begin{figure}[H]
     \centering
+\begin{subfigure}[t]{0.49\textwidth}
+     \centering
+    \includegraphics[width=\linewidth]{Adapt/bode_compare.png}
+    \caption{2048 Low Sidelobe windows}
+    \label{bode_compare}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{Adapt/bode_compare_better_id.png}
+    \caption{1024 Low Sidelobe windows}
+    \label{bode_compare_better_id}
+\end{subfigure}
+\\
+\begin{subfigure}{0.5\textwidth}
+    \includegraphics[width=\linewidth]{Adapt/FRFvsModelTF.png}
+    \caption{20 Hanning windows}
+    \label{FRFvsModelTF}
+\end{subfigure}
+\caption{Bode plot of model of the system (from Section \ref{Modelling Shaking Table Dynamics}) used in the simulations, and the identified frequency response function in \emph{Adapt} for various identification settings}
+\end{figure}
+
+\pagebreak
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\linewidth]{Adapt/Response_Spectra.png}
-    \caption{Target response spectrum and the resulting response spectrum from tuned PID-F, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare}.}
+    \caption{Shaking table response spectra: Target, tuned PID-F controller, LQI controller, and the 3 iterations of OLI method using FRF from the worse identification (shown in figure \ref{bode_compare})}
     \label{Response_Spectra_2drivers}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Adapt/Response_Spectra_better_id.png}
-    \caption{Target response spectrum and the resulting response spectrum from tuned PID-F, optimal controller, and the 3 iterations of adapted drivers resulting from FRF shown in figure \ref{bode_compare_better_id}.}
+    \caption{Shaking table response spectra: Target, tuned PID-F controller, LQI controller, and the 3 iterations of OLI method using FRF from the better identification (shown in figure \ref{bode_compare_better_id})}
     \label{Response_Spectra_better_id}
 \end{figure}
 
 \section{Comparing Control Strategy Performance for Benchmark Seismic Signals}\label{sec_Comparing_Control_Strategies}
 
-and the optimal controller with $Q=10^3$ (as in Figure \ref{fig_Bode_LQI_Qe3}). The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
+A set of recorded earthquake ground-motion time histories covering a wide range of seismic characteristics are considered in this study, namely \citep{narasimhan2006}: i) 1940 Imperial Valley earthquake, El Centro Fault Normal (FN) and Fault Parallel (FP) records; ii) 1992 Erzikan earthquake, Erzikan North-South (NS) and East-West (EW) record; iii) 1995 Kobe earthquake, Kobe NS and EW records; iv) 2009 L'Aquila earthquake; v) 1994 Northridge earthquake, Newhall FN and FP records; vi) 1994 Northridge earthquake, Rinaldi FN and FP records; vii) 1994 Northridge earthquake, Sylmar FN and FP records; viii) 1976 Friuli earthquake, Tolmezzo record.
+
+The 2DOF system coupled to the platen had the modal properties described in Section \ref{sec_Simulating_OLI}. For the OLI method the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}. The PID-F controller was tuned with the settings described in Section \ref{sec_Tuned_PID-F}. For the LQI controller, the performance index (Eq. \eqref{eq_LQI_cost_function}) had $R=10^{-9}$, and $Q$ with every entry set to zero, except $Q_{x_i}=10^3$, as to have a similar bandwidth to the PID-F controller for the sake of comparing both (see figure \ref{fig_Bode_LQI_Qe3}). The code implementation, along with the developed Python and MATLAB functions for format conversion between LNEC test files (\emph{.ltf / .tgt / .drv / .acq}) and standard text files, can be found at the following GitHub repository \href{https://github.com/c-radicallis/Controlo_Plataforma_Sismica/blob/main/uniaxial_table_model/Adapting_Driver_Signal/sim_plot_adapted_drivers.m}{location}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Adapt/excel_accel_resp_spectrum.png}
-    \caption{Acceleration response spectrum MSE for various seismic signals. (For the Erzikan earthquake (figure \ref{erzikan_4th_N}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}
+    \caption{Acceleration response spectrum MSE for various earthquakes. (For the Erzikan earthquake (figure \ref{erzikan_4th_N}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}
     \label{excel_accel_resp_spectrum}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{Adapt/excel_disp_resp_spectrum.png}
-    \caption{Displacement response spectrum MSE for various seismic signals. (For the Erzikan earthquake (figure \ref{erzikan_4th_N}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}
+    \caption{Displacement response spectrum MSE for various earthquakes. (For the Erzikan earthquake (figure \ref{erzikan_4th_N}), an additional driver adaption iteration was performed, and the results shown are for the resulting 4th driver)}
     \label{excel_disp_resp_spectrum}
 \end{figure}
 
@@ -2685,7 +2681,7 @@ The dynamic model identification of the plant is needed for tuning the controlle
 
 \subsection{Control Strategies}
 
-\subsubsection{LNEC's driver signal iterative adaptation process}
+\subsubsection{LNEC's driver signal iterative adaptation process (OLI method)}
 
 This control technique is known as Online Iteration (OLI) [MTS Systems], as it iteratively modifies the command input on an individual sample-by-sample basis until the system response is close to the target. 
 This method compensates the next drive signal with a drive correction signal which is computed from filtering the previous iteration error with the inverse model of the closed-loop frequency response function. The closed-loop frequency response function (FRF) is estimated via a nonparametric identification method by spectral analysis. To this end, the user interface of the driver iteration program allows many different settings for the identification. For the simulations of the OLI method, the identification used the same experimentally acquired data with the band-limited pink noise, and the FRF identification settings use Hanning window with the number of windows set to 8192 with 97\% overlap, and the FRF mode is set to H3. During the driver adaptation process, settings such as correction factor and maximum frequency compensation are adjusted as needed, while the coherence threshold is left at 90\%.
@@ -2708,7 +2704,7 @@ The simulations with the LQI controller use the plant model resulting from the t
 
 \subsection{Performance Evaluation}
 
-A set of recorded earthquake ground-motion time histories covering a wide range of seismic characteristics are considered in this study, namely \citep{narasimhan2006}: i) 1940 Imperial Valley earthquake, El Centro Fault Normal (FN) and Fault Parallel (FP) records; ii) 1992 Erzikan earthquake, Erzikan North-South (NS) and East-West (EW) record; iii) 1995 Kobe earthquake, Kobe NS and EW records; iv) 2009 L'Aquila earthquake; v) 1994 Northridge earthquake, Newhall FN and FP records; vi) 1994 Northridge earthquake, Rinaldi FN and FP records; vii) 1994 Northridge earthquake, Sylmar FN and FP records; viii) 1976 Friuli earthquake, Tolmezzo record. To ensure that the imposed inputs remained within the displacement capacity of the shaking table, appropriate scale factors were computed by taking the quotient of maximum desired displacement of 4 mm with the maximum displacement of any direction of the seismic signal (rounded to 3 decimal places) and then applied to the ground-motion signals. 
+The same set of earthquakes as in Section \ref{sec_Comparing_Control_Strategies} was used to evaluate the performance of each control strategy. To ensure that the imposed inputs remained within the displacement capacity of the shaking table, appropriate scale factors were computed by taking the quotient of maximum desired displacement of 4 mm with the maximum displacement of any direction of the seismic signal (rounded to 3 decimal places) and then applied to the ground-motion signals. 
 The performance of each control method is evaluated through the acceleration and displacement response spectrum mean squared error (MSE) for every input action described in the previous section. The acceleration response spectrum is computed from 0.1 Hz to 30 Hz for 500 logarithmically spaced points, and the displacement response spectrum is computed for the same frequencies, however, for only the first 344 points, equating to a range from 0.1 Hz to 5.04 Hz.
 
 

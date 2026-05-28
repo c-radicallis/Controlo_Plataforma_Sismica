@@ -3,8 +3,14 @@ addpath 'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma
 %%
 launch_Adapt =0; % Set to 1 to lauch Adapt.exe
 return_on = 1; % Set to 1 for execution to stop before adapting drivers, or set to 0 if the adapted drivers have already been generated
+%
+opts1=bodeoptions('cstprefs');opts1.FreqUnits = 'Hz';opts1.XLim={[1 40]};opts1.PhaseWrapping="on";opts1.PhaseWrappingBranch=-360;
+opts1.PhaseVisible='off'; 
+opts1.Title.String={'Bode Plot - Closed Loop'}
+opts1.YLim={[-40 5]};
+ Ts = 0.005;
 
-% Load target
+%% Load target
 folder  =  'C:\Users\afons\OneDrive - Universidade de Lisboa\Controlo de Plataforma Sismica\uniaxial_table_model\Adapting_Driver_Signal\PRJ_Sylmar';
 target = 'sylmar.tgt'; 
 addpath(folder);

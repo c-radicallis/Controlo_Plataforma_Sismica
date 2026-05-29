@@ -1562,7 +1562,7 @@ For this section, consider the following:
 \begin{itemize}
     \item A data sequence containing 32768 points was used;
     \item  $r_1(t) = 0$, where the tracking error ($e_y = r_2 - y$) is what is input to the controller, as this mimics the setup at LNEC;
-    \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the noise input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$;
+    \item The data sequences $r_{2}(t)$ and $e_0(t)$ for the pairs of examples are the same, with the disturbance input $e(t)$ in each one resulting from a scaling of $e_0(t)$:  $e(t) = k \cdot e_0(t)$;
     \item In figures \ref{fig_two_stage/example/K5_noise01} and \ref{fig_two_stage/example/K5_noise1}, the controller was set to $C(z)=5$;
     \item In figures \ref{fig_two_stage/example/noise005} and \ref{fig_two_stage/example/noise08}, the controller was set to $C(z)=0.5 \cdot (z^{-1} + 0.8 z^{-2})$ .
 \end{itemize}  
@@ -2595,7 +2595,7 @@ The system under study is a closed-loop control system, schematically illustrate
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{experimental_validation/mini_table_control_loop.png}
+    \includegraphics[width=\linewidth]{experimental_validation/mini_table_control_loop.png}
     \caption{Shaking table control loop}
     \label{fig_Shaking table control loop}
 \end{figure}
@@ -2620,9 +2620,9 @@ This section details the methods with which the identification of the plant, tun
 
 \subsection{Identification of Electrodynamic Shaker}
 
-The dynamic model identification of the plant is needed for tuning the controllers. To this end an identification experiment is carried out using a limited-band pink noise driver signal, with amplitude of approximately ±4 mm, with the controller set with proportional gain Kp=10, and data acquisition at 200 Hz. A sampling period of 5 ms is used throughout. The imperative of running experiments under closed-loop control poses additional challenges for identifying the plant (shaking table with physical model). To address the particularities of a closed-loop identification, the two-stage method \citep{vandenhof1993} illustrated in figure \ref{fig_two_stage_block_tikz} is applied. Firstly, the sensitivity function with controller, S0C, is identified by fitting a linear FIR model with 100 parameters (the order of the model just needs to be high enough to reproduce the noise-free control action, and high variance is not of concern). Then a Hammerstein-Wiener model is defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a more refined model for the sensitivity function. This function is then used to compute the noise-free control action ur, from which (by being uncorrelated with the output y) the plant G0 can now be estimated without bias introduced by the controller in the feedback loop.  The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/minimesa_data/blob/main/}{location}.
+The dynamic model identification of the plant is needed for tuning the controllers. To this end, multiple identification experiment were carried out using a limited-band pink noise driver signal, with amplitude set of approximately ±4 mm (according to the available displacement range of the shaker), using various controller settings, and data acquisition at 200 Hz. A sampling period of 5 ms is used throughout. Additionally, two identification experiments used a sine sweep signal of constant acceleration $\ddot{x} = 1.2 m/s^2$ as reference to drive the system.
 
-%\subsubsection{Applying Two-Stage Identification Method}
+The imperative of running experiments under closed-loop control poses additional challenges for identifying the plant (shaking table with physical model). To address the particularities of a closed-loop identification, the two-stage method \citep{vandenhof1993} illustrated in figure \ref{fig_two_stage_block_tikz} is applied. Firstly, the sensitivity function with controller, $S_0 C$, is identified by fitting a linear FIR model with 100 parameters (the order of the model just needs to be high enough to reproduce the noise-free control action, and high variance is not of concern). Then a Hammerstein-Wiener model is defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a more refined model for the sensitivity function. This function is then used to compute the noise-free control action $u_r$, from which (by being uncorrelated with the output y) the plant $G_0$ can now be estimated without bias introduced by the controller in the feedback loop.  The code implementation can be found at the following GitHub repository \href{https://github.com/c-radicallis/minimesa_data/blob/main/}{location}.  Identification was also performed by application of the direct method, and, since the controller was known, by indirect method. 
 
 \begin{figure}[H]
     \centering
@@ -2674,44 +2674,24 @@ The dynamic model identification of the plant is needed for tuning the controlle
     \label{fig_two_stage_block_tikz}
 \end{figure}
 
-% \begin{enumerate}
-%     \item \textbf{Identification of the sensitivity function $S_0$:}
-%     \begin{itemize}
-%         \item A linear FIR model with 100 parameters was fitted (the number of parameters was chosen arbitrarily for this stage).
-%         \item A Hammerstein-Wiener model was then defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a refined model.
-%     \end{itemize}
-    
-%     \item \textbf{Reconstruction of the control action isolated from noise effects ($\hat{u}_r$).}
-    
-%     \item \textbf{Identification of $G_0$:}
-%     \begin{itemize}
-%         \item Non-parametric identification indicated a 4th-order model.
-%         \item A model with 4 poles and 3 zeros was fitted using the reconstructed control action and the measured output.
-%     \end{itemize}
-% \end{enumerate}
-
 \subsection{Control Strategies}
 
 \subsubsection{LNEC's driver signal iterative adaptation process (OLI method)}
-
 This control technique is known as Online Iteration (OLI) [MTS Systems], as it iteratively modifies the command input on an individual sample-by-sample basis until the system response is close to the target. 
-This method compensates the next drive signal with a drive correction signal which is computed from filtering the previous iteration error with the inverse model of the closed-loop frequency response function. The closed-loop frequency response function (FRF) is estimated via a nonparametric identification method by spectral analysis. To this end, the user interface of the driver iteration program allows many different settings for the identification. For the simulations of the OLI method, the identification used the same experimentally acquired data with the band-limited pink noise, and the FRF identification settings use Hanning window with the number of windows set to 8192 with 97\% overlap, and the FRF mode is set to H3. During the driver adaptation process, settings such as correction factor and maximum frequency compensation are adjusted as needed, while the coherence threshold is left at 90\%.
+This method compensates the next drive signal with a drive correction signal which is computed from filtering the previous iteration error with the inverse model of the closed-loop frequency response function. The closed-loop frequency response function (FRF) is estimated via a nonparametric identification method by spectral analysis. To this end, the user interface of the driver iteration program allows many different settings for the identification. For the simulations of the OLI method, the identification used the same experimentally acquired data with the band-limited pink noise, using controller with proportional gain $K_p=10$, and the FRF identification settings use Hanning window with the number of windows set to 8192 with 97\% overlap, and the FRF mode is set to H3. During the driver adaptation process, settings such as correction factor and maximum frequency compensation are adjusted as needed, while the coherence threshold is left at 90\%.
 The closed-loop transfer function used in the simulations of the OLI method was estimated by direct identification (from signals “r” and “y”, resorting to figure \ref{fig_Shaking table control loop}), and its frequency response is shown in figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake}.
 
 \subsubsection{ PID-F control strategy}
-
-Taking into consideration the test procedure at LNEC (Figure \ref{fig_lnec_test_process_diagram}), where the identification is carried out each time the target signal is scaled up, one possible straightforward improvement would be to update the controller tune accordingly using this information. Another simple enhancement would be to add a filtered derivative term to the PI controller (making it a PID-F), since this should be of simple implementation in the existing version of the control software, as it is merely an extension of the existing controller structure, and allows more tunability. This is precisely what was done: optimize the PID-F gains to the identified plant dynamics. 
-The simulations with the PID-F controller use the plant model resulting from the two-stage identification and the controller itself to close the loop.
+In the experimental test procedure followed at LNEC (Fig. \ref{fig_lnec_test_process_diagram}), system identification is performed each time the target signal is scaled up. A natural and straightforward improvement arising from this procedure is the systematic updating of the controller tuning parameters in accordance with the identified plant dynamics. A further enhancement consists of augmenting the existing PI controller with a filtered derivative term, yielding a PID-F structure. This extension is particularly advantageous in the present context, as it requires minimal modifications to the existing control software architecture, representing a natural extension of the current controller structure, while simultaneously affording greater tuning flexibility. Accordingly, a PID-F controller is implemented and systematically tuned based on the identified dynamic characteristics of the system.
 
 \subsubsection{LQI control strategy}
-
-The controllable canonical form state space representation of the plant transfer function obtained via the closed-loop two stage method identification is used in the minimization of the LQI cost function:
+From the plant transfer function identified via the two-stage method, a state-space representation in controllable canonical form is adopted, with the state vector $x(t)$ defined accordingly. This state-space representation is subsequently employed to determine the optimal state-feedback control law, $u(t) = -K \cdot x_{aug}(t)$, where the augmented state vector $x_{aug}(t) = [x(t) x_i(t)]^\intercal$ incorporates the state $x_i(t)$ which is defined as the integral of the tracking error. The optimal static gain vector $K$ is obtained through minimization of the LQI performance index:
 \begin{equation}
- J = \sum_{0}^{\infty}{{x\left(t\right)}^\intercal Q}x(t)+{u\left(t\right)}^\intercal R u(t) dt
+ J = \sum_{0}^{\infty}{{x_{aug}(t)}^\intercal Q} x_{aug}(t)+{u(t)}^\intercal R u(t) dt
 \end{equation}
-where Q and R have appropriate dimensions, with R=1 and Q being a diagonal matrix where each parameter was found via Nelder-Mead simplex algorithm \citep{lagarias1998} in order to minimize the acceleration response spectrum MSE for the seismic signal on test, computed for 100 logarithmically spaced points between 0.1Hz and 30Hz. The optimal state feedback control law is given by u(t) = K [x(t) xi(t)]T, with xi(t) being the integral of the tracking error
+where Q and R have appropriate dimensions, with R=1 and Q being a diagonal matrix where each parameter was found via Nelder-Mead simplex algorithm \citep{lagarias1998} in order to minimize the acceleration response spectrum MSE for the seismic signal on test, computed for 100 logarithmically spaced points between 0.1Hz and 30Hz. 
 
-The simulations with the LQI controller use the plant model resulting from the two-stage identification, and the controller itself to close the loop.
+The simulations with the PID-F and LQI controllers use the plant model resulting from the two-stage identification.
 
 \subsection{Performance Evaluation}
 
@@ -2769,9 +2749,11 @@ The performance of each control method is evaluated through the acceleration and
 
 \section{Results}
 
-\subsection{System identification \& Controller Tuning}
+\subsection{System identification, Controller Tuning, \& Performance Evaluation}
 
-The closed-loop frequency response obtained with each control method is shown on the Bode plot of figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake}
+The complete identification results for every method, controller, and drive signal are shown in Appendix \ref{appendix:full_shaker_id_results}. Given the large differences between the various experiments in the results of the indirect method, and the mixed results of both the direct and two-stage method, from the fundamental knowledge of the applicability and limitations of these identification methods on closed-loop systems, it was decided to proceed with the model identified via the two-stage method resulting from the run with the controller proportional gain set to $K_P = 10 $.
+
+The Bode plot of figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake} displays the result of the direct identification of the closed-loop with the controller set as proportional gain $K_p = 10$, and the expected closed-loop response with the respectively tuned controllers, computed from the plant model.
 
 \begin{figure}[H]
     \centering
@@ -2782,9 +2764,11 @@ The closed-loop frequency response obtained with each control method is shown on
 
 The frequency responses clearly highlights the benefits of optimizing the controllers (PID-F and LQI) since a larger bandwidth is obtained while maintaining a unitary gain at lower frequencies. This directly translates to improvements in the response spectrum, which will meet the target on the first run, instead of not requiring several iterations.
 
+As for the performance evaluation for the benchmark earthquakes, the response spectra are presented in Appendix \ref{appendix:shaker_benchmark}.
+
 \subsection{Summary of Results}
 
-The results obtained with the proposed methodology show how the tunning/optimization can improve significantly the performance of the system. It can be observed in \ref{Response spectra for a scaled-down Newhall fault parallel seismic signal} for acceleration and displacement response spectra of Tolmezzo earthquake, respectively, that the PID-F controller closely matches the target response, the LQI achieves an even closer match, whereas the OLI method (LNEC's approach) remains further from the target even after the third drive iteration. The MSE values quantify the differences observed among the curves.
+The results obtained with the proposed methodology show how the tunning/optimization can improve significantly the performance of the system. It can be observed in \ref{Response spectra for a scaled-down Newhall fault parallel seismic signal} for acceleration and displacement response spectra of Newhall earthquake, respectively, that the PID-F controller closely matches the target response, the LQI achieves an even closer match, whereas the OLI method (LNEC's approach) remains further from the target even after the third drive iteration. The MSE values quantify the differences observed among the curves.
 
 \begin{figure}[H]
     \centering
@@ -3108,6 +3092,100 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \includegraphics[width=\linewidth]{1DST_benchmark/sylmar_20250722_1937/Response_Spectra_P.png}
     \caption{Response spectra for Sylmar fault parallel}
 \end{figure}
+
+\chapter{Shaker Identification Results}\label{appendix:full_shaker_id_results}
+
+\begin{figure}[H]
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/direct_full.jpg}
+    \caption{Direct method}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/indirect_full.jpg}
+    \caption{Indirect method}
+\end{subfigure}
+\\
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/twostage_full.jpg}
+    \caption{Two-stage method}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/cl_full.jpg}
+    \caption{Direct identification of closed-loop}
+\end{subfigure}
+\caption{Bode plot of identification results with different methods.  The label "sweep" denotes the experiments driven with a sine sweep. "P" denotes the proportional gain for which the controller was set, and "wc10", "wc15", "wc20" denotes the PIDF tunes described in figures \ref{wc10},\ref{wc15}, and \ref{wc20}, respectively.}
+\end{figure}
+
+\begin{figure}[H]
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/1.jpg}
+    \caption{Sine sweep with controller $K_P = 7$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/2.jpg}
+    \caption{Sine sweep with controller $K_P = 15$}
+\end{subfigure}
+\\
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/3.jpg}
+    \caption{Pink noise with controller $K_P = 5$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/4.jpg}
+    \caption{Pink noise with controller $K_P = 7$}
+\end{subfigure}
+\\
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/5.jpg}
+    \caption{Pink noise with controller $K_P = 10$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/6.jpg}
+    \caption{Pink noise with controller $K_P = 15$}
+\end{subfigure}
+\caption{ Autocorrelation of the residuals, and cross-correlation between the residuals and the inputs, for each identified model, for each experiment}
+\end{figure}
+
+\begin{figure}[H]
+   \ContinuedFloat
+   \centering 
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/7.jpg}
+    \caption{Pink noise with controller $K_p = 6.75 ,\,  K_i = 68 ,\,  K_d = .0712891 ,\,  T_f = 0.00161743$}\label{wc10}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/8.jpg}
+    \caption{Pink noise with controller $K_p = 8.75,\,  K_i = 139 ,\,  K_d = 0.125977 ,\,  T_f = 0.00109863$}\label{wc15}
+\end{subfigure}
+\\
+\begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{shaker_id_results/20260529_1749/9.jpg}
+    \caption{Pink noise with controller $K_p = 8.5625 ,\,  K_i = 75 ,\,  K_d = 0.18457 ,\,  T_f = 0.000167847$}\label{wc20}
+\end{subfigure}
+
+\caption{ Autocorrelation of the residuals, and cross-correlation between the residuals and the inputs, for each identified model, for each experiment}
+\end{figure}
+
+\chapter{Shaker Control Strategy Performance Evaluation}\label{appendix:shaker_benchmark}
 
 
 

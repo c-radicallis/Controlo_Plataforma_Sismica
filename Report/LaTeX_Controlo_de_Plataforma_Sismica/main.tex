@@ -36,6 +36,7 @@
 \usepackage{arydshln}
 \usepackage[english]{babel}
 \usepackage{cases}
+\usepackage{siunitx}
 
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
@@ -1635,25 +1636,24 @@ In \citet{tekeste2021}, through a dedicated  experimental campaign to characteri
 \begin{tabular}{c  l  l }
 \hline
 \textbf{Symbol} & \textbf{Description} & \textbf{Value} \\ \hline
-$k_p$ & Proportional gain of the controller & $129.93 \, \text{V/m}$ \\ \hline
-$\tau_{sv}$ & Time-delay parameter of the servo-valve transfer function & $0.0246 \, \text{s}$ \\ \hline
-$k_{sv}$ & Servo-valve gain &  \\ \hline % 1934.50 \,
-$k_q$ & Valve flow gain & \\ \hline % 
-$k_{sv}k_q$ & Total valve flow gain & $0.0019345 \, \text{m}^3/\text{s/V}$ \\ \hline % 
-$k_c$ & Valve pressure-flow gain &   \\ \hline %$\text{m}^3/\text{s/kPa}$
-$C_l$ & Total leakage coefficient of the piston &  \\ \hline %$ \text{m}^3/\text{s/kPa}$
-$ k_{Pl}$ & $ = k_c + C_l $ & $ 1.67401\cdot 10^{-10}   \text{m}^3/\text{s/Pa} $\\ \hline
-$A$ & Area of the fluid under compression in the actuator & $0.012456 \, \text{m}^2$ \\ \hline
-$V_t$ & Total volume of the fluid under compression in the actuator & $0.002659 \, \text{m}^3$ \\ \hline
-$\beta_e$ & Effective bulk modulus of the system & $193716280 \, \text{Pa}$ \\ \hline
-$K_h$ & Oil-column frequency of the actuator $= 4*\beta_e A^2 / V_t$ & $45213171683 \, \text{Pa/m}$ \\ \hline
-$m_{sp}$ & Mass  of the SDOF structure & -  \\ \hline
-$k_{sp}$ & Stiffness of the SDOF structure & - \\ \hline
-$c_{sp}$ & Damping of the SDOF structure & - \\ \hline
-$m_p$ & Mass of the platen & $1975.1 \, \text{kg}$ \\ \hline
-$c_t$ & Combined damping force of the actuator and the platen & $5780.0 \, \text{Ns/m}$ \\ \hline
-$m_T$ & Total mass $= m_p + m_{sp}$  & - \\ \hline
-%$H_{sp}$ & Transfer function relating platen and SDOF structure displacement & - \\ \hline
+$k_p$ & Proportional gain of the controller & \SI{129.93}{\volt\per\meter} \\ \hline
+$\tau_{sv}$ & Time-delay parameter of the servo-valve transfer function & \SI{0.0246}{\second} \\ \hline
+$k_{sv}$ & Servo-valve gain & -- \\ \hline
+$k_q$ & Valve flow gain & -- \\ \hline
+$k_{sv}k_q$ & Total valve flow gain & \SI{0.0019345}{\meter\cubed\per\second\per\volt} \\ \hline
+$k_c$ & Valve pressure-flow gain & -- \\ \hline
+$C_l$ & Total leakage coefficient of the piston & -- \\ \hline
+$k_{Pl}$ & $= k_c + C_l$ & \SI{1.67401e-10}{\meter\cubed\per\second\per\pascal} \\ \hline
+$A$ & Area of the fluid under compression in the actuator & \SI{0.012456}{\meter\squared} \\ \hline
+$V_t$ & Total volume of the fluid under compression in the actuator & \SI{0.002659}{\meter\cubed} \\ \hline
+$\beta_e$ & Effective bulk modulus of the system & \SI{193716280}{\pascal} \\ \hline
+$K_h$ & Oil-column frequency of the actuator $\left( = 4 \cdot \beta_e \cdot A^2 / V_t \right)$ & \SI{45213171683}{\pascal\per\meter} \\ \hline
+$m_{sp}$ & Mass of the SDOF structure & -- \\ \hline
+$k_{sp}$ & Stiffness of the SDOF structure & -- \\ \hline
+$c_{sp}$ & Damping of the SDOF structure & -- \\ \hline
+$m_p$ & Mass of the platen & \SI{1975.1}{\kilogram} \\ \hline
+$c_t$ & Combined damping force of the actuator and the platen & \SI{5780.0}{\newton\second\per\meter} \\ \hline
+$m_T$ & Total mass $= m_p + m_{sp}$ & -- \\ \hline
 \end{tabular}
 \label{tab:parameters}
 \end{table}
@@ -2644,7 +2644,7 @@ Subsequently, the shared variables used for inter-layer communication (one of th
     \centering
     \fbox{\includegraphics[width=0.97\linewidth]{LabVIEW_figs/select_params.jpeg}}
     \caption{Controller gains menu on the HMI}
-    \label{fig_fpga_control_params}
+    \label{fig_select_params}
 \end{figure}
 
 Given the constraints on the availability of the hardware for implementation and testing, and the extensive modifications necessary at every layer of the software for implementation of the LQG servo controller, its implementation is pending.

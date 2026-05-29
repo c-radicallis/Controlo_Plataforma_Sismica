@@ -2572,7 +2572,7 @@ As an alternative to testing on LNEC's uniaxial shaking table, as a result of it
 An experimental facility comprising a small-scale shaking table with dedicated hardware and software is used to validate the methodology. The measurement and control chain is depicted on figure \ref{fig_Experimental_facility} and, consists of:
 \begin{itemize}
     \item Shaking Table, including a small-scale shaking table installed on a fixed base, along which it rolls over, driven by a Goodmans model 390A electrodynamic shaker, and a Linear Variable Differential Transformer (LVDT) measures the relative displacement of the platform;
-    \item Conditioning and Control unit, with a hardware rack comprising all required signal conditioning and control components, including sensor signal conditioners and a National Instruments PXI Real-Time Controller integrated with a CompactRIO system featuring a Virtex-5 FPGA, enabling autonomous real-time execution of control and acquisition tasks;
+    \item Conditioning and Control unit, with a hardware rack comprising all required signal conditioning and control components, including sensor signal conditioners and a National Instruments PXI Real-Time Controller integrated with a CompactRIO system featuring a PXI-7841R Virtex-5 FPGA, enabling autonomous real-time execution of control and acquisition tasks;
     \item Data Acquisition System comprising a host PC, where the experimental setup is configured using the NI LabVIEW environment, including the implementation and supervision of the control strategy, the data acquisition set-up, as well as the measurement and visualization of the experimental results.
 \end{itemize}
 
@@ -2600,7 +2600,54 @@ The system under study is a closed-loop control system, schematically illustrate
     \label{fig_Shaking table control loop}
 \end{figure}
 
-The control strategy currently implemented at LNEC is the OLI control approach. For the majority of applications, the PID controller parameters are tuned in advance for a specific test configuration and subsequently kept fixed throughout most experimental campaigns.
+The control strategy currently implemented at LNEC is the OLI control approach. For the majority of applications, the PI controller parameters are tuned in advance for a specific test configuration and subsequently kept fixed throughout most experimental campaigns.
+
+\subsection{Implementation of the PID-F Controller in the Shaking Table Control Software}
+
+In order to test the proposed controllers, the existing LNEC shaking table control software was modified to include them. The shaking table control software is a LabVIEW application, chosen for its native integration with the National Instruments (Fig. \ref{fig_labview_scheme}). The software architecture consists of three layers: a user interface running on a host computer (HMI), a Real-Time controller that executes the supervisory application (National Instruments PXI Real-Time Controller), and an FPGA (PXI-7841R) on which the control and data acquisition loop runs (Fig. \ref{fig_labview_scheme}).
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.5\linewidth]{LabVIEW_figs/HMI_RT_FPGA_Overview_1994019705.jpg}}
+    \caption{Embedded system components \citep{ni_hmi_rt_fpga_comm}}
+    \label{fig_labview_scheme}
+\end{figure}
+
+The implementation of the PID-F controller required modifications at each of these layers. At the FPGA level (Fig.\ref{fig_fpga_pmain}), the block responsible for computing the control action was modified to implement the desired PID-F structure.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.97\linewidth]{LabVIEW_figs/fpga_main.jpeg}}
+    \caption{Total FPGA main block: FPGA\_main.vi }
+    \label{fig_fpga_pmain}
+\end{figure}
+
+This proved non-trivial due to resource constraints on DSP48s operations within the FPGA. To overcome this, high-throughput math functions were employed for fixed-point arithmetic operations, with look-up tables used wherever possible to reduce DSP48s usage. The usage of LabVIEW FPGA high-throughout math blocks also implied the usage of fixed-point variables in the computations. As such, the controller gains, originally defined as 16-bit signed integers, were defined as 8-bit unsigned fixed-point values, with the bit allocation between integer and fractional parts chosen to maximise precision, while still offering the necessary operating range. This configuration allowed the modified control Virtual Instrument (VI) block (Fig. \ref{fig_fpga_pidf_v2}) to be successfully compiled and deployed to the FPGA.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.97\linewidth]{LabVIEW_figs/PIDF_V2.jpg}}
+    \caption{Controller block: FPGA\_PIDF\_V2.vi }
+    \label{fig_fpga_pidf_v2}
+\end{figure}
+
+Subsequently, the shared variables used for inter-layer communication (one of them shown in Fig. \ref{fig_fpga_control_params}) were updated to expose the PID-F controller gains, and the user interface was modified accordingly to allow the operator to set these gains during testing (Fig. \ref{fig_select_params}). This concludes the experimental implementation of the PID-F controller within the existing shaking table control software.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.97\linewidth]{LabVIEW_figs/fpag_main_zoom.jpeg}}
+    \caption{FPGA main block: "Control\_Params" cluster (containing the controller gains set by the user on the HMI) }
+    \label{fig_fpga_control_params}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.97\linewidth]{LabVIEW_figs/select_params.jpeg}}
+    \caption{Controller gains menu on the HMI}
+    \label{fig_fpga_control_params}
+\end{figure}
+
+Given the constraints on the availability of the hardware for implementation and testing, and the extensive modifications necessary at every layer of the software for implementation of the LQG servo controller, its implementation is pending.
 
 \section{Methodology}
 
@@ -2751,7 +2798,9 @@ The performance of each control method is evaluated through the acceleration and
 
 \subsection{System identification, Controller Tuning, \& Performance Evaluation}
 
-The complete identification results for every method, controller, and drive signal are shown in Appendix \ref{appendix:full_shaker_id_results}. Given the large differences between the various experiments in the results of the indirect method, and the mixed results of both the direct and two-stage method, from the fundamental knowledge of the applicability and limitations of these identification methods on closed-loop systems, it was decided to proceed with the model identified via the two-stage method resulting from the run with the controller proportional gain set to $K_P = 10 $.
+The complete identification results for all methods, controllers, and drive signals are presented in Appendix \ref{appendix:full_shaker_id_results}. 
+
+The indirect method yielded inconsistent results across experiments, and both the direct and two-stage methods produced mixed results. Based on the fundamental knowledge of applicability and limitations of each identification method in closed-loop systems, it was decided to proceed with the model identified via the two-stage method on the data from the run with the controller proportional gain set to $K_P = 10 $.
 
 The Bode plot of figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake} displays the result of the direct identification of the closed-loop with the controller set as proportional gain $K_p = 10$, and the expected closed-loop response with the respectively tuned controllers, computed from the plant model.
 
@@ -2768,16 +2817,24 @@ As for the performance evaluation for the benchmark earthquakes, the response sp
 
 \subsection{Summary of Results}
 
+\vspace{-2mm}
+
 The results obtained with the proposed methodology show how the tunning/optimization can improve significantly the performance of the system. It can be observed in \ref{Response spectra for a scaled-down Newhall fault parallel seismic signal} for acceleration and displacement response spectra of Newhall earthquake, respectively, that the PID-F controller closely matches the target response, the LQI achieves an even closer match, whereas the OLI method (LNEC's approach) remains further from the target even after the third drive iteration. The MSE values quantify the differences observed among the curves.
+
+\vspace{-2mm}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\linewidth]{experimental_validation/Response_Spectra_Tolmezzo_results.png}
-    \caption{Response spectra for a scaled-down Newhall fault parallel seismic signal}
+    \includegraphics[width=\linewidth]{Shaker_benchmark/newhall_20260525_1603/Response_Spectra_N.png}
+    \caption{Response spectra for a scaled-down Newhall fault normal seismic signal}
     \label{Response spectra for a scaled-down Newhall fault parallel seismic signal}
 \end{figure}
 
+\vspace{-2mm}
+
 The results obtained for the remaining earthquakes exhibit the same trend, as shown in figures \ref{Acceleration response spectrum MSE for various seismic signals} and \ref{Displacement response spectrum MSE for various seismic signals}. This analysis confirms the benefits of using the proposed methodology, consistently identifying the LQI controller as the one that achieves the best closed-loop performance results.
+
+\vspace{-2mm}
 
 \begin{figure}[H]
 \begin{minipage}{0.49\textwidth}
@@ -2795,6 +2852,7 @@ The results obtained for the remaining earthquakes exhibit the same trend, as sh
 \end{minipage}
 \end{figure}
 
+\vspace{-2mm}
 
 \chapter{Conclusions \& Outlook}
 
@@ -3093,7 +3151,7 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
     \caption{Response spectra for Sylmar fault parallel}
 \end{figure}
 
-\chapter{Shaker Identification Results}\label{appendix:full_shaker_id_results}
+\chapter{Electrodynamic Shaker Identification Results}\label{appendix:full_shaker_id_results}
 
 \begin{figure}[H]
 \begin{subfigure}{0.49\textwidth}
@@ -3185,9 +3243,85 @@ $f_1$ (Hz) & $f_2$ (Hz) & $\xi_1$ & $\xi_2$ & $i_{sv}$ (v) & $F_P$ (kN) & Accele
 \caption{ Autocorrelation of the residuals, and cross-correlation between the residuals and the inputs, for each identified model, for each experiment}
 \end{figure}
 
-\chapter{Shaker Control Strategy Performance Evaluation}\label{appendix:shaker_benchmark}
+\chapter{Control Strategy Performance Evaluation for Benchmark Earthquakes with Electrodynamic Shaker Model}\label{appendix:shaker_benchmark}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/elcentro_20260424_1833/Response_Spectra_N.png}
+    \caption{Response spectra for El Centro fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/elcentro_20260424_1833/Response_Spectra_P.png}
+    \caption{Response spectra for El Centro fault parallel}
+\end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/erzikan_20260427_1244/Response_Spectra_N.png}
+    \caption{Response spectra for Erzikan North-South}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/erzikan_20260427_1244/Response_Spectra_P.png}
+    \caption{Response spectra for Erzikan East-West}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/kobe_20260427_1452/Response_Spectra_N.png}
+    \caption{Response spectra for Kobe North-South}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/kobe_20260427_1452/Response_Spectra_P.png}
+    \caption{Response spectra for Kobe East-West}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/laquila_Response_Spectra_N.png}
+    \caption{Response spectra for L'Aquila}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/tolmezzo_Response_Spectra_N.png}
+    \caption{Response spectra for Tolmezzo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/rinaldi_20260428_1809/Response_Spectra_N.png}
+    \caption{Response spectra for Rinaldi fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/rinaldi_20260428_1809/Response_Spectra_P.png}
+    \caption{Response spectra for Rinaldi fault parallel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/newhall_20260525_1603/Response_Spectra_N.png}
+    \caption{Response spectra for Newhall fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/newhall_20260525_1603/Newhall_FP.jpg}
+    \caption{Response spectra for Newhall fault parallel}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/sylmar_20260427_1718/Response_Spectra_N.png}
+    \caption{Response spectra for Sylmar fault normal}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Shaker_benchmark/sylmar_20260427_1718/Response_Spectra_P.png}
+    \caption{Response spectra for Sylmar fault parallel}
+\end{figure}
 
 
 \end{document}

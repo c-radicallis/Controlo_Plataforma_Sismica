@@ -32,21 +32,12 @@
         "command": "bibtex",
         "args": ["%DOCFILE%"]
     },
-    {
-        "name": "makeindex-nomencl",
-        "command": "makeindex",
-        "args": ["%DOCFILE%.nlo", "-s", "nomencl.ist", "-o", "%DOCFILE%.nls"]
-    },
-    {
-        "name": "makeglossaries",
-        "command": "makeglossaries",
-        "args": ["%DOCFILE%"]
-    }
+
 ],
 "latex-workshop.latex.recipes": [
     {
-        "name": "pdflatex → bibtex → nomencl → glossaries → pdflatex",
-        "tools": ["pdflatex", "bibtex", "makeindex-nomencl", "makeglossaries", "pdflatex"]
+        "name": "pdflatex → bibtex → pdflatex",
+        "tools": ["pdflatex", "bibtex", "pdflatex"]
     }
 ]}
 

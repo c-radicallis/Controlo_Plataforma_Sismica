@@ -1,0 +1,41 @@
+Unicode character ̧ (U+0327)Unicode character ̧ (U+0327)[{
+	"resource": "/C:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sismica/LaTex_Extended_Article/extended_article.tex",
+	"owner": "LaTeX",
+	"severity": 8,
+	"message": "Unicode character ̧ (U+0327)",
+	"source": "LaTeX",
+	"startLineNumber": 1,
+	"startColumn": 1,
+	"endLineNumber": 1,
+	"endColumn": 65536,
+	"modelVersionId": 4,
+	"origin": "extHost1"
+}]~
+
+[{
+	"resource": "/C:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sismica/LaTex_Extended_Article/extended_article.tex",
+	"owner": "LaTeX",
+	"severity": 8,
+	"message": "Unicode character ̃ (U+0303)",
+	"source": "LaTeX",
+	"startLineNumber": 1,
+	"startColumn": 1,
+	"endLineNumber": 1,
+	"endColumn": 65536,
+	"modelVersionId": 4,
+	"origin": "extHost1"
+}]
+
+[{
+	"resource": "/C:/Users/afons/OneDrive - Universidade de Lisboa/Controlo de Plataforma Sismica/Report/LaTeX_Controlo_de_Plataforma_Sismica/LaTex_Extended_Article/extended_article.tex",
+	"owner": "LaTeX",
+	"severity": 8,
+	"message": "Undefined control sequence.",
+	"source": "LaTeX",
+	"startLineNumber": 1,
+	"startColumn": 1,
+	"endLineNumber": 1,
+	"endColumn": 65536,
+	"modelVersionId": 69,
+	"origin": "extHost1"
+}]

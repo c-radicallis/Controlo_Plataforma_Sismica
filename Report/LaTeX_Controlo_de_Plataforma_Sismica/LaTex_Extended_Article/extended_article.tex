@@ -1,0 +1,107 @@
+\documentclass[  10pt, twocolumn]{article} %draft ,
+% LTeX: enabled=false
+\usepackage{natbib}
+\usepackage[nottoc, notlot, notlof]{tocbibind}
+\usepackage[a4paper, tmargin=2.5cm, bmargin=2.5cm,lmargin=2.5cm, rmargin=2.5cm, includefoot] {geometry} % 
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{svg}
+\usepackage{caption} %[font=footnotesize]
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{subcaption}
+\usepackage{color,soul}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+\usepackage{physics}
+\usepackage{mathrsfs}
+\usepackage{tabularx}
+% \usepackage{multirow}
+% \usepackage{multicol}
+\usepackage{xurl}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=cyan,pdfpagelayout=TwoPageRight,pdftitle={Development of Control Strategies for Earthquake Reproduction on Shaking Platform}, pdfauthor={Afonso Costa Henrique},pdfsubject={Development of Control Strategies for Earthquake Reproduction on Shaking Platform}}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+% \usepackage{listings}
+% \usepackage{matlab-prettifier}
+\usepackage{float}
+\usepackage{silence}
+\WarningFilter{caption}{Unused}
+\WarningFilter{hyperref}{Draft mode on}
+\newcommand{\mycomment}[1]{}
+\usepackage{arydshln}
+\usepackage[english]{babel}
+\usepackage{cases}
+% \usepackage{siunitx}
+
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{10pt}{0pt}
+\titlespacing*{\subsection}{0pt}{10pt}{0pt}
+
+\usepackage{secdot}%% Also put a dot after the subsection number
+\sectiondot{subsection}%% Set a space between dot and heading text
+\sectionpunct{section}{. }    % By default, \sectiondot places a \quad
+\sectionpunct{subsection}{. } % after the number
+
+\usepackage{indentfirst}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns,decorations.pathmorphing,positioning,arrows.meta, positioning, shapes.multipart, calc,arrows, positioning, calc, shapes.geometric}
+%% ----- FONT SELECTION -----
+\usepackage[nopatch=footnote]{microtype}   % fine-tunes spacing to avoid overflows
+% \usepackage{lmodern}     % improved CM Roman
+\renewcommand{\rmdefault}{phv}
+\renewcommand{\sfdefault}{phv}
+
+\raggedbottom
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \pagestyle{plain}% Apply the general page style to all pages by default
+% \pagenumbering{arabic}
+
+\begin{document}
+\normalsize
+
+\twocolumn[
+\title{Development of Control Strategies for Earthquake Reproduction on Shaking Platform}
+\date{May 2026}
+\author{Afonso Costa Henrique \\ afonso.henrique@tecnico.ulisboa.pt \\ \\ Instituto Superior T\'{e}cnico, Lisboa, Portugal}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT & KEYWORDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+This paper presents two model-based controllers for the accurate simulation of earthquakes using an experimental seismic shaking table. Reproducing recorded earthquake ground-motion time histories, along with the analysis of their effects on built structures through scaled laboratory experiments remains a challenging task. A primary concern is ensuring that the vibration response spectrum of the seismic shaking table accurately matches the target earthquake signal. During the experiments, the dynamic response of the mounted coupled physical structure must not interfere with the seismic shaking table motion intended to reproduce the earthquake excitation. This requirement can be formulated as a disturbance rejection problem, for which two model-based control strategies are proposed: a Filtered PID (PID-F) controller and a Linear Quadratic Integral (LQI) controller. In both approaches, the identification of the dynamic model of the combined system (the shaking table platform and the mounted coupled structure) is required, for which the two-stage closed-loop identification method is used. The performance of both controllers, and the OLI method, are evaluated using eight benchmark real earthquake ground-motion records, firstly, with a model of LNEC's uniaxial shaking table, and then, with a model of a small-scale eletrodynamic shaking table  identified experimentally via two-stage method. The results show that the performance of both the PID-F and LQI controllers outperform the standard Online Iteration (OLI) method currently in use at the Laboratório Nacional de Engenharia Civil. Among the two proposed approaches, the LQI controller achieves the best results by minimizing the squared error between the target and measured response spectra of the earthquake reference signal. Overall, these results open the possibility of exploring new control techniques for reproducing simulated earthquakes in laboratory-scale experimental setups.
+
+\noindent{{\bf Keywords:}} Earthquake Engineering, Control Systems, System Identification, Closed-loop Identification
+
+\end{abstract}
+% End one column section (begin default two columns)
+]
+
+
+
+
+\section{Conclusions \& Outlook}
+
+This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and, moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
+
+Given the nature of shaking table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
+
+The final step of the proposed methodology consists in implementing the optimized controllers on the physical system (small-scale shaking table). Completing this step will close the loop of the methodology and will enable the verification and confirmation of the results and the achieved performance. Subsequently, the methodology is intended to be implemented on LNEC's uniaxial shaking table, where the same analysis will be conducted to assess its effectiveness on larger-scale systems. This future stage aims to evaluate the scalability, robustness, and practical applicability of the proposed control strategy under more demanding testing conditions. After demonstrating their superior performance, the proposed methodology will be applied on future shaking table tests.
+
+
+% \clearpage 
+%% BIBLIOGRAFIA
+\bibliographystyle{abbrvnat}
+\setcitestyle{authoryear}
+\bibliography{bibfile}
+
+\end{document}

@@ -56,9 +56,6 @@
 \titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 
-\let\oldsection\chapter
-\renewcommand{\chapter}{\cleardoublepage\oldsection}
-
 \usepackage{indentfirst}
 
 \usepackage{tikz}
@@ -265,8 +262,7 @@ A few words about the university, financial support, research advisor, dissertat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\mbox{}
-\newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -288,7 +284,7 @@ Os resultados indicam que ambos os controladores, PID-F e LQI, oferecem desempen
 \end{otherlanguage}
 %%%%%
 % LTeX: enabled=true
-\clearpage
+%\clearpage
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}% Add entry in the table of contents as section
 
@@ -305,10 +301,10 @@ The results indicate that both the PID-F and the LQI controllers offer superior 
 \textbf{Keywords:} : Earthquake Engineering, Control Systems, System Identification, Closed-loop Identification
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\cleardoublepage 
 \tableofcontents % Indice
 
 \cleardoublepage 
+
 \phantomsection
 \addcontentsline{toc}{section}{List of Tables}
 \listoftables % Tabelas
@@ -320,21 +316,19 @@ The results indicate that both the PID-F and the LQI controllers offer superior 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\clearpage
 \phantomsection
 \addcontentsline{toc}{section}{Nomenclature}
 \printnomenclature
 
-
-\clearpage
 \phantomsection
 %\addcontentsline{toc}{section}{Glossary}% Add entry in the table of contents as section
 \glsaddall
 \printglossary[type=\acronymtype,title=\acronymname, toctitle=\acronymname]
 
 
+\let\oldsection\chapter
+\renewcommand{\chapter}{\cleardoublepage\oldsection}
 
-%\clearpage
 \pagestyle{plain}% Apply the general page style to all pages by default
 \pagenumbering{arabic}
 \chapter{Introduction}
@@ -360,6 +354,7 @@ At the Laboratório Nacional de Engenharia Civil (LNEC) a Goodmans model VG-108 
     \label{fig_3D_render_triaxial}
 \end{minipage}
 \end{figure}
+
 
 \clearpage
 \section{Seismic Platform  Tests at LNEC}

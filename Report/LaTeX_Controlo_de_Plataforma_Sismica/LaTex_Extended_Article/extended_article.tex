@@ -1,7 +1,7 @@
 \documentclass[ 10pt, twocolumn]{article} %draft ,
 % LTeX: enabled=false
 \usepackage[numbers]{natbib}
-\usepackage[a4paper, tmargin=2.5cm, bmargin=2.5cm,lmargin=2.5cm, rmargin=2.5cm, includefoot] {geometry} % 
+\usepackage[a4paper, tmargin=25mm, bmargin=20mm,lmargin=25mm, rmargin=25mm, includefoot] {geometry} % 
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{svg}
@@ -37,8 +37,8 @@
 % \usepackage{siunitx}
 
 \usepackage{titlesec}
-\titlespacing*{\section}{0pt}{10pt}{0pt}
-\titlespacing*{\subsection}{0pt}{10pt}{0pt}
+\titlespacing*{\section}{0pt}{2mm}{0pt}
+\titlespacing*{\subsection}{0pt}{2mm}{0pt}
 \titleformat{\section}
   {\normalfont\bfseries\fontsize{10}{12}\selectfont}
   {\thesection.}
@@ -63,28 +63,36 @@
 
 \usepackage{dblfloatfix}
 \renewcommand{\bottomfraction}{0.9}
-\renewcommand{\topfraction}{0.4}
+\renewcommand{\topfraction}{0.8}
 \renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.8}
+\setcounter{bottomnumber}{5}
+\setcounter{topnumber}{5}
+\setcounter{totalnumber}{10}
 \makeatletter
 \def\fps@figure{b}
 \def\fps@table{b}
 \makeatother
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
-\twocolumn[
+\twocolumn[\vspace*{-8mm}
 \title{Development of Control Strategies for Earthquake Reproduction on Shaking Platform}
 \date{May 2026}
 \author{Afonso Costa Henrique \\ afonso.henrique@tecnico.ulisboa.pt \\ Instituto Superior Técnico, Lisboa, Portugal}
 \maketitle
-\vspace{-5mm}
-]% End one column section (begin default two columns)
+\vspace{-7mm}
 
 \textbf{Abstract} - This paper presents two model-based controllers for the accurate simulation of earthquakes using an experimental seismic shaking table. Reproducing recorded earthquake ground-motion time histories, along with the analysis of their effects on built structures through scaled laboratory experiments remains a challenging task. A primary concern is ensuring that the vibration response spectrum of the seismic shaking table accurately matches the target earthquake signal. During the experiments, the dynamic response of the mounted coupled physical structure must not interfere with the seismic shaking table motion intended to reproduce the earthquake excitation. This requirement can be formulated as a disturbance rejection problem, for which two model-based control strategies are proposed: a Filtered PID (PID-F) controller and a Linear Quadratic Integral (LQI) controller. In both approaches, the identification of the dynamic model of the combined system (the shaking table platform and the mounted coupled structure) is required, for which the two-stage closed-loop identification method is used. The performance of both controllers, and the OLI method, are evaluated using eight benchmark real earthquake ground-motion records, firstly, with a model of LNEC's uniaxial shaking table, and then, with a model of a small-scale eletrodynamic shaking table  identified experimentally via two-stage method. The results show that the performance of both the PID-F and LQI controllers outperform the standard Online Iteration (OLI) method currently in use at the Laboratório Nacional de Engenharia Civil. Among the two proposed approaches, the LQI controller achieves the best results by minimizing the squared error between the target and measured response spectra of the earthquake reference signal. Overall, these results open the possibility of exploring new control techniques for reproducing simulated earthquakes in laboratory-scale experimental setups.
 
 \noindent{{\bf Keywords:}} Earthquake Engineering, Control Systems, Closed-loop System Identification
+\vspace{3mm}
+]% End one column section (begin default two columns)
+
+
 
 \section{Introduction} %%%%%   %%%%%  %%%%%    %%%%%   %%%%%  
 

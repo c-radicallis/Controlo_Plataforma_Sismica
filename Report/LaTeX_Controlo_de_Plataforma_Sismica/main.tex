@@ -1654,13 +1654,13 @@ $m_T$ & Total mass $= m_p + m_{sp}$ & -- \\ \hline
 \end{table}
 
 
-\subsection{Mathematical Model for LNEC Uniaxial Shaking Table with a Coupled 2DOF System}
+\subsection{A Model for LNEC Uniaxial Shaking Table with a Coupled 2DOF System}
 
 In order to determine a model for the shaking table with a coupled 2DOF systems, which will represent the essential dynamics of usual test specimens, firstly, the block diagram (in figure \ref{fig_clean_block_force_output}) containing only part of the system, which includes the controller, servo valve, and hydraulic actuator, was built:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Modelling/ST1D_block_diagram.png}
+    \includegraphics[width=\linewidth]{Modelling/ST1D_block_diagram.png}
         % \begin{tikzpicture}[
         %     block/.style = {draw, thick, rectangle, minimum height=2.2em, align=center},
         %     sum/.style   = {draw, thick, circle, minimum size=2em, inner sep=0pt},
@@ -2451,7 +2451,7 @@ The \emph{Adapt} target file (.tgt) contains displacement and acceleration signa
 The first driver (driver zero) was generated using just the target file. This driver was then converted to text format using the previously mentioned Python functions, and then input into the Matlab model. From the simulation displacement output, the acceleration was computed using a second order central difference. This data was then written to \emph{.acq} format, and used, along with the target file, to generate driver 1  in \emph{Adapt.exe}. The same process was repeated to generate subsequent driver until the output response spectra was deemed to be sufficiently close to the target response spectra.
 
 \paragraph{Application example: Discussion of Method \& Results} \label{sec_OLI_Application_example}
-In this application example of the OLI method, the target signal is the L'Aquila reduced-scale earthquake, and the test specimen modal properties are those described in Section~\ref{sec_Simulating_OLI}. For the driver generation settings, which were kept throughout, coherence threshold was set to 0.9, maximum frequency compensation was set to 25Hz, and the correction factor was set to 0.65. For the identification, various settings were used, while window overlap was set to 0.5 and preserved as such, and the results are shown in figure \ref{bode_compare}, where a large number of windows results in a poor identification; in figure \ref{bode_compare_better_id}, where using 1024 Low Sidelobe windows results in an improved approximation of the transfer function, but identification still is unable to capture the resonance/anti-resonance at 1.5 Hz; and in figure \ref{FRFvsModelTF}, where the increasedg the width of the windows, in this case, using 20 Hanning windows results in a much better identification, now capturing the resonance/anti-resonance at around 1.5 Hz (however, the use of so few windows likely wouldn't work if the identification was being done with noisy experimental data).
+In this application example of the OLI method, the target signal is the L'Aquila reduced-scale earthquake, and the test specimen modal properties are those described in Section \ref{sec_Simulating_OLI}. For the driver generation settings, which were kept throughout, coherence threshold was set to 0.9, maximum frequency compensation was set to 25Hz, and the correction factor was set to 0.65. For the identification, various settings were used, while window overlap was set to 0.5 and preserved as such, and the results are shown in figure \ref{bode_compare}, where a large number of windows results in a poor identification; in figure \ref{bode_compare_better_id}, where using 1024 Low Sidelobe windows results in an improved approximation of the transfer function, but identification still is unable to capture the resonance/anti-resonance at 1.5 Hz; and in figure \ref{FRFvsModelTF}, where the increasedg the width of the windows, in this case, using 20 Hanning windows results in a much better identification, now capturing the resonance/anti-resonance at around 1.5 Hz (however, the use of so few windows likely wouldn't work if the identification was being done with noisy experimental data).
 
 The identified FRF which largely matches the model, shown in figure \ref{bode_compare_better_id}, yields adapted drivers which mostly converge to the target response spectra. Nevertheless, three iterations are still required to approximate the target, and the method does not perform as well as the LQI and PID-F controllers.
 

@@ -24,7 +24,8 @@ R.~Bairr{\~a}o and Duque.
 
 \bibitem[Botto(2021)]{Botto}
 M.~A. Botto.
-\newblock Optimal control, 2021.
+\newblock {Lecture notes on Optimal Control}.
+\newblock Lecture notes, Instituto Superior Técnico, Departamento de Engenharia Mecânica, IDMEC, Lisboa, Portugal, 2021.
 
 \bibitem[Bousias(2017)]{Bousias2017Experimental}
 S.~Bousias.
@@ -228,7 +229,7 @@ G.~Shen, X.~Li, Z.~Zhu, Y.~Tang, W.~dong Zhu, and S.~Liu.
 
 \bibitem[S{\"o}derstr{\"o}m and Stoica(1989)]{Soderstrom_Stoica}
 T.~S{\"o}derstr{\"o}m and P.~Stoica.
-\newblock \emph{System Identification}.
+\newblock \emph{{System Identification}}.
 \newblock Prentice Hall International Series in Systems and Control Engineering. Prentice Hall International, Hemel Hempstead, UK, 1989.
 \newblock ISBN 0-12-881236-5.
 
@@ -240,7 +241,8 @@ D.~P. Stoten and E.~G. G{\'o}mez.
 
 \bibitem[{Sá da Costa}(2012)]{Sa_da_Costa}
 J.~{Sá da Costa}.
-\newblock Optimal control, 2012.
+\newblock Optimal control.
+\newblock Lecture notes, Instituto Superior Técnico, 2012.
 
 \bibitem[Tang et~al.(2020)Tang, Dietz, Hong, and Li]{Tang2020Performance}
 Z.~Tang, M.~Dietz, Y.~Hong, and Z.~Li.
@@ -267,13 +269,14 @@ G.~Tsinidis, F.~D. Silva, I.~Anastasopoulos, E.~Bilotta, A.~Bobet, Y.~Hashash, C
 
 \bibitem[Valério(2025)]{DuarteValerio}
 D.~Valério.
-\newblock Lecture notes of signals, systems and control, November 2025.
+\newblock {Lecture Notes of Signals, Systems and Control}.
+\newblock Lecture notes, Instituto Superior Técnico, Departamento de Engenharia Mecânica, IDMEC, November 2025.
 \newblock URL \url{https://fenix.tecnico.ulisboa.pt/downloadFile/2252418289018459/Signals_systems_and_control.pdf}.
 
 \bibitem[Van~den Hof(2020)]{VanDenHof2020}
 P.~M.~J. Van~den Hof.
-\newblock System identification -- data-driven modelling of dynamic systems.
-\newblock Eindhoven, The Netherlands, February 2020.
+\newblock {System Identification -- Data-Driven Modelling of Dynamic Systems}.
+\newblock Lecture notes, Eindhoven University of Technology, Control Systems Group, Department of Electrical Engineering, Eindhoven, The Netherlands, February 2020.
 \newblock URL \url{http://publications.pvandenhof.nl/discsysid/ManuscrSysid_Febr2020.pdf}.
 
 \bibitem[{Van Den Hof} and Schrama(1993)]{vandenhof1993}

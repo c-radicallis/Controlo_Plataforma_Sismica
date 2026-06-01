@@ -59,18 +59,21 @@
 \renewcommand{\rmdefault}{phv}
 \renewcommand{\sfdefault}{phv}
 
-% \usepackage{dblfloatfix}
-\renewcommand{\bottomfraction}{0.6}
-\renewcommand{\topfraction}{0.0}
-\renewcommand{\textfraction}{0.05}
-\renewcommand{\floatpagefraction}{0.8}
-\setcounter{bottomnumber}{5}
-\setcounter{topnumber}{5}
-\setcounter{totalnumber}{10}
-\makeatletter
-\def\fps@figure{b}
-\def\fps@table{b}
-\makeatother
+\renewcommand{\bottomfraction}{0.95}
+% \renewcommand{\topfraction}{0.0}
+% \renewcommand{\textfraction}{0.05}
+% \renewcommand{\floatpagefraction}{0.95}
+% \setcounter{bottomnumber}{5}
+% \setcounter{topnumber}{5}
+% \setcounter{totalnumber}{10}
+% \makeatletter
+% \def\fps@figure{b}
+% \def\fps@table{b}
+% \makeatother
+
+\usepackage{stfloats}
+\usepackage{subcaption}
+\usepackage{placeins}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -107,7 +110,7 @@ This paper starts in Section I with a brief introduction to the seismic shaking 
 
 The current control strategy implemented in the LNEC's seismic shaking table tests is based on the OLI algorithm. It involves the iterative synthesis of a drive signal with progressively increasing severity, aiming to ensure that the platform accurately reproduces the response spectra of the reference signal, i.e., the target earthquake (Fig.\ref{fig_1}). The experimental test procedure consists in testing the structure to a series of test steps starting with a low severity earthquake (scaled earthquake) and then repeat for the same earthquake at a higher severity (higher amplitude), until a defined amplitude is reached which usually corresponds to the original amplitude of the earthquake - reference severity.
 
-\begin{figure}%[H]
+\begin{figure}%
     \centering
     \includegraphics[width=\linewidth]{lnec_test_process_diagram.jpg}
     \caption{Current LNEC's seismic experimental test procedure}
@@ -116,7 +119,7 @@ The current control strategy implemented in the LNEC's seismic shaking table tes
 
 At each test step the structural damage is accessed and, before starting a new test step, the system's transfer function is identified using a band-limited pink noise input signal (with a slope of -10dB/decade). This transfer function is then used to generate the drive signal for each test step. Throughout this process, the amplitude of the reference signal increases progressively, and it is expected that the coupled physical structure will enter a non-linear regime, either due to the behaviour of some of its components or the damage accumulated during the various tests. At each test step, the system's performance is evaluated by comparing the response spectrums of the reference signal with the platform (Fig.\ref{fig_2}).
 
-\begin{figure}%[H]
+\begin{figure}%
     \centering
     \includegraphics[width=\linewidth]{Response_Spectra_OLI_accel.png}
     \caption{Acceleration response spectrum evolution for the scaled L'Aquila seismic signal using four iteratively generated drive signals.}
@@ -131,7 +134,7 @@ To overcome these limitations a control methodology for shaking table using an o
 
 An experimental facility comprising a small-scale seismic shaking table with dedicated hardware and software is used to validate the methodology. The measurement and control chain is depicted on Fig.\ref{fig_3} consisting on: i) Shaking Table, including a small-scale shaking table installed on a fixed base, along which it rolls over, driven by a Goodmans model 390A electrodynamic shaker, and a Linear Variable Differential Transformer (LVDT) measures the relative displacement of the platform; ii) Conditioning and Control unit, with a hardware rack comprising all required signal conditioning and control components, including sensor signal conditioners and a National Instruments PXI Real-Time Controller integrated with a CompactRIO system featuring a Virtex-5 FPGA, enabling autonomous real-time execution of control and acquisition tasks; iii) and, Data Acquisition System comprising a host PC, where the experimental setup is configured using the NI LabVIEW environment, including the implementation and supervision of the control strategy, the data acquisition set-up, as well as the measurement and visualization of the experimental results. 
 
-\begin{figure}%[H]
+\begin{figure}%
     \centering
     \includegraphics[width=\linewidth]{experimental_validation/shaker_whole_system.png}
     \caption{Experimental facility}
@@ -142,7 +145,7 @@ One key advantage of this system framework is the modularity, since both data ac
 
 The approach proposed in this paper considers the full system as a closed-loop control system schematically illustrated in Fig.\ref{fig_4}, comprising of two blocks: i) a given controller, which in this paper is a PID-F controller or an optimal LQI controller; and ii) the controlled system, consisting of the shaking- able hardware, including its mechanical and electrical components, together with the top-mounted coupled structure (also referred as the physical model). The controller is designed to minimize the error between the output signal y, corresponding to the shaking table motion, and the reference signal r, corresponding to the earthquake signal.
 
-\begin{figure}%[H]
+\begin{figure}%
     \centering
     \includegraphics[width=\linewidth]{experimental_validation/mini_table_control_loop.png}
     \caption{Seismic shaking table control loop}
@@ -153,86 +156,88 @@ The control strategy currently implemented at LNEC is the OLI control approach. 
 
 \section{Methodology}
 
-This section details the system identification method used, the controllers design, and how the performance evaluation is measured. Firstly, the two-stage closed-loop identification method \cite{vandenhof1993} is addressed. Then the open-loop driver signal design procedure currently used at LNEC is described. This method will serve as a baseline for different controller performance comparison. Finally, the two proposed controllers are designed.
+This section details the identification of the models used in this study, the controllers design, and how controller performance was evaluated. 
 
-A dynamic model identification of the plant (shaking table and the mounted coupled structure) is needed for tunning the controllers. To this end an identification experiment is carried out using a band-limited pink noise driver signal, with amplitude of approximately ±4 mm, with the controller set with proportional gain Kp=10 V/m, and data acquisition at 200 Hz. A sampling period of 5 ms is used throughout. The imperative of running experiments under closed-loop control poses additional challenges for identifying the plant. To address the particularities of a closed-loop identification, the two-stage method \cite{vandenhof1993} illustrated in Fig.\ref{fig_two_stage_block_tikz} is applied. 
+Firstly, the model for LNEC's uniaxial shaking table is introduced. Then, the two-stage closed-loop identification method \cite{vandenhof1993} for the identification of the eletrodynamic shaker is addressed.
+
+For the control strategies, the OLI method currently used at LNEC is described, and this method will serve as a baseline for different controller performance comparison. Finally, the design of the PID-F and LQI controllers .
 
 \subsection{LNEC Uniaxial Shaking Table Model}
 
-In \citet{tekeste2021}, a model of the ST1D coupled with a 1DOF system was developed by parameterizing linearized analytical models of its individual components. To derive a model for the shaking table coupled with a 2DOF mass-spring-damper system (representative of the essential dynamics of typical test specimens) a block diagram comprising the controller, servo valve, and hydraulic system (Fig.\ref{fig_clean_block_force_output}) was first constructed. Subsequently, transfer functions for the complete system were derived. The resulting model was employed in all simulations of the 1DST.
-\begin{figure*}
-    \centering
-    \includegraphics[width=\linewidth]{ST1D_block_diagram.png}
-        % \begin{tikzpicture}[
-        %     block/.style = {draw, thick, rectangle, minimum height=2.2em, align=center},
-        %     sum/.style   = {draw, thick, circle, minimum size=2em, inner sep=0pt},
-        %     >=Stealth, thick, font=\small,
-        %     node distance=2.0cm and 1.6cm
-        %     ]
+In \citet{tekeste2021}, a model of the ST1D coupled with a 1DOF system was developed by parameterizing linearized analytical models of its individual components. To derive a model for the shaking table coupled with a 2DOF mass-spring-damper system (representative of the essential dynamics of typical test specimens) a block diagram comprising the controller, servo valve, and hydraulic system was first constructed. Subsequently, transfer functions for the complete system were derived. The resulting model was employed in all simulations of the ST1D.
+% \begin{figure*}
+%     \centering
+%     \includegraphics[width=\linewidth]{ST1D_block_diagram.png}
+%         % \begin{tikzpicture}[
+%         %     block/.style = {draw, thick, rectangle, minimum height=2.2em, align=center},
+%         %     sum/.style   = {draw, thick, circle, minimum size=2em, inner sep=0pt},
+%         %     >=Stealth, thick, font=\small,
+%         %     node distance=2.0cm and 1.6cm
+%         %     ]
 
-        %     %--- Main signal path ---
-        %     \node (xref) {$X_{\mathrm{ref}}$};
+%         %     %--- Main signal path ---
+%         %     \node (xref) {$X_{\mathrm{ref}}$};
 
-        %     \node[sum, right=2.0cm of xref] (s1) at (0,0) {};
-        %     \node[font=\tiny] at ($(s1)+(-0.30, 0.25)$) {$+$};
-        %     \node[font=\tiny] at ($(s1)+(-0.08,-0.33)$) {$-$};
+%         %     \node[sum, right=2.0cm of xref] (s1) at (0,0) {};
+%         %     \node[font=\tiny] at ($(s1)+(-0.30, 0.25)$) {$+$};
+%         %     \node[font=\tiny] at ($(s1)+(-0.08,-0.33)$) {$-$};
 
-        %     \node[block, minimum width=1.6cm, right=of s1, label=above:{\footnotesize Controler}] (gc) {$G_c$};
+%         %     \node[block, minimum width=1.6cm, right=of s1, label=above:{\footnotesize Controler}] (gc) {$G_c$};
 
-        %     \node[block, minimum width=3.6cm, right=of gc, label=above:{\footnotesize Servo-Valve}] (sv)
-        %         {$\dfrac{K_{sv}}{1+s\cdot\tau_{sv}}$};
+%         %     \node[block, minimum width=3.6cm, right=of gc, label=above:{\footnotesize Servo-Valve}] (sv)
+%         %         {$\dfrac{K_{sv}}{1+s\cdot\tau_{sv}}$};
 
-        %     \node[block, minimum width=1.6cm, right=of sv] (kq) {$K_q$};
+%         %     \node[block, minimum width=1.6cm, right=of sv] (kq) {$K_q$};
 
-        %     \node[sum, right=of kq] (s2) {};
-        %     \node[font=\tiny] at ($(s2)+(-0.33, 0.25)$) {$+$};
-        %     \node[font=\tiny] at ($(s2)+(-0.33,-0.25)$) {$-$};
+%         %     \node[sum, right=of kq] (s2) {};
+%         %     \node[font=\tiny] at ($(s2)+(-0.33, 0.25)$) {$+$};
+%         %     \node[font=\tiny] at ($(s2)+(-0.33,-0.25)$) {$-$};
 
-        %     \node[block, minimum width=4.0cm, right=of s2] (hyd)
-        %         {$\dfrac{1}{C_\ell + s\cdot A^2/k_h}$};
+%         %     \node[block, minimum width=4.0cm, right=of s2] (hyd)
+%         %         {$\dfrac{1}{C_\ell + s\cdot A^2/k_h}$};
 
-        %     \node[block, minimum width=1.6cm, right=of hyd] (Abl) {$A$};
+%         %     \node[block, minimum width=1.6cm, right=of hyd] (Abl) {$A$};
 
-        %     \node[right=of Abl] (fp) {$F_P$};
+%         %     \node[right=of Abl] (fp) {$F_P$};
 
-        %     %--- Feedback blocks ---
-        %     \node[block, minimum width=1.6cm, above=3.2cm of hyd] (kc) {$K_c$};
-        %     \node[block, minimum width=1.6cm, below=2.8cm of s2] (As) {$A\cdot s$};
+%         %     %--- Feedback blocks ---
+%         %     \node[block, minimum width=1.6cm, above=3.2cm of hyd] (kc) {$K_c$};
+%         %     \node[block, minimum width=1.6cm, below=2.8cm of s2] (As) {$A\cdot s$};
 
-        %     %--- Forward path arrows ---
-        %     \draw[->] (xref) -- (s1);
-        %     \draw[->] (s1)   -- node[above]{$e(t)$}        (gc);
-        %     \draw[->] (gc)   -- node[above]{$i_{sv}$}   (sv);
-        %     \draw[->] (sv)   -- node[above]{$x_{sv}$}   (kq);
-        %     \draw[->] (kq)   -- node[above]{$Q_L$}      (s2);
-        %     \draw[->] (s2)   -- node[above]{$Q$}        (hyd);
-        %     \draw[->] (hyd)  -- node[above]{$P_L$}      (Abl);
-        %     \draw[->] (Abl)  -- (fp);
+%         %     %--- Forward path arrows ---
+%         %     \draw[->] (xref) -- (s1);
+%         %     \draw[->] (s1)   -- node[above]{$e(t)$}        (gc);
+%         %     \draw[->] (gc)   -- node[above]{$i_{sv}$}   (sv);
+%         %     \draw[->] (sv)   -- node[above]{$x_{sv}$}   (kq);
+%         %     \draw[->] (kq)   -- node[above]{$Q_L$}      (s2);
+%         %     \draw[->] (s2)   -- node[above]{$Q$}        (hyd);
+%         %     \draw[->] (hyd)  -- node[above]{$P_L$}      (Abl);
+%         %     \draw[->] (Abl)  -- (fp);
 
-        %     %--- Kc feedback path ---
-        %     \coordinate (pl_tap) at ($(hyd.east)!0.5!(Abl.west)$);
-        %     \draw (pl_tap) -- ++(0,3.2) coordinate (kc_in);
-        %     \draw[->] (kc_in) -- (kc.east);
-        %     \draw[->] (kc.west) -- ++(-1.5,0) |- (s2.north);
+%         %     %--- Kc feedback path ---
+%         %     \coordinate (pl_tap) at ($(hyd.east)!0.5!(Abl.west)$);
+%         %     \draw (pl_tap) -- ++(0,3.2) coordinate (kc_in);
+%         %     \draw[->] (kc_in) -- (kc.east);
+%         %     \draw[->] (kc.west) -- ++(-1.5,0) |- (s2.north);
 
-        %     %--- XT bottom feedback line ---
-        %     \draw (s1.south) -- ++(0,-1.4) coordinate (xt_left);
-        %     \draw (As.south) -- ++(0,-1.4) coordinate (xt_mid);
-        %     \draw[->] (xt_left) -- ++(18.0,0) node[right]{$X_T$};
-        %     \draw[->] (xt_left) -- (s1.south);   % into s1 (negative)
-        %     \draw[->] (xt_mid)  -- (As.north);   % into A·s
-        %     \draw[->] (As.north) -- (s2.south);  % A·s output into s2 (negative)
+%         %     %--- XT bottom feedback line ---
+%         %     \draw (s1.south) -- ++(0,-1.4) coordinate (xt_left);
+%         %     \draw (As.south) -- ++(0,-1.4) coordinate (xt_mid);
+%         %     \draw[->] (xt_left) -- ++(18.0,0) node[right]{$X_T$};
+%         %     \draw[->] (xt_left) -- (s1.south);   % into s1 (negative)
+%         %     \draw[->] (xt_mid)  -- (As.north);   % into A·s
+%         %     \draw[->] (As.north) -- (s2.south);  % A·s output into s2 (negative)
 
-        % \end{tikzpicture}
-    \caption{Block diagram of the ST1D}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
-    \label{fig_clean_block_force_output}
-\end{figure*}
+%         % \end{tikzpicture}
+%     \caption{Block diagram of the ST1D}%, with position $X_{ref}$ as input and force applied to the platen $F_P$ as output.
+%     \label{fig_clean_block_force_output}
+% \end{figure*}
 
 \subsection{Eletrodynamic Shaker Model}
 
 A dynamic model identification of the plant (shaking table and the mounted coupled structure) is needed for tunning the controllers. To this end an identification experiment is carried out using a band-limited pink noise driver signal, with amplitude of approximately ±4 mm, with the controller set with proportional gain Kp=10 V/m, and data acquisition at 200 Hz. A sampling period of 5 ms is used throughout. The imperative of running experiments under closed-loop control poses additional challenges for identifying the plant. To address the particularities of a closed-loop identification, the two-stage method \cite{vandenhof1993} illustrated in Fig.\ref{fig_two_stage_block_tikz} is applied. 
 
-\begin{figure}%[H]
+\begin{figure}%
     \centering
     \includegraphics[width=\linewidth]{two_stage_block_diagram.jpg}
         % \begin{tikzpicture}[circ/.style = {draw, circle, minimum size=8mm, inner sep=0pt}, thick ]
@@ -285,18 +290,19 @@ A dynamic model identification of the plant (shaking table and the mounted coupl
 
 Firstly, the sensitivity function with controller, $S_0 C$, is identified by fitting a linear FIR model with 100 parameters (the order of the model needs to be high enough to reproduce the noise-free control action, and high variance is not of concern). Then a Hammerstein-Wiener model is defined, using the previously identified FIR model as the linear block, and with the output nonlinearity equal to that of the physical system (saturation of the control action at known values), resulting in a more refined model for the sensitivity function. This function is then used to compute the noise-free control action $u_r$, from which (by being uncorrelated with the output y) the plant $G_0$ can now be estimated without bias introduced by the controller in the feedback loop.  The model resulting from the two-stage identification was employed in the simulations with the PID-F and LQI controllers.
 
+
 \subsection{Control Strategies}
 
 \subsubsection{LNEC's Driver Signal Iterative Adaptation Process (OLI method)}
 This control technique is known as Online Iteration (OLI) [MTS Systems], as it iteratively modifies the command input on an individual sample-by-sample basis until the system response is close to the target. 
-This method compensates the next drive signal with a drive correction signal which is computed from filtering the previous iteration error with the inverse model of the closed-loop frequency response function. The closed-loop frequency response function (FRF) is estimated via a nonparametric identification method by spectral analysis. To this end, the user interface of the driver iteration program allows many different settings for the identification. For the simulations of the OLI method, in the case of the 1DST model, the identification settings were 0.5 window overlap for 20 Hanning windows, with FRF mode set to H3, no filtering, and displacement/acceleration cross-over frequency turned off, and the driver adaptation settings were kept as described in Section \ref{sec_OLI_Application_example}; And, in the case of the eletrodynamic shaker, the identification used the experimentally acquired data with the band-limited pink noise, using controller with proportional gain $K_p=10$, and the FRF identification settings use Hanning window with the number of windows set to 8192 with 97\% overlap, and the FRF mode is set to H3. During the driver adaptation process, settings such as correction factor and maximum frequency compensation are adjusted as needed, while the coherence threshold is left at 90\%.
+This method compensates the next drive signal with a drive correction signal which is computed from filtering the previous iteration error with the inverse model of the closed-loop frequency response function. The closed-loop frequency response function (FRF) is estimated via a nonparametric identification method by spectral analysis. To this end, the user interface of the driver iteration program allows many different settings for the identification. For the simulations of the OLI method, in the case of the ST1D model, the identification settings were 0.5 window overlap for 20 Hanning windows, with FRF mode set to H3, no filtering, and displacement/acceleration cross-over frequency turned off; And, in the case of the eletrodynamic shaker, the identification used the experimentally acquired data with the band-limited pink noise, using controller with proportional gain $K_p=10$, and the FRF identification settings use Hanning window with the number of windows set to 8192 with 97\% overlap, and the FRF mode is set to H3. During the driver adaptation process, settings such as correction factor and maximum frequency compensation are adjusted as needed, while the coherence threshold is left at 90\%.
 The closed-loop transfer function used in the simulations of the OLI method was estimated by direct identification (from signals “r” and “y”, resorting to figure \ref{fig_4}), and its frequency response is shown in figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake}.
 
 \subsubsection{PID-F Controller}
 In the experimental test procedure followed at LNEC (Fig. \ref{fig_1}), system identification is performed each time the target signal is scaled up. A natural and straightforward improvement arising from this procedure is the systematic updating of the controller tuning parameters in accordance with the identified plant dynamics. A further enhancement consists of augmenting the existing PI controller with a filtered derivative term, yielding a PID-F structure. This extension is particularly advantageous in the present context, as it requires minimal modifications to the existing control software architecture, representing a natural extension of the current controller structure, while simultaneously affording greater tuning flexibility. Accordingly, a PID-F controller is implemented and systematically tuned based on the identified dynamic characteristics of the system.
 
 \subsubsection{LQI Controller}
-From the plant transfer function identified via the two-stage method, a state-space representation in controllable canonical form is adopted, with the state vector $x(t)$ defined accordingly. This state-space representation is subsequently employed to determine the optimal state-feedback control law, $u(t) = -K \cdot x_{aug}(t)$, where the augmented state vector $x_{aug}(t) = [x(t) x_i(t)]^\intercal$ incorporates the state $x_i(t)$ which is defined as the integral of the tracking error. The optimal static gain vector $K$ is obtained through minimization of the LQI performance index: $ J = \sum_{0}^{\infty}{{x_{aug}(t)}^\intercal Q} x_{aug}(t)+{u(t)}^\intercal R u(t) dt $, where Q and R have appropriate dimensions, with R=1 and Q being a diagonal matrix where each parameter was found via Nelder-Mead simplex algorithm \citep{lagarias1998} in order to minimize the acceleration response spectrum MSE for the seismic signal on test, computed for 100 logarithmically spaced points between 0.1Hz and 30Hz. 
+From the plant transfer function identified via the two-stage method, a state-space representation in controllable canonical form is adopted, with the state vector $x(t)$ defined accordingly. This state-space representation is subsequently employed to determine the optimal state-feedback control law, $u(t) = -K \cdot x_{aug}(t)$, where the augmented state vector $x_{aug}(t) = [x(t) x_i(t)]^\intercal$ incorporates the state $x_i(t)$ which is defined as the integral of the tracking error. The optimal static gain vector $K$ is obtained through minimization of the LQI performance index: $ J = \sum_{t=0}^{\infty}{{x_{aug}(t)}^\intercal Q} x_{aug}(t)+{u(t)}^\intercal R u(t) $, where Q and R have appropriate dimensions, with R=1 and Q being a diagonal matrix where each parameter was found via Nelder-Mead simplex algorithm \citep{lagarias1998} in order to minimize the acceleration response spectrum MSE for the seismic signal on test, computed for 100 logarithmically spaced points between 0.1Hz and 30Hz. 
 
 \subsection{Performance Evaluation}
 
@@ -306,22 +312,62 @@ To ensure that the imposed inputs remained within the displacement capacity of t
 
 The performance of each control method is evaluated through the acceleration and displacement response spectrum mean squared error (MSE) for every input action described in the previous section. The acceleration response spectrum is computed from 0.1 Hz to 30 Hz for 500 logarithmically spaced points, and the displacement response spectrum is computed for the same frequencies, however, for only the first 344 points, equating to a range from 0.1 Hz to 5.04 Hz.
 
-For the case of the 1DST model, a 2DOF system coupled to the platen was considered, with both masses set to 2000 kg, and the modal properties: $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$. 
+For the case of the ST1D model, a 2DOF system coupled to the platen was considered, with both masses set to 2000 kg, and the modal properties: $f_1 = 1.5 Hz$, $\zeta_1  = 0.02$, $f_2 = 6 Hz$, $\zeta_2 = 0.05$. 
 
 \section{Results}
 
 \subsection{LNEC's Uniaxial Shaking Table Model}
 
+The ST1D model, the platen acceleration and displacement response spectrum MSE for each earthquake, for each control strategy is shown in figure \ref{excel_accel_resp_spectrum} and \ref{excel_disp_resp_spectrum}. To highlight how the platen response spectra obtained for each control strategy (and iteration, in the case of OLI method) varies across the frequency range, the results for the Erzikan earthquake in the fault normal direction are shown in figure \ref{erzikan_4th_N}. 
+
+\begin{figure}%
+    \centering
+    \includegraphics[width=1\linewidth]{Erzikan_Response_Spectra_N_accel.png}
+    \caption{Erzikan fault North-South response spectra. For this case a 4th adapted driver was computed, which yielded better results then the PID-F (unlike the 3rd driver used in every other performance comparison), but only in terms of acceleration response spectrum and in the fault normal direction.}
+    \label{erzikan_4th_N}
+\end{figure}
+
+% \begin{figure}
+%     \begin{subfigure}{0.49\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{ST1D_excel_accel.jpg}
+%         \caption{Acceleration response spectrum MSE}
+%         \label{excel_accel_resp_spectrum}
+%     \end{subfigure}
+%     \\
+%     \begin{subfigure}{0.49\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{ST1D_excel_disp.jpg}
+%         \caption{Displacement response spectrum MSE}
+%         \label{excel_disp_resp_spectrum}
+%     \end{subfigure}
+%     \caption{ST1D model response spectra for benchmark seismic signals}
+% \end{figure}
+
+\begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ST1D_excel_accel.jpg}
+        \caption{Acceleration response spectrum MSE}
+        \label{excel_accel_resp_spectrum}
+\end{figure}
+
+\begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{ST1D_excel_disp.jpg}
+        \caption{Displacement response spectrum MSE}
+        \label{excel_disp_resp_spectrum}
+    \caption{ST1D model response spectra for benchmark seismic signals}
+\end{figure}
+
+
 
 \subsection{Eletrodynamic Shaker}
 
-The complete identification results for all methods, controllers, and drive signals are presented in Appendix \ref{appendix:full_shaker_id_results}. 
-
-The indirect method yielded inconsistent results across experiments, and both the direct and two-stage methods produced mixed results. Based on the fundamental knowledge of applicability and limitations of each identification method in closed-loop systems, it was decided to proceed with the model identified via the two-stage method on the data from the run with the controller proportional gain set to $K_P = 10 $.
+For the identification, the indirect method yielded inconsistent results across experiments, and both the direct and two-stage methods produced mixed results. Based on the fundamental knowledge of applicability and limitations of each identification method in closed-loop systems, it was decided to proceed with the model identified via the two-stage method on the data from the run with the controller proportional gain set to $K_P = 10 $.
 
 The Bode plot of figure \ref{Fig6_Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake} displays the result of the direct identification of the closed-loop with the controller set as proportional gain $K_p = 10$, and the expected closed-loop response with the respectively tuned controllers, computed from the plant model.
 
-\begin{figure}%[H]
+\begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{experimental_validation/Bode_ClosedLoop.jpg}
     \caption{Shaking table control loop frequency response with controllers optimized for the Tolmezzo earthquake}
@@ -330,49 +376,60 @@ The Bode plot of figure \ref{Fig6_Shaking table control loop frequency response 
 
 The frequency responses clearly highlights the benefits of optimizing the controllers (PID-F and LQI) since a larger bandwidth is obtained while maintaining a unitary gain at lower frequencies. This directly translates to improvements in the response spectrum, which will meet the target on the first run, instead of not requiring several iterations.
 
-As for the performance evaluation for the benchmark earthquakes, the response spectra are presented in Appendix \ref{appendix:shaker_benchmark}.
-
 The results obtained with the proposed methodology show how the tunning/optimization can improve significantly the performance of the system. It can be observed in \ref{Response spectra for a scaled-down Newhall fault parallel seismic signal} for acceleration and displacement response spectra of Newhall earthquake, respectively, that the PID-F controller closely matches the target response, the LQI achieves an even closer match, whereas the OLI method (LNEC's approach) remains further from the target even after the third drive iteration. The MSE values quantify the differences observed among the curves.
-
-
-\begin{figure*}%[H]
-    \centering
-    \includegraphics[width=\linewidth]{experimental_validation/newhalll_shaker_Response_Spectra_N.png}
-    \caption{Response spectra for a scaled-down Newhall fault normal seismic signal}
-    \label{Response spectra for a scaled-down Newhall fault parallel seismic signal}
-\end{figure*}
-
-
 
 The results obtained for the remaining earthquakes exhibit the same trend, as shown in figures \ref{Acceleration response spectrum MSE for various seismic signals} and \ref{Displacement response spectrum MSE for various seismic signals}. This analysis confirms the benefits of using the proposed methodology, consistently identifying the LQI controller as the one that achieves the best closed-loop performance results.
 
-
-
-\begin{figure}%[H]
-    \centering
-    \includegraphics[width=\linewidth]{experimental_validation/BarChart_Accel.png}
-    \caption{Acceleration response spectrum MSE for various seismic signals}
-    \label{Acceleration response spectrum MSE for various seismic signals}
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{experimental_validation/newhalll_shaker_Response_Spectra_N_accel.png}
+\caption{Acceleration response spectra for a scaled-down Newhall fault normal seismic signal}
+\label{Response spectra for a scaled-down Newhall fault parallel seismic signal}
 \end{figure}
 
+% \begin{figure}
+%     \begin{subfigure}{0.49\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{experimental_validation/BarChart_Accel.png}
+%         \caption{Acceleration response spectrum MSE}
+%         \label{Acceleration response spectrum MSE for various seismic signals}
+%     \end{subfigure}
+%     \\
+%     \begin{subfigure}{0.49\textwidth}
+%         \centering
+%         \includegraphics[width=\linewidth]{experimental_validation/BarChart_Disp.png}
+%         \caption{Displacement response spectrum MSE}
+%         \label{Displacement response spectrum MSE for various seismic signals}
+%     \end{subfigure}
+%     \caption{Eletrodynamic shaker model response spectra for benchmark seismic signals}
+% \end{figure}
 
-\begin{figure}%[H]
-    \centering
-    \includegraphics[width=\linewidth]{experimental_validation/BarChart_Disp.png}
-    \caption{Displacement response spectrum MSE for various seismic signals}
-    \label{Displacement response spectrum MSE for various seismic signals}
+\begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{experimental_validation/BarChart_Accel.png}
+        \caption{Acceleration response spectrum MSE}
+        \label{Acceleration response spectrum MSE for various seismic signals}
+\end{figure}
+
+\begin{figure}
+        \centering
+        \includegraphics[width=\linewidth]{experimental_validation/BarChart_Disp.png}
+        \caption{Displacement response spectrum MSE}
+        \label{Displacement response spectrum MSE for various seismic signals}
+    \caption{Eletrodynamic shaker model response spectra for benchmark seismic signals}
 \end{figure}
 
 
 
 \section{Conclusions \& Outlook}
 
-This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and, moreover, offer a systematic approach to the control problem with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations.
+This work presents an improved solution to the current OLI method used in LNEC to experimentally reproduce simulated earthquakes in laboratory shaking table setups. Based on model-based controllers and using the two-stage closed-loop identification method to identify the plant and  optimize the controllers, the PID-F and the LQI controllers were shown to reproduce the target response spectra across the whole frequency spectrum of the earthquake signal more accurately on the first run when compared with the standard OLI method fourth run. The tuned controllers (PID-F and LQI) also require less user intervention, and, moreover, offer a systematic approach to the control problem, with LQI controller providing the best results by significant margin for all earthquake ground-motions simulations. Furthermore, the proposed control strategies may also be used in conjunction with the OLI method, which, being a combined open- and closed-loop strategy with no restrictions on the closed-loop controller, can incorporate the benefits of improved closed-loop control alongside open-loop driver signal adaptation.
+
+The next step of the proposed methodology consists in implementing the optimized controllers on the physical system (electrodynamic shaker), which also requires the design and implementation of a state observer. Completing this step will enable the verification and confirmation of the results and the achieved performance. Subsequently, the methodology is intended to be implemented on LNEC's uniaxial shaking table, where the same analysis will be conducted to assess its effectiveness on larger-scale systems. This future stage aims to evaluate the scalability, robustness, and practical applicability of the proposed control strategy under more demanding testing conditions. If the performance is proved superior against alternative approaches, the proposed methodology will be applied on future shaking table tests.
 
 Given the nature of shaking table experimental testing, the test specimens are often driven to plastic deformation, some form of failure, or have significant nonlinear behaviour which is not detectable in the small intensity identification experiments. This results in non-negligible shifts in dynamic properties and excitation of unknown modes that may occur during the test, and the proposed method of optimizing controllers for the plant dynamics cannot account for this, so further investment should be directed to the implementation of adaptive online identification methods that can inform nonlinear control strategies in order to address both the evolving and nonlinear test specimen dynamics.
 
-The final step of the proposed methodology consists in implementing the optimized controllers on the physical system (small-scale shaking table). Completing this step will close the loop of the methodology and will enable the verification and confirmation of the results and the achieved performance. Subsequently, the methodology is intended to be implemented on LNEC's uniaxial shaking table, where the same analysis will be conducted to assess its effectiveness on larger-scale systems. This future stage aims to evaluate the scalability, robustness, and practical applicability of the proposed control strategy under more demanding testing conditions. After demonstrating their superior performance, the proposed methodology will be applied on future shaking table tests.
-
+\FloatBarrier
 
 \section*{Acknowledgment}
 The author acknowledges LNEC for its financial support through the research fellowship under the LNEC Research Programme Modelação do Comportamento Estrutural- Mestr, and Fundação para a Ciência e a Tecnologia (FCT) for its financial support via LAETA (project https://doi.org/10.54499/UID/50022/2025).
